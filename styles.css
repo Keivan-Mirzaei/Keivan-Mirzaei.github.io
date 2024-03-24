@@ -8,3 +8,12 @@ h5,
 h6 {
   font-family: Roboto, sans-serif;
 }
+
+.k1-title {
+  text-transform: uppercase;
+}
+
+.k1-proof {
+  color: transparent;
+  text-shadow: 0 0 10px grey;
+}
