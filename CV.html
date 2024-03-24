@@ -9,10 +9,6 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Roboto"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
     <style>
       html,
       body,
@@ -28,17 +24,22 @@
     <script type="text/javascript" async
     src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML">
     </script>
-
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://kit.fontawesome.com/21fdd541b6.js" crossorigin="anonymous"></script>
   </head>
+
+
+  
   <body class="w3-light-grey">
-    <div class="w3-bar w3-teal w3-text-white">
+    <nav class="w3-bar w3-teal w3-text-white" style="position: sticky; top: 0; z-index: 1;">
       <a href="./index.html" class="w3-bar-item w3-button"><i
         class="fa fa-home fa-fw w3-margin-right w3-large w3-text-white"
       ></i></a>
       <a href="./math.html" class="w3-bar-item w3-button">\(\Sigma\)</a>
       <a href="./code.html" class="w3-bar-item w3-button w3-monospace">Hello World!</a>
       <a href="./CV.html" class="w3-bar-item w3-button">About me...</a>
-    </div>
+    </nav>
+
     <!-- Page Container -->
     <div class="w3-content w3-margin-top" style="max-width: 1400px">
       <!-- The Grid -->
@@ -47,34 +48,27 @@
         <div class="w3-third">
           <div class="w3-white w3-text-grey w3-card-4">
             <div class="w3-container">
-              <h1 class="w3-text-black w3-padding-16">
+              <h1 class="w3-text-dark-grey w3-padding">
                 Keivan Mirzaei
               </h1>
-              <hr />
-              <p>
-                <i
-                  class="fa fa-graduation-cap fa-fw w3-margin-right w3-large w3-text-teal"
-                ></i
-                >PhD Student
+              <p class="w3-monospace">
+                keivan.mirzaei <span class="w3-light-grey w3-text-grey">at</span> ucalgary.ca
               </p>
-              <p>
-                <i
-                  class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"
-                ></i
-                >keivan.mirzaei <span class="w3-light-grey w3-text-grey">at</span> ucalgary.ca
-              </p>
-              <hr />
 
-              <p class="w3-large">
-                <b
-                  ><i class="fa fa-gears fa-fw w3-margin-right w3-text-teal"></i
-                  >Skills</b
-                >
-              </p>
-              <p class="w3-monospace w3-center">
-                Python MATLAB \(\LaTeX\)
-              </p>
-              <br />
+            </div>
+          </div>
+          <br />
+          <div class="w3-white w3-text-grey w3-card-4">
+            <div class="w3-container">
+              <h3 class="w3-text-dark-grey">Research Interests</h3>
+              <ul>
+                <li>Stochastic Analysis</li>
+                <li>Probability Theory</li>
+                <li>Mathematical Finance</li>
+                <li>Stochastic Differential Equations</li>
+                <li>Mathematical Analysis</li>
+                <li>Machine Learning</li>
+              </ul>
             </div>
           </div>
           <br />
@@ -84,162 +78,464 @@
 
         <!-- Right Column -->
         <div class="w3-twothird">
-          <div class="w3-container w3-card w3-white w3-margin-bottom">
+          <div class="w3-container w3-card w3-white w3-margin-bottom w3-padding">
             <h2 class="w3-text-grey w3-padding-16">
               <i
-              class="fa fa-university fa-fw w3-margin-right w3-xxlarge w3-text-teal"
+              class="fa fa-university fa-fw w3-margin-right w3-xxlarge w3-text-dark-grey"
             ></i
             >Education
             </h2>
+
             <div class="w3-container">
               <h5 class="w3-opacity"><b>University of Calgary</b></h5>
-              <p>PhD, Mathematical Finance</p><p class="w3-text-teal">In progress</p>
-              <hr />
+              <p>PhD, Mathematical Finance</p>
+              <i class="w3-text-grey">GPA: 4.0/4.0</i>
             </div>
+            <hr />
+
             <div class="w3-container">
               <h5 class="w3-opacity"><b>Sharif University of Technology</b></h5>
               <p>MSc, Probability Theory and Stochastic Analysis</p>
+              <br \>
+              <p class="w3-text-grey">MSc Thesis:
+                <i>
+                  ”Stein's Method, Malliavin Calculus, Relations and Applica- tions,” under supervision of Prof. Bijan Zohuri-Zangeneh; Judged with excellent evaluation
+                </i>
+              </p>
+              <i class="w3-text-grey">GPA: 4.0/4.0</i>
               <hr />
             </div>
+
             <div class="w3-container">
               <h5 class="w3-opacity"><b>Ferdowsi University of Mashad</b></h5>
               <p>BSc, Pure Mathematics</p>
-              <br />
+              <i class="w3-text-grey">GPA: 3.2/4.0</i>
             </div>
+            <br>
           </div>
         <br />
-          <div class="w3-container w3-card w3-white">
+          <div class="w3-container w3-card w3-white w3-margin-bottom w3-padding">
             <h2 class="w3-text-grey w3-padding-16">
               <i
-                class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"
+                class="fas fa-medal fa-solid w3-margin-right w3-xxlarge w3-text-yellow"
               ></i
-              >Teaching Experience
+              >Honors and Awards
             </h2>
-            <div class="w3-container">
-              <h5 class="w3-opacity">
-                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
-                  >Teaching Assistant</b
-                >
-                Complex Analysis, University of Calgary
-              </h5>
-              <h6 class="w3-text-teal">
-                <i class="fa fa-calendar fa-fw w3-margin-right"></i>2023
-              </h6>
-              <hr />
-            </div>
-            <div class="w3-container">
-              <h5 class="w3-opacity">
-                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
-                  >Grader</b
-                >
-                Canadian Open Mathematics Challenge (COMC)
-              </h5>
-              <h6 class="w3-text-teal">
-                <i class="fa fa-calendar fa-fw w3-margin-right"></i>2022
-              </h6>
-              <hr />
-            </div>
-            <div class="w3-container">
-              <h5 class="w3-opacity">
-                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
-                  >Teaching Assistant</b
-                >
-                Discrete Mathematics, University of Calgary
-              </h5>
-              <h6 class="w3-text-teal">
-                <i class="fa fa-calendar fa-fw w3-margin-right"></i>2022
-              </h6>
-              <hr />
-            </div>
-            <div class="w3-container">
-              <h5 class="w3-opacity">
-                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
-                  >Teaching Assistant</b
-                >
-                Teaching Assistant, Linear Methods, University of Calgary
-              </h5>
-              <h6 class="w3-text-teal">
-                <i class="fa fa-calendar fa-fw w3-margin-right"></i>2022
-              </h6>
-              <hr />
-            </div>
-            <div class="w3-container">
-              <h5 class="w3-opacity">
-                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
-                  >Teaching Assistant</b
-                >
-                Complex Analysis, University of Calgary
-              </h5>
-              <h6 class="w3-text-teal">
-                <i class="fa fa-calendar fa-fw w3-margin-right"></i>2023
-              </h6>
-              <hr />
-            </div>
-            <div class="w3-container">
-              <h5 class="w3-opacity">
-                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
-                  >Teaching Assistant</b
-                >
-                Complex Analysis, University of Calgary
-              </h5>
-              <h6 class="w3-text-teal">
-                <i class="fa fa-calendar fa-fw w3-margin-right"></i>2023
-              </h6>
-              <hr />
-            </div>
-            <div class="w3-container">
-              <h5 class="w3-opacity">
-                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
-                  >Teaching Assistant</b
-                >
-                Complex Analysis, University of Calgary
-              </h5>
-              <h6 class="w3-text-teal">
-                <i class="fa fa-calendar fa-fw w3-margin-right"></i>2023
-              </h6>
-              <hr />
-            </div>
-            <div class="w3-container">
-              <h5 class="w3-opacity">
-                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
-                  >Teaching Assistant</b
-                >
-                Complex Analysis, University of Calgary
-              </h5>
-              <h6 class="w3-text-teal">
-                <i class="fa fa-calendar fa-fw w3-margin-right"></i>2023
-              </h6>
-              <hr />
-            </div>
-            <div class="w3-container">
-              <h5 class="w3-opacity">
-                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
-                  >Teaching Assistant</b
-                >
-                Complex Analysis, University of Calgary
-              </h5>
-              <h6 class="w3-text-teal">
-                <i class="fa fa-calendar fa-fw w3-margin-right"></i>2023
-              </h6>
-              <hr />
-            </div>
-            <div class="w3-container">
-              <h5 class="w3-opacity">
-                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
-                  >Teaching Assistant</b
-                >
-                Complex Analysis, University of Calgary
-              </h5>
-              <h6 class="w3-text-teal">
-                <i class="fa fa-calendar fa-fw w3-margin-right"></i>2023
-              </h6>
-              <hr />
-            </div>
-          </div>
 
-          <!-- End Right Column -->
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2021</b
+                >
+                One of the top three students of the faculty based on GPA, 4.0/4.0
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Sharif University of Technology
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-yellow w3-margin-right w3-padding-small w3-round"
+                  >2018</b
+                >
+                First Place and Gold Medal
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                23<sup>rd</sup> National Scientific Olympiad for University Students in Mathematics, Tehran-Iran
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2018</b
+                >
+                5<sup>th</sup> Place
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                National University Entrance Exam of Master Program, Iran
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-light-grey w3-margin-right w3-padding-small w3-round"
+                  >2017</b
+                >
+                Second Prize
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                International Mathematics Competition for University Students (IMC), Blagoevgrad-Bulgaria
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2017</b
+                >
+                Educational Prize
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Iran's National Elites Foundation (INEF)
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-brown w3-margin-right w3-padding-small w3-round"
+                  >2017</b
+                >
+                Bronze Medal
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                18<sup>th</sup> International Mathematical Olympiad for University Students, Tehran-Iran
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-brown w3-margin-right w3-padding-small w3-round"
+                  >2017</b
+                >
+                Third Place and Bronze Medal
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                22<sup>nd</sup> National Scientific Olympiad for University Students in Mathematics, Tehran-Iran
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2017</b
+                >
+                7<sup>th</sup> Place
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                National University Entrance Exam of Master Program, Iran
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-light-grey w3-margin-right w3-padding-small w3-round"
+                  >2016</b
+                >
+                Silver Medal
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Contest of Mathematics for University Students, Seoul-South Korea
+              </i>  
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-light-grey w3-margin-right w3-padding-small w3-round"
+                  >2016</b
+                >
+                Silver Medal
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                40<sup>th</sup> Iranian Mathematics Competition for University Students, Tehran-Iran
+              </i>  
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2014</b
+                >
+                Educational Prize
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Iran's National Elites Foundation (INEF)
+              </i>  
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-light-grey w3-margin-right w3-padding-small w3-round"
+                  >2014</b
+                >
+                Silver Medal
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                38<sup>th</sup>Iranian Mathematics Competition for University Students, Kerman-Iran
+              </i>  
+
+            </div>
+
+
         </div>
+        <br />
+          <div class="w3-container w3-card w3-white w3-margin-bottom w3-padding">
+            <h2 class="w3-text-grey w3-padding-16">
+              <i
+              class="fa-solid fa-chalkboard-user w3-margin-right w3-xxlarge w3-text-teal"
+            ></i
+            >Teachings and Experiences
+            </h2>
+            
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >Fall 2023</b
+                >
+                Teaching Assistant : University Calculus I
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                University of Calgary
+              </i>
+              <hr />
+            </div>
 
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >Fall 2023</b
+                >
+                Teaching Assistant : Discrete Mathematics
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                University of Calgary
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >Fall 2023</b
+                >
+                Teaching Assistant : Linear Methods II
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                University of Calgary
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >Fall 2023</b
+                >
+                Teaching Assistant : Discrete Mathematics
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                University of Calgary
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >Spring 2023</b
+                >
+                Teaching Assistant : Linear Methods II
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                University of Calgary
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >Winter 2023</b
+                >
+                Teaching Assistant : Complex Analysis
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                University of Calgary
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2022</b
+                >
+                Grader : Canadian Open Mathematics Challenge (COMC)
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Alberta-Canada
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >Fall 2022</b
+                >
+                Teaching Assistant : Discrete Mathematics
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                University of Calgary
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >Fall 2022</b
+                >
+                Teaching Assistant : Linear Methods
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                University of Calgary
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2019</b
+                >
+                Grader : 43<sup>rd</sup> Iranian Mathematics Competition
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Competitions' Committee of Iranian Mathematical Society
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2019</b
+                >
+                Teacher : Preparational classes for undergraduate students for International Mathematics Competition (IMC)
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Sharif University of Technology
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2019</b
+                >
+                Teacher : Preparational classes for Iranian Mathematics Competition for University Students
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Ferdowsi University of Mashhad
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2018</b
+                >
+                Teacher : Preparational classes for International Mathematical Tournament of Towns
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Math House
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2017</b
+                >
+                Teaching Assistant : Complex Analysis
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Ferdowsi University of Mashhad
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2017</b
+                >
+                Teaching Assistant : Theoretical Foundations of Problem Solving
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Ferdowsi University of Mashhad
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2017</b
+                >
+                Assistant Team Leader : Ferdowsi University of Mashhad's team for 41<sup>st</sup> Iranian Mathematics Competition
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Ferdowsi University of Mashhad
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2016</b
+                >
+                Teaching Assistant : Linear Algebra
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Ferdowsi University of Mashhad
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2016</b
+                >
+                Teaching Assistant : Foundations of Analysis
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Ferdowsi University of Mashhad
+              </i>
+              <hr />
+            </div>
+
+            <div class="w3-container">
+              <h5 class="w3-opacity">
+                <b class="w3-grey w3-margin-right w3-padding-small w3-round"
+                  >2016</b
+                >
+                Teacher : Preparational classes for National Mathematical Olympiad
+              </h5>
+              <i class="w3-text-grey w3-opacity">
+                Math House
+              </i>
+            </div>
+
+          </div>
         <!-- End Grid -->
       </div>
 
