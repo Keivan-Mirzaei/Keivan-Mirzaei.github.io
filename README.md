@@ -6,10 +6,10 @@ Hello everyone. My name is Keivan Mirzaei and I am a math student. This is a per
 As a warm-up you can show that if the points of the plane are each colored <b style="color:red;">red</b> or <b style="color:green;">green</b>, then one of these colors contains pairs of points at every mutual distance.
 
 You might be interested in evaluating
-$$
-\sqrt{1+2\sqrt{1+3\sqrt{1+4\sqrt{1+\dots}}}}
-$$
+
+$$\sqrt{1+2\sqrt{1+3\sqrt{1+4\sqrt{1+\dots}}}}$$
+
 or showing that at every party always two people have the same number os friends present.
 
 
-Please feel free to contact me through my email `keivan.mirzaei at outlook.com` for suggesting interesting problems.
+Please feel free to share your throughs. This is my email: `keivan.mirzaei at outlook.com`.
