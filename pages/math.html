@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <!-- head -->
+  <head>
+    <!-- title -->
+    <title>Keivan Mirzaei</title>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1"
+      name="viewport" />
+    <!-- styles -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet" />
+    <link
+      href="https://www.w3schools.com/w3css/4/w3.css"
+      rel="stylesheet" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet" />
+    <link
+      crossorigin="anonymous"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism-tomorrow.min.css"
+      integrity="sha512-kSwGoyIkfz4+hMo5jkJngSByil9jxJPKbweYec/UgS+S1EgE45qm4Gea7Ks2oxQ7qiYyyZRn66A9df2lMtjIsw=="
+      referrerpolicy="no-referrer"
+      rel="stylesheet" />
+    <link
+      href="/resources/styles.css"
+      rel="stylesheet" />
+    <!-- codes -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script
+      async=""
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML"
+      type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
+    <script src="/resources/script.js"></script>
+  </head>
+  <!-- body -->
+  <body class="w3-light-grey">
+    <!-- navigation -->
+    <nav
+      class="w3-bar w3-teal w3-text-white"
+      style="
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      ">
+      <a class="w3-bar-item w3-button" href="/"
+        ><i
+          class="fa fa-home fa-fw w3-margin-right w3-large w3-text-white"></i
+      ></a>
+      <a
+        class="w3-bar-item w3-button"
+        href="/pages/math.html"
+        >\( e^{i\pi} + 1 = 0 \)</a
+      >
+      <a
+        class="w3-bar-item w3-button w3-monospace"
+        href="/pages/code.html"
+        >Hello World!</a
+      >
+      <a
+        class="w3-bar-item w3-button"
+        href="/pages/CV.html"
+        >About me...</a
+      >
+    </nav>
+    <!-- cards container -->
+    <div
+      class="w3-content w3-margin-top w3-padding"
+      id="cards-container">
+      <div
+        class="w3-white w3-text-dark-grey w3-card-4 w3-margin-bottom card">
+        <div class="w3-container">
+          <h3>Hilbert Matrices</h3>
+          <p>
+            Prove that the matrix given by \[
+            \begin{bmatrix} 1 &amp; \frac 12 &amp;
+            \dots &amp; \frac 1n\\ \frac 12 &amp;
+            \frac 13 &amp; \dots &amp; \frac
+            1{n+1}\\ \vdots &amp; \vdots &amp;
+            \ddots &amp; \vdots\\ \frac 1n &amp;
+            \frac 1{n+1} &amp; \dots &amp; \frac
+            1{2n-1}\\ \end{bmatrix} \] is
+            non-singular.
+          </p>
+          <div class="solution w3-margin-bottom">
+            <b class="w3-text-green">Solution. </b
+            >Observe that if we denote the matrix
+            above with \(H = [H_{ij}]\), then we
+            have \[ H_{ij} = \int_{0}^{1}
+            x^{i+j-2}. \] Now let \( \vec{x} =
+            (x_1, x_2, \dots, x_n)^\intercal \neq
+            \vec 0\) be an arbitrary column
+            vector. Some straightforward
+            calculations give: \[ \begin{align}
+            \vec{x}^\intercal H \vec{x} &amp;=
+            \sum_{i, j=1}^{n}\left(x_i
+            x_j\int_{0}^{1} x^{i+j-2}\right)dx\\
+            &amp;=
+            \int_{0}^{1}\left(\sum_{i=1}^{n}
+            x_ix^{i-1}\right)^2 dx &gt; 0.
+            \end{align} \] Therefore, the only
+            solution to the equation \(H\vec x =
+            \vec 0\) is the trivial solution and
+            the conclusion follows. ▢
+          </div>
+        </div>
+        <button
+          class="w3-button w3-block w3-grey toggle-solution">
+          Show/Hide Solution
+        </button>
+      </div>
+      <div
+        class="w3-white w3-text-dark-grey w3-card-4 w3-margin-bottom card">
+        <div class="w3-container">
+          <h3>Simple but Fun</h3>
+          <p>
+            Suppose \(n\) is an odd number and
+            \(a_1, a_2, \dots, a_n\) is a
+            permutation of \(1, 2, \dots, n\).
+            Prove that the product
+          </p>
+          <p>
+            \[ (a_1-1)\cdot(a_2-2)\dots (a_n-n) \]
+          </p>
+          <p>is always an even number.</p>
+          <div class="solution w3-margin-bottom">
+            <b class="w3-text-green">Solution. </b
+            >One only need to observe that \[
+            (a_1-1) + (a_2-2) + \dots + (a_n-n) =
+            0. \] As the sum of an odd number of
+            integers results in zero, at least one
+            of them should be even. ▢
+          </div>
+        </div>
+        <button
+          class="w3-button w3-block w3-grey toggle-solution">
+          Show/Hide Solution
+        </button>
+      </div>
+      <div
+        class="w3-white w3-text-dark-grey w3-card-4 w3-margin-bottom card">
+        <div class="w3-container">
+          <h3>Trigonometry Without a Word</h3>
+          <p>
+            Prove the following two equalities \[
+            \arctan(\frac 12) + \arctan(\frac 13)
+            = \frac \pi 4\\ \arctan(1) +
+            \arctan(2) + \arctan(3) = \pi. \]
+          </p>
+          <div class="solution w3-margin-bottom">
+            <b class="w3-text-green"
+              >Solution.
+            </b>
+            <figure
+              class="w3-text-grey w3-center">
+              <img
+                alt=""
+                height="auto"
+                src="/Figures/1001.png"
+                width="100%" />
+              <figcaption>
+                A Without-a-Word Proof
+              </figcaption>
+            </figure>
+            . ▢
+          </div>
+        </div>
+        <button
+          class="w3-button w3-block w3-grey toggle-solution">
+          Show/Hide Solution
+        </button>
+      </div>
+      <div
+        class="w3-white w3-text-dark-grey w3-card-4 w3-margin-bottom card">
+        <div class="w3-container">
+          <h3>Conservative Polynomials</h3>
+          <p>
+            Suppose that \(P\) is a polynomial
+            that takes both positive and negative
+            values. Prove that the function
+            \(|P|\) is not a polynomial anymore.
+          </p>
+          <div class="solution w3-margin-bottom">
+            <b class="w3-text-green">Solution. </b
+            >Suppose to the contrary that \(|P|\)
+            is a polynomial and without loss of
+            generality also suppose that \(P\)
+            takes positive values infinitely many
+            times. Therefore the polynomial
+            equality \(|P(x)| - P(x) = 0\) has
+            infinitely many solutions. Hence the
+            fundamental theorem of algebra gives
+            \(|P(x)| = P(x)\) which contradicts
+            the fact that \(P\) takes both
+            positive and negative values. ▢
+          </div>
+        </div>
+        <button
+          class="w3-button w3-block w3-grey toggle-solution">
+          Show/Hide Solution
+        </button>
+      </div>
+    </div>
+    <!-- footer -->
+    <footer
+      class="w3-container w3-teal w3-center w3-margin-top">
+      <p>Find me on other platforms</p>
+      <a
+        href="https://contacts.ucalgary.ca/info/math/profiles/1-11770567"
+        ><i
+          class="fa fa-university w3-hover-opacity"></i
+      ></a>
+      <a href="https://github.com/keivan-mirzaei"
+        ><i
+          class="fa fa-github w3-hover-opacity"></i
+      ></a>
+      <a
+        href="https://www.linkedin.com/in/k1-mirzaei"
+        ><i
+          class="fa fa-linkedin w3-hover-opacity w3-margin-bottom"></i
+      ></a>
+    </footer>
+  </body>
+</html>
