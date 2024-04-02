@@ -1,109 +1,45 @@
 <!DOCTYPE html>
 <html>
-  <!-- head -->
-  <head>
-    <!-- title -->
-    <title>Keivan Mirzaei</title>
-    <meta charset="utf-8" />
-    <meta
-      content="width=device-width, initial-scale=1"
-      name="viewport" />
-    <!-- styles -->
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto"
-      rel="stylesheet" />
-    <link
-      href="https://www.w3schools.com/w3css/4/w3.css"
-      rel="stylesheet" />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-      rel="stylesheet" />
-    <link
-      crossorigin="anonymous"
-      href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism-tomorrow.min.css"
-      integrity="sha512-kSwGoyIkfz4+hMo5jkJngSByil9jxJPKbweYec/UgS+S1EgE45qm4Gea7Ks2oxQ7qiYyyZRn66A9df2lMtjIsw=="
-      referrerpolicy="no-referrer"
-      rel="stylesheet" />
-    <link
-      href="/resources/styles.css"
-      rel="stylesheet" />
-    <!-- codes -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script
-      async=""
-      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML"
-      type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
-    <script src="/resources/script.js"></script>
-  </head>
-  <!-- body -->
-  <body class="w3-light-grey">
-    <!-- navigation -->
-    <nav
-      class="w3-bar w3-teal w3-text-white"
-      style="
-        position: sticky;
-        top: 0;
-        z-index: 1;
-      ">
-      <a class="w3-bar-item w3-button" href="/"
-        ><i
-          class="fa fa-home fa-fw w3-margin-right w3-large w3-text-white"></i
-      ></a>
-      <a
-        class="w3-bar-item w3-button"
-        href="/pages/math.html"
-        >\( e^{i\pi} + 1 = 0 \)</a
-      >
-      <a
-        class="w3-bar-item w3-button w3-monospace"
-        href="/pages/code.html"
-        >Hello World!</a
-      >
-      <a
-        class="w3-bar-item w3-button"
-        href="/pages/CV.html"
-        >About me...</a
-      >
-    </nav>
-    <!-- cards container -->
-    <div
-      class="w3-content w3-margin-top w3-padding"
-      id="cards-container">
-      <div
-        class="w3-white w3-text-dark-grey w3-card-4 w3-margin-bottom card">
-        <div class="w3-container">
-          <h2>Sampling Brownian Motion</h2>
-          <p>
-            The following code shows how we can
-            code a Brownian motion. As a reminder,
-            a stochastic process \( \{ B(t), t
-            \geq 0 \} \) is said to be a Brownian
-            motion if it satisfies the following
-            properties:
-          </p>
-          <ol>
-            <li>\( B(0) = 0 \) almost surely.</li>
-            <li>
-              The process has continuous sample
-              paths, meaning \( B(t) \) is
-              continuous in \( t \).
-            </li>
-            <li>
-              The increments \( B(t) - B(s) \) are
-              stationary and independent for all
-              \( 0 \leq s \lt t \).
-            </li>
-            <li>
-              \( B(t) - B(s) \) follows a normal
-              distribution with mean \( 0 \) and
-              variance \( t - s \) for all \( 0
-              \leq s \lt t \).
-            </li>
-          </ol>
-          <p></p>
-          <pre><code class="language-py">class BrownianMotion:
+<!-- head -->
+<head>
+<!-- title -->
+<title>Keivan Mirzaei</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<!-- styles -->
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"/>
+<link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism-tomorrow.min.css" integrity="sha512-kSwGoyIkfz4+hMo5jkJngSByil9jxJPKbweYec/UgS+S1EgE45qm4Gea7Ks2oxQ7qiYyyZRn66A9df2lMtjIsw==" referrerpolicy="no-referrer" rel="stylesheet"/>
+<link href="/resources/styles.css" rel="stylesheet"/>
+<!-- codes -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
+<script src="/resources/script.js"></script>
+</head>
+<!-- body -->
+<body class="w3-light-grey">
+<!-- navigation -->
+<nav class="w3-bar w3-teal w3-text-white" style="position: sticky; top: 0; z-index: 1">
+<a class="w3-bar-item w3-button" href="/"><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-white"></i></a>
+<a class="w3-bar-item w3-button" href="/pages/math.html">MATH</a>
+<a class="w3-bar-item w3-button w3-monospace" href="/pages/code.html">CODES</a>
+<a class="w3-bar-item w3-button" href="/pages/CV.html">My CV</a>
+</nav>
+<!-- cards container -->
+<div class="w3-content w3-margin-top w3-padding" id="cards-container"><div class="w3-white w3-text-dark-grey w3-card-4 w3-margin-bottom card">
+<div class="w3-container">
+<h2>Sampling Brownian Motion</h2>
+<p>The following code shows how we can code a Brownian motion. As a reminder, a stochastic process \( \{ B(t), t \geq 0 \} \) is said to be a Brownian motion if it satisfies the following properties:</p>
+<ol>
+<li>\( B(0) = 0 \) almost surely.</li>
+<li>The process has continuous sample paths, meaning \( B(t) \) is continuous in \( t \).</li>
+<li>The increments \( B(t) - B(s) \) are stationary and independent for all \( 0 \leq s \lt t \).</li>
+<li>\( B(t) - B(s) \) follows a normal distribution with mean \( 0 \) and variance \( t - s \) for all \( 0 \leq s \lt t \).</li>
+</ol>
+<pre><code class="language-py">class BrownianMotion:
     def __init__(self, mu, sigma):
         self.mu = mu
         self.sigma = sigma
@@ -131,38 +67,15 @@
         vals[1:] = self.sigma * np.cumsum(normal_vector)
         + time_vector[1:] * self.mu
         return vals</code></pre>
-          <figure class="w3-text-grey w3-center">
-            <img
-              alt=""
-              height="auto"
-              src="/Figures/1002.png"
-              width="100%" />
-            <figcaption>
-              A Simple Plot of the Standard
-              Brownian Motion
-            </figcaption>
-          </figure>
-        </div>
-      </div>
-    </div>
-    <!-- footer -->
-    <footer
-      class="w3-container w3-teal w3-center w3-margin-top">
-      <p>Find me on other platforms</p>
-      <a
-        href="https://contacts.ucalgary.ca/info/math/profiles/1-11770567"
-        ><i
-          class="fa fa-university w3-hover-opacity"></i
-      ></a>
-      <a href="https://github.com/keivan-mirzaei"
-        ><i
-          class="fa fa-github w3-hover-opacity"></i
-      ></a>
-      <a
-        href="https://www.linkedin.com/in/k1-mirzaei"
-        ><i
-          class="fa fa-linkedin w3-hover-opacity w3-margin-bottom"></i
-      ></a>
-    </footer>
-  </body>
+<figure class="w3-text-grey w3-center"><img alt="" height="auto" src="/Figures/1002.png" width="100%"/><figcaption>A Simple Plot of the Standard Brownian Motion</figcaption></figure>
+</div>
+</div></div>
+<!-- footer -->
+<footer class="w3-container w3-teal w3-center w3-margin-top">
+<p>Find me on other platforms</p>
+<a href="https://contacts.ucalgary.ca/info/math/profiles/1-11770567"><i class="fa fa-university w3-hover-opacity"></i></a>
+<a href="https://github.com/keivan-mirzaei"><i class="fa fa-github w3-hover-opacity"></i></a>
+<a href="https://www.linkedin.com/in/k1-mirzaei"><i class="fa fa-linkedin w3-hover-opacity w3-margin-bottom"></i></a>
+</footer>
+</body>
 </html>

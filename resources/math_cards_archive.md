@@ -83,3 +83,30 @@ Suppose to the contrary that \(|P|\) is a polynomial and without loss of general
 <!-- end solution -->
 
 <!-- separator -->
+
+### Stirling's Approximation but Weaker
+
+Show that 
+\[
+\lim_{n\to \infty} \frac{e^nn!}{n^n} = \infty.
+\]
+
+<!-- begin solution -->
+Fix \(k\in \mathbb N\). According to the power series representation of the exponential function we should have:
+\[
+\begin{align*}
+e^n
+&= 1 + n + \frac{n^2}{2!} + \cdots + \frac{n^n}{n!} + \frac{n^{n+1}}{(n+1)!} + \cdots\\
+&\gt \frac{n^n}{n!}\left(1 + \frac {n}{n+1} + \frac {n^2}{(n+1)(n+2)}+ \cdots\right)\\
+&\gt \frac{n^n}{n!}\left(1 + \frac {n}{n+1} + \cdots + \frac {n^k}{(n+1)\cdots(n+k)}\right).\tag{1}\label{eq:1}
+\end{align*}
+\]
+Therefore, \ref{eq:1} gives
+\[
+\liminf_{n\to \infty} \frac{e^nn!}{n^n} \gt k
+\]
+and the conclusion follows from the fact that \(k\) was an arbitrary number.
+<!-- end solution -->
+
+<!-- separator -->
+
