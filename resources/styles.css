@@ -41,3 +41,8 @@ pre code {
   font-size:smaller;
   opacity: 90%;
 }
+
+.block-math {
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap;
+}

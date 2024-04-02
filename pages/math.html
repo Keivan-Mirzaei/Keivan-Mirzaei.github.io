@@ -32,29 +32,29 @@
 <div class="w3-content w3-margin-top w3-padding" id="cards-container"><div class="w3-white w3-text-dark-grey w3-card-4 w3-margin-bottom card">
 <div class="w3-container">
 <h3>Hilbert Matrices</h3>
-<p>Prove that the matrix given by
-\[
+<p>Prove that the matrix given by</p>
+<div class="block-math">\[
 \begin{bmatrix}
 1 &amp; \frac 12 &amp; \dots &amp; \frac 1n\\
 \frac 12 &amp; \frac 13 &amp; \dots &amp; \frac 1{n+1}\\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
 \frac 1n &amp; \frac 1{n+1} &amp; \dots &amp; \frac 1{2n-1}\\
 \end{bmatrix}
-\]
-is non-singular.</p>
+\]</div>
+<p>is non-singular.</p>
 <div class="solution w3-margin-bottom"><b class="w3-text-green">Solution. </b>Observe that if we denote the matrix above with \(H = [H_{ij}]\), then we have
-\[
+<div class="block-math">\[
 H_{ij} = \int_{0}^{1} x^{i+j-2}.
-\]
+\]</div>
 Now let \( \vec{x} = (x_1, x_2, \dots, x_n)^\intercal \neq \vec 0\) be an arbitrary column vector. Some straightforward calculations give:
 
-\[
+<div class="block-math">\[
 \begin{align}
 \vec{x}^\intercal H \vec{x}
 &amp;= \sum_{i, j=1}^{n}\left(x_i x_j\int_{0}^{1} x^{i+j-2}\right)dx\\
 &amp;= \int_{0}^{1}\left(\sum_{i=1}^{n} x_ix^{i-1}\right)^2 dx &gt; 0.
 \end{align}
-\]
+\]</div>
 Therefore, the only solution to the equation \(H\vec x = \vec 0\) is the trivial solution and the conclusion follows. ▢</div>
 </div>
 <button class="w3-button w3-block w3-grey toggle-solution">
@@ -63,14 +63,14 @@ Therefore, the only solution to the equation \(H\vec x = \vec 0\) is the trivial
 <div class="w3-container">
 <h3>Simple but Fun</h3>
 <p>Suppose \(n\) is an odd number and \(a_1, a_2, \dots, a_n\) is a permutation of \(1, 2, \dots, n\). Prove that the product</p>
-<p>\[
+<div class="block-math">\[
 (a_1-1)\cdot(a_2-2)\dots (a_n-n)
-\]</p>
+\]</div>
 <p>is always an even number.</p>
 <div class="solution w3-margin-bottom"><b class="w3-text-green">Solution. </b>One only need to observe that
-\[
+<div class="block-math">\[
 (a_1-1) + (a_2-2) + \dots + (a_n-n) = 0.
-\]
+\]</div>
 As the sum of an odd number of integers results in zero, at least one of them should be even. ▢</div>
 </div>
 <button class="w3-button w3-block w3-grey toggle-solution">
@@ -78,11 +78,11 @@ As the sum of an odd number of integers results in zero, at least one of them sh
 </button></div><div class="w3-white w3-text-dark-grey w3-card-4 w3-margin-bottom card">
 <div class="w3-container">
 <h3>Trigonometry Without a Word</h3>
-<p>Prove the following two equalities
-\[
+<p>Prove the following two equalities</p>
+<div class="block-math">\[
 \arctan(\frac 12) + \arctan(\frac 13) = \frac \pi 4\\
 \arctan(1) + \arctan(2) + \arctan(3) = \pi.
-\]</p>
+\]</div>
 <div class="solution w3-margin-bottom"><b class="w3-text-green">Solution. </b><figure class="w3-text-grey w3-center"><img alt="" height="auto" src="/Figures/1001.png" width="100%"/><figcaption>A Without-a-Word Proof</figcaption></figure>. ▢</div>
 </div>
 <button class="w3-button w3-block w3-grey toggle-solution">
@@ -98,23 +98,23 @@ As the sum of an odd number of integers results in zero, at least one of them sh
 </button></div><div class="w3-white w3-text-dark-grey w3-card-4 w3-margin-bottom card">
 <div class="w3-container">
 <h3>Stirling's Approximation but Weaker</h3>
-<p>Show that 
-\[
+<p>Show that </p>
+<div class="block-math">\[
 \lim_{n\to \infty} \frac{e^nn!}{n^n} = \infty.
-\]</p>
+\]</div>
 <div class="solution w3-margin-bottom"><b class="w3-text-green">Solution. </b>Fix \(k\in \mathbb N\). According to the power series representation of the exponential function we should have:
-\[
+<div class="block-math">\[
 \begin{align*}
 e^n
 &amp;= 1 + n + \frac{n^2}{2!} + \cdots + \frac{n^n}{n!} + \frac{n^{n+1}}{(n+1)!} + \cdots\\
 &amp;\gt \frac{n^n}{n!}\left(1 + \frac {n}{n+1} + \frac {n^2}{(n+1)(n+2)}+ \cdots\right)\\
 &amp;\gt \frac{n^n}{n!}\left(1 + \frac {n}{n+1} + \cdots + \frac {n^k}{(n+1)\cdots(n+k)}\right).\tag{1}\label{eq:1}
 \end{align*}
-\]
+\]</div>
 Therefore, \ref{eq:1} gives
-\[
+<div class="block-math">\[
 \liminf_{n\to \infty} \frac{e^nn!}{n^n} \gt k
-\]
+\]</div>
 and the conclusion follows from the fact that \(k\) was an arbitrary number. ▢</div>
 </div>
 <button class="w3-button w3-block w3-grey toggle-solution">
