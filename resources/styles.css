@@ -39,10 +39,9 @@ figcaption:before {
 
 pre code {
   font-size:smaller;
-  opacity: 90%;
 }
 
 .block-math {
-  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-x: auto;
   white-space: nowrap;
 }

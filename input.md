@@ -1,23 +1,11 @@
-### Stirling's Approximation but Weaker
+# Conditional Probabilities and Expectations
 
-Show that 
-\[
-\lim_{n\to \infty} \frac{n^n}{e^nn!} = 0.
-\]
+## Introduction
 
-<!-- begin solution -->
-Fix \(k\in \mathbb N\). According to the power series representation of the exponential function we should have:
-\[
-\begin{align}
-e^n
-&= 1 + n + \frac{n^2}{2!} + \cdots + \frac{n^n}{n!} + \frac{n^{n+1}}{(n+1)!} + \cdots\notag\\
-&\gt \frac{n^n}{n!}\left(1 + \frac {n}{n+1} + \frac {n^2}{(n+1)(n+2)}+ \cdots\right)\notag\\
-&\gt \frac{n^n}{n!}\left(1 + \frac {n}{n+1} + \cdots + \frac {n^k}{(n+1)\cdots(n+k)}\right).
-\end{align}
-\]
-Therefore, (1) gives
-\[
-\liminf_{n\to \infty} \frac{e^nn!}{n^n} \gt k
-\]
-and The conclusion follows from the fact that $k$ was an arbitrary number.
-<!-- end solution -->
+To deeply understand the concept of conditional probabilities and expectations, one needs to first understand the necessity behind these definitions. To give a good example of the situation, let us suppose that an imaginary experiment is set. A machine flips a fair coin up to 5 times. Before each round you need to decide if you want to play the following round and if yes, how much you bet. At the first glance, it might seem like you have an advantage over the opponent (which in this case happens to be a machine) as you are the one who declares the finish (almost) and the pot. Speculations aside, who has the upper hand in this seemingly boring game?
+
+## An Analysis of the Game
+
+To begin the analysis of the game above, we need to tailor a probability space for this scenario. As it is pretty clear, we can define our sample space to be $\Omega = {\{H, T\}}^{5}$ where $H$ stands for heads and $T$ stands for tails (we can suppose that the coin flip continues even after we quit and stops at the 5^th^). A scenario in this setting is just a sequence of heads and tails; something like $\omega=(T, H, H, H, T)$.
+
+What is the best we can get 
