@@ -6,9 +6,9 @@ As a warm-up you can show that if the points of the plane are each colored <b st
 
 You might be interested in evaluating
 
-\[
+$$
 \sqrt{1+2\sqrt{1+3\sqrt{1+4\sqrt{1+\dots}}}}
-\]
+$$
 
 or showing that at every party always two people have the same number of friends present.
 
