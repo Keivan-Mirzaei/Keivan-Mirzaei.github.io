@@ -1,54 +1,55 @@
-<!DOCTYPE html>
-<html>
-<!-- head -->
-<head>
-<!-- title -->
-<title>Keivan Mirzaei</title>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<!-- styles -->
-<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"/>
-<link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
-<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism-tomorrow.min.css" integrity="sha512-kSwGoyIkfz4+hMo5jkJngSByil9jxJPKbweYec/UgS+S1EgE45qm4Gea7Ks2oxQ7qiYyyZRn66A9df2lMtjIsw==" referrerpolicy="no-referrer" rel="stylesheet"/>
-<link href="/resources/styles.css" rel="stylesheet"/>
-<!-- codes -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
-<script src="/resources/script.js"></script>
-</head>
-<!-- body -->
-<body class="w3-light-grey">
-<!-- navigation -->
-<nav class="w3-bar w3-teal w3-text-white" style="position: sticky; top: 0; z-index: 1">
-<a class="w3-bar-item w3-button" href="/"><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-white"></i></a>
-<a class="w3-bar-item w3-button" href="/pages/math.html">MATH</a>
-<a class="w3-bar-item w3-button w3-monospace" href="/pages/code.html">CODES</a>
-<a class="w3-bar-item w3-button" href="/pages/CV.html">My CV</a>
-</nav>
-<!-- cards container -->
-<div class="w3-content w3-margin-top w3-padding" id="cards-container"><div class="w3-white w3-text-dark-grey w3-card-4 w3-margin-bottom card">
-<div class="w3-container">
-<h1>keivan-mirzaei.com</h1>
-<p>Hello everyone. My name is Keivan Mirzaei and I am a math student. This is a personal website with the intention of promoting and introducing math problems to a wide range of students and math enthusiasts. It is a fun activity of mine as I usually spend my free hours on thinking to math problems.</p>
-<p>As a warm-up you can show that if the points of the plane are each colored <b style="color:red;">red</b> or <b style="color:green;">green</b>, then one of these colors contains pairs of points at every mutual distance.</p>
-<p>You might be interested in evaluating</p>
-<p>\[
-\sqrt{1+2\sqrt{1+3\sqrt{1+4\sqrt{1+\dots}}}}
-\]</p>
-<p>or showing that at every party always two people have the same number of friends present.</p>
-<p>Please feel free to contact me through my email <code>keivan.mirzaei at outlook.com</code> for suggesting interesting problems.</p>
+---
+layout: default
+section: home
+description: Mathematical problems, explorations, interactive lessons, and research. The personal notebook of Keivan Mirzaei.
+search: true
+search_title: Home
+---
+<div class="home-wrap">
+  <section class="hero" aria-labelledby="welcome">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> A personal notebook</p>
+      <h1 id="welcome">A place for<br><em>curious thinking.</em></h1>
+      <p>I’m Keivan. This is where I collect mathematical ideas, explore them through code, and leave a little room for the unexpected.</p>
+      <a class="primary-link" href="{{ '/notes/' | relative_url }}">Explore the notebook {% include icon.html name='arrow' %}</a>
+      <a class="quiet-link" href="{{ '/about/' | relative_url }}">A little about me ↗</a>
+    </div>
+    <div class="hero-diagram" aria-hidden="true">
+      <svg viewBox="0 0 260 260" fill="none"><defs><pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M26 0H0V26" stroke="#d8ded4" stroke-width=".6"/></pattern></defs><rect width="260" height="260" fill="url(#grid)"/><path d="M0 130h260M130 0v260" stroke="#a9b8a7"/><g stroke="#38705d" stroke-width="1.2"><ellipse cx="130" cy="130" rx="93" ry="39" transform="rotate(-45 130 130)"/><ellipse cx="130" cy="130" rx="93" ry="58" transform="rotate(-45 130 130)"/><ellipse cx="130" cy="130" rx="93" ry="78" transform="rotate(-45 130 130)"/><ellipse cx="130" cy="130" rx="93" ry="18" transform="rotate(-45 130 130)"/></g><circle cx="196" cy="64" r="4" fill="#38705d"/></svg>
+      <span>Different paths. Shared curiosity.</span>
+    </div>
+  </section>
+  <section class="subject-section" aria-labelledby="subjects-title">
+    <div class="section-heading"><h2 id="subjects-title">Ways to explore</h2><span class="count-label">Follow a thread</span></div>
+    <div class="subject-grid">
+      {% for format in site.data.formats %}
+      <a href="{{ format.url | relative_url }}" class="subject-card">
+        <span class="subject-number">0{{ forloop.index }} /</span>
+        {% include icon.html name=format.icon %}
+        <h3>{{ format.title }} <span>↗</span></h3>
+        <p>{{ format.description }}</p>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="recent-section" aria-labelledby="recent-title">
+    <div class="section-heading"><h2 id="recent-title">From the notebook</h2><a class="text-link" href="{{ '/notes/' | relative_url }}">View all posts <span aria-hidden="true">↗</span></a></div>
+    <div class="note-list">
+      {% for format in site.data.formats %}
+        {% assign latest = site.posts | where: 'format', format.key | first %}
+        {% if latest %}{% include note.html post=latest %}{% endif %}
+      {% endfor %}
+    </div>
+  </section>
+  {% assign featured_research = site.research | where: 'featured', true | first %}
+  {% if featured_research %}
+  <section class="research-spotlight" aria-labelledby="research-title">
+    <div class="section-heading">
+      <h2 id="research-title">A window into my research</h2>
+      <a class="text-link" href="{{ '/research/' | relative_url }}">All research <span aria-hidden="true">↗</span></a>
+    </div>
+    {% include research-card.html project=featured_research level=3 %}
+  </section>
+  {% endif %}
+  <aside class="home-note"><span aria-hidden="true">✳</span><p>Sometimes a good question is the best place to start.<br>Have an interesting problem? <a href="mailto:{{ site.email }}">Send it my way.</a></p></aside>
 </div>
-</div></div>
-<!-- footer -->
-<footer class="w3-container w3-teal w3-center w3-margin-top">
-<p>Find me on other platforms</p>
-<a href="https://contacts.ucalgary.ca/info/math/profiles/1-11770567"><i class="fa fa-university w3-hover-opacity"></i></a>
-<a href="https://github.com/keivan-mirzaei"><i class="fa fa-github w3-hover-opacity"></i></a>
-<a href="https://www.linkedin.com/in/k1-mirzaei"><i class="fa fa-linkedin w3-hover-opacity w3-margin-bottom"></i></a>
-</footer>
-</body>
-</html>

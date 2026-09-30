@@ -1,0 +1,19 @@
+---
+layout: null
+permalink: /search.json
+sitemap: false
+---
+[
+{%- assign entries = site.posts | concat: site.research | concat: site.pages | where: 'search', true -%}
+{%- for entry in entries -%}
+{%- assign entry_format = site.data.formats | where: 'key', entry.format | first -%}
+  {
+    "title": {{ entry.search_title | default: entry.title | jsonify }},
+    "url": {{ entry.url | relative_url | jsonify }},
+    "category": {% if entry.collection == 'research' %}"Research"{% elsif entry.collection == 'posts' %}{{ entry_format.label | default: 'Post' | jsonify }}{% else %}"Page"{% endif %},
+    "tags": {{ entry.tags | join: ' ' | append: ' ' | append: entry.category | jsonify }},
+    "description": {{ entry.description | default: '' | jsonify }},
+    "content": {{ entry.content | default: entry.description | markdownify | strip_html | normalize_whitespace | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]

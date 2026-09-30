@@ -1,0 +1,13 @@
+{% if include.project.links.size > 0 %}
+<ul class="research-links" aria-label="Research resources">
+  {% for resource in include.project.links %}
+    {% assign first_character = resource.url | slice: 0 %}
+    {% if first_character == '/' %}
+      {% assign resource_url = resource.url | relative_url %}
+    {% else %}
+      {% assign resource_url = resource.url %}
+    {% endif %}
+  <li><a href="{{ resource_url | escape }}">{{ resource.label | escape }} <span aria-hidden="true">↗</span></a></li>
+  {% endfor %}
+</ul>
+{% endif %}

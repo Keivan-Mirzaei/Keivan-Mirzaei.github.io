@@ -1,0 +1,62 @@
+title: Keivan Mirzaei
+description: Mathematical problems, explorations, interactive learning, and research by Keivan Mirzaei.
+url: https://keivan-mirzaei.com
+baseurl: ""
+lang: en
+timezone: America/Edmonton
+author: Keivan Mirzaei
+email: keivan.mirzaei@outlook.com
+
+permalink: /notes/:title/
+paginate: 5
+paginate_path: /notes/page/:num/
+feed:
+  excerpt_only: true # Keep solutions out of feed previews.
+collections:
+  research:
+    output: true
+    permalink: /research/:name/
+    sort_by: order
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  math_engine: mathjax
+  syntax_highlighter: rouge
+
+plugins:
+  - jekyll-feed
+  - jekyll-paginate
+  - jekyll-sitemap
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: page
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      section: notes
+      search: true
+  - scope:
+      path: ""
+      type: research
+    values:
+      layout: research
+      section: research
+      search: true
+      order: 100
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - LICENSE
+  - docs
+  - scripts
+  - tests
+  - vendor
+  - legacy

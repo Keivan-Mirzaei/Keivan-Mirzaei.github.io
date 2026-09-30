@@ -1,0 +1,18 @@
+- key: problem
+  label: Problem
+  title: Problems
+  url: /problems/
+  icon: math
+  description: A question to think about, with a solution to uncover when you’re ready.
+- key: exploration
+  label: Exploration
+  title: Explorations
+  url: /explorations/
+  icon: experiment
+  description: Follow an idea through mathematics, code, images, and experiments.
+- key: module
+  label: Learning module
+  title: Learning modules
+  url: /learning/
+  icon: learning
+  description: Build understanding step by step, with explanations and hands-on learning.

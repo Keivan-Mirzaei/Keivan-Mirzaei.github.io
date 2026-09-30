@@ -1,0 +1,13 @@
+<article class="research-card">
+  {% if include.project.cover %}
+  <img class="research-cover" src="{{ include.project.cover | relative_url }}" alt="{{ include.project.cover_alt | escape }}" loading="lazy" decoding="async">
+  {% endif %}
+  <div class="research-card-body">
+    <p class="eyebrow">{{ include.project.kind | default: 'Research project' }}{% if include.project.year %} / {{ include.project.year }}{% endif %}</p>
+    <h{{ include.level | default: 2 }}><a href="{{ include.project.url | relative_url }}">{{ include.project.title }}</a></h{{ include.level | default: 2 }}>
+    <p>{{ include.project.description }}</p>
+    {% if include.project.institution %}<p class="research-institution">{{ include.project.institution }}</p>{% endif %}
+    <a class="text-link" href="{{ include.project.url | relative_url }}">Explore this work {% include icon.html name='arrow' %}</a>
+    {% include research-links.html project=include.project %}
+  </div>
+</article>

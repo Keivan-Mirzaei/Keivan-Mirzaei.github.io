@@ -1,17 +1,75 @@
-# keivan-mirzaei.com
+# Keivan Mirzaei’s notebook
 
-Hello everyone. My name is Keivan Mirzaei and I am a math student. This is a personal website with the intention of promoting and introducing math problems to a wide range of students and math enthusiasts. It is a fun activity of mine as I usually spend my free hours on thinking to math problems.
+A small Jekyll site for problems, explorations, learning modules, and a research showcase. Write posts and pages in Markdown; shared templates build the navigation, article pages, paginated archive, search index, RSS feed, and sitemap.
 
-As a warm-up you can show that if the points of the plane are each colored <b style="color:red;">red</b> or <b style="color:green;">green</b>, then one of these colors contains pairs of points at every mutual distance.
+The browser uses plain HTML, CSS, and a little JavaScript. There is no front-end framework, database, font service, or search service. MathJax loads only on pages with equations. Posts, navigation links, and solution disclosures work without JavaScript; full-text search and sidebar toggling use JavaScript.
 
-You might be interested in evaluating
+## Write
 
-$$
-\sqrt{1+2\sqrt{1+3\sqrt{1+4\sqrt{1+\dots}}}}
-$$
+Add a file in `_posts`, or run:
 
-or showing that at every party always two people have the same number of friends present.
+```sh
+python3 scripts/new_post.py "An interesting problem" --type problem --math
+python3 scripts/new_post.py "Following an idea" --type exploration --draft
+python3 scripts/new_post.py "A lesson for students" --type module --draft
+python3 scripts/new_post.py "My research project" --type research --draft
+```
 
-Please feel free to contact me through my email `keivan.mirzaei at outlook.com` for suggesting interesting problems.
+Edit `cv.md` for the CV and `_data/navigation.yml` for sidebar links. See [the writing guide](docs/writing.md) for examples, drafts, equations, new pages, and migration details.
 
-<!-- separator -->
+## Preview locally
+
+Install Ruby 3.3 or newer and Bundler, then:
+
+```sh
+bundle install
+bundle exec jekyll serve
+```
+
+Open http://127.0.0.1:4000. For drafts, add `--drafts`. Generated files go in `_site` and are never committed. If port 4000 is already used, add `--port 4001`.
+
+## Verify
+
+```sh
+bundle exec jekyll build --strict_front_matter
+python3 scripts/check_site.py
+python3 -m unittest discover -s tests
+node --test tests/*.test.mjs
+```
+
+The check validates local links and anchors, page headings, image descriptions, search coverage, the feed, the sitemap, and exclusion of authoring files. It also runs in GitHub Actions on pull requests and before publishing.
+
+## Publish on GitHub Pages
+
+1. In the repository’s **Settings → Pages**, select **GitHub Actions** as the build source.
+2. Keep the custom domain `keivan-mirzaei.com` configured there. `CNAME` and `_config.yml` already use it.
+3. Push the reviewed changes to `main`. The included workflow builds, checks, and deploys the site. Pull requests are built and checked without deploying.
+
+No website content has to be generated or pasted by hand. These local changes do not publish until pushed. See GitHub’s [custom workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
+For a project site at `username.github.io/repository`, set `url` to `https://username.github.io`, `baseurl` to `/repository`, and remove or replace `CNAME`. Internal links use `relative_url` so they follow this setting. The current personal domain uses an empty `baseurl`.
+
+## Structure
+
+```text
+_posts/                 Published Markdown notes
+_drafts/                Unpublished posts
+_research/              Research projects, papers, and thesis work
+_data/navigation.yml    Sidebar links
+_layouts/, _includes/   Shared templates
+assets/                 CSS, JavaScript, widgets, and media
+docs/templates/         Starter content for all four entry types
+cv.md, about.md          Editable standalone pages
+notes/index.html        Paginated archive
+search.json             Generated search index template
+scripts/                Optional authoring helper and build checks
+legacy/                 Original source, excluded from the site
+```
+
+The CV contains the original 2024 information and needs a content update before it represents a current CV. The six original posts are joined by twelve labeled sample posts: three problems, five explorations, and four interactive lessons. The research section separates the MSc thesis already listed in the CV from two demonstration showcases; the latter do not claim publications or completed studies.
+
+Sample posts use `sample: true`; example research entries use the same flag and are grouped separately. Edit or remove the sample Markdown files as you replace them with your own writing. Five reusable activities demonstrate graphing, probability, a card trick, and random walks. Scripts load only where used; the small local video has native controls and does not preload or autoplay.
+
+Advanced graphs add two optional components: `scientific-plot` reads Plotly JSON data; `sphere-slice` demonstrates a custom Three.js scene. Both show a static SVG preview first. Plotly, Three.js, and graph data load only after **Open interactive view** is pressed. Closing a view releases its renderer. The 3D dependencies use pinned CDN versions configured in `_data/graph_libraries.yml`, so opening these activities needs a network connection and compatible browser graphics. The ordinary posts and existing SVG activities do not load either library.
+
+The [advanced graph guide](docs/advanced-graphs.md) covers authoring, supported plot types, generating data in Python, and extending the scene. No Node packages or front-end build step are needed. Node.js 18 or newer is used only for the small geometry test suite.

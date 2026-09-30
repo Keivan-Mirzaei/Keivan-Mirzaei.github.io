@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="{{ site.lang | default: 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title | escape }} · {% endif %}{{ site.title | escape }}{% if paginator.page > 1 %} · Page {{ paginator.page }}{% endif %}</title>
+  <meta name="description" content="{{ page.description | default: site.description | escape }}">
+  <meta name="theme-color" content="#f5f5f0">
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+  {% feed_meta %}
+  <script src="{{ '/assets/js/navigation.js' | relative_url }}" defer></script>
+  {% if page.search_page %}<script src="{{ '/assets/js/search.js' | relative_url }}" defer></script>{% endif %}
+  {% if page.widgets contains 'sphere-slice' %}
+  <script type="importmap">{"imports":{"three":{{ site.data.graph_libraries.three | jsonify }},"three/addons/":{{ site.data.graph_libraries.three_addons | jsonify }}}}</script>
+  {% endif %}
+  {% for widget in page.widgets %}
+    {% assign widget_script = site.data.widgets[widget] %}
+    {% if widget_script %}<script src="{{ widget_script | relative_url }}"{% if widget_script contains '.mjs' %} type="module"{% else %} defer{% endif %}></script>{% endif %}
+  {% endfor %}
+  {% if page.math %}
+  <script src="{{ '/assets/js/math.js' | relative_url }}" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" id="MathJax-script" defer></script>
+  {% endif %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <aside class="sidebar" id="sidebar" aria-label="Site navigation">
+    <a class="identity" href="{{ '/' | relative_url }}">
+      <span class="monogram" aria-hidden="true">km<span>.</span></span>
+      <span class="identity-name">Keivan Mirzaei</span>
+      <span class="identity-caption">Mathematics &amp; other curiosities</span>
+    </a>
+    <p class="nav-label">Explore</p>
+    <nav aria-label="Main">
+      {% assign active_section = page.format | default: page.section %}
+      {% for item in site.data.navigation %}
+      <a class="nav-link{% if active_section == item.key %} is-active{% endif %}" href="{{ item.url | relative_url }}"{% if active_section == item.key %} aria-current="{% if page.url == item.url %}page{% else %}true{% endif %}"{% endif %}>
+        {% include icon.html name=item.icon %}<span>{{ item.title }}</span>
+        {% if item.key == 'notes' %}<span class="nav-count">{{ site.posts.size }}</span>{% endif %}
+      </a>
+      {% endfor %}
+    </nav>
+    <div class="sidebar-bottom">
+      <p>A notebook, always in progress.</p>
+      <a href="https://github.com/keivan-mirzaei">GitHub ↗</a>
+      <a href="mailto:{{ site.email }}">Email ↗</a>
+    </div>
+  </aside>
+  <button class="sidebar-backdrop" type="button" tabindex="-1" aria-label="Close navigation" hidden></button>
+  <div class="site-body">
+    <header class="topbar">
+      <div class="topbar-location">
+        <button class="menu-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Hide navigation" hidden>{% include icon.html name='menu' %}</button>
+        <span class="topbar-title">The notebook <span aria-hidden="true">/</span> <span>{{ page.breadcrumb | default: page.title | default: 'Home' }}</span></span>
+      </div>
+      <a class="search-link" href="{{ '/search/' | relative_url }}">{% include icon.html name='search' %}<span>Search</span><kbd>/</kbd></a>
+    </header>
+    <main id="main" tabindex="-1">{{ content }}</main>
+    <footer class="site-footer"><span>© {{ site.time | date: '%Y' }} {{ site.title }}</span><span><a href="{{ '/feed.xml' | relative_url }}">RSS feed</a><span aria-hidden="true"> · </span><a href="{{ '/about/' | relative_url }}">Say hello ↗</a></span></footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+---
+layout: default
+---
+<article class="page-wrap article">
+  <a class="back-link" href="{{ '/research/' | relative_url }}">← Research</a>
+  <header class="page-heading">
+    <p class="eyebrow">{{ page.kind | default: 'Research project' }}{% if page.year %} / {{ page.year }}{% endif %}</p>
+    <h1>{{ page.title }}</h1>
+    <p class="page-description">{{ page.description }}</p>
+    <dl class="research-facts">
+      {% if page.authors %}<div><dt>Authors</dt><dd>{{ page.authors | join: ', ' }}</dd></div>{% endif %}
+      {% if page.institution %}<div><dt>Institution</dt><dd>{{ page.institution }}</dd></div>{% endif %}
+      {% if page.venue %}<div><dt>Venue</dt><dd>{{ page.venue }}</dd></div>{% endif %}
+      {% if page.status %}<div><dt>Status</dt><dd>{{ page.status }}</dd></div>{% endif %}
+    </dl>
+    {% include research-links.html project=page %}
+  </header>
+  {% if page.sample %}<p class="sample-notice">Example showcase content for trying the website. This is not a publication or research claim by Keivan Mirzaei.</p>{% endif %}
+  <div class="prose">{{ content }}</div>
+  <footer class="article-footer">
+    <p>Interested in this work?</p>
+    <a href="mailto:{{ site.email }}">Get in touch ↗</a>
+  </footer>
+</article>

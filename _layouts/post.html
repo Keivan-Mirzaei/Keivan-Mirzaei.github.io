@@ -1,0 +1,49 @@
+---
+layout: default
+---
+{% assign post_format = site.data.formats | where: 'key', page.format | first %}
+<article class="page-wrap article">
+  <a class="back-link" href="{{ post_format.url | default: '/notes/' | relative_url }}">← {{ post_format.title | default: 'All posts' }}</a>
+  <header class="page-heading">
+    <p class="eyebrow">{{ post_format.label | default: 'Post' }}{% if page.level and page.level != '' %} <span aria-hidden="true">/</span> {{ page.level }}{% endif %}{% if page.sample %} / Sample post{% endif %}</p>
+    <h1>{{ page.title }}</h1>
+    <p class="page-description">{{ page.description }}</p>
+    <div class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}">{% if page.archived %}From the {{ page.date | date: '%Y' }} archive{% else %}{{ page.date | date: '%B %-d, %Y' }}{% endif %}</time><span aria-hidden="true">·</span><span>{% assign minutes = content | number_of_words | divided_by: 200 | plus: 1 %}{{ minutes }} min read</span></div>
+    {% if page.tags.size > 0 %}<ul class="tags" aria-label="Topics">{% for tag in page.tags %}<li><a href="{{ '/search/' | relative_url }}?q={{ tag | url_encode }}">{{ tag }}</a></li>{% endfor %}</ul>{% endif %}
+  </header>
+  {% if page.format == 'module' %}
+  <section class="module-overview" aria-labelledby="before-you-start">
+    <h2 id="before-you-start">Before you start</h2>
+    <dl>
+      {% if page.duration and page.duration != '' %}<div><dt>Allow</dt><dd>{{ page.duration }}</dd></div>{% endif %}
+      {% if page.prerequisites.size > 0 %}<div><dt>Helpful background</dt><dd>{{ page.prerequisites | join: ', ' }}</dd></div>{% endif %}
+    </dl>
+    {% if page.objectives.size > 0 %}
+    <p>By the end, you’ll be able to:</p>
+    <ul>{% for objective in page.objectives %}<li>{{ objective }}</li>{% endfor %}</ul>
+    {% endif %}
+  </section>
+  {% endif %}
+  <div class="prose">
+    {% if page.format == 'problem' %}
+      {% assign parts = content | split: '<!-- solution -->' %}
+      {{ parts.first }}
+      {% assign solution = parts[1] | strip %}
+      {% if solution != '' %}
+      <details class="problem-solution">
+        <summary>Explore the solution</summary>
+        <div class="solution-content">{{ solution }}</div>
+      </details>
+      {% else %}
+      <p class="solution-note">No solution is included with this problem.</p>
+      {% endif %}
+    {% else %}
+      {{ content }}
+    {% endif %}
+  </div>
+  <footer class="article-footer"><p>Have a question, a different approach, or an idea to share?</p><a href="mailto:{{ site.email }}">I’d love to hear it. ↗</a></footer>
+  <nav class="post-pagination" aria-label="More notes">
+    {% if page.previous %}<a href="{{ page.previous.url | relative_url }}"><span class="eyebrow">← Previous note</span>{{ page.previous.title }}</a>{% endif %}
+    {% if page.next %}<a href="{{ page.next.url | relative_url }}"><span class="eyebrow">Next note →</span>{{ page.next.title }}</a>{% endif %}
+  </nav>
+</article>

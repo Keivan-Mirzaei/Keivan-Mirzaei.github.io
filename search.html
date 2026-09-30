@@ -1,0 +1,17 @@
+---
+title: Search the notebook
+eyebrow: Find a thread
+permalink: /search/
+description: Search the full text of notes and pages, including topics, proofs, and code.
+search_page: true
+---
+<form class="search-form" role="search" action="{{ '/search/' | relative_url }}">
+  <label for="search-input">What are you curious about?</label>
+  <div class="search-field">{% include icon.html name='search' %}<input id="search-input" type="search" name="q" placeholder="Try probability, polynomials, or Python…" autocomplete="off" maxlength="200" aria-describedby="search-status"><button type="submit">Search</button></div>
+</form>
+<noscript><p>Search needs JavaScript. You can still browse <a href="{{ '/notes/' | relative_url }}">all notes</a>, <a href="{{ '/math/' | relative_url }}">mathematics</a>, and <a href="{{ '/code/' | relative_url }}">code</a>.</p></noscript>
+<div id="search-app" data-index="{{ '/search.json' | relative_url }}">
+  <p id="search-status" class="search-status" role="status" aria-live="polite">Enter a word or phrase to start exploring.</p>
+  <div id="search-results" class="search-results"></div>
+  <button id="search-more" class="secondary-button" type="button" hidden>Show more results</button>
+</div>

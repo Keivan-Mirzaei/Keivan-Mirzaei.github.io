@@ -1,0 +1,8 @@
+# Widgets are loaded only on pages that list them in their front matter.
+quadratic: /assets/js/widgets/quadratic.js
+derivative: /assets/js/widgets/derivative.js
+bayes: /assets/js/widgets/bayes.js
+card-trick: /assets/js/widgets/card-trick.js
+random-walk: /assets/js/widgets/random-walk.js
+scientific-plot: /assets/js/widgets/scientific-plot.mjs
+sphere-slice: /assets/js/widgets/sphere-slice.mjs

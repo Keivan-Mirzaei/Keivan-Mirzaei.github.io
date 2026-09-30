@@ -1,0 +1,38 @@
+---
+layout: default
+title: Research
+section: research
+permalink: /research/
+description: Research projects, papers, and thesis work.
+---
+<div class="page-wrap research-index">
+  <header class="page-heading">
+    <p class="eyebrow">Questions &amp; connections</p>
+    <h1>Research</h1>
+    <p class="page-description">{{ page.description }}</p>
+  </header>
+  <div class="research-intro">
+    <p>My interests include probability theory, stochastic analysis, mathematical finance, differential equations, and machine learning.</p>
+    <a class="text-link" href="{{ '/cv/' | relative_url }}">View my curriculum vitae <span aria-hidden="true">↗</span></a>
+  </div>
+  <section aria-labelledby="research-work">
+    <div class="section-heading"><h2 id="research-work">Research &amp; thesis work</h2></div>
+    {% for project in site.research %}
+      {% unless project.sample %}
+      {% include research-card.html project=project level=3 %}
+      {% endunless %}
+    {% endfor %}
+  </section>
+  {% assign examples = site.research | where: 'sample', true %}
+  {% if examples.size > 0 %}
+  <section aria-labelledby="research-examples">
+    <div class="section-heading"><h2 id="research-examples">Example project showcases</h2></div>
+    <p class="research-intro">Sample content for exploring the site’s features. These are demonstrations, not publications or completed studies.</p>
+    {% for project in examples %}{% include research-card.html project=project level=3 %}{% endfor %}
+  </section>
+  {% endif %}
+  <aside class="home-note">
+    {% include icon.html name='research' %}
+    <p>For questions about my research or potential collaborations,<br><a href="mailto:{{ site.email }}">get in touch.</a></p>
+  </aside>
+</div>

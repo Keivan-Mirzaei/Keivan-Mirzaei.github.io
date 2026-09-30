@@ -1,0 +1,24 @@
+{% assign slice_id = include.id | default: 'sphere-slice' %}
+<section class="graph-widget advanced-widget" data-widget="sphere-slice" aria-labelledby="{{ slice_id }}-heading">
+  <div class="graph-heading"><h3 id="{{ slice_id }}-heading">Slice a sphere</h3><p class="graph-equation">x² + y² + z² = 1</p></div>
+  <p>Move the horizontal plane and inspect its intersection with the unit sphere.</p>
+  <div class="advanced-stage">
+    <img class="advanced-preview" data-preview src="{{ '/assets/figures/sphere-slice.svg' | relative_url }}" alt="A unit sphere cut by a horizontal plane at height 0.5. Their circular intersection has radius approximately 0.866." loading="lazy" width="720" height="460">
+    <div class="advanced-view" data-view id="{{ slice_id }}-view" role="region" aria-label="Rotatable sphere and slicing plane" hidden></div>
+  </div>
+  <div class="advanced-launch"><button class="secondary-button" type="button" data-open aria-expanded="false" aria-controls="{{ slice_id }}-view" disabled>Open interactive view</button></div>
+  <p class="advanced-status" data-status role="status">Static preview: height 0.5; circle radius approximately 0.866.</p>
+  <fieldset class="advanced-controls" data-controls hidden disabled>
+    <legend>Explore the cross-section</legend>
+    <div class="graph-controls"><label for="{{ slice_id }}-height">Plane height <span>h = <output data-height>0.5</output></span></label><input id="{{ slice_id }}-height" name="height" type="range" min="-1.4" max="1.4" step="0.02" value="0.5"></div>
+    <p class="activity-result" data-feedback role="status">The cross-section is a circle of radius 0.866.</p>
+    <p>Drag to rotate. Use the buttons to change the view with a keyboard. The orange circle marks the intersection; the blue axis points upward.</p>
+    <div class="activity-buttons">
+      <button class="secondary-button" type="button" data-camera="left">Rotate left</button><button class="secondary-button" type="button" data-camera="right">Rotate right</button>
+      <button class="secondary-button" type="button" data-camera="up">Tilt up</button><button class="secondary-button" type="button" data-camera="down">Tilt down</button>
+      <button class="secondary-button" type="button" data-camera="in">Zoom in</button><button class="secondary-button" type="button" data-camera="out">Zoom out</button>
+      <button class="secondary-button" type="button" data-reset>Reset activity</button>
+    </div>
+  </fieldset>
+  <noscript><p>The static preview and worked examples below explain the geometry without JavaScript.</p></noscript>
+</section>

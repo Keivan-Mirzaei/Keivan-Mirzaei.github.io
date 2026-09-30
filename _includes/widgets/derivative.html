@@ -1,0 +1,26 @@
+{% assign widget_id = include.id | default: 'derivative' %}
+<section class="graph-widget" data-widget="derivative" aria-labelledby="{{ widget_id }}-heading">
+  <div class="graph-heading"><h3 id="{{ widget_id }}-heading">Zoom in on a slope</h3><p class="graph-equation">f(x) = x², at x = 1</p></div>
+  <svg class="function-plot" viewBox="0 0 600 340" role="img" aria-labelledby="{{ widget_id }}-title {{ widget_id }}-desc">
+    <title id="{{ widget_id }}-title">A secant approaches the tangent to a parabola</title>
+    <desc id="{{ widget_id }}-desc" data-description>The secant through (1, 1) and (2, 4) has slope 3. The tangent at (1, 1) has slope 2.</desc>
+    <defs><clipPath id="{{ widget_id }}-clip"><rect x="44" y="20" width="536" height="276"/></clipPath></defs>
+    <g class="plot-grid"><path d="M44 20H580M44 89H580M44 158H580M44 227H580M44 296H580M44 20V296M178 20V296M312 20V296M446 20V296M580 20V296"/></g>
+    <g class="plot-labels"><text x="44" y="322">−1</text><text x="178" y="322">0</text><text x="312" y="322">1</text><text x="446" y="322">2</text><text x="580" y="322">3</text><text x="22" y="300">−1</text><text x="22" y="231">1</text><text x="22" y="162">3</text><text x="22" y="93">5</text><text x="22" y="25">7</text></g>
+    <g clip-path="url(#{{ widget_id }}-clip)">
+      <path class="plot-curve" d="M44 227 Q312 365 580 -49"/>
+      <path class="plot-reference" d="M44 365 L580 89"/>
+      <path class="plot-secant" data-secant d="M44 434 L580 20"/>
+      <circle class="plot-vertex" cx="312" cy="227" r="5"/>
+      <circle class="plot-second-point" data-point cx="446" cy="123.5" r="5"/>
+    </g>
+  </svg>
+  <p class="plot-legend">Green: x² · Orange: secant · Dashed: tangent</p>
+  <div class="graph-controls">
+    <label for="{{ widget_id }}-h">Step size <span>h = <output data-h>1</output></span></label>
+    <input id="{{ widget_id }}-h" type="range" min="-1" max="1" step="0.01" value="1" disabled>
+  </div>
+  <p class="activity-result" data-feedback role="status">At h = 1, the secant slope is 3. The tangent slope is 2.</p>
+  <button class="secondary-button" type="button" data-reset disabled>Reset</button>
+  <noscript><p>The static drawing shows h = 1. The lesson below explains the limit without the controls.</p></noscript>
+</section>

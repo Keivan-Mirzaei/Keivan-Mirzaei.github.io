@@ -1,0 +1,4 @@
+<figure class="media-figure">
+  <iframe class="video-embed" src="{{ include.src | escape }}" title="{{ include.title | escape }}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  {% if include.caption %}<figcaption>{{ include.caption | escape }}</figcaption>{% endif %}
+</figure>

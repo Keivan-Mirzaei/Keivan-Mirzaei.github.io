@@ -1,0 +1,4 @@
+# Pinned versions. These URLs are fetched only after opening an interactive view.
+plotly: https://cdn.plot.ly/plotly-gl3d-4.1.1.min.js
+three: https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js
+three_addons: https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/

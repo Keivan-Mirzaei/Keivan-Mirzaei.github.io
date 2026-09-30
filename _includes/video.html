@@ -1,0 +1,10 @@
+<figure class="media-figure">
+  <video controls playsinline preload="none"{% if include.poster %} poster="{{ include.poster | relative_url }}"{% endif %} aria-label="{{ include.title | default: 'Video' | escape }}">
+    <source src="{{ include.src | relative_url }}" type="{{ include.type | default: 'video/mp4' }}">
+    {% if include.captions %}<track kind="captions" src="{{ include.captions | relative_url }}" srclang="{{ include.lang | default: 'en' }}" label="{{ include.language | default: 'English' }}" default>{% endif %}
+    <a href="{{ include.src | relative_url }}">Download the video</a>.
+  </video>
+  {% if include.caption or include.transcript %}
+  <figcaption>{{ include.caption | escape }}{% if include.transcript %} <a href="{{ include.transcript | relative_url }}">Read the transcript</a>.{% endif %}</figcaption>
+  {% endif %}
+</figure>

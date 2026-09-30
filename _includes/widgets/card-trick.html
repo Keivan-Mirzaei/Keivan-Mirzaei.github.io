@@ -1,0 +1,9 @@
+{% assign widget_id = include.id | default: 'card-trick' %}
+<section class="graph-widget" data-widget="card-trick" aria-labelledby="{{ widget_id }}-heading">
+  <div class="graph-heading"><h3 id="{{ widget_id }}-heading">Think of a card</h3><span class="activity-badge">21 cards · 3 rounds</span></div>
+  <p>Remember one number. Keep it secret! Select the column containing it, then repeat with the new arrangement.</p>
+  <div class="card-columns" data-columns></div>
+  <p class="activity-result" data-feedback role="status">Choose any number from 1 to 21. JavaScript is needed to deal the cards.</p>
+  <button class="secondary-button" type="button" data-reset disabled>Start again</button>
+  <noscript><p>You can still follow the worked example below with 21 slips of paper.</p></noscript>
+</section>

@@ -1,0 +1,20 @@
+{% assign widget_id = include.id | default: 'bayes' %}
+<section class="graph-widget" data-widget="bayes" aria-labelledby="{{ widget_id }}-heading">
+  <div class="graph-heading"><h3 id="{{ widget_id }}-heading">A factory’s inspection desk</h3><span class="activity-badge">1,000 items</span></div>
+  <p>The scanner flags 90% of faulty items and 10% of good items. Change how common faults are before scanning.</p>
+  <div class="graph-controls">
+    <label for="{{ widget_id }}-rate">Fault rate <span><output data-rate>10</output>%</span></label>
+    <input id="{{ widget_id }}-rate" type="range" min="0" max="100" step="1" value="10" disabled>
+  </div>
+  <table class="probability-table">
+    <caption>Expected counts among 1,000 items</caption>
+    <thead><tr><th scope="col">Actual condition</th><th scope="col">Flagged</th><th scope="col">Not flagged</th></tr></thead>
+    <tbody><tr><th scope="row">Faulty</th><td data-tp>90</td><td data-fn>10</td></tr><tr><th scope="row">Good</th><td data-fp>90</td><td data-tn>810</td></tr></tbody>
+  </table>
+  <p>Among flagged items:</p>
+  <div class="probability-bar" role="img" aria-label="50 percent faulty, 50 percent good" data-bar><span data-faulty style="width:50%"></span></div>
+  <p class="plot-legend">Solid green: faulty · Striped: good</p>
+  <p class="activity-result" data-feedback role="status">90 of the 180 flagged items are faulty: 50.0%.</p>
+  <button class="secondary-button" type="button" data-reset disabled>Reset</button>
+  <noscript><p>The table shows the 10% fault-rate example. JavaScript enables the slider.</p></noscript>
+</section>

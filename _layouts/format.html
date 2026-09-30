@@ -1,0 +1,20 @@
+---
+layout: default
+---
+<div class="page-wrap">
+  <header class="page-heading">
+    <p class="eyebrow">The notebook</p>
+    <h1>{{ page.title }}</h1>
+    <p class="page-description">{{ page.description }}</p>
+  </header>
+  {% include format-nav.html %}
+  {% assign posts = site.posts | where: 'format', page.format %}
+  {% if posts.size > 0 %}
+  <div class="note-list">
+    {% for post in posts %}{% include note.html post=post level=2 %}{% endfor %}
+  </div>
+  {% else %}
+  <p class="collection-empty">No {{ page.title | downcase }} have been published yet.</p>
+  {% endif %}
+  {{ content }}
+</div>

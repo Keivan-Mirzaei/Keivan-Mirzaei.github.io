@@ -1,0 +1,18 @@
+---
+layout: default
+title: All posts
+section: notes
+description: Problems to solve, ideas to explore, and things to learn.
+---
+<div class="page-wrap">
+  <header class="page-heading"><p class="eyebrow">The notebook</p><h1>All posts</h1><p class="page-description">{{ page.description }}</p></header>
+  {% include format-nav.html %}
+  <div class="note-list">{% for post in paginator.posts %}{% include note.html post=post level=2 %}{% endfor %}</div>
+  {% if paginator.total_pages > 1 %}
+  <nav class="pagination" aria-label="Note pages">
+    {% if paginator.previous_page %}<a href="{{ paginator.previous_page_path | relative_url }}" rel="prev">← Newer</a>{% else %}<span></span>{% endif %}
+    <span>Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
+    {% if paginator.next_page %}<a href="{{ paginator.next_page_path | relative_url }}" rel="next">Older →</a>{% else %}<span></span>{% endif %}
+  </nav>
+  {% endif %}
+</div>
