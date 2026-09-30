@@ -4,11 +4,6 @@ description: "For a natural number n, prove that n + 2 and n² + n + 1 cannot bo
 format: problem
 tags: [number theory, perfect powers]
 math: true
-source_channel: mathematics_society
-source_problem: 91
-source_url: https://t.me/mathematics_society/346
-source_published_at: "2019-07-20T17:20:44+00:00"
-source_solution_url: https://t.me/mathematics_society/348
 ---
 
 Let $$n$$ be a natural number. Prove that the two numbers
@@ -19,7 +14,7 @@ $$
 
 cannot both be perfect cubes.
 
-*Translated from [Problem 91 in @mathematics_society](https://t.me/mathematics_society/346). The statement holds whether or not your convention includes $$0$$ among the natural numbers.*
+The statement holds whether or not your convention includes $$0$$ among the natural numbers.
 
 <!-- solution -->
 
@@ -63,5 +58,3 @@ $$
 $$
 
 Taking cube roots gives $$a^2-1<b<a^2$$, impossible for an integer $$b$$. Therefore the two expressions cannot both be cubes.
-
-*Adapted from the [channel's handwritten solution](https://t.me/mathematics_society/348), with the intermediate algebra written out.*

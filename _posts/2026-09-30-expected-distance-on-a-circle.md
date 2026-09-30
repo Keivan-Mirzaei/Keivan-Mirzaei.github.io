@@ -4,10 +4,6 @@ description: "Choose two points uniformly on a unit circle. What is their expect
 format: problem
 tags: [probability, geometry, expectation]
 math: true
-source_channel: mathematics_society
-source_problem: 80
-source_url: https://t.me/mathematics_society/317
-source_published_at: "2018-10-27T03:11:49+00:00"
 ---
 
 Choose two points independently and uniformly on the circumference of a circle of radius $$1$$.
@@ -18,4 +14,27 @@ What is the expected value—the average—of the straight-line distance between
 
 The distance is measured along the chord joining the points, rather than along the circumference.
 
-*Translated from [Problem 80 in @mathematics_society](https://t.me/mathematics_society/317). This entry preserves the channel's question as a challenge.*
+<!-- solution -->
+
+**The expected distance is $$4/\pi\approx1.273$$.**
+
+Let $$\theta\in[0,\pi]$$ be the smaller central angle between the two points. After fixing the first point, the second point's angle relative to it is uniform on $$[0,2\pi)$$. Folding the two halves of this interval onto $$[0,\pi]$$ shows that $$\theta$$ is uniform there, with density $$1/\pi$$. The answer is the same whichever first point we fix, by rotational symmetry.
+
+The two radii and the chord form an isosceles triangle. Bisecting it gives a right triangle with hypotenuse 1 and angle $$\theta/2$$, so the chord length is
+
+$$
+D=2\sin\!\left(\frac{\theta}{2}\right).
+$$
+
+Averaging this length over the uniform angle gives
+
+$$
+\begin{aligned}
+\mathbb E[D]
+&=\frac{1}{\pi}\int_0^\pi2\sin\!\left(\frac{\theta}{2}\right)\,d\theta\\
+&=\frac{1}{\pi}\left[-4\cos\!\left(\frac{\theta}{2}\right)\right]_0^\pi\\
+&=\boxed{\frac{4}{\pi}}.
+\end{aligned}
+$$
+
+For a circle of radius $$R$$, all distances scale by $$R$$, and the same calculation gives $$4R/\pi$$.

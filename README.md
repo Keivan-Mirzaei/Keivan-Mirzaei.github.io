@@ -65,7 +65,7 @@ search.json             Generated search index template
 scripts/                Optional authoring helper and build checks
 ```
 
-The CV contains the original 2024 information and needs a content update before it represents a current CV. The six original posts are joined by five English adaptations from [@mathematics_society](https://t.me/mathematics_society). The [Telegram import record](docs/telegram-imports.md) lists the original posts and the treatment of their solutions. The research section lists two arXiv preprints with author credits, summaries, and PDF links, followed by the 2021 MSc thesis with a verified overview, supervision details, and its original PDF. The newer preprint is featured on the homepage.
+The CV contains the original 2024 information and needs a content update before it represents a current CV. The notebook contains the six original posts and four additional problems. Complete solutions accompany the spaceship detector problem, the expected chord length, and the perfect-cube problem. The duplicate absolute-value problem redirects to the original Conservative Polynomials article. The research section lists two arXiv preprints with author credits, summaries, and PDF links, followed by the 2021 MSc thesis with a verified overview, supervision details, and its original PDF. The newer preprint is featured on the homepage.
 
 Sample posts, demonstration research entries, their unused media, and obsolete copies of the original website have been removed. Earlier versions remain in Git history. Five reusable activities support graphing, probability, a card trick, and random walks. Scripts load only where used. The learning section is ready for your own lessons; starter content remains in `docs/templates/`.
 

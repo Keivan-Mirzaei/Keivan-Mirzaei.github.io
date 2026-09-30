@@ -93,6 +93,8 @@ try:
             errors.append(f"Search result has no page: {url}")
     for collection in ("notes", "research"):
         for entry in (ROOT / collection).glob("*/index.html"):
+            if pages[entry.resolve()].redirect:
+                continue
             url = BASEURL + "/" + entry.parent.relative_to(ROOT).as_posix() + "/"
             if url not in urls:
                 errors.append(f"Entry missing from search: {url}")
