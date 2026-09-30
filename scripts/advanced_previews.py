@@ -6,10 +6,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FIGURES = ROOT / "assets/figures"
-spec = importlib.util.spec_from_file_location("graph_data", ROOT / "assets/code/advanced_graph_data.py")
+spec = importlib.util.spec_from_file_location("graph_data", ROOT / "scripts/graph_data.py")
 data = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(data)
 data.write_figures(ROOT / "assets/plots")
+FIGURES.mkdir(parents=True, exist_ok=True)
 
 
 def write_svg(name, title, body):

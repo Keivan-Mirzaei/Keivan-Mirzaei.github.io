@@ -145,19 +145,19 @@ Duration, level, and prerequisites are optional. Write the lesson around explana
 
 Also add `widgets: [quadratic]` to the page's front matter. The graph works in modules, explorations, research pages, and other pages. For multiple graphs in one page, give each a different `id`; their controls operate independently.
 
-The component plots `y = a(x − h)² + k`. Native sliders work with the keyboard. A values table and text description update alongside the plot. Without JavaScript, a static graph and values table remain available. The learning section now contains three complete sample lessons.
+The component plots `y = a(x − h)² + k`. Native sliders work with the keyboard. A values table and text description update alongside the plot. Without JavaScript, a static graph and values table remain available.
 
 The following components are ready to reuse. Set `widgets: [name]` and include `widgets/name.html`, giving each instance a unique `id`:
 
-| Name | Activity | Example post |
-| --- | --- | --- |
-| `quadratic` | Shape, shift, and reflect a parabola | `moving-a-parabola` |
-| `derivative` | Move a secant toward a tangent; handle the zero step explicitly | `secant-to-tangent` |
-| `bayes` | Change a base rate and inspect expected counts | `conditioning-changes-the-denominator` |
-| `card-trick` | Play three rounds of the 21-card trick | `twenty-one-cards` |
-| `random-walk` | Reveal, replay, pause, and regenerate a scaled random walk | `random-walks-at-two-scales` |
+| Name | Activity |
+| --- | --- |
+| `quadratic` | Shape, shift, and reflect a parabola |
+| `derivative` | Move a secant toward a tangent; handle the zero step explicitly |
+| `bayes` | Change a base rate and inspect expected counts |
+| `card-trick` | Play three rounds of the 21-card trick |
+| `random-walk` | Reveal, replay, pause, and regenerate a scaled random walk |
 
-The random-walk component's no-script text assumes the article supplies a static figure, as its example post does. Its seeded browser generator is intentionally different from the downloadable Python example. `python3 scripts/sample_figures.py` rebuilds the two sample SVG figures and the downloadable CSV with the standard library.
+Supply a static figure alongside the random-walk component so readers without JavaScript can follow the article.
 
 The graph uses a small local script and SVG; there is no graphing service or plotting library. New activities can follow the same pattern:
 
@@ -168,7 +168,7 @@ The graph uses a small local script and SVG; there is no graphing service or plo
 
 Each script is loaded only on pages that request it. Keep instances independent, provide keyboard controls, and give the visualization a text alternative. New interactive behavior needs a component; ordinary lessons just reuse existing components.
 
-For more complex scientific plots or custom 3D scenes, see [Advanced and 3D graphs](advanced-graphs.md). The `scientific-plot` and `sphere-slice` components show static previews first and load their plotting libraries only when a reader opens them. The wave-surface, damped-oscillator, and sphere-slicing sample posts demonstrate the authoring pattern.
+For more complex scientific plots or custom 3D scenes, see [Advanced and 3D graphs](advanced-graphs.md). The `scientific-plot` and `sphere-slice` components show static previews first and load their plotting libraries only when a reader opens them. The guide includes the markup and optional generators needed to create your own graphs.
 
 ## Research: showcase work separately from posts
 
@@ -205,9 +205,9 @@ Describe your contribution and what the work establishes.
 
 Replace the example information and URLs with real details. Optional metadata and links can be omitted. Resource labels can be Paper, Preprint, DOI, Code, Slides, Dataset, Poster, or any useful label. Local files use paths beginning with `/`; external links should use full HTTPS URLs. An optional `cover` image also needs a descriptive `cover_alt`.
 
-The research index shows entries in ascending `order`. The first entry with `featured: true` is shown on the homepage. Research is included in search and the sitemap; the RSS feed contains post summaries, so solutions are not exposed in feed previews. The initial thesis entry uses only the information already present in the CV and has no invented publication links or date.
+The research index groups entries with `kind: Paper` under Papers, followed by thesis and other research work. Within each group, entries appear in ascending `order`. The first entry with `featured: true` is shown on the homepage. Research is included in search and the sitemap; the RSS feed contains post summaries, so solutions are not exposed in feed previews. The MSc thesis entry uses its supplied PDF to verify the year, supervision details, and overview. Optional `supervisor` and `assistant_supervisor` fields appear in the research page's metadata; local PDFs can be stored in `assets/papers/` and linked through `links`.
 
-The two example showcases use `sample: true`. That flag groups them under “Example project showcases” and adds an explicit notice on their detail pages. Sample posts also use `sample: true` to identify them in lists and article headings. Remove the flag only after replacing or approving the content as your own. The homepage shows the latest post from each format so readers can try all three.
+The homepage shows the latest published post from each format that has content. Sample posts and demonstration research entries have been removed; use the starters in `docs/templates/` when creating new entries.
 
 For an unpublished research entry, set `published: false` (the helper does this with `--draft`). Remove that line when ready. Such entries are excluded from the public pages, showcase, and search index.
 
@@ -253,6 +253,6 @@ The workflow tests create temporary content, check all formats, confirm solution
 
 ## Migration notes
 
-The six old articles use April 1, 2024—the first archive commit date—for ordering. Their pages say “From the 2024 archive”; this is not a claim about their original publication day. Five are now problems; the Brownian-motion article is an exploration. Original source files are preserved in `legacy/`, excluded from the site. The unfinished probability article remains a draft exploration.
+The six old articles use April 1, 2024—the first archive commit date—for ordering. Their pages say “From the 2024 archive”; this is not a claim about their original publication day. Five are now problems; the Brownian-motion article is an exploration. Original source files remain in Git history. The unfinished probability article remains a draft exploration.
 
 The CV retains the original 2024 information, with one duplicate teaching entry removed. The Brownian example was repaired to run and use the correct time intervals. Mathematical typesetting details were repaired in the Hilbert and factorial proofs. Existing figures, the custom domain, and redirects from `/pages/math.html`, `/pages/code.html`, and `/pages/CV.html` are preserved.

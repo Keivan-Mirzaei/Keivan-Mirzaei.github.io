@@ -209,6 +209,8 @@ mark { color: var(--ink); background: #e1ebbd; border-radius: 2px; }
 .research-card h2 a, .research-card h3 a { text-decoration: none; }
 .research-card h2 a:hover, .research-card h3 a:hover { text-decoration: underline; }
 .research-card p:not(.eyebrow) { font-size: 14px; color: var(--muted); }
+.research-card p.research-authors { color: var(--ink); }
+.research-card p.research-status { font-size: 12px; }
 .research-card .research-institution { font-size: 12px; }
 .research-cover { display: block; width: 100%; max-height: 320px; object-fit: cover; }
 .research-links { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 20px 0 0; }

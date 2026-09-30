@@ -3,7 +3,7 @@ layout: default
 title: Research
 section: research
 permalink: /research/
-description: Research projects, papers, and thesis work.
+description: Papers and thesis work in stochastic analysis, probability, and graph theory.
 ---
 <div class="page-wrap research-index">
   <header class="page-heading">
@@ -12,23 +12,25 @@ description: Research projects, papers, and thesis work.
     <p class="page-description">{{ page.description }}</p>
   </header>
   <div class="research-intro">
-    <p>My interests include probability theory, stochastic analysis, mathematical finance, differential equations, and machine learning.</p>
+    <p>My work explores stochastic analysis, probability, and graph theory—from measurability and stochastic control to elementary arguments for Lights Out.</p>
     <a class="text-link" href="{{ '/cv/' | relative_url }}">View my curriculum vitae <span aria-hidden="true">↗</span></a>
   </div>
-  <section aria-labelledby="research-work">
-    <div class="section-heading"><h2 id="research-work">Research &amp; thesis work</h2></div>
-    {% for project in site.research %}
-      {% unless project.sample %}
+  {% assign papers = site.research | where: 'kind', 'Paper' %}
+  {% if papers.size > 0 %}
+  <section aria-labelledby="research-papers">
+    <div class="section-heading"><h2 id="research-papers">Papers</h2></div>
+    {% for project in papers %}
       {% include research-card.html project=project level=3 %}
-      {% endunless %}
     {% endfor %}
   </section>
-  {% assign examples = site.research | where: 'sample', true %}
-  {% if examples.size > 0 %}
-  <section aria-labelledby="research-examples">
-    <div class="section-heading"><h2 id="research-examples">Example project showcases</h2></div>
-    <p class="research-intro">Sample content for exploring the site’s features. These are demonstrations, not publications or completed studies.</p>
-    {% for project in examples %}{% include research-card.html project=project level=3 %}{% endfor %}
+  {% endif %}
+  {% assign other_work = site.research | where_exp: 'project', 'project.kind != "Paper"' %}
+  {% if other_work.size > 0 %}
+  <section aria-labelledby="research-work">
+    <div class="section-heading"><h2 id="research-work">Thesis &amp; other research</h2></div>
+    {% for project in other_work %}
+      {% include research-card.html project=project level=3 %}
+    {% endfor %}
   </section>
   {% endif %}
   <aside class="home-note">

@@ -38,6 +38,22 @@ class ContentWorkflow(unittest.TestCase):
             create("Unpublished post sentinel", "--type", "module", "--draft")
             create("Invalid slug", "--slug", "../escape", success=False)
             create("Invalid format option", "--type", "module", "--without-solution", success=False)
+            (source / "_posts/2024-04-02-fixture-sphere.md").write_text(r"""---
+title: Fixture sphere
+description: Check optional graph rendering.
+format: module
+widgets: [sphere-slice]
+math: true
+---
+For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
+
+| Height | Radius |
+| --- | --- |
+| 0 | 1 |
+| 1 | 0 |
+
+{% include widgets/sphere-slice.html id='fixture-sphere' %}
+""")
 
             # A duplicate must never overwrite the author's existing content.
             original = source / "_posts/2024-04-02-fixture-problem.md"
@@ -74,7 +90,7 @@ class ContentWorkflow(unittest.TestCase):
             self.assertNotIn('type="importmap"', problem)
             self.assertNotIn('scientific-plot.mjs', problem)
             self.assertNotIn('sphere-slice.mjs', problem)
-            sphere = page("slicing-a-sphere")
+            sphere = page("fixture-sphere")
             self.assertIn('type="importmap"', sphere)
             self.assertIn('type="module"', sphere)
             self.assertIn('sphere-slice.mjs', sphere)

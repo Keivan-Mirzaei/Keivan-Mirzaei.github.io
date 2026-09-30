@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 430" role="img" aria-labelledby="title desc">
+  <title id="title">A possible invisible spaceship position</title>
+  <desc id="desc">A seven-by-seven grid. A two-by-two spaceship is shown occupying rows three and four and columns four and five. No detector arrangement is shown.</desc>
+  <rect width="640" height="430" rx="12" fill="#f3f4ef"/>
+  <rect x="166" y="35" width="308" height="308" fill="#fcfcf9"/>
+  <rect x="298" y="123" width="88" height="88" fill="#c9d9c2"/>
+  <path d="M166 35H474M166 79H474M166 123H474M166 167H474M166 211H474M166 255H474M166 299H474M166 343H474M166 35V343M210 35V343M254 35V343M298 35V343M342 35V343M386 35V343M430 35V343M474 35V343" fill="none" stroke="#8f9b89" stroke-width="1.5"/>
+  <rect x="298" y="123" width="88" height="88" fill="none" stroke="#285b46" stroke-width="3" stroke-dasharray="7 5"/>
+  <text x="320" y="383" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#285b46">One possible 2 × 2 position</text>
+  <text x="320" y="410" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#686e66">Where would you put the detectors?</text>
+</svg>

@@ -10,6 +10,8 @@ layout: default
     <dl class="research-facts">
       {% if page.authors %}<div><dt>Authors</dt><dd>{{ page.authors | join: ', ' }}</dd></div>{% endif %}
       {% if page.institution %}<div><dt>Institution</dt><dd>{{ page.institution }}</dd></div>{% endif %}
+      {% if page.supervisor %}<div><dt>Supervisor</dt><dd>{{ page.supervisor | escape }}</dd></div>{% endif %}
+      {% if page.assistant_supervisor %}<div><dt>Assistant supervisor</dt><dd>{{ page.assistant_supervisor | escape }}</dd></div>{% endif %}
       {% if page.venue %}<div><dt>Venue</dt><dd>{{ page.venue }}</dd></div>{% endif %}
       {% if page.status %}<div><dt>Status</dt><dd>{{ page.status }}</dd></div>{% endif %}
     </dl>

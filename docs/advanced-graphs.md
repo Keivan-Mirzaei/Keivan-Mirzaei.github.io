@@ -10,7 +10,7 @@ Add `scientific-plot` to the post's `widgets` field:
 widgets: [scientific-plot]
 ```
 
-Then include a plot in the Markdown body:
+First generate or supply the JSON data and SVG preview, then include the plot in the Markdown body. The wave example below uses the optional generator described later in this guide:
 
 ```liquid
 {% include widgets/scientific-plot.html
@@ -46,18 +46,20 @@ The wrapper handles the site's colors, responsive sizing, native view buttons, r
 Run the included example with only Python's standard library:
 
 ```sh
-python3 assets/code/advanced_graph_data.py --output assets/plots
+python3 scripts/graph_data.py --output assets/plots
 ```
 
 It generates the wave surface and the damped oscillator's phase portrait. The browser receives the numeric results, not a Python runtime. This pattern also works for expensive computations performed ahead of time. Parameter changes that require new results must either be calculated in JavaScript or have their data prepared in advance.
 
 If you already use Python's Plotly package, a figure's JSON export can be used as the starting file, provided its trace types and axes fit the adapter. Export ordinary numeric arrays; the included generator is a simple example of the expected shape.
 
-Rebuild all sample data and static previews with:
+Generate the example data and static previews when you want to use them in a new article:
 
 ```sh
 python3 scripts/advanced_previews.py
 ```
+
+These generated wave and oscillator files are not included in the repository until you create an article that uses them. The sphere component's required static preview is already included.
 
 ## Custom 3D teaching scenes
 

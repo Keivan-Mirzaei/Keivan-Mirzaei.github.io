@@ -1,6 +1,6 @@
 """Generate numeric Plotly figures with Python's standard library.
 
-Run: python3 advanced_graph_data.py --output plots
+Run: python3 scripts/graph_data.py --output assets/plots
 The JSON is data, not executable code; the website loads it on request.
 """
 

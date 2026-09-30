@@ -63,13 +63,14 @@ cv.md, about.md          Editable standalone pages
 notes/index.html        Paginated archive
 search.json             Generated search index template
 scripts/                Optional authoring helper and build checks
-legacy/                 Original source, excluded from the site
 ```
 
-The CV contains the original 2024 information and needs a content update before it represents a current CV. The six original posts are joined by twelve labeled sample posts: three problems, five explorations, and four interactive lessons. The research section separates the MSc thesis already listed in the CV from two demonstration showcases; the latter do not claim publications or completed studies.
+The CV contains the original 2024 information and needs a content update before it represents a current CV. The six original posts are joined by five English adaptations from [@mathematics_society](https://t.me/mathematics_society). The [Telegram import record](docs/telegram-imports.md) lists the original posts and the treatment of their solutions. The research section lists two arXiv preprints with author credits, summaries, and PDF links, followed by the 2021 MSc thesis with a verified overview, supervision details, and its original PDF. The newer preprint is featured on the homepage.
 
-Sample posts use `sample: true`; example research entries use the same flag and are grouped separately. Edit or remove the sample Markdown files as you replace them with your own writing. Five reusable activities demonstrate graphing, probability, a card trick, and random walks. Scripts load only where used; the small local video has native controls and does not preload or autoplay.
+Sample posts, demonstration research entries, their unused media, and obsolete copies of the original website have been removed. Earlier versions remain in Git history. Five reusable activities support graphing, probability, a card trick, and random walks. Scripts load only where used. The learning section is ready for your own lessons; starter content remains in `docs/templates/`.
 
 Advanced graphs add two optional components: `scientific-plot` reads Plotly JSON data; `sphere-slice` demonstrates a custom Three.js scene. Both show a static SVG preview first. Plotly, Three.js, and graph data load only after **Open interactive view** is pressed. Closing a view releases its renderer. The 3D dependencies use pinned CDN versions configured in `_data/graph_libraries.yml`, so opening these activities needs a network connection and compatible browser graphics. The ordinary posts and existing SVG activities do not load either library.
 
 The [advanced graph guide](docs/advanced-graphs.md) covers authoring, supported plot types, generating data in Python, and extending the scene. No Node packages or front-end build step are needed. Node.js 18 or newer is used only for the small geometry test suite.
+
+The `.gitignore` excludes generated output, dependency folders, caches, local environment files, editor settings, and temporary files. Keep source Markdown, required assets, `Gemfile.lock`, and the thesis PDF in Git. The original figures and compatibility redirects remain so existing links continue to work.
