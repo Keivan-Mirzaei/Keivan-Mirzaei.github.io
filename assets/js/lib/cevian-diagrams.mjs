@@ -11,7 +11,7 @@ function frame(width) {
   return { width, height, project: ([x, y]) => [24 + x * (width - 48), 24 + y * (height - 54)] };
 }
 
-function labels(items, width, height) {
+function labelPlacements(items, width, height) {
   const boxes = [];
   return items.map(({ point, text, preferred = [12, -10] }) => {
     const candidates = [preferred, [14, 16], [-16, -12], [-16, 18], [24, 0], [-24, 0], [0, -26], [0, 28], [28, -20], [-28, 24]];
@@ -26,8 +26,21 @@ function labels(items, width, height) {
     }
     if (!chosen) chosen = { x: point[0] + preferred[0], y: point[1] + preferred[1], box: { x: 0, right: 0, y: 0, bottom: 0 } };
     boxes.push(chosen.box);
-    return `<text class="cv-label" x="${number(chosen.x)}" y="${number(chosen.y)}" text-anchor="middle">${text}</text>`;
-  }).join('');
+    return { x: chosen.x, y: chosen.y, text };
+  });
+}
+
+function labels(items, width, height) {
+  return labelPlacements(items, width, height).map(({x,y,text}) => `<text class="cv-label" x="${number(x)}" y="${number(y)}" text-anchor="middle">${text}</text>`).join('');
+}
+
+export function landscapeMarker(width, weights, shape = 'scalene') {
+  const f = frame(width);
+  const vertices = TRIANGLE_SHAPES[shape];
+  const o = f.project(weightedPoint(vertices, weights));
+  const g = f.project(weightedPoint(vertices, [1,1,1]));
+  const label = labelPlacements([{point:g,text:'G: 25%',preferred:[0,-18]},{point:o,text:'O',preferred:[14,16]}],width,f.height)[1];
+  return {point:o, label};
 }
 
 export function triangleDiagram(width, weights = [.5, .1875, .3125], shape = 'scalene', mode = 'inner', interactive = false, reference = true) {
@@ -82,7 +95,8 @@ export function landscapeDiagram(width, weights = [.5, .1875, .3125], shape = 's
   }
   const o = f.project(weightedPoint(vertices, weights));
   const g = f.project(weightedPoint(vertices, [1, 1, 1]));
-  return `<svg class="cv-diagram cv-movable" viewBox="0 0 ${width} ${f.height}" width="${width}" height="${f.height}" role="group" aria-label="Area landscape: every possible meeting point is colored by its inner triangle's area. The unique peak is the centroid, at 25 percent." data-cv-map><title>The area landscape has its unique maximum at the centroid</title>${cells.join('')}${polygon(vertices.map(f.project), 'cv-boundary')}<g data-cv-map-maximum tabindex="0" role="button" aria-label="Choose the centroid: the area is exactly one quarter"><circle cx="${g[0]}" cy="${g[1]}" r="18" fill="transparent"/><path class="cv-peak" d="M${g[0]-5},${g[1]}h10 M${g[0]},${g[1]-5}v10"/>${labels([{point:g,text:'G: 25%',preferred:[0,-18]}],width,f.height)}</g><circle class="cv-point" data-cv-map-point cx="${o[0]}" cy="${o[1]}" r="6" pointer-events="none"/><text class="cv-label" data-cv-map-label x="${o[0]+14}" y="${o[1]+16}" text-anchor="middle">O</text></svg>`;
+  const marker = landscapeMarker(width, weights, shape);
+  return `<svg class="cv-diagram cv-movable" viewBox="0 0 ${width} ${f.height}" width="${width}" height="${f.height}" role="group" aria-label="Area landscape: every possible meeting point is colored by its inner triangle's area. The unique peak is the centroid, at 25 percent." data-cv-map><title>The area landscape has its unique maximum at the centroid</title>${cells.join('')}${polygon(vertices.map(f.project), 'cv-boundary')}<g data-cv-map-maximum tabindex="0" role="button" aria-label="Choose the centroid: the area is exactly one quarter"><circle cx="${g[0]}" cy="${g[1]}" r="18" fill="transparent"/><path class="cv-peak" d="M${g[0]-5},${g[1]}h10 M${g[0]},${g[1]-5}v10"/>${labels([{point:g,text:'G: 25%',preferred:[0,-18]}],width,f.height)}</g><circle class="cv-point" data-cv-map-point cx="${o[0]}" cy="${o[1]}" r="6" pointer-events="none"/><text class="cv-label" data-cv-map-label x="${marker.label.x}" y="${marker.label.y}" text-anchor="middle">O</text></svg>`;
 }
 
 export function tetrahedronDiagram(width, weights = [42, 27, 19, 12], angle = 32) {

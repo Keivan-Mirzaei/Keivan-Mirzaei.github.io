@@ -1,5 +1,5 @@
 import { TRIANGLE_SHAPES, normalizeWeights, triangleData, positionWeights, barycentricPoint, simplexRatio } from '../lib/cevian-math.mjs';
-import { triangleDiagram, factorsDiagram, landscapeDiagram, tetrahedronDiagram } from '../lib/cevian-diagrams.mjs';
+import { triangleDiagram, factorsDiagram, landscapeDiagram, landscapeMarker, tetrahedronDiagram } from '../lib/cevian-diagrams.mjs';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 const percentage = value => `${(value * 100).toFixed(2)}%`;
@@ -69,13 +69,11 @@ if (explorer) {
     const svg = map.querySelector('svg');
     if (svg) {
       const width = svg.viewBox.baseVal.width;
-      const diagramHeight = svg.viewBox.baseVal.height;
-      const x = 24 + data.point[0] * (width - 48);
-      const y = 24 + data.point[1] * (diagramHeight - 54);
+      const placement = landscapeMarker(width, weights, shape);
       const marker = svg.querySelector('[data-cv-map-point]');
-      marker.setAttribute('cx', x); marker.setAttribute('cy', y);
+      marker.setAttribute('cx', placement.point[0]); marker.setAttribute('cy', placement.point[1]);
       const label = svg.querySelector('[data-cv-map-label]');
-      label.setAttribute('x', x + 14); label.setAttribute('y', y + 16);
+      label.setAttribute('x', placement.label.x); label.setAttribute('y', placement.label.y);
     }
   }
 
