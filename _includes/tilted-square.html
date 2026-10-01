@@ -1,0 +1,41 @@
+<section id="the-tilted-square" class="ts-puzzle" data-widget="tilted-square" data-phase="puzzle" aria-labelledby="ts-title">
+  <h2 id="ts-title">What is the area of the shaded square?</h2>
+  <div class="ts-figure">
+    <svg id="ts-diagram" viewBox="0 0 360 348" height="348" role="img" aria-label="Four congruent right triangles with legs a and b surround a tilted shaded square">
+      <title>The tilted square</title>
+      <rect id="ts-area" class="ts-area" x="36" y="34" width="288" height="288"></rect>
+      <g id="ts-piece-0" class="ts-piece"><polygon points="36,34 159.4286,34 36,198.5714"></polygon><polyline class="ts-right-angle" points="36,44 46,44 46,34"></polyline></g>
+      <g id="ts-piece-1" class="ts-piece"><polygon points="159.4286,34 324,34 324,157.4286"></polygon><polyline class="ts-right-angle" points="314,34 314,44 324,44"></polyline></g>
+      <g id="ts-piece-2" class="ts-piece"><polygon points="324,157.4286 324,322 200.5714,322"></polygon><polyline class="ts-right-angle" points="324,312 314,312 314,322"></polyline></g>
+      <g id="ts-piece-3" class="ts-piece"><polygon points="36,198.5714 36,322 200.5714,322"></polygon><polyline class="ts-right-angle" points="36,312 46,312 46,322"></polyline></g>
+      <rect id="ts-frame" class="ts-frame" x="36" y="34" width="288" height="288"></rect>
+      <g id="ts-a-dimension" class="ts-dimension"><path d="M36,23v-6 M159.4286,23v-6 M36,20h123.4286"></path><text x="97.7143" y="14" text-anchor="middle">a</text></g>
+      <g id="ts-b-dimension" class="ts-dimension"><path d="M25,34h-6 M25,198.5714h-6 M22,34v164.5714"></path><text x="9" y="121.2857" text-anchor="middle">b</text></g>
+      <text id="ts-question" class="ts-question" x="180" y="178" text-anchor="middle" dominant-baseline="middle">?</text>
+      <g id="ts-result" class="ts-result">
+        <rect id="ts-a-square" class="ts-square"></rect>
+        <rect id="ts-b-square" class="ts-square"></rect>
+        <text id="ts-a-label" text-anchor="middle" dominant-baseline="middle">a<tspan baseline-shift="super" class="ts-exponent">2</tspan></text>
+        <text id="ts-b-label" text-anchor="middle" dominant-baseline="middle">b<tspan baseline-shift="super" class="ts-exponent">2</tspan></text>
+      </g>
+    </svg>
+  </div>
+  <div class="ts-controls">
+    <button id="ts-reveal" type="button" data-word="serious" aria-label="Serious? Show solution" aria-pressed="false" hidden>
+      <span class="ts-word" aria-hidden="true">
+        <span class="ts-letter" style="--ts-letter-delay: 220ms"><span class="ts-from">S</span><span class="ts-to">O</span></span>
+        <span class="ts-letter" style="--ts-letter-delay: 340ms"><span class="ts-from">e</span><span class="ts-to">b</span></span>
+        <span class="ts-letter" style="--ts-letter-delay: 460ms"><span class="ts-from">r</span><span class="ts-to">v</span></span>
+        <span class="ts-shared">ious</span>
+        <span class="ts-letter" style="--ts-letter-delay: 580ms"><span class="ts-from">?</span><span class="ts-to">!</span></span>
+      </span>
+    </button>
+  </div>
+  <p id="ts-note" aria-live="polite">Four congruent right triangles. Two marked lengths.</p>
+  <noscript>
+    <details class="ts-static-solution">
+      <summary>Obvious!</summary>
+      <p>Slide the four triangles to leave a square of side a and another of side b. The same shaded area becomes a² + b².</p>
+    </details>
+  </noscript>
+</section>

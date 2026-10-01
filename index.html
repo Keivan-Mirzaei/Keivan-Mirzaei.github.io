@@ -4,6 +4,7 @@ section: home
 description: A notebook of mathematical problems, explorations, interactive lessons, and research.
 search: true
 search_title: Home
+widgets: [tilted-square]
 ---
 <div class="home-wrap">
   <section class="hero" aria-labelledby="welcome">
@@ -14,10 +15,7 @@ search_title: Home
       <a class="primary-link" href="{{ '/notes/' | relative_url }}">Explore the notebook {% include icon.html name='arrow' %}</a>
       <a class="quiet-link" href="{{ '/about/' | relative_url }}">About the notebook ↗</a>
     </div>
-    <div class="hero-diagram" aria-hidden="true">
-      <svg viewBox="0 0 260 260" fill="none"><defs><pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M26 0H0V26" stroke="#d8ded4" stroke-width=".6"/></pattern></defs><rect width="260" height="260" fill="url(#grid)"/><path d="M0 130h260M130 0v260" stroke="#a9b8a7"/><g stroke="#38705d" stroke-width="1.2"><ellipse cx="130" cy="130" rx="93" ry="39" transform="rotate(-45 130 130)"/><ellipse cx="130" cy="130" rx="93" ry="58" transform="rotate(-45 130 130)"/><ellipse cx="130" cy="130" rx="93" ry="78" transform="rotate(-45 130 130)"/><ellipse cx="130" cy="130" rx="93" ry="18" transform="rotate(-45 130 130)"/></g><circle cx="196" cy="64" r="4" fill="#38705d"/></svg>
-      <span>Different paths. Shared curiosity.</span>
-    </div>
+    {% include tilted-square.html %}
   </section>
   <section class="subject-section" aria-labelledby="subjects-title">
     <div class="section-heading"><h2 id="subjects-title">Ways to explore</h2><span class="count-label">Follow a thread</span></div>
