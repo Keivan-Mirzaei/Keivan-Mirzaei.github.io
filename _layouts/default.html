@@ -54,6 +54,9 @@
     <header class="topbar">
       <div class="topbar-location">
         <button class="menu-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Hide navigation" hidden>{% include icon.html name='menu' %}</button>
+        <a class="topbar-home" href="{{ '/' | relative_url }}" aria-label="{{ site.title | escape }} home" title="Home">
+          <img src="{{ '/assets/favicon.svg' | relative_url }}" alt="Rounded trefoil knot" width="32" height="32">
+        </a>
         <span class="topbar-title">The notebook <span aria-hidden="true">/</span> <span>{{ page.breadcrumb | default: page.title | default: 'Home' }}</span></span>
       </div>
       <a class="search-link" href="{{ '/search/' | relative_url }}">{% include icon.html name='search' %}<span>Search</span><kbd>/</kbd></a>
