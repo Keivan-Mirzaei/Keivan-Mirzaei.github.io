@@ -1,0 +1,15 @@
+<section class="graph-widget cevian-widget" data-cevian-simplex aria-labelledby="cv-simplex-title">
+  <div class="graph-heading"><h3 id="cv-simplex-title">The same question in three dimensions</h3><span class="activity-badge" data-cv-volume>2.57% of the volume</span></div>
+  <div data-cv-tetra>{% include widgets/cevian-tetra.svg %}</div>
+  <p class="cv-caption">A₁, …, A₄ are the outer vertices. Xᵢ is where the line from Aᵢ through O meets the opposite face. Drag horizontally to rotate, or use the rotation slider.</p>
+  <label class="cv-rotation-control">Rotate the view<input type="range" min="0" max="360" step="1" value="32" data-cv-rotation disabled></label>
+  <p class="cv-caption">Change the relative vertex weights to move O. Positive weights keep it inside; all four cevians continue to meet there.</p>
+  <div class="cv-mass-controls">
+    <label>Weight at A₁ <output data-cv-weight-output="0">42%</output><input type="range" min="1" max="100" step="1" value="42" data-cv-weight="0" aria-label="Relative weight at A₁" disabled></label>
+    <label>Weight at A₂ <output data-cv-weight-output="1">27%</output><input type="range" min="1" max="100" step="1" value="27" data-cv-weight="1" aria-label="Relative weight at A₂" disabled></label>
+    <label>Weight at A₃ <output data-cv-weight-output="2">19%</output><input type="range" min="1" max="100" step="1" value="19" data-cv-weight="2" aria-label="Relative weight at A₃" disabled></label>
+    <label>Weight at A₄ <output data-cv-weight-output="3">12%</output><input type="range" min="1" max="100" step="1" value="12" data-cv-weight="3" aria-label="Relative weight at A₄" disabled></label>
+  </div>
+  <button class="secondary-button" type="button" data-cv-tetra-center disabled>Move to the face centers</button>
+  <p class="cv-status" data-cv-volume-status aria-live="polite">The maximum is 1/27 of the volume, about 3.704%.</p>
+</section>

@@ -1,0 +1,15 @@
+<section class="graph-widget cevian-widget" data-cevian-explorer aria-labelledby="cv-explorer-title">
+  <div class="graph-heading"><h3 id="cv-explorer-title">Move the meeting point</h3><span class="activity-badge" data-cv-area>20.98% of ABC</span></div>
+  <div data-cv-main>{% include widgets/cevian-main.svg %}</div>
+  <p class="cv-caption">Drag O, tap inside the triangle, or use the sliders. The dashed outline is the midpoint triangle.</p>
+  <div class="cv-position-controls">
+    <label>Height above BC<input type="range" min="4" max="94" value="50" step="0.1" data-cv-height disabled></label>
+    <label>Position parallel to BC<input type="range" min="4" max="96" value="62.5" step="0.1" data-cv-across disabled></label>
+  </div>
+  <div class="cv-control-row">
+    <button class="secondary-button" type="button" data-cv-center disabled>Show the maximum</button>
+    <label class="cv-shape-control">Outer triangle<select data-cv-shape aria-label="Outer triangle" disabled><option value="scalene">Scalene</option><option value="tall">Tall</option><option value="slanted">Slanted</option></select></label>
+  </div>
+  <p class="cv-status" data-cv-status aria-live="polite">The cevians keep meeting at O. Can you make the green triangle reach 25%?</p>
+  <noscript><p>The diagrams and complete proof remain readable without JavaScript. Enable it to move the points.</p></noscript>
+</section>
