@@ -241,7 +241,7 @@ These options are not used by the deployment workflow. Drafts are still readable
 
 Search ranks title matches before topic and body matches. It stays in the browser and loads its index only after a query is entered. Format lists show all matching posts; the combined archive has numbered pagination. The old subject pages remain available for existing links.
 
-The CV's preprint list comes from research entries with `kind: Paper`. Update education, awards, experience, and the `updated` date in `cv.md`. The download uses the supplied April 2026 PDF in `assets/cv/`; replace the PDF and its dated link when a newer document is available. Awards announced separately are included in the web CV.
+The CV's preprint list comes from research entries with `kind: Paper`. Update education, awards, experience, and the `updated` date in `cv.md`. The download uses `assets/cv/keivan-mirzaei-cv.pdf`, compiled from the CV source in `/Users/keivan/CV/CV.tex`. When updating the document, replace that PDF and update the date in the download label. The current document includes both 2026 awards and the Fall 2026 teaching roles.
 
 Run the checks before publishing:
 

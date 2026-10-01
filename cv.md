@@ -12,7 +12,7 @@ I am a PhD candidate in Mathematical Finance at the University of Calgary, super
 
 [keivan.mirzaei@ucalgary.ca](mailto:keivan.mirzaei@ucalgary.ca) · [GitHub](https://github.com/Keivan-Mirzaei)
 
-[Download CV (PDF, April 2026)]({{ '/assets/cv/keivan-mirzaei-cv-april-2026.pdf' | relative_url }})
+[Download CV (PDF, September 2026)]({{ '/assets/cv/keivan-mirzaei-cv.pdf' | relative_url }})
 
 *Web CV updated {{ page.updated | date: '%B %Y' }}.*
 
@@ -87,11 +87,13 @@ Research interests: stochastic analysis, probability theory, mathematical financ
 
 ### Bow Valley College
 
+- **Fall 2026 — Instructor:** Introductory Calculus.
 - **Winter 2026 — Instructor:** Linear Methods I; Introductory Calculus II.
 - **Fall 2025 — Course developer:** Introduction to Statistics II. Contributed to the development of the university transfer mathematics curriculum in statistics.
 
 ### University of Calgary — Teaching assistant
 
+- **Fall 2026:** University Calculus III (MATH 367); Calculus for Engineers and Scientists (MATH 275).
 - **Spring 2026:** Introduction to Statistics I.
 - **Winter 2026:** Time Series Analysis; Introduction to Statistics II.
 - **Fall 2025:** Calculus for Engineers and Scientists; University Calculus II.
