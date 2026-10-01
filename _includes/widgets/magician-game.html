@@ -1,0 +1,11 @@
+<section class="graph-widget magician-widget" data-magician-game aria-labelledby="mp-game-title">
+  <div class="graph-heading"><h3 id="mp-game-title">An audience of 64</h3><span class="activity-badge" data-round>Round 0 · 64 standing</span></div>
+  <div class="mp-audience" data-audience>{% include widgets/magician-audience.svg %}</div>
+  <p class="mp-caption">Filled dots are standing. Outlined dots have sat down.</p>
+  <div class="mp-control-row">
+    <button class="secondary-button" type="button" data-flip disabled>Flip a round</button>
+    <button class="mp-secondary" type="button" data-new-audience disabled>New audience</button>
+  </div>
+  <p class="mp-status" data-game-status aria-live="polite">Everyone is standing. Will this game reach exactly one?</p>
+  <noscript><p>Enable JavaScript to play. Each round independently keeps each standing person with probability one half.</p></noscript>
+</section>

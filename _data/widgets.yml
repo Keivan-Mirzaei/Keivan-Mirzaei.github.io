@@ -7,3 +7,4 @@ random-walk: /assets/js/widgets/random-walk.js
 scientific-plot: /assets/js/widgets/scientific-plot.mjs
 sphere-slice: /assets/js/widgets/sphere-slice.mjs
 tilted-square: /assets/js/widgets/tilted-square.js
+magicians-problem: /assets/js/widgets/magicians-problem.mjs
