@@ -1,4 +1,4 @@
-# Keivan Mirzaei’s notebook
+# Almost Obvious
 
 A small Jekyll site for problems, explorations, learning modules, and a research showcase. Write posts and pages in Markdown; shared templates build the navigation, article pages, paginated archive, search index, RSS feed, and sitemap.
 

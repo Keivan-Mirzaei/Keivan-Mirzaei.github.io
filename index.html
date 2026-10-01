@@ -1,18 +1,18 @@
 ---
 layout: default
 section: home
-description: Mathematical problems, explorations, interactive lessons, and research. The personal notebook of Keivan Mirzaei.
+description: A notebook of mathematical problems, explorations, interactive lessons, and research.
 search: true
 search_title: Home
 ---
 <div class="home-wrap">
   <section class="hero" aria-labelledby="welcome">
     <div class="hero-copy">
-      <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> A personal notebook</p>
+      <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Mathematics &amp; other curiosities</p>
       <h1 id="welcome">A place for<br><em>curious thinking.</em></h1>
-      <p>I’m Keivan. This is where I collect mathematical ideas, explore them through code, and leave a little room for the unexpected.</p>
+      <p>Explore mathematical ideas through problems, proofs, code, and experiments. Follow a question, test a pattern, and see where curiosity leads.</p>
       <a class="primary-link" href="{{ '/notes/' | relative_url }}">Explore the notebook {% include icon.html name='arrow' %}</a>
-      <a class="quiet-link" href="{{ '/about/' | relative_url }}">A little about me ↗</a>
+      <a class="quiet-link" href="{{ '/about/' | relative_url }}">About the notebook ↗</a>
     </div>
     <div class="hero-diagram" aria-hidden="true">
       <svg viewBox="0 0 260 260" fill="none"><defs><pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M26 0H0V26" stroke="#d8ded4" stroke-width=".6"/></pattern></defs><rect width="260" height="260" fill="url(#grid)"/><path d="M0 130h260M130 0v260" stroke="#a9b8a7"/><g stroke="#38705d" stroke-width="1.2"><ellipse cx="130" cy="130" rx="93" ry="39" transform="rotate(-45 130 130)"/><ellipse cx="130" cy="130" rx="93" ry="58" transform="rotate(-45 130 130)"/><ellipse cx="130" cy="130" rx="93" ry="78" transform="rotate(-45 130 130)"/><ellipse cx="130" cy="130" rx="93" ry="18" transform="rotate(-45 130 130)"/></g><circle cx="196" cy="64" r="4" fill="#38705d"/></svg>
@@ -45,11 +45,11 @@ search_title: Home
   {% if featured_research %}
   <section class="research-spotlight" aria-labelledby="research-title">
     <div class="section-heading">
-      <h2 id="research-title">A window into my research</h2>
+      <h2 id="research-title">A window into research</h2>
       <a class="text-link" href="{{ '/research/' | relative_url }}">All research <span aria-hidden="true">↗</span></a>
     </div>
     {% include research-card.html project=featured_research level=3 %}
   </section>
   {% endif %}
-  <aside class="home-note"><span aria-hidden="true">✳</span><p>Sometimes a good question is the best place to start.<br>Have an interesting problem? <a href="mailto:{{ site.email }}">Send it my way.</a></p></aside>
+  <aside class="home-note"><span aria-hidden="true">✳</span><p>Sometimes a good question is the best place to start.<br>Have an interesting problem? <a href="mailto:{{ site.email }}">Share it here.</a></p></aside>
 </div>
