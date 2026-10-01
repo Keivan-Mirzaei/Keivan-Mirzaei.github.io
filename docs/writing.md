@@ -241,6 +241,8 @@ These options are not used by the deployment workflow. Drafts are still readable
 
 Search ranks title matches before topic and body matches. It stays in the browser and loads its index only after a query is entered. Format lists show all matching posts; the combined archive has numbered pagination. The old subject pages remain available for existing links.
 
+The CV's preprint list comes from research entries with `kind: Paper`. Update education, awards, experience, and the `updated` date in `cv.md`. The download uses the supplied April 2026 PDF in `assets/cv/`; replace the PDF and its dated link when a newer document is available. Awards announced separately are included in the web CV.
+
 Run the checks before publishing:
 
 ```sh
@@ -255,4 +257,4 @@ The workflow tests create temporary content, check all formats, confirm solution
 
 The six old articles use April 1, 2024—the first archive commit date—for ordering. Their pages say “From the 2024 archive”; this is not a claim about their original publication day. Five are now problems; the Brownian-motion article is an exploration. Original source files remain in Git history. The unfinished probability article remains a draft exploration.
 
-The CV retains the original 2024 information, with one duplicate teaching entry removed. The Brownian example was repaired to run and use the correct time intervals. Mathematical typesetting details were repaired in the Hilbert and factorial proofs. Existing figures, the custom domain, and redirects from `/pages/math.html`, `/pages/code.html`, and `/pages/CV.html` are preserved.
+The CV was refreshed from the supplied 2026 document and award announcements. The Brownian example was repaired to run and use the correct time intervals. Mathematical typesetting details were repaired in the Hilbert and factorial proofs. Existing figures, the custom domain, and redirects from `/pages/math.html`, `/pages/code.html`, and `/pages/CV.html` are preserved.
