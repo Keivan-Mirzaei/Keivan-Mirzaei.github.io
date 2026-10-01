@@ -1,5 +1,5 @@
 import { TRIANGLE_SHAPES, normalizeWeights, triangleData, positionWeights, barycentricPoint, simplexRatio } from '../lib/cevian-math.mjs';
-import { triangleDiagram, factorsDiagram, landscapeDiagram, landscapeMarker, tetrahedronDiagram } from '../lib/cevian-diagrams.mjs';
+import { triangleDiagram, factorsDiagram, landscapeDiagram, landscapeMarker, tetrahedronDiagram } from '../lib/cevian-diagrams.mjs?v=20261001-2';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 const percentage = value => `${(value * 100).toFixed(2)}%`;

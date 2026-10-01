@@ -8,4 +8,4 @@ scientific-plot: /assets/js/widgets/scientific-plot.mjs
 sphere-slice: /assets/js/widgets/sphere-slice.mjs
 tilted-square: /assets/js/widgets/tilted-square.js
 magicians-problem: /assets/js/widgets/magicians-problem.mjs
-cevian-triangles: /assets/js/widgets/cevian-triangles.mjs
+cevian-triangles: /assets/js/widgets/cevian-triangles.mjs?v=20261001-2
