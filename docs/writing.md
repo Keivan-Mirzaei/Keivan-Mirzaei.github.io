@@ -255,6 +255,6 @@ The workflow tests create temporary content, check all formats, confirm solution
 
 ## Migration notes
 
-The six old articles use April 1, 2024—the first archive commit date—for ordering. Their pages say “From the 2024 archive”; this is not a claim about their original publication day. Five are now problems; the Brownian-motion article is an exploration. Original source files remain in Git history. The unfinished probability article remains a draft exploration.
+The five retained old articles use April 1, 2024—the first archive commit date—for ordering. Their pages say “From the 2024 archive”; this is not a claim about their original publication day. All five are problems. Original source files remain in Git history. The unfinished probability article remains a draft exploration.
 
-The CV was refreshed from the supplied 2026 document and award announcements. The Brownian example was repaired to run and use the correct time intervals. Mathematical typesetting details were repaired in the Hilbert and factorial proofs. Existing figures, the custom domain, and redirects from `/pages/math.html`, `/pages/code.html`, and `/pages/CV.html` are preserved.
+The CV was refreshed from the supplied 2026 document and award announcements. Mathematical typesetting details were repaired in the Hilbert and factorial proofs. The remaining figures, the custom domain, and redirects from `/pages/math.html`, `/pages/code.html`, and `/pages/CV.html` are preserved.
