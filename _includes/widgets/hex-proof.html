@@ -1,0 +1,11 @@
+<section class="graph-widget hex-widget" data-hex-proof aria-labelledby="hex-proof-title">
+  <div class="graph-heading"><h3 id="hex-proof-title">Walk the coastline</h3><span class="activity-badge" data-hex-proof-count>At the start</span></div>
+  <p class="hex-caption">Every cell is coloured. Click a cell to change its colour, then follow the boundary from Start. The small outside stubs separate the four coloured shores.</p>
+  <div class="hex-board hex-proof-board" data-hex-proof-board>
+    <img src="{{ '/assets/images/hex-coastline.svg' | relative_url }}" width="600" height="410" alt="A completely coloured five by five Hex board. A dark coastline runs from the top-left corner to the bottom-left corner. The red cells alongside it make a top-to-bottom winning chain, highlighted with a dashed line.">
+  </div>
+  <div class="hex-legend"><span><i class="hex-key hex-red" aria-hidden="true">R</i>Red shore</span><span><i class="hex-key hex-blue" aria-hidden="true">B</i>Blue shore</span><span><i class="hex-line-key" aria-hidden="true"></i>Coastline</span><span><i class="hex-line-key hex-chain-key" aria-hidden="true"></i>Winning chain</span></div>
+  <p class="hex-status" data-hex-proof-status role="status">The coastline cannot branch, stop inside, or get trapped in a loop. It leads to a winning chain.</p>
+  <div class="hex-actions"><button class="secondary-button" type="button" data-hex-proof-step disabled>Next step</button><button class="hex-secondary" type="button" data-hex-proof-finish disabled>Trace whole coast</button><button class="hex-secondary" type="button" data-hex-proof-reset disabled>Restart walk</button><button class="hex-secondary" type="button" data-hex-proof-new disabled>Shuffle colours</button></div>
+  <noscript><p>In this example, the coast ends at the bottom-left corner. Follow the dashed red chain from the top to the bottom. The argument applies to every colouring, not just this example.</p></noscript>
+</section>
