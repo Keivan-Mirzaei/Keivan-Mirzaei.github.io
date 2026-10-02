@@ -20,14 +20,12 @@
 /* Keep each button at its full cell size so dragging and keyboard moves use the same coordinates. */
 .puzzle-page .klotski-block { position: absolute; left: 0; top: 0; display: grid; place-items: center; margin: 0; padding: 3px; border: 0; border-radius: 0; background: transparent; color: #485047; font: 18px/1 var(--sans); touch-action: none; user-select: none; -webkit-user-select: none; transition: none; cursor: grab; }
 .klotski-block::before { content: ''; position: absolute; inset: 3px; border: 1px solid var(--klotski-tile-border); border-radius: 10px; background: var(--klotski-tile); box-shadow: var(--klotski-tile-shadow); pointer-events: none; transition: none; }
-.klotski-block:not(:disabled):hover::before { border-color: #b5c1ad; box-shadow: 0 4px 4px #48583b26, inset 0 1px 1px #fff; }
-.klotski-block.is-selected::before { border-color: #54725b; box-shadow: var(--klotski-tile-shadow), inset 0 0 0 2px #54725b; }
+.klotski-block:not(:disabled):hover::before { box-shadow: 0 4px 4px #48583b26, inset 0 1px 1px #fff; }
 .puzzle-page .klotski-block:focus-visible { outline: none; }
-.klotski-block:focus-visible::before { outline: 2px solid var(--green); outline-offset: -2px; }
+.klotski-block:focus-visible::before { outline: 2px solid var(--muted); outline-offset: -2px; }
 .puzzle-page .klotski-block.klotski-target { color: #f4f6eb; }
 .klotski-target::before { border-color: #315541; background: var(--klotski-goal); box-shadow: var(--klotski-goal-shadow); }
 .klotski-target:not(:disabled):hover::before { border-color: #315541; box-shadow: 0 4px 4px #28432b40, inset 0 1px 1px #abc2a980; }
-.klotski-target.is-selected::before { border-color: #315541; box-shadow: var(--klotski-goal-shadow), inset 0 0 0 2px #e2efdb; }
 .klotski-target:focus-visible::before { outline-color: #e2efdb; }
 .klotski-target > span { position: relative; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border: 1px solid #edf3dd35; border-radius: 50%; font: 28px/1 var(--sans); pointer-events: none; }
 .klotski-target .klotski-target-arrow { font-size: 28px; }
