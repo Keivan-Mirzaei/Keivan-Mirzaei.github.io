@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 360" width="440" height="360" role="img" aria-labelledby="title description">
+  <title id="title">Tiling</title>
+  <desc id="description">A floor with three missing squares and four colourful tiles to fit into its empty spaces.</desc>
+  <defs><pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V8" stroke="#d9ded3" stroke-width="2"/></pattern></defs>
+  <rect width="440" height="360" fill="#fcfcf9"/>
+  <rect x="24" y="63" width="236" height="236" rx="8" fill="#eef0e8" stroke="#e0e4dc"/>
+  <g fill="#fcfcf9" stroke="#d8ddd1" stroke-width="1">
+    <rect x="36" y="75" width="50" height="50" rx="3"/><rect x="90" y="75" width="50" height="50" rx="3"/><rect x="144" y="75" width="50" height="50" rx="3"/>
+    <rect x="36" y="129" width="50" height="50" rx="3"/><rect x="90" y="129" width="50" height="50" rx="3"/><rect x="144" y="129" width="50" height="50" rx="3"/><rect x="198" y="129" width="50" height="50" rx="3"/>
+    <rect x="36" y="183" width="50" height="50" rx="3"/><rect x="90" y="183" width="50" height="50" rx="3"/><rect x="144" y="183" width="50" height="50" rx="3"/><rect x="198" y="183" width="50" height="50" rx="3"/>
+    <rect x="90" y="237" width="50" height="50" rx="3"/><rect x="144" y="237" width="50" height="50" rx="3"/>
+  </g>
+  <g fill="url(#hatch)" stroke="#c6ccbf" stroke-dasharray="3 3"><rect x="198" y="75" width="50" height="50" rx="3"/><rect x="36" y="237" width="50" height="50" rx="3"/><rect x="198" y="237" width="50" height="50" rx="3"/></g>
+  <g fill="#c67b67"><rect x="290" y="65" width="28" height="28" rx="2"/><rect x="322" y="65" width="28" height="28" rx="2"/><rect x="290" y="97" width="28" height="28" rx="2"/></g>
+  <g fill="#70968c"><rect x="358" y="144" width="28" height="28" rx="2"/><rect x="358" y="176" width="28" height="28" rx="2"/><rect x="390" y="176" width="28" height="28" rx="2"/></g>
+  <g fill="#839bbc"><rect x="316" y="227" width="28" height="28" rx="2"/><rect x="284" y="259" width="28" height="28" rx="2"/><rect x="316" y="259" width="28" height="28" rx="2"/><rect x="316" y="291" width="28" height="28" rx="2"/></g>
+  <g fill="#c4a168"><rect x="370" y="248" width="28" height="28" rx="2"/><rect x="402" y="248" width="28" height="28" rx="2"/><rect x="370" y="280" width="28" height="28" rx="2"/></g>
+  <g fill="#282e29" stroke="#fcfcf9" stroke-width="1.5"><circle cx="304" cy="79" r="3"/><circle cx="372" cy="158" r="3"/><circle cx="330" cy="241" r="3"/><circle cx="384" cy="262" r="3"/></g>
+</svg>

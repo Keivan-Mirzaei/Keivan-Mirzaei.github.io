@@ -13,7 +13,7 @@ sitemap: false
     "category": {% if entry.collection == 'research' %}"Research"{% elsif entry.collection == 'posts' or entry.collection == 'lessons' %}{{ entry_format.label | default: 'Post' | jsonify }}{% else %}"Page"{% endif %},
     "tags": {{ entry.tags | join: ' ' | append: ' ' | append: entry.category | jsonify }},
     "description": {{ entry.description | default: '' | jsonify }},
-    "content": {{ entry.content | default: entry.description | markdownify | strip_html | normalize_whitespace | jsonify }}
+    "content": {% if entry.layout == 'puzzle' %}{{ entry.description | default: entry.title | normalize_whitespace | jsonify }}{% else %}{{ entry.content | default: entry.description | markdownify | strip_html | normalize_whitespace | jsonify }}{% endif %}
   }{% unless forloop.last %},{% endunless %}
 {%- endfor -%}
 ]

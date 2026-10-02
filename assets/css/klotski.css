@@ -1,0 +1,56 @@
+.klotski-game { display: grid; grid-template-columns: minmax(0, 1fr) 258px; gap: 48px; align-items: start; }
+.klotski-play-area { min-width: 0; }
+.klotski-board-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; max-width: 400px; margin: 0 auto 18px; color: var(--muted); font-size: 12px; }
+.klotski-board-heading [data-klotski-count] { flex-shrink: 0; font: 11px/1.6 var(--mono); }
+.klotski-board-wrap { position: relative; width: min(400px, 100%); margin: 0 auto; padding: 0 0 37px; }
+.klotski-board { position: relative; width: 100%; aspect-ratio: 4 / 5; border: 5px solid #bac6b8; border-bottom-color: transparent; border-radius: 8px 8px 3px 3px; background-color: #e7ebe2; background-image: linear-gradient(to right, #dce2d7 1px, transparent 1px), linear-gradient(to bottom, #dce2d7 1px, transparent 1px); background-size: 25% 20%; }
+.klotski-board::before, .klotski-board::after { content: ''; position: absolute; bottom: -5px; width: 25%; height: 5px; background: #bac6b8; border-radius: 0 0 2px 2px; }
+.klotski-board::before { left: -5px; width: calc(25% + 5px); }
+.klotski-board::after { right: -5px; width: calc(25% + 5px); }
+.klotski-board > img { display: block; width: 100%; height: auto; }
+.klotski-board:has(> img) { border: none; background: transparent; aspect-ratio: 400 / 530; }
+.klotski-board:has(> img)::before, .klotski-board:has(> img)::after { display: none; }
+.klotski-block { position: absolute; display: grid; place-items: center; margin: 0; padding: 4px; border: 4px solid #e7ebe2; border-radius: 10px; background: #d3ddc9; color: #4e654b; box-shadow: inset 0 -3px 0 #bccbb6; font: 18px/1 var(--serif) !important; touch-action: none; user-select: none; -webkit-user-select: none; transition: left 130ms ease, top 130ms ease; }
+.klotski-block:hover { background: #c8d6bd; }
+.klotski-block.is-selected { background: #bfceb4; box-shadow: inset 0 0 0 2px var(--green), inset 0 -3px 0 #a3b99b; }
+.klotski-block.klotski-target { background: var(--green); color: #fff; box-shadow: inset 0 -3px 0 #1d4534; }
+.klotski-block.klotski-target:hover { background: #204e3c; }
+.klotski-target.is-selected { box-shadow: inset 0 0 0 2px #e2efdb, inset 0 -3px 0 #173c2d; }
+.klotski-target > span { display: flex; flex-direction: column; align-items: center; gap: 12px; font: 13px/1.3 var(--sans); }
+.klotski-target .klotski-target-arrow { font-size: 28px; }
+.klotski-block.is-dragging { z-index: 2; transition: none; cursor: grabbing; }
+.klotski-board.is-solved .klotski-target { box-shadow: inset 0 0 0 3px #e2efdb; }
+.puzzle-page .klotski-block:disabled { opacity: 1; }
+.klotski-exit { position: absolute; bottom: 0; left: 25%; width: 50%; display: flex; justify-content: center; align-items: center; gap: 10px; color: var(--green); font: 10px/1.6 var(--sans); letter-spacing: 1px; text-transform: uppercase; }
+.klotski-exit span { font-size: 18px; line-height: 1; }
+.klotski-controls { padding: 24px; border: 1px solid var(--line); border-radius: 8px; background: #f4f5ef; }
+.klotski-instructions { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+.klotski-selection { margin: 23px 0 12px; text-align: center; color: var(--green); font-size: 13px; }
+.klotski-directions { display: grid; grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(2, 44px); gap: 5px; justify-content: center; }
+.klotski-direction { border: 1px solid #bfcbb9; border-radius: 4px; background: var(--paper); color: var(--green); font-size: 23px !important; }
+.klotski-direction:not(:disabled):hover { background: var(--tint); }
+.klotski-up { grid-row: 1; grid-column: 2; }
+.klotski-left { grid-row: 2; grid-column: 1; }
+.klotski-down { grid-row: 2; grid-column: 2; }
+.klotski-right { grid-row: 2; grid-column: 3; }
+.klotski-status { margin: 22px 0 18px; min-height: 3.6em; font-size: 13px; line-height: 1.8; }
+.klotski-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.klotski-secondary { padding: 10px 14px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--ink); font-size: 12px !important; }
+.klotski-secondary:not(:disabled):hover { border-color: #bac6b8; }
+.klotski-caption { margin: 22px 0 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+@media (prefers-reduced-motion: reduce) { .klotski-block { transition: none; } }
+@media (max-width: 760px) {
+  .klotski-game { grid-template-columns: 1fr; gap: 28px; }
+  .klotski-controls { display: grid; grid-template-columns: minmax(0, 1fr) 154px; gap: 0 24px; padding: 20px; }
+  .klotski-instructions { grid-column: 1; grid-row: 1 / 3; align-self: center; }
+  .klotski-selection { grid-column: 2; margin: 0 0 8px; }
+  .klotski-directions { grid-column: 2; }
+  .klotski-status { grid-column: 1; margin: 18px 0; min-height: 0; }
+  .klotski-actions { grid-column: 1 / -1; }
+  .klotski-caption { grid-column: 1 / -1; margin-top: 18px; }
+}
+@media (max-width: 400px) {
+  .klotski-controls { gap: 0 16px; padding: 16px; grid-template-columns: minmax(0, 1fr) 142px; }
+  .klotski-directions { grid-template-columns: repeat(3, 44px); }
+  .klotski-board-heading { font-size: 11px; }
+}
