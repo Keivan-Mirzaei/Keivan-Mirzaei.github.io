@@ -1,0 +1,38 @@
+introductory-calculus:
+  title: Introductory Calculus
+  url: /learning/introductory-calculus/
+  level: Single-variable calculus
+  description: From a curve's slope to the area beneath it. Explore limits, derivatives, and integrals through questions, pictures, and problems.
+  image: /assets/images/introductory-calculus.svg
+  image_alt: A curve with a tangent line showing its slope and a shaded region showing accumulated area.
+  lesson_count: 5
+  start_label: Start the derivatives module
+  modules:
+    - title: Functions, limits, and continuity
+      description: Read a function's graph, make sense of approaching a value, and understand when limits describe the function itself.
+    - title: "Derivatives: from rates to local linearity"
+      description: Build the derivative from secant slopes, derive the rules, and discover what differentiability really requires.
+      url: /notes/derivatives/
+      module_id: derivatives
+    - title: Applications of derivatives
+      description: Use rates of change to understand motion, sketch curves, and solve optimization and related-rates problems.
+    - title: Integrals and accumulation
+      description: Approximate an area with small pieces, take a limit, and interpret the definite integral as accumulated change.
+    - title: The fundamental theorem of calculus
+      description: Connect differentiation with integration, find antiderivatives, and turn accumulation into a practical calculation.
+  prerequisites:
+    - Algebra, including equations, inequalities, and manipulating fractions.
+    - Function notation and graphs, including polynomial, exponential, and logarithmic functions.
+    - Basic trigonometry, including sine, cosine, and radians.
+  references:
+    - title: Calculus, Volume 1
+      author: OpenStax
+      url: https://openstax.org/details/books/calculus-volume-1
+      description: A free companion text for limits, differentiation, and integration, with examples and exercises.
+    - title: Active Calculus — Single Variable
+      author: Matt Boelkins
+      url: https://activecalculus.org/acs2e/
+      description: A free text built around questions and activities for developing a conceptual understanding of calculus.
+    - title: "Problems in Real Analysis: Advanced Calculus on the Real Axis"
+      author: Teodora-Liliana Rădulescu, Vicențiu D. Rădulescu, and Titu Andreescu · Springer, 2009
+      description: Chapter 5 supplies selected ideas and extension problems for the derivatives module. Best used for the proof-based material.

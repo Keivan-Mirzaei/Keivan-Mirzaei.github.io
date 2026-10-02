@@ -1,0 +1,67 @@
+---
+layout: default
+---
+{% assign course = site.data.courses[page.course_id] %}
+{% assign available_modules = course.modules | where_exp: 'module', 'module.url != nil' %}
+{% assign first_module = available_modules | first %}
+<article class="page-wrap course-overview">
+  <a class="back-link" href="{{ '/learning/' | relative_url }}">← Learning</a>
+  <header class="page-heading course-heading">
+    <p class="eyebrow">{{ course.level }} <span aria-hidden="true">/</span> Self-paced course</p>
+    <h1>{{ page.title }}</h1>
+    <p class="page-description">{{ page.description }}</p>
+    <div class="course-summary">
+      <span>{{ course.modules.size }} modules on the roadmap</span>
+      <span>{{ available_modules.size }} available now · {{ course.lesson_count }} lessons</span>
+    </div>
+    <nav class="course-jump-links" aria-label="On this page">
+      <a href="#course-description-heading">Description</a>
+      <a href="#course-contents-heading">Modules</a>
+      <a href="#course-prerequisites-heading">Prerequisites</a>
+      <a href="#course-references-heading">References</a>
+    </nav>
+  </header>
+  <section class="course-description" aria-labelledby="course-description-heading">
+    <h2 id="course-description-heading">About the course</h2>
+    <div class="prose">{{ content }}</div>
+    {% if first_module %}<a class="primary-link" href="{{ first_module.url | relative_url }}">{{ course.start_label | default: 'Start an available module' }} {% include icon.html name='arrow' %}</a>{% endif %}
+  </section>
+  <section class="course-contents" aria-labelledby="course-contents-heading">
+    <h2 id="course-contents-heading">Table of contents</h2>
+    <p class="course-section-note">Follow the modules in order, or open the available module to begin.</p>
+    <ol class="course-module-list">
+      {% for module in course.modules %}
+      <li>
+        {% if module.url %}<a class="course-module-entry is-available" href="{{ module.url | relative_url }}">{% else %}<div class="course-module-entry">{% endif %}
+          <span class="course-module-number" aria-hidden="true">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+          <div class="course-module-copy">
+            <span class="course-module-status">{% if module.url %}Available · {{ site.data.modules[module.module_id].lessons.size }} lessons{% else %}Forthcoming{% endif %}</span>
+            <h3>{{ module.title }}{% if module.url %} <span aria-hidden="true">↗</span>{% endif %}</h3>
+            <p>{{ module.description }}</p>
+            {% if module.url %}<span class="course-module-open">Open module →</span>{% endif %}
+          </div>
+        {% if module.url %}</a>{% else %}</div>{% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  <section class="course-prerequisites" aria-labelledby="course-prerequisites-heading">
+    <h2 id="course-prerequisites-heading">Prerequisites</h2>
+    <p>You do not need prior calculus for the full course. Be comfortable with:</p>
+    <ul>{% for prerequisite in course.prerequisites %}<li>{{ prerequisite }}</li>{% endfor %}</ul>
+    <p class="course-section-note">To start the available derivatives module, you will also need limits and continuity, including the standard trigonometric and exponential limits.</p>
+  </section>
+  <section class="course-references" aria-labelledby="course-references-heading">
+    <h2 id="course-references-heading">References</h2>
+    <p class="course-section-note">Companion reading and sources for further exploration.</p>
+    <ul>
+      {% for reference in course.references %}
+      <li>
+        <h3>{% if reference.url %}<a href="{{ reference.url }}">{{ reference.title }} <span aria-hidden="true">↗</span></a>{% else %}{{ reference.title }}{% endif %}</h3>
+        <p class="course-reference-author">{{ reference.author }}</p>
+        <p>{{ reference.description }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+</article>

@@ -10,7 +10,7 @@ sitemap: false
   {
     "title": {{ entry.search_title | default: entry.title | jsonify }},
     "url": {{ entry.url | relative_url | jsonify }},
-    "category": {% if entry.collection == 'research' %}"Research"{% elsif entry.collection == 'posts' or entry.collection == 'modules' or entry.collection == 'lessons' %}{{ entry_format.label | default: 'Post' | jsonify }}{% else %}"Page"{% endif %},
+    "category": {% if entry.layout == 'course' %}"Learning course"{% elsif entry.collection == 'research' %}"Research"{% elsif entry.collection == 'posts' or entry.collection == 'modules' or entry.collection == 'lessons' %}{{ entry_format.label | default: 'Post' | jsonify }}{% else %}"Page"{% endif %},
     "tags": {{ entry.tags | join: ' ' | append: ' ' | append: entry.category | jsonify }},
     "description": {{ entry.description | default: '' | jsonify }},
     "content": {% if entry.layout == 'puzzle' %}{{ entry.description | default: entry.title | normalize_whitespace | jsonify }}{% else %}{{ entry.content | default: entry.description | markdownify | strip_html | normalize_whitespace | jsonify }}{% endif %}

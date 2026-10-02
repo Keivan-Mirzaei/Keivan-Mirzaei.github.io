@@ -1,0 +1,52 @@
+/* Course cards share the quiet illustrated style of the puzzle collection. */
+.learning-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr)); gap: 24px; }
+.learning-card { display: block; overflow: hidden; border: 1px solid var(--line); border-radius: 7px; background: #f8f9f4; text-decoration: none; }
+.learning-card:hover { border-color: #becfba; background: var(--tint); }
+.learning-card-art { padding: 20px 16px 6px; background: var(--paper); }
+.learning-card-art img { display: block; width: 100%; height: 205px; object-fit: contain; }
+.learning-card-copy { padding: 24px; }
+.learning-card-meta { color: var(--muted); font-size: 10px; }
+.learning-card h2 { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 12px 0 16px; font: 30px/1.2 var(--serif); letter-spacing: -.6px; }
+.learning-card h2 > span { color: var(--green); font: 20px var(--sans); }
+.learning-card p { margin: 0 0 20px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.learning-card-progress { display: block; margin-bottom: 16px; color: var(--muted); font: 10px/1.6 var(--mono); }
+.learning-card-link { display: inline-flex; align-items: center; gap: 14px; color: var(--green); font-size: 12px; }
+.learning-card-link .icon { width: 16px; }
+.learning-extra-heading { margin: 50px 0 20px; font: 28px/1.3 var(--serif); }
+.course-heading { padding-bottom: 27px; border-bottom: 1px solid var(--line); }
+.course-summary { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 25px; color: var(--muted); font: 11px/1.6 var(--mono); }
+.course-jump-links { display: flex; flex-wrap: wrap; gap: 5px 22px; margin-top: 19px; color: var(--green); font-size: 12px; }
+.course-jump-links a { display: flex; align-items: center; min-height: 36px; }
+.course-overview > section { margin-top: 44px; }
+.course-overview h2 { margin-bottom: 16px; font: 30px/1.3 var(--serif); letter-spacing: -.5px; }
+.course-overview .prose { font-size: 14px; }
+.course-overview .prose p { margin-bottom: 18px; }
+.course-description .primary-link { margin-top: 6px; }
+.course-section-note { color: var(--muted); font-size: 13px; line-height: 1.8; }
+.course-module-list { padding: 0; margin: 22px 0 0; list-style: none; border-top: 1px solid var(--line); }
+.course-module-list > li { border-bottom: 1px solid var(--line); }
+.course-module-entry { display: flex; gap: 24px; padding: 24px 16px; text-decoration: none; }
+.course-module-entry.is-available { background: #f0f4ed; }
+.course-module-entry.is-available:hover { background: var(--tint); }
+.course-module-number { flex: 0 0 26px; padding-top: 4px; color: #899380; font: 16px var(--mono); }
+.course-module-status { display: block; margin-bottom: 7px; color: var(--muted); font: 10px/1.6 var(--mono); }
+.is-available .course-module-status { color: var(--green); }
+.course-module-copy { min-width: 0; }
+.course-module-copy h3 { margin: 0 0 8px; font: 23px/1.35 var(--serif); }
+.course-module-copy h3 > span { color: var(--green); font: 17px var(--sans); }
+.course-module-copy p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.course-module-open { display: block; margin-top: 13px; color: var(--green); font-size: 12px; }
+.course-prerequisites { font-size: 14px; }
+.course-prerequisites ul { padding-left: 22px; margin-bottom: 20px; }
+.course-prerequisites li { padding-left: 4px; margin-bottom: 9px; }
+.course-references ul { padding: 0; margin: 23px 0 0; list-style: none; }
+.course-references li { margin-top: 23px; }
+.course-references h3 { margin-bottom: 7px; font-size: 15px; font-weight: 600; }
+.course-references p { margin-bottom: 6px; color: var(--muted); font-size: 13px; }
+.course-references .course-reference-author { font-size: 11px; }
+@media (max-width: 600px) {
+  .learning-grid { grid-template-columns: 1fr; }
+  .course-summary { flex-direction: column; }
+  .course-module-entry { gap: 16px; padding: 23px 10px; }
+  .course-module-copy h3 { font-size: 21px; }
+}

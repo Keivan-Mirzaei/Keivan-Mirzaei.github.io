@@ -120,8 +120,22 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
                 self.assertTrue((destination / "notes/derivatives" / lesson_slug / "index.html").is_file())
             learning = (destination / "learning/index.html").read_text()
             self.assertIn("Fixture lesson", learning)
-            self.assertIn("Derivatives: from rates to local linearity", learning)
+            self.assertIn("Introductory Calculus", learning)
+            self.assertIn('href="/learning/introductory-calculus/"', learning)
+            self.assertNotIn("Derivatives: from rates to local linearity", learning)
             self.assertNotIn('aria-label="Browse post formats"', learning)
+            course = page("introductory-calculus", "learning")
+            for heading in ("About the course", "Table of contents", "Prerequisites", "References"):
+                self.assertIn(heading, course)
+            self.assertIn('href="/notes/derivatives/"', course)
+            self.assertIn("Available · 5 lessons", course)
+            self.assertEqual(course.count('class="course-module-status">Forthcoming'), 4)
+            self.assertIn('href="/learning/introductory-calculus/"', page("derivatives"))
+            sidebar = learning.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
+            self.assertNotIn('<details', sidebar)
+            self.assertEqual(sidebar.count('class="nav-link'), 6)
+            posts_sidebar = problem.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
+            self.assertIn('href="/notes/" aria-current="true"', posts_sidebar)
             for archive in [destination / "notes/index.html", *(destination / "notes/page").glob("*/index.html")]:
                 # Learning links in the shared sidebar do not make modules posts.
                 archive_content = archive.read_text().partition('<main ')[2].partition('</main>')[0]
@@ -138,6 +152,9 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             module_result = next(entry for entry in index if entry["title"] == "Fixture lesson")
             self.assertEqual(module_result["category"], "Learning module")
             self.assertEqual(module_result["url"], "/learning/fixture-lesson/")
+            course_result = next(entry for entry in index if entry["title"] == "Introductory Calculus")
+            self.assertEqual(course_result["category"], "Learning course")
+            self.assertEqual(course_result["url"], "/learning/introductory-calculus/")
             self.assertNotIn("Write the solution here.", feed)
 
             preview = Path(directory) / "preview"

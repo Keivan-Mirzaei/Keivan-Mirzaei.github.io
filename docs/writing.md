@@ -115,6 +115,12 @@ To embed a hosted video, supply its **embed URL**, not its ordinary watch URL:
 
 Embedded players load lazily and contact their host when loaded. No video player is loaded on other pages.
 
+## Learning courses
+
+Course cards on `/learning/` come from `_data/courses.yml`. Each course has an illustration, description, module roadmap, prerequisites, and references. Its overview page lives in `learning/` and uses `layout: course` with the matching `course_id`.
+
+Add a module's `url` and `module_id` to the course roadmap when it is ready; entries without a URL appear as forthcoming and have no link. Update the course's `lesson_count` as lessons are published. Set `course_id` on the module's front matter to group it under the course card. Modules without a course continue to appear separately in the learning index.
+
 ## Learning modules: explain, predict, try, reflect
 
 A module uses the same Markdown authoring workflow and can include any of the media above. Create it in `_modules/`, or use `--type module` with the helper. Add teaching metadata to its front matter:

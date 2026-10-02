@@ -15,6 +15,7 @@ objectives:
   - Recognize differentiability as a local linear approximation, even for surprising functions.
 layout: module
 module_id: derivatives
+course_id: introductory-calculus
 module_step: 0
 permalink: /notes/derivatives/
 ---

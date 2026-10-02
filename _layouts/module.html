@@ -9,7 +9,12 @@ layout: default
 {% assign next_lesson = course.lessons | where: 'step', next_step | first %}
 <article class="page-wrap article course-module">
   {% if lesson_step == 0 %}
+  {% assign parent_course = site.data.courses[page.course_id] %}
+  {% if parent_course %}
+  <a class="back-link" href="{{ parent_course.url | relative_url }}">← {{ parent_course.title }}</a>
+  {% else %}
   <a class="back-link" href="{{ '/learning/' | relative_url }}">← Learning modules</a>
+  {% endif %}
   {% else %}
   <a class="back-link" href="{{ course.overview | relative_url }}">← {{ course.title }}: overview</a>
   {% endif %}

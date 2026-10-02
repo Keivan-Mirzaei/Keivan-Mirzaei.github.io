@@ -6,15 +6,6 @@
   url: /notes/
   key: notes
   icon: notebook
-  collapsible: true
-  overview: All posts
-  children:
-    - title: Problems
-      url: /problems/
-      key: problem
-    - title: Explorations
-      url: /explorations/
-      key: exploration
 - title: Puzzles
   url: /puzzles/
   key: puzzles
@@ -23,8 +14,6 @@
   url: /learning/
   key: module
   icon: learning
-  collapsible: true
-  overview: All learning modules
 - title: About
   url: /about/
   key: about

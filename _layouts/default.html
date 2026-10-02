@@ -11,6 +11,7 @@
   <link rel="apple-touch-icon" href="{{ '/apple-touch-icon.png' | relative_url }}?v=trefoil-20261001" sizes="180x180">
   <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   {% if page.section == 'puzzles' %}<link rel="stylesheet" href="{{ '/assets/css/puzzles.css' | relative_url }}?v={{ site.time | date: '%s' }}">{% endif %}
+  {% if page.format == 'module' %}<link rel="stylesheet" href="{{ '/assets/css/learning.css' | relative_url }}?v={{ site.time | date: '%s' }}">{% endif %}
   {% if page.widgets contains 'hex' %}<link rel="stylesheet" href="{{ '/assets/css/hex.css' | relative_url }}?v={{ site.time | date: '%s' }}">{% endif %}
   {% if page.widgets contains 'three-cups' %}<link rel="stylesheet" href="{{ '/assets/css/three-cups.css' | relative_url }}?v={{ site.time | date: '%s' }}">{% endif %}
   {% feed_meta %}
@@ -39,37 +40,13 @@
     <p class="nav-label">Explore</p>
     <nav aria-label="Main">
       {% assign active_section = page.format | default: page.section %}
+      {% if active_section == 'problem' or active_section == 'exploration' %}{% assign active_section = 'notes' %}{% endif %}
       <ul class="nav-list">
       {% for item in site.data.navigation %}
-      {% assign active_child = item.children | where: 'key', active_section | first %}
       <li>
-      {% if item.collapsible %}
-      <details class="nav-group"{% if active_section == item.key or active_child %} open{% endif %}>
-        <summary class="nav-link{% if active_section == item.key or active_child %} is-parent-active{% endif %}">
-          {% include icon.html name=item.icon %}<span>{{ item.title }}</span>
-          {% if item.key == 'notes' %}<span class="nav-count">{{ site.posts.size }}</span>{% endif %}
-          <svg class="nav-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
-        </summary>
-        <ul class="nav-sublist">
-          <li><a class="nav-link{% if page.url == item.url %} is-active{% endif %}" href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.overview }}</a></li>
-          {% for child in item.children %}
-          <li><a class="nav-link{% if active_section == child.key %} is-active{% endif %}" href="{{ child.url | relative_url }}"{% if active_section == child.key %} aria-current="{% if page.url == child.url %}page{% else %}true{% endif %}"{% endif %}>{{ child.title }}</a></li>
-          {% endfor %}
-          {% if item.key == 'module' %}
-          {% for learning_module in site.modules %}
-          {% assign course = site.data.modules[learning_module.module_id] %}
-          {% assign module_active = false %}
-          {% if page.url == learning_module.url %}{% assign module_active = true %}{% elsif page.module_id and page.module_id == learning_module.module_id %}{% assign module_active = true %}{% endif %}
-          <li><a class="nav-link{% if module_active %} is-active{% endif %}" href="{{ learning_module.url | relative_url }}"{% if module_active %} aria-current="{% if page.url == learning_module.url %}page{% else %}true{% endif %}"{% endif %}>{{ course.title | default: learning_module.title | escape }}</a></li>
-          {% endfor %}
-          {% endif %}
-        </ul>
-      </details>
-      {% else %}
-      <a class="nav-link{% if active_section == item.key %} is-active{% elsif active_child %} is-parent-active{% endif %}" href="{{ item.url | relative_url }}"{% if active_section == item.key %} aria-current="{% if page.url == item.url %}page{% else %}true{% endif %}"{% endif %}>
+      <a class="nav-link{% if active_section == item.key %} is-active{% endif %}" href="{{ item.url | relative_url }}"{% if active_section == item.key %} aria-current="{% if page.url == item.url %}page{% else %}true{% endif %}"{% endif %}>
         {% include icon.html name=item.icon %}<span>{{ item.title }}</span>
       </a>
-      {% endif %}
       </li>
       {% endfor %}
       </ul>
