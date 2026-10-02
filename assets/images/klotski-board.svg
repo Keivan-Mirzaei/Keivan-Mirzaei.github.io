@@ -1,14 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="530" viewBox="0 0 400 530" role="img" aria-label="Klotski blocks with a marked square and an exit at the bottom">
-  <rect x="3" y="3" width="394" height="494" rx="8" fill="#e7ebe2" stroke="#bac6b8" stroke-width="6"/>
-  <path d="M103 497H297" stroke="#fcfcf9" stroke-width="8"/>
-  <g fill="#d3ddc9" stroke="#e7ebe2" stroke-width="6">
-    <rect x="6" y="6" width="97" height="195" rx="8"/><rect x="297" y="6" width="97" height="195" rx="8"/>
-    <rect x="6" y="201" width="97" height="195" rx="8"/><rect x="297" y="201" width="97" height="195" rx="8"/>
-    <rect x="103" y="201" width="194" height="98" rx="8"/>
-    <rect x="103" y="299" width="97" height="97" rx="8"/><rect x="200" y="299" width="97" height="97" rx="8"/>
-    <rect x="6" y="396" width="97" height="97" rx="8"/><rect x="297" y="396" width="97" height="97" rx="8"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="530" viewBox="0 0 400 530" role="img" aria-label="Porcelain Klotski board with ivory ceramic tiles and a green goal square">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fafaf2"/><stop offset="1" stop-color="#e4e6da"/></linearGradient>
+    <linearGradient id="goal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4d7b62"/><stop offset="1" stop-color="#315d47"/></linearGradient>
+    <filter id="tile-shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="3" stdDeviation="1.5" flood-color="#48583b" flood-opacity=".16"/></filter>
+    <filter id="tray-shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#243a28" flood-opacity=".08"/></filter>
+  </defs>
+  <rect x="7" y="7" width="386" height="480" rx="29" fill="#eeeee6" stroke="#d7dbd2" filter="url(#tray-shadow)"/>
+  <rect x="24" y="24" width="352" height="440" rx="12" fill="#daddd2" stroke="#cbd0c3"/>
+  <g fill="url(#tile)" stroke="#cbd0c3" filter="url(#tile-shadow)">
+    <rect x="28" y="28" width="80" height="168" rx="14"/><rect x="292" y="28" width="80" height="168" rx="14"/>
+    <rect x="28" y="204" width="80" height="168" rx="14"/><rect x="292" y="204" width="80" height="168" rx="14"/>
+    <rect x="116" y="204" width="168" height="80" rx="14"/>
+    <rect x="116" y="292" width="80" height="80" rx="14"/><rect x="204" y="292" width="80" height="80" rx="14"/>
+    <rect x="28" y="380" width="80" height="80" rx="14"/><rect x="292" y="380" width="80" height="80" rx="14"/>
   </g>
-  <rect x="103" y="6" width="194" height="195" rx="8" fill="#285b46" stroke="#e7ebe2" stroke-width="6"/>
-  <g text-anchor="middle" fill="#fff" font-family="Arial,sans-serif"><text x="200" y="96" font-size="30">↓</text><text x="200" y="128" font-size="13">Exit</text></g>
-  <text x="200" y="523" fill="#285b46" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" letter-spacing="1">EXIT ↓</text>
+  <rect x="116" y="28" width="168" height="168" rx="14" fill="url(#goal)" stroke="#315541" filter="url(#tile-shadow)"/>
+  <circle cx="200" cy="112" r="33" fill="none" stroke="#edf3dd" stroke-opacity=".2"/>
+  <path d="M200 99v26m-10-10 10 10 10-10" fill="none" stroke="#f4f6eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M112 464h176v20a5 5 0 0 1-5 5H117a5 5 0 0 1-5-5Z" fill="#daddd2"/>
+  <text x="200" y="514" fill="#54725b" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="500" letter-spacing="1.8">EXIT ↓</text>
 </svg>
