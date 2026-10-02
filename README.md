@@ -6,7 +6,7 @@ The browser uses plain HTML, CSS, and a little JavaScript. There is no front-end
 
 ## Write
 
-Add a file in `_posts`, or run:
+Add problems and explorations in `_posts`, learning modules in `_modules`, and research in `_research`, or run:
 
 ```sh
 python3 scripts/new_post.py "An interesting problem" --type problem --math
@@ -26,7 +26,7 @@ bundle install
 bundle exec jekyll serve
 ```
 
-Open http://127.0.0.1:4000. For drafts, add `--drafts`. Generated files go in `_site` and are never committed. If port 4000 is already used, add `--port 4001`.
+Open http://127.0.0.1:4000. For post drafts, add `--drafts`; for unpublished modules, lessons, and research, add `--unpublished`. Generated files go in `_site` and are never committed. If port 4000 is already used, add `--port 4001`.
 
 ## Verify
 
@@ -54,6 +54,7 @@ For a project site at `username.github.io/repository`, set `url` to `https://use
 ```text
 _posts/                 Published Markdown notes
 _drafts/                Unpublished posts
+_modules/               Learning-module overviews and single-page modules
 _lessons/               Individual pages within learning modules
 _research/              Research projects, papers, and thesis work
 _data/navigation.yml    Sidebar links
@@ -70,7 +71,7 @@ The CV is updated through September 2026, including the Eric Milner Prize, Winte
 
 Sample posts, demonstration research entries, their unused media, and obsolete copies of the original website have been removed. Earlier versions remain in Git history. Reusable activities support graphing, probability, a card trick, and random walks. Scripts load only where used. Starter content remains in `docs/templates/`.
 
-The derivatives course has a short overview with motivation, objectives, and a table of contents, followed by five separate lesson pages with course-order navigation. It develops the derivative from average rates, derives the rules, introduces implicit, inverse, logarithmic, and parametric techniques, and returns to differentiability as local linearity. Twenty problems include hidden hints and solutions, followed by three synthesis tasks. Secant and magnification activities include rigorous error bounds and explicitly represent rational/irrational branches. The overview is the single entry in the learning-module list; individual lessons remain searchable.
+Learning modules have their own collection and index, separate from posts, the post archive, and the post RSS feed. The derivatives course has a short overview with motivation, objectives, and a table of contents, followed by five separate lesson pages with course-order navigation. It develops the derivative from average rates, derives the rules, introduces implicit, inverse, logarithmic, and parametric techniques, and returns to differentiability as local linearity. Twenty problems include hidden hints and solutions, followed by three synthesis tasks. Secant and magnification activities include rigorous error bounds and explicitly represent rational/irrational branches. The overview is the single entry in the learning-module list; individual lessons remain searchable. Its existing overview and lesson addresses are preserved.
 
 Advanced graphs add two optional components: `scientific-plot` reads Plotly JSON data; `sphere-slice` demonstrates a custom Three.js scene. Both show a static SVG preview first. Plotly, Three.js, and graph data load only after **Open interactive view** is pressed. Closing a view releases its renderer. The 3D dependencies use pinned CDN versions configured in `_data/graph_libraries.yml`, so opening these activities needs a network connection and compatible browser graphics. The ordinary posts and existing SVG activities do not load either library.
 

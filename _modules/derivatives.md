@@ -2,6 +2,7 @@
 title: "Derivatives: from rates to local linearity"
 description: "Build the derivative from secant slopes, derive the rules, master demanding computations, and discover what differentiability really requires."
 format: module
+date: 2026-10-02
 level: "Calculus with proofs"
 tags: [calculus, derivatives, real analysis]
 duration: "five lessons of 60–90 minutes, plus problem work"

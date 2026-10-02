@@ -33,22 +33,29 @@ def main():
     if args.type == "research":
         existing = (ROOT / "_research" / f"{slug}.md").exists()
     else:
-        existing = list((ROOT / "_posts").glob(f"*-{slug}.md")) or (ROOT / "_drafts" / f"{slug}.md").exists()
+        existing = (list((ROOT / "_posts").glob(f"*-{slug}.md"))
+                    or (ROOT / "_drafts" / f"{slug}.md").exists()
+                    or (ROOT / "_modules" / f"{slug}.md").exists())
     if existing:
         parser.error(f"An entry with the slug '{slug}' already exists.")
 
-    folder = ROOT / ("_research" if args.type == "research" else "_drafts" if args.draft else "_posts")
+    if args.type in ("module", "research"):
+        folder = ROOT / ("_modules" if args.type == "module" else "_research")
+    else:
+        folder = ROOT / ("_drafts" if args.draft else "_posts")
     folder.mkdir(exist_ok=True)
-    filename = f"{slug}.md" if args.draft or args.type == "research" else f"{args.date.isoformat()}-{slug}.md"
+    filename = f"{slug}.md" if args.draft or args.type in ("module", "research") else f"{args.date.isoformat()}-{slug}.md"
     path = folder / filename
     content = ["---", f"title: {json.dumps(args.title, ensure_ascii=False)}",
                'description: "Write a short introduction here."']
     if args.type == "research":
         content += ['kind: Research project', 'featured: false', 'order: 100', 'links: []']
-        if args.draft:
-            content.append('published: false')
     else:
         content.append(f"format: {args.type}")
+    if args.type == "module":
+        content.append(f"date: {args.date.isoformat()}")
+    if args.type in ("module", "research") and args.draft:
+        content.append('published: false')
     if args.category:
         content.append(f"category: {json.dumps(args.category)}")
     content += ["tags: []", f"math: {str(args.math).lower()}"]

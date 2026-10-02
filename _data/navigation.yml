@@ -2,22 +2,22 @@
   url: /
   key: home
   icon: home
-- title: All posts
+- title: Posts
   url: /notes/
   key: notes
   icon: notebook
-- title: Problems
-  url: /problems/
-  key: problem
-  icon: math
-- title: Explorations
-  url: /explorations/
-  key: exploration
-  icon: experiment
+  children:
+    - title: Problems
+      url: /problems/
+      key: problem
+    - title: Explorations
+      url: /explorations/
+      key: exploration
 - title: Learning modules
   url: /learning/
   key: module
   icon: learning
+  separate: true
 - title: Puzzles
   url: /puzzles/
   key: puzzles
@@ -26,11 +26,3 @@
   url: /research/
   key: research
   icon: research
-- title: Curriculum vitae
-  url: /cv/
-  key: cv
-  icon: document
-- title: About
-  url: /about/
-  key: about
-  icon: person

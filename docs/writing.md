@@ -2,7 +2,7 @@
 
 ## Choose a format
 
-The main navigation follows how a reader uses a post. Topics such as probability, geometry, Python, or mathematical finance belong in `tags` and remain searchable.
+Problems and explorations are the two post formats. Learning modules have their own section and collection. Topics such as probability, geometry, Python, or mathematical finance belong in `tags` and remain searchable.
 
 | Format | Use it for | What the template adds |
 | --- | --- | --- |
@@ -11,7 +11,7 @@ The main navigation follows how a reader uses a post. Topics such as probability
 | `module` | A lesson for students | Objectives, prerequisites, optional duration, and interactive components |
 | Research entry | A paper, thesis, or research project | A separate showcase page, resource links, and optional homepage feature |
 
-All three post formats live in `_posts/YYYY-MM-DD-short-title.md`. Research entries live in `_research/short-title.md`. Existing `/notes/.../` addresses stay stable when you change a post's format.
+Problems and explorations live in `_posts/YYYY-MM-DD-short-title.md`. Learning modules live in `_modules/short-title.md`, with new module addresses at `/learning/short-title/`. Research entries live in `_research/short-title.md`. Existing `/notes/.../` addresses stay stable when you change a post's format; the derivatives module and its lessons also retain their existing addresses.
 
 ## Create an entry
 
@@ -27,7 +27,7 @@ python3 scripts/new_post.py "My research project" --type research --draft
 
 The helper copies a starter from `docs/templates/`. Replace its example text before publishing. It never overwrites an existing entry. You can use `--slug` for a custom URL name and `--date YYYY-MM-DD` for a post date. Research URLs do not use dates.
 
-The homepage, format lists, paginated archive, search index, RSS feed, and sitemap update at build time. Do not edit generated files in `_site`.
+The homepage, format lists, learning index, paginated post archive, search index, RSS feed, and sitemap update at build time. Learning modules appear in the learning index and search, separately from posts and their RSS feed. Do not edit generated files in `_site`.
 
 ## Problems: write normally, add a solution if you want
 
@@ -117,7 +117,7 @@ Embedded players load lazily and contact their host when loaded. No video player
 
 ## Learning modules: explain, predict, try, reflect
 
-A module uses the same Markdown authoring workflow and can include any of the media above. Add teaching metadata to its front matter:
+A module uses the same Markdown authoring workflow and can include any of the media above. Create it in `_modules/`, or use `--type module` with the helper. Add teaching metadata to its front matter:
 
 ```yaml
 ---
@@ -210,7 +210,7 @@ Replace the example information and URLs with real details. Optional metadata an
 
 The research index groups entries with `kind: Paper` under Papers, followed by thesis and other research work. Within each group, entries appear in ascending `order`. The first entry with `featured: true` is shown on the homepage. Research is included in search and the sitemap; the RSS feed contains post summaries, so solutions are not exposed in feed previews. The MSc thesis entry uses its supplied PDF to verify the year, supervision details, and overview. Optional `supervisor` and `assistant_supervisor` fields appear in the research page's metadata; local PDFs can be stored in `assets/papers/` and linked through `links`.
 
-The homepage shows the latest published post from each format that has content. Sample posts and demonstration research entries have been removed; use the starters in `docs/templates/` when creating new entries.
+The homepage shows the latest published posts, with separate links to learning modules. Sample posts and demonstration research entries have been removed; use the starters in `docs/templates/` when creating new entries.
 
 For an unpublished research entry, set `published: false` (the helper does this with `--draft`). Remove that line when ready. Such entries are excluded from the public pages, showcase, and search index.
 
@@ -218,17 +218,17 @@ For an unpublished research entry, set `published: false` (the helper does this 
 
 ### Modules with several lesson pages
 
-The published derivatives module uses `_posts/2026-10-02-derivatives.md` as its overview and `_lessons/derivatives/` for its five lesson pages. The overview holds motivation, objectives, prerequisites, and the table of contents. Each lesson keeps its own content, exercises, and widgets. The `module` layout provides a compact contents disclosure and previous/next navigation in course order; only the overview appears as a post in the learning-module list.
+The published derivatives module uses `_modules/derivatives.md` as its overview and `_lessons/derivatives/` for its five lesson pages. The overview holds motivation, objectives, prerequisites, and the table of contents. Each lesson keeps its own content, exercises, and widgets. The `module` layout provides a compact contents disclosure and previous/next navigation in course order; only the overview appears in the learning-module list. Its explicit `/notes/derivatives/` permalink and all lesson permalinks preserve existing links.
 
 Register the course title, overview URL, and ordered lesson titles and URLs in `_data/modules.yml`. Set `module_id` and numeric `module_step` (`0` for the overview, `1` onward for lessons), and give each page a stable `permalink`. Lesson files belong to the `lessons` collection and are included in search when published. Keep `published: false` on every unfinished page.
 
-For a new course, keep its overview in `_drafts/` and its unfinished lessons in `_lessons/`, with `published: false` on every page. To preview the complete unpublished course, use:
+For a new course, keep its overview in `_modules/` and its unfinished lessons in `_lessons/`, with `published: false` on every page. The helper's `--type module --draft` option sets this on the overview. To preview the complete unpublished course, use:
 
 ```sh
-bundle exec jekyll serve --drafts --unpublished
+bundle exec jekyll serve --unpublished
 ```
 
-When publication is approved, move the overview to `_posts` and remove `published: false` from the overview and every lesson. The public build uses neither preview flag, so unfinished courses remain excluded until then.
+To publish, remove `published: false` from the overview and every lesson. Keep them in their collections. The public build uses no preview flags, so unfinished courses remain excluded until then. Single-page modules use the same publication workflow and do not need a course record or lesson pages.
 
 ### Single-page posts and research drafts
 
@@ -240,7 +240,7 @@ bundle exec jekyll serve --drafts
 
 Publish a post by moving it to `_posts/YYYY-MM-DD-title.md`. Keep the title portion of the filename stable to preserve its URL. Future-dated posts remain excluded until a build after their date. There is no scheduled build: push a change or run the workflow when ready.
 
-Research drafts stay in `_research` with `published: false`. To preview both kinds of unfinished work locally:
+Research drafts stay in `_research` and module drafts stay in `_modules`, with `published: false`. To preview all kinds of unfinished work locally:
 
 ```sh
 bundle exec jekyll serve --drafts --unpublished
@@ -252,13 +252,13 @@ These options are not used by the deployment workflow. Drafts are still readable
 
 - `_config.yml`: site identity, domain, pagination, and collections. Restart preview after changing it.
 - `_data/navigation.yml`: sidebar links.
-- `_data/formats.yml`: the three post-format names, descriptions, and destinations.
+- `_data/formats.yml`: post-format and learning-module names, descriptions, and destinations.
 - `_layouts/`, `_includes/`: shared presentation.
 - `assets/css/site.css`: grouped styles, with colors and dimensions at the top.
 - `cv.md`, `about.md`: standalone pages. Add new Markdown pages with a title, permalink, and `search: true` if they should be searchable.
-- `search.json`: generated full-text index of posts, research, and opted-in pages.
+- `search.json`: generated full-text index of posts, modules, lessons, research, and opted-in pages.
 
-Search ranks title matches before topic and body matches. It stays in the browser and loads its index only after a query is entered. Format lists show all matching posts; the combined archive has numbered pagination. The old subject pages remain available for existing links.
+Search ranks title matches before topic and body matches. It stays in the browser and loads its index only after a query is entered. Format lists show all matching posts; the combined post archive has numbered pagination. Learning modules are listed separately in title order. The old subject pages remain available for existing links.
 
 The CV's preprint list comes from research entries with `kind: Paper`. Update education, awards, experience, and the `updated` date in `cv.md`. The download uses `assets/cv/keivan-mirzaei-cv.pdf`, compiled from the CV source in `/Users/keivan/CV/CV.tex`. When updating the document, replace that PDF and update the date in the download label. The current document includes both 2026 awards and the Fall 2026 teaching roles.
 

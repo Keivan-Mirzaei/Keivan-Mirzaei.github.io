@@ -1,0 +1,84 @@
+.three-cups-widget .three-cups-instruction {
+  margin: 16px 0 24px;
+  color: var(--muted);
+  line-height: 1.75;
+}
+.three-cups-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 520px;
+  margin: 0 auto 24px;
+}
+.three-cups-cup {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 10px 13px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.45;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+.three-cups-cup:not(:disabled):hover {
+  background: #edf1e8;
+  border-color: #a6baa3;
+}
+.three-cups-cup[aria-pressed="true"] {
+  border-color: var(--green);
+  background: var(--tint);
+  box-shadow: inset 0 0 0 1px var(--green);
+}
+.three-cups-cup:disabled { cursor: default; }
+.three-cups-number { font: 10px/1.6 var(--mono); color: var(--muted); }
+.three-cups-illustration { display: block; width: 120px; margin: 4px 0 5px; }
+.three-cups-shadow { fill: #dfe4d9; }
+.three-cups-vessel {
+  transform: rotate(0deg);
+  transform-origin: 60px 65.5px;
+  transition: transform 350ms ease;
+}
+.three-cups-cup[data-facing="up"] .three-cups-vessel { transform: rotate(180deg); }
+.three-cups-body, .three-cups-base, .three-cups-rim {
+  fill: #dce6d3;
+  stroke: var(--green);
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+.three-cups-base { fill: #e9efdf; }
+.three-cups-rim { fill: #f8faf1; }
+.three-cups-opening { fill: #a6baa3; }
+.three-cups-shine { fill: none; stroke: #f8faf1; stroke-width: 4; stroke-linecap: round; }
+.three-cups-orientation { font-size: 12px; }
+.three-cups-selection {
+  display: inline-block;
+  min-width: 72px;
+  margin-top: 10px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  background: #eef1e8;
+  color: var(--green);
+  font-size: 11px;
+}
+.three-cups-cup[aria-pressed="true"] .three-cups-selection { background: var(--green); color: #fff; }
+.three-cups-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.three-cups-controls button { min-height: 44px; }
+.three-cups-controls .secondary-button:disabled { opacity: .45; cursor: default; }
+.three-cups-reset { border: 0; border-radius: 3px; padding: 9px 15px; background: transparent; color: var(--green); font-size: 12px; }
+.three-cups-reset:not(:disabled):hover { background: var(--tint); }
+.three-cups-reset:disabled { color: var(--muted); cursor: default; }
+.three-cups-widget .three-cups-status { margin: 14px 0 0; min-height: 3.4em; color: var(--green); font-size: 13px; line-height: 1.7; }
+.three-cups-widget noscript p { margin: 16px 0 0; font-size: 13px; }
+@media (max-width: 480px) {
+  .three-cups-row { gap: 7px; }
+  .three-cups-cup { padding: 12px 4px 11px; }
+  .three-cups-selection { min-width: 0; padding: 4px 8px; font-size: 10px; }
+  .three-cups-orientation { font-size: 10px; }
+  .three-cups-widget .graph-heading h3 { font-size: 21px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .three-cups-vessel, .three-cups-cup { transition: none; }
+}

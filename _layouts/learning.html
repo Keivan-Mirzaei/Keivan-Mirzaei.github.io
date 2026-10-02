@@ -1,0 +1,18 @@
+---
+layout: default
+---
+<div class="page-wrap">
+  <header class="page-heading">
+    <p class="eyebrow">Learn step by step</p>
+    <h1>{{ page.title }}</h1>
+    <p class="page-description">{{ page.description }}</p>
+  </header>
+  {% if site.modules.size > 0 %}
+  <div class="note-list">
+    {% for module in site.modules %}{% include note.html post=module level=2 %}{% endfor %}
+  </div>
+  {% else %}
+  <p class="collection-empty">No learning modules have been published yet.</p>
+  {% endif %}
+  {{ content }}
+</div>

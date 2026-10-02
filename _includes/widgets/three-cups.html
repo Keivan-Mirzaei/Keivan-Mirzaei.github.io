@@ -1,0 +1,33 @@
+{% assign widget_id = include.id | default: 'three-cups' %}
+<section class="graph-widget three-cups-widget" data-three-cups aria-labelledby="{{ widget_id }}-heading">
+  <div class="graph-heading">
+    <h3 id="{{ widget_id }}-heading">Three cups</h3>
+    <span class="activity-badge" data-cups-count>0 moves · 0 of 3 up</span>
+  </div>
+  <p class="three-cups-instruction" id="{{ widget_id }}-instructions">Select two cups, then press Flip selected. Select a cup again to deselect it.</p>
+  <div class="three-cups-row" role="group" aria-label="Choose two cups" aria-describedby="{{ widget_id }}-instructions">
+    {% for number in (1..3) %}
+    <button class="three-cups-cup" type="button" data-cup data-facing="down" aria-pressed="false" aria-label="Cup {{ number }}, facing down, not selected" disabled>
+      <span class="three-cups-number" aria-hidden="true">Cup {{ number }}</span>
+      <svg class="three-cups-illustration" viewBox="0 0 120 134" aria-hidden="true" focusable="false">
+        <ellipse class="three-cups-shadow" cx="60" cy="118" rx="38" ry="5"/>
+        <g class="three-cups-vessel">
+          <path class="three-cups-body" d="M41 32 Q60 24 79 32 L95 99 Q60 113 25 99 Z"/>
+          <path class="three-cups-shine" d="M46 45 L36 87"/>
+          <ellipse class="three-cups-base" cx="60" cy="32" rx="19" ry="6"/>
+          <ellipse class="three-cups-rim" cx="60" cy="99" rx="35" ry="9"/>
+          <ellipse class="three-cups-opening" cx="60" cy="99" rx="27" ry="5"/>
+        </g>
+      </svg>
+      <span class="three-cups-orientation" data-cup-orientation aria-hidden="true">Facing down</span>
+      <span class="three-cups-selection" data-cup-selection aria-hidden="true">Select</span>
+    </button>
+    {% endfor %}
+  </div>
+  <div class="three-cups-controls">
+    <button class="secondary-button" type="button" data-cups-flip disabled>Flip selected</button>
+    <button class="three-cups-reset" type="button" data-cups-reset disabled>Reset</button>
+  </div>
+  <p class="three-cups-status" data-cups-status role="status" aria-atomic="true">Select two cups to begin.</p>
+  <noscript><p>Enable JavaScript to select and flip the cups, or try the puzzle with three cups on a table. Each move must flip exactly two.</p></noscript>
+</section>

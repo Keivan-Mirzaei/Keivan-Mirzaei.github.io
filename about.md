@@ -1,36 +1,51 @@
 ---
-title: About the notebook
+title: About Almost Obvious
 section: about
 eyebrow: Mathematics & curiosity
 permalink: /about/
-description: A place to explore mathematical problems, follow ideas, and learn by experimenting.
+description: A diary of questions, ideas, and whatever catches my curiosity.
 search: true
-math: true
+widgets: [three-cups]
 ---
-Almost Obvious is a notebook of mathematical questions, proofs, and experiments. The name is a nod to those moments when a result seems clear, but the proof takes a little more thought. Try an example, notice a pattern, ask why it works, and follow the idea a little further.
+I use this website as a diary: a place to share whatever passes through my mind or catches my interest. Often that means a mathematical question, a proof, or an experiment; sometimes it is simply an idea I want to spend a little more time with.
 
-It is for students, teachers, and anyone who enjoys thinking about mathematics. Topics range from algebra and geometry to probability, analysis, and computation. There is no required reading order; start with a question that catches your attention.
+The name Almost Obvious is a nod to those moments when a result seems clear, but the proof takes a little more thought. Start anywhere that catches your curiosity.
 
-## Ways to explore
+## A small question to start
 
-- [Problems]({{ '/problems/' | relative_url }}) offer questions to work through, with solutions to uncover when you are ready.
-- [Explorations]({{ '/explorations/' | relative_url }}) follow ideas through examples, code, diagrams, and experiments.
-- [Learning modules]({{ '/learning/' | relative_url }}) are a space for step-by-step explanations and interactive activities.
-- [Research]({{ '/research/' | relative_url }}) collects papers and thesis work, with summaries and links for further reading.
+Three cups sit in a row, all facing down. On each move, turn over **exactly two** cups. Can you get all three facing up?
 
-The notebook is always in progress. Some entries begin with an elementary puzzle; others lead toward deeper theory. Each is an invitation to spend time with an idea and see where it goes.
+{% include widgets/three-cups.html %}
 
-## Start with a question
+<details markdown="1">
+<summary>A hint</summary>
 
-Suppose every point in the plane is colored either red or green. Show that one of these colors contains pairs of points at every possible distance.
+Count the cups facing up. What can a move do to that number?
 
-Or try this: at every party with at least two people, there are always two people with the same number of friends present. Why?
+</details>
 
-And, for another kind of puzzle, what is the value of this infinite nested radical?
+<details class="problem-solution" markdown="1">
+<summary>The one-line solution</summary>
 
-$$
-\sqrt{1+2\sqrt{1+3\sqrt{1+4\sqrt{1+\dots}}}}
-$$
+Each move changes the number of upward-facing cups by −2, 0, or 2, so it stays even; three is odd, making the goal impossible.
+
+</details>
+
+That is the kind of moment this notebook is about: a little experimentation, then a reason that explains every possible attempt.
+
+## Find your way around
+
+[Posts]({{ '/notes/' | relative_url }}) come in two forms: [Problems]({{ '/problems/' | relative_url }}) offer a question and a solution to uncover when you are ready; [Explorations]({{ '/explorations/' | relative_url }}) follow an idea through examples, diagrams, code, and experiments.
+
+[Learning modules]({{ '/learning/' | relative_url }}) have their own space for courses and topics, with explanations and interactive activities that build understanding step by step.
+
+You can also [play a puzzle]({{ '/puzzles/' | relative_url }}) or [read about my research]({{ '/research/' | relative_url }}).
+
+## About me
+
+I’m a PhD candidate in Mathematical Finance at the University of Calgary. My research is in stochastic analysis and partial differential equations, and I teach mathematics. Alongside that work, I keep this diary to collect ideas, follow questions, and share things I find interesting.
+
+For my education, teaching, and academic experience, see my [CV]({{ '/cv/' | relative_url }}).
 
 ## Get in touch
 

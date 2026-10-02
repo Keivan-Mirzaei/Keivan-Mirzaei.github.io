@@ -42,8 +42,9 @@ layout: default
     {% endif %}
   </div>
   <footer class="article-footer"><p>Have a question, a different approach, or an idea to share?</p><a href="mailto:{{ site.email }}">I’d love to hear it. ↗</a></footer>
-  <nav class="post-pagination" aria-label="More notes">
-    {% if page.previous %}<a href="{{ page.previous.url | relative_url }}"><span class="eyebrow">← Previous note</span>{{ page.previous.title }}</a>{% endif %}
-    {% if page.next %}<a href="{{ page.next.url | relative_url }}"><span class="eyebrow">Next note →</span>{{ page.next.title }}</a>{% endif %}
+  {% assign entry_kind = 'note' %}{% if page.format == 'module' %}{% assign entry_kind = 'module' %}{% endif %}
+  <nav class="post-pagination" aria-label="{% if page.format == 'module' %}More learning modules{% else %}More notes{% endif %}">
+    {% if page.previous %}<a href="{{ page.previous.url | relative_url }}"><span class="eyebrow">← Previous {{ entry_kind }}</span>{{ page.previous.title }}</a>{% endif %}
+    {% if page.next %}<a href="{{ page.next.url | relative_url }}"><span class="eyebrow">Next {{ entry_kind }} →</span>{{ page.next.title }}</a>{% endif %}
   </nav>
 </article>

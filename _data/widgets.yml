@@ -4,6 +4,7 @@ derivative: /assets/js/widgets/derivative.js
 differentiability: /assets/js/widgets/differentiability.mjs
 bayes: /assets/js/widgets/bayes.js
 card-trick: /assets/js/widgets/card-trick.js
+three-cups: /assets/js/widgets/three-cups.mjs
 random-walk: /assets/js/widgets/random-walk.js
 scientific-plot: /assets/js/widgets/scientific-plot.mjs
 sphere-slice: /assets/js/widgets/sphere-slice.mjs

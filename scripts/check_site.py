@@ -91,7 +91,7 @@ try:
         target, _ = resolve_link(url, ROOT / "search.json")
         if target is None or not target.is_file():
             errors.append(f"Search result has no page: {url}")
-    for collection in ("notes", "research"):
+    for collection in ("notes", "learning", "research"):
         for entry in (ROOT / collection).glob("*/index.html"):
             if pages[entry.resolve()].redirect:
                 continue

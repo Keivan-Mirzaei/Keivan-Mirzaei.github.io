@@ -1,6 +1,8 @@
 <nav class="topic-links" aria-label="Browse post formats">
   <a href="{{ '/notes/' | relative_url }}"{% if page.section == 'notes' and page.format == nil %} aria-current="page"{% endif %}>All posts</a>
   {% for format in site.data.formats %}
+  {% if format.key != 'module' %}
   <a href="{{ format.url | relative_url }}"{% if page.format == format.key %} aria-current="page"{% endif %}>{{ format.title }}</a>
+  {% endif %}
   {% endfor %}
 </nav>

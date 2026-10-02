@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   {% if page.section == 'puzzles' %}<link rel="stylesheet" href="{{ '/assets/css/puzzles.css' | relative_url }}?v={{ site.time | date: '%s' }}">{% endif %}
   {% if page.widgets contains 'hex' %}<link rel="stylesheet" href="{{ '/assets/css/hex.css' | relative_url }}?v={{ site.time | date: '%s' }}">{% endif %}
+  {% if page.widgets contains 'three-cups' %}<link rel="stylesheet" href="{{ '/assets/css/three-cups.css' | relative_url }}?v={{ site.time | date: '%s' }}">{% endif %}
   {% feed_meta %}
   <script src="{{ '/assets/js/navigation.js' | relative_url }}" defer></script>
   {% if page.search_page %}<script src="{{ '/assets/js/search.js' | relative_url }}" defer></script>{% endif %}
@@ -38,17 +39,34 @@
     <p class="nav-label">Explore</p>
     <nav aria-label="Main">
       {% assign active_section = page.format | default: page.section %}
+      <ul class="nav-list">
       {% for item in site.data.navigation %}
-      <a class="nav-link{% if active_section == item.key %} is-active{% endif %}" href="{{ item.url | relative_url }}"{% if active_section == item.key %} aria-current="{% if page.url == item.url %}page{% else %}true{% endif %}"{% endif %}>
+      {% assign active_child = item.children | where: 'key', active_section | first %}
+      <li{% if item.separate %} class="nav-separate"{% endif %}>
+      <a class="nav-link{% if active_section == item.key %} is-active{% elsif active_child %} is-parent-active{% endif %}" href="{{ item.url | relative_url }}"{% if active_section == item.key %} aria-current="{% if page.url == item.url %}page{% else %}true{% endif %}"{% endif %}>
         {% include icon.html name=item.icon %}<span>{{ item.title }}</span>
         {% if item.key == 'notes' %}<span class="nav-count">{{ site.posts.size }}</span>{% endif %}
       </a>
+      {% if item.children %}
+      <ul class="nav-sublist">
+        {% for child in item.children %}
+        <li><a class="nav-link{% if active_section == child.key %} is-active{% endif %}" href="{{ child.url | relative_url }}"{% if active_section == child.key %} aria-current="{% if page.url == child.url %}page{% else %}true{% endif %}"{% endif %}>{{ child.title }}</a></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      </li>
       {% endfor %}
+      </ul>
     </nav>
     <div class="sidebar-bottom">
-      <p>A notebook, always in progress.</p>
-      <a href="https://github.com/keivan-mirzaei">GitHub ↗</a>
-      <a href="mailto:{{ site.email }}">Email ↗</a>
+      <p class="sidebar-author">{{ site.author | escape }}</p>
+      <p class="sidebar-note">A notebook, always in progress.</p>
+      <nav class="sidebar-personal" aria-label="About and contact">
+        <a href="{{ '/about/' | relative_url }}"{% if active_section == 'about' %} class="is-active" aria-current="page"{% endif %}>About</a>
+        <a href="{{ '/cv/' | relative_url }}"{% if active_section == 'cv' %} class="is-active" aria-current="page"{% endif %}>CV</a>
+        <a href="https://github.com/keivan-mirzaei">GitHub <span aria-hidden="true">↗</span></a>
+        <a href="mailto:{{ site.email }}">Email <span aria-hidden="true">↗</span></a>
+      </nav>
     </div>
   </aside>
   <button class="sidebar-backdrop" type="button" tabindex="-1" aria-label="Close navigation" hidden></button>

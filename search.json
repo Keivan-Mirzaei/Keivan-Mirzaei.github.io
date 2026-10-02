@@ -4,13 +4,13 @@ permalink: /search.json
 sitemap: false
 ---
 [
-{%- assign entries = site.posts | concat: site.lessons | concat: site.research | concat: site.pages | where: 'search', true -%}
+{%- assign entries = site.posts | concat: site.modules | concat: site.lessons | concat: site.research | concat: site.pages | where: 'search', true -%}
 {%- for entry in entries -%}
 {%- assign entry_format = site.data.formats | where: 'key', entry.format | first -%}
   {
     "title": {{ entry.search_title | default: entry.title | jsonify }},
     "url": {{ entry.url | relative_url | jsonify }},
-    "category": {% if entry.collection == 'research' %}"Research"{% elsif entry.collection == 'posts' or entry.collection == 'lessons' %}{{ entry_format.label | default: 'Post' | jsonify }}{% else %}"Page"{% endif %},
+    "category": {% if entry.collection == 'research' %}"Research"{% elsif entry.collection == 'posts' or entry.collection == 'modules' or entry.collection == 'lessons' %}{{ entry_format.label | default: 'Post' | jsonify }}{% else %}"Page"{% endif %},
     "tags": {{ entry.tags | join: ' ' | append: ' ' | append: entry.category | jsonify }},
     "description": {{ entry.description | default: '' | jsonify }},
     "content": {% if entry.layout == 'puzzle' %}{{ entry.description | default: entry.title | normalize_whitespace | jsonify }}{% else %}{{ entry.content | default: entry.description | markdownify | strip_html | normalize_whitespace | jsonify }}{% endif %}
