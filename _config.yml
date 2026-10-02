@@ -13,6 +13,9 @@ paginate_path: /notes/page/:num/
 feed:
   excerpt_only: true # Keep solutions out of feed previews.
 collections:
+  lessons:
+    output: true
+    permalink: /learning/:path/
   research:
     output: true
     permalink: /research/:name/
@@ -30,6 +33,14 @@ plugins:
   - jekyll-sitemap
 
 defaults:
+  - scope:
+      path: ""
+      type: lessons
+    values:
+      layout: module
+      format: module
+      section: module
+      search: true
   - scope:
       path: ""
     values:

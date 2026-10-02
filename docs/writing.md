@@ -153,11 +153,14 @@ The following components are ready to reuse. Set `widgets: [name]` and include `
 | --- | --- |
 | `quadratic` | Shape, shift, and reflect a parabola |
 | `derivative` | Move a secant toward a tangent; handle the zero step explicitly |
+| `differentiability` | Magnify a local graph, choose a candidate slope, and compare rigorous error bounds |
 | `bayes` | Change a base rate and inspect expected counts |
 | `card-trick` | Play three rounds of the 21-card trick |
 | `random-walk` | Reveal, replay, pause, and regenerate a scaled random walk |
 
 Supply a static figure alongside the random-walk component so readers without JavaScript can follow the article.
+
+The `differentiability` component accepts `model='square'` (the default) or `model='absolute'` for its initial static view. Its controls also offer an oscillating function and two rational/irrational examples. It magnifies both coordinates by the same zoom factor and displays the error from a candidate linear approximation. Dense branches use labeled guides and selected points; unresolved oscillations use envelopes. These drawings accompany bounds rather than substitute for proofs.
 
 The graph uses a small local script and SVG; there is no graphing service or plotting library. New activities can follow the same pattern:
 
@@ -212,6 +215,22 @@ The homepage shows the latest published post from each format that has content. 
 For an unpublished research entry, set `published: false` (the helper does this with `--draft`). Remove that line when ready. Such entries are excluded from the public pages, showcase, and search index.
 
 ## Drafts and publication
+
+### Modules with several lesson pages
+
+The published derivatives module uses `_posts/2026-10-02-derivatives.md` as its overview and `_lessons/derivatives/` for its five lesson pages. The overview holds motivation, objectives, prerequisites, and the table of contents. Each lesson keeps its own content, exercises, and widgets. The `module` layout provides a compact contents disclosure and previous/next navigation in course order; only the overview appears as a post in the learning-module list.
+
+Register the course title, overview URL, and ordered lesson titles and URLs in `_data/modules.yml`. Set `module_id` and numeric `module_step` (`0` for the overview, `1` onward for lessons), and give each page a stable `permalink`. Lesson files belong to the `lessons` collection and are included in search when published. Keep `published: false` on every unfinished page.
+
+For a new course, keep its overview in `_drafts/` and its unfinished lessons in `_lessons/`, with `published: false` on every page. To preview the complete unpublished course, use:
+
+```sh
+bundle exec jekyll serve --drafts --unpublished
+```
+
+When publication is approved, move the overview to `_posts` and remove `published: false` from the overview and every lesson. The public build uses neither preview flag, so unfinished courses remain excluded until then.
+
+### Single-page posts and research drafts
 
 Post drafts live in `_drafts/title.md`. Preview them with:
 

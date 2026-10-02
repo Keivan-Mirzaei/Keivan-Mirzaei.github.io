@@ -1,0 +1,14 @@
+{% assign course_contents = site.data.modules[page.module_id] %}
+{% if include.compact %}<details class="module-contents-disclosure"><summary>Table of contents</summary>{% endif %}
+<nav class="module-contents"{% if include.compact %} aria-label="Module contents"{% else %} aria-labelledby="module-contents-title"{% endif %}>
+  {% if include.compact %}<p><a href="{{ course_contents.overview | relative_url }}">Motivation and objectives</a></p>{% else %}<h2 id="module-contents-title">Table of contents</h2>{% endif %}
+  <ol>
+    {% for lesson in course_contents.lessons %}
+    <li>
+      <a href="{{ lesson.url | relative_url }}"{% if page.module_step == lesson.step %} aria-current="page"{% endif %}>{{ lesson.title }}</a>
+      {% unless include.compact %}<p>{{ lesson.description }}</p>{% endunless %}
+    </li>
+    {% endfor %}
+  </ol>
+</nav>
+{% if include.compact %}</details>{% endif %}

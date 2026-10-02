@@ -1,0 +1,43 @@
+{% assign widget_id = include.id | default: 'differentiability' %}
+{% assign initial_model = include.model | default: 'square' %}
+<section class="graph-widget differentiability-widget" data-widget="differentiability" data-model="{{ initial_model }}" aria-labelledby="{{ widget_id }}-heading">
+  <div class="graph-heading">
+    <h3 id="{{ widget_id }}-heading">Does the graph become a line?</h3>
+    <p class="graph-equation" data-equation>{% if initial_model == 'absolute' %}f(x) = |x|, at a = 0{% else %}f(x) = x², at a = 1{% endif %}</p>
+  </div>
+  <p class="differentiability-caption">Both axes use the same magnification. Horizontal: u = (x − a)/ρ. Vertical: v = (f(x) − f(a))/ρ. A candidate tangent becomes v = Lu.</p>
+  <svg class="function-plot" viewBox="0 0 620 365" role="img" aria-labelledby="{{ widget_id }}-title {{ widget_id }}-desc">
+    <title id="{{ widget_id }}-title">A graph magnified around its base point</title>
+    <desc id="{{ widget_id }}-desc" data-description>{% if initial_model == 'absolute' %}The absolute value graph remains a corner under magnification. With candidate slope zero, its maximum normalized error is one at every zoom radius.{% else %}At radius one, the magnified parabola is v = 2u + u². Its candidate tangent is v = 2u and its maximum normalized error is one.{% endif %}</desc>
+    <defs><clipPath id="{{ widget_id }}-clip"><rect x="68" y="20" width="502" height="290"/></clipPath></defs>
+    <g data-grid class="plot-grid"><path d="M68 82.14H570M68 123.57H570M68 165H570M68 206.43H570M68 247.86H570M68 20V310M193.5 20V310M319 20V310M444.5 20V310M570 20V310"/></g>
+    <g class="plot-axes"><path d="M68 165H570M319 20V310"/></g>
+    <g class="plot-labels"><text x="68" y="334">−1</text><text x="193.5" y="334">−0.5</text><text x="319" y="334">0</text><text x="444.5" y="334">0.5</text><text x="570" y="334">1</text><text x="45" y="86">2</text><text x="45" y="169">0</text><text x="45" y="252">−2</text><text x="598" y="334">u</text><text x="319" y="13">v</text></g>
+    <g clip-path="url(#{{ widget_id }}-clip)">
+      <g data-guides></g>
+      <path class="plot-curve" data-curve d="{% if initial_model == 'absolute' %}M68 123.57 L319 165 L570 123.57{% else %}M68 206.43 Q319 206.43 570 40.71{% endif %}"/>
+      <path class="differentiability-tangent" data-tangent d="{% if initial_model == 'absolute' %}M68 165L570 165{% else %}M68 247.86L570 82.14{% endif %}"/>
+      <g data-samples></g>
+      <circle class="plot-vertex" cx="319" cy="165" r="4"/>
+    </g>
+  </svg>
+  <p class="plot-legend" data-legend>Green: magnified function · Dark dashed: candidate line</p>
+  <div class="graph-controls">
+    <label for="{{ widget_id }}-function">Function to inspect</label>
+    <select id="{{ widget_id }}-function" data-function disabled>
+      <option value="square"{% if initial_model == 'square' %} selected{% endif %}>Parabola at 1</option>
+      <option value="absolute"{% if initial_model == 'absolute' %} selected{% endif %}>Absolute value at 0</option>
+      <option value="oscillation">x² sin(1/x) at 0</option>
+      <option value="rational-square">x² on rationals, 0 on irrationals</option>
+      <option value="rational-linear">x on rationals, 0 on irrationals</option>
+    </select>
+    <label for="{{ widget_id }}-zoom">Zoom level <span>ρ = <output data-radius>1</output></span></label>
+    <input id="{{ widget_id }}-zoom" data-zoom type="range" min="0" max="5" step="1" value="0" disabled>
+    <label for="{{ widget_id }}-slope">Candidate slope <span>L = <output data-slope>{% if initial_model == 'absolute' %}0{% else %}2{% endif %}</output></span></label>
+    <input id="{{ widget_id }}-slope" data-slope-control type="range" min="-2" max="3" step="0.1" value="{% if initial_model == 'absolute' %}0{% else %}2{% endif %}" disabled>
+  </div>
+  <p class="activity-result" data-feedback role="status">{% if initial_model == 'absolute' %}Maximum normalized error: 1. Zooming does not reduce it. No choice of slope removes the corner.{% else %}Normalized error bound: 1. With slope 2 this bound equals ρ and tends to zero as you zoom.{% endif %}</p>
+  <p class="differentiability-caption" data-explanation>The normalized error is the largest vertical discrepancy from the candidate line over −1 ≤ u ≤ 1. The lesson supplies the limit proof.</p>
+  <button class="secondary-button" type="button" data-reset disabled>Reset this view</button>
+  <noscript><p>The static view shows radius 1. The formulas and proofs in the lesson remain available without the controls.</p></noscript>
+</section>

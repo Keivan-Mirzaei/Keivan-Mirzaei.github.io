@@ -1,0 +1,37 @@
+---
+layout: default
+---
+{% assign course = site.data.modules[page.module_id] %}
+{% assign lesson_step = page.module_step | default: 0 %}
+{% assign previous_step = lesson_step | minus: 1 %}
+{% assign next_step = lesson_step | plus: 1 %}
+{% assign previous_lesson = course.lessons | where: 'step', previous_step | first %}
+{% assign next_lesson = course.lessons | where: 'step', next_step | first %}
+<article class="page-wrap article course-module">
+  {% if lesson_step == 0 %}
+  <a class="back-link" href="{{ '/learning/' | relative_url }}">← Learning modules</a>
+  {% else %}
+  <a class="back-link" href="{{ course.overview | relative_url }}">← {{ course.title }}: overview</a>
+  {% endif %}
+  <header class="page-heading">
+    <p class="eyebrow">Learning module <span aria-hidden="true">/</span> {% if lesson_step == 0 %}Overview{% else %}{{ course.title }} · Lesson {{ lesson_step }} of {{ course.lessons.size }}{% endif %}</p>
+    <h1>{{ page.title }}</h1>
+    <p class="page-description">{{ page.description }}</p>
+    {% if page.duration %}<p class="module-duration">Allow {{ page.duration }}.</p>{% endif %}
+  </header>
+  {% if page.published == false or page.draft %}<p class="sample-notice"><strong>Draft for review.</strong> This module has not been published.</p>{% endif %}
+  {% if lesson_step != 0 %}{% include module-contents.html compact=true %}{% endif %}
+  <div class="prose">{{ content }}</div>
+  <nav class="module-pagination" aria-label="Lesson navigation">
+    {% if lesson_step == 1 %}
+    <a class="module-previous" href="{{ course.overview | relative_url }}" rel="prev"><span class="eyebrow">← Previous</span>Motivation and objectives</a>
+    {% elsif previous_lesson %}
+    <a class="module-previous" href="{{ previous_lesson.url | relative_url }}" rel="prev"><span class="eyebrow">← Lesson {{ previous_lesson.step }}</span>{{ previous_lesson.title }}</a>
+    {% endif %}
+    {% if next_lesson %}
+    <a class="module-next" href="{{ next_lesson.url | relative_url }}" rel="next"><span class="eyebrow">{% if lesson_step == 0 %}Start Lesson 1{% else %}Lesson {{ next_lesson.step }}{% endif %} →</span>{{ next_lesson.title }}</a>
+    {% elsif lesson_step != 0 %}
+    <a class="module-next" href="{{ course.overview | relative_url }}"><span class="eyebrow">Module complete</span>Return to the course overview →</a>
+    {% endif %}
+  </nav>
+</article>

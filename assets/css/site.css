@@ -229,6 +229,28 @@ mark { color: var(--ink); background: #e1ebbd; border-radius: 2px; }
 .module-overview dt, .research-facts dt { color: var(--muted); font-size: 12px; }
 .module-overview dd, .research-facts dd { margin: 0; }
 .module-overview dl > div, .research-facts > div { margin-bottom: 12px; }
+.module-duration { color: var(--muted); font-size: 13px; margin-top: 20px; }
+.module-contents { margin: 28px 0; }
+.module-contents ol { padding-left: 24px; }
+.module-contents li { padding: 12px 0 12px 5px; border-bottom: 1px solid var(--line); }
+.module-contents li::marker { color: var(--muted); font: 13px var(--mono); }
+.module-contents li a { color: var(--green); font: 21px/1.5 var(--serif); text-decoration: none; }
+.module-contents li a:hover { text-decoration: underline; }
+.module-contents li p { margin: 5px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.module-contents-disclosure { border: 1px solid var(--line); border-radius: 4px; padding: 13px 18px; margin-bottom: 30px; font-size: 13px; }
+.module-contents-disclosure summary { cursor: pointer; color: var(--green); }
+.module-contents-disclosure .module-contents { margin: 16px 0 0; }
+.module-contents-disclosure .module-contents a { font-size: 16px; }
+.module-contents-disclosure .module-contents li { padding: 8px 0; }
+.module-contents [aria-current="page"] { font-weight: 700; }
+.module-pagination { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 42px; border-top: 1px solid var(--line); padding-top: 26px; }
+.module-pagination a { color: var(--green); font: 19px/1.5 var(--serif); text-decoration: none; }
+.module-pagination .eyebrow { display: block; font-size: 10px; margin-bottom: 8px; }
+.module-next { grid-column: 2; }
+@media (max-width: 540px) {
+  .module-pagination { grid-template-columns: 1fr; gap: 22px; }
+  .module-next { grid-column: 1; }
+}
 .module-preview { margin-top: 45px; padding-top: 28px; border-top: 1px solid var(--line); }
 .module-preview > h2 { font: 32px/1.3 var(--serif); margin-bottom: 18px; }
 .module-preview > p:not(.eyebrow) { color: var(--muted); }
@@ -472,6 +494,14 @@ mark { color: var(--ink); background: #e1ebbd; border-radius: 2px; }
 button:disabled { cursor: default; opacity: .55; }
 .plot-secant { fill: none; stroke: #a85928; stroke-width: 2.5; }
 .plot-second-point { fill: #a85928; stroke: var(--paper); stroke-width: 2; }
+.differentiability-widget .differentiability-caption { font: 12px/1.7 var(--sans); color: var(--muted); margin: 12px 0; }
+.differentiability-widget .graph-controls select { width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid var(--line); border-radius: 3px; color: var(--ink); background: var(--paper); font: 13px var(--sans); }
+.differentiability-widget .graph-controls input { min-height: 44px; }
+.differentiability-tangent { fill: none; stroke: #384c35; stroke-width: 2; stroke-dasharray: 8 6; }
+.differentiability-guide, .differentiability-envelope { fill: none; stroke: #94a587; stroke-width: 1.3; stroke-dasharray: 3 5; }
+.differentiability-other-guide { fill: none; stroke: #a85928; stroke-width: 1.3; stroke-dasharray: 3 5; }
+.differentiability-rational { fill: var(--green); }
+.differentiability-irrational { fill: #a85928; }
 .probability-table { margin: 20px 0; width: 100%; }
 .probability-table caption { text-align: left; color: var(--muted); font-size: 12px; }
 .probability-bar { height: 34px; border: 1px solid var(--green); background: repeating-linear-gradient(135deg, #e6ece1 0 5px, #bccdb5 5px 7px); overflow: hidden; border-radius: 3px; }

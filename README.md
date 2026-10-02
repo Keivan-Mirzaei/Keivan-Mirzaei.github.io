@@ -54,6 +54,7 @@ For a project site at `username.github.io/repository`, set `url` to `https://use
 ```text
 _posts/                 Published Markdown notes
 _drafts/                Unpublished posts
+_lessons/               Individual pages within learning modules
 _research/              Research projects, papers, and thesis work
 _data/navigation.yml    Sidebar links
 _layouts/, _includes/   Shared templates
@@ -67,7 +68,9 @@ scripts/                Optional authoring helper and build checks
 
 The CV is updated through September 2026, including the Eric Milner Prize, Winter 2026 Graduate Assistant Teaching Excellence Award, Fall 2026 teaching at Bow Valley College and the University of Calgary, recent curriculum development, talks, projects, and skills. It links to the updated September 2026 PDF and lists preprints from the research collection automatically. The notebook contains the five retained original posts and four additional problems. Complete solutions accompany the spaceship detector problem, the expected chord length, and the perfect-cube problem. The duplicate absolute-value problem redirects to the original Conservative Polynomials article. The research section lists two arXiv preprints with author credits, summaries, and PDF links, followed by the 2021 MSc thesis with a verified overview, supervision details, and its original PDF. The newer preprint is featured on the homepage.
 
-Sample posts, demonstration research entries, their unused media, and obsolete copies of the original website have been removed. Earlier versions remain in Git history. Five reusable activities support graphing, probability, a card trick, and random walks. Scripts load only where used. The learning section is ready for your own lessons; starter content remains in `docs/templates/`.
+Sample posts, demonstration research entries, their unused media, and obsolete copies of the original website have been removed. Earlier versions remain in Git history. Reusable activities support graphing, probability, a card trick, and random walks. Scripts load only where used. Starter content remains in `docs/templates/`.
+
+The derivatives course has a short overview with motivation, objectives, and a table of contents, followed by five separate lesson pages with course-order navigation. It develops the derivative from average rates, derives the rules, introduces implicit, inverse, logarithmic, and parametric techniques, and returns to differentiability as local linearity. Twenty problems include hidden hints and solutions, followed by three synthesis tasks. Secant and magnification activities include rigorous error bounds and explicitly represent rational/irrational branches. The overview is the single entry in the learning-module list; individual lessons remain searchable.
 
 Advanced graphs add two optional components: `scientific-plot` reads Plotly JSON data; `sphere-slice` demonstrates a custom Three.js scene. Both show a static SVG preview first. Plotly, Three.js, and graph data load only after **Open interactive view** is pressed. Closing a view releases its renderer. The 3D dependencies use pinned CDN versions configured in `_data/graph_libraries.yml`, so opening these activities needs a network connection and compatible browser graphics. The ordinary posts and existing SVG activities do not load either library.
 

@@ -1,0 +1,24 @@
+derivatives:
+  title: Derivatives
+  overview: /notes/derivatives/
+  lessons:
+    - step: 1
+      title: From average rate to instantaneous rate
+      url: /notes/derivatives/rates/
+      description: Move a secant toward a tangent and define the derivative as a two-sided limit.
+    - step: 2
+      title: Calculating from the definition
+      url: /notes/derivatives/definition/
+      description: Simplify difference quotients, match piecewise joins, and diagnose the corner in absolute value.
+    - step: 3
+      title: Why the differentiation rules work
+      url: /notes/derivatives/rules/
+      description: Derive the rules from limits and combine them in demanding computations.
+    - step: 4
+      title: Choosing a more powerful technique
+      url: /notes/derivatives/techniques/
+      description: Use implicit, inverse, logarithmic, and parametric differentiation with their hypotheses.
+    - step: 5
+      title: Differentiability means local linearity
+      url: /notes/derivatives/local-linearity/
+      description: Compare error bounds, explore dense branches and oscillations, and complete the synthesis tasks.
