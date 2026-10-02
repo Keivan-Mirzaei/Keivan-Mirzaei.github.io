@@ -1,0 +1,6 @@
+- title: Hex
+  url: /puzzles/hex/
+  description: Build a path of your colour from one side to the other. Your opponent has the same idea.
+  image: /assets/images/hex-board.svg
+  image_alt: An empty Hex board with red top and bottom sides and blue left and right sides.
+  players: Against the computer or local two-player

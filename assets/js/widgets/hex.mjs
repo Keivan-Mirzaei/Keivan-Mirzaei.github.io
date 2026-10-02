@@ -1,4 +1,4 @@
-import { RED, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs';
+import { RED, BLUE, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs';
 
 const name = color => color === RED ? 'Red' : 'Blue';
 const goal = color => color === RED ? 'top to bottom' : 'left to right';
@@ -13,7 +13,7 @@ function layout(geometry) {
   return { minX, minY, width, height };
 }
 
-function drawBoard(holder, cells, size, { playable = false, editing = false, path = [], last = -1, coast = null, step = 0 } = {}) {
+function drawBoard(holder, cells, size, { playable = false, editing = false, path = [], last = -1, coast = null, step = 0, restoreFocus = true } = {}) {
   const focused = holder.contains(document.activeElement) ? document.activeElement.dataset.hexCell : undefined;
   const geometry = coast?.geometry || hexGeometry(size), box = layout(geometry);
   holder.style.aspectRatio = `${box.width} / ${box.height}`;
@@ -39,31 +39,56 @@ function drawBoard(holder, cells, size, { playable = false, editing = false, pat
   holder.innerHTML = svg + buttons + overlay + labels;
   holder.setAttribute('role', 'group');
   holder.setAttribute('aria-label', `${size} by ${size} Hex board. Red joins top to bottom; Blue joins left to right.${coast ? ` Coastline: ${step} of ${coast.tour.length} edges traced.` : ''}`);
-  if (focused !== undefined) holder.querySelector(`[data-hex-cell="${focused}"]`)?.focus({ preventScroll: true });
+  if (restoreFocus && focused !== undefined) holder.querySelector(`[data-hex-cell="${focused}"]`)?.focus({ preventScroll: true });
 }
 
-document.querySelectorAll('[data-hex-game]').forEach(game => {
+export function initializeHexGame(game) {
   const get = key => game.querySelector(`[data-hex-${key}]`);
-  let size = 5, human = RED, cells = Array(25).fill(0), toMove = RED;
-  let history = [], last = -1, busy = false, worker = null, generation = 0;
+  const orderControls = [...game.querySelectorAll('[data-hex-order]')];
+  let size = 5, human = RED, local = false, cells = Array(25).fill(0), toMove = RED;
+  let history = [], last = -1, busy = false, worker = null, generation = 0, boardFocus = -1;
   function cancel() { generation++; worker?.terminate(); worker = null; busy = false; }
+  function showSize() {
+    const label = get('size-label'), value = Number(get('size').value);
+    if (label) label.textContent = `${value} × ${value}`;
+    if (get('size').type === 'range') get('size').setAttribute('aria-valuetext', `${value} by ${value}`);
+  }
   function render(message = '') {
     const win = winner(cells, size), count = cells.filter(Boolean).length;
+    const board = get('board'), active = document.activeElement, focused = board.contains(active);
+    if (focused) boardFocus = Number(active.dataset.hexCell);
+    const returnToBoard = focused || (boardFocus >= 0 && (!active || active === document.body));
+    if (!returnToBoard) boardFocus = -1;
     // Keep cells as native buttons even while locked, for a consistent board.
-    drawBoard(get('board'), cells, size, { playable: true, path: win ? winningPath(cells, size, win) : [], last });
-    get('board').querySelectorAll('button').forEach(button => {
-      button.disabled = busy || Boolean(win) || toMove !== human || Boolean(cells[Number(button.dataset.hexCell)]);
+    drawBoard(board, cells, size, { playable: true, path: win ? winningPath(cells, size, win) : [], last, restoreFocus: false });
+    const buttons = [...board.querySelectorAll('button')];
+    buttons.forEach(button => {
+      button.disabled = busy || Boolean(win) || (!local && toMove !== human) || Boolean(cells[Number(button.dataset.hexCell)]);
     });
     get('count').textContent = `${count} ${count === 1 ? 'stone' : 'stones'}`;
-    get('instruction').textContent = `You play ${human === RED ? 'first' : 'second'} as ${name(human)}: connect ${goal(human)}. Choose an empty cell; stones stay put.`;
+    get('instruction').textContent = local
+      ? 'Take turns choosing an empty cell. Red connects top to bottom; Blue connects left to right.'
+      : `You play ${human === RED ? 'first' : 'second'} as ${name(human)}: connect ${goal(human)}. Choose an empty cell; stones stay put.`;
     get('undo').disabled = !history.length;
-    get('status').textContent = message || (win ? `${win === human ? 'You win!' : 'The computer wins.'} ${name(win)} has connected ${goal(win)}. The dashed line marks a winning chain.` : busy ? `${name(3 - human)} is thinking…` : `Your turn · ${name(human)} connects ${goal(human)}.`);
-    get('board').setAttribute('aria-busy', String(busy));
+    get('undo').textContent = local ? 'Undo move' : 'Undo your turn';
+    get('status').textContent = message || (win
+      ? `${local ? `${name(win)} wins!` : win === human ? 'You win!' : 'The computer wins.'} ${name(win)} has connected ${goal(win)}. The dashed line marks a winning chain.`
+      : busy ? `${name(3 - human)} is thinking…`
+      : local ? `${name(toMove)}’s turn · connect ${goal(toMove)}.`
+      : `Your turn · ${name(human)} connects ${goal(human)}.`);
+    board.setAttribute('aria-busy', String(busy));
+    if (returnToBoard && !busy) {
+      // Resume keyboard play after a replaced or temporarily locked cell.
+      const next = buttons.find(button => !button.disabled && Number(button.dataset.hexCell) >= boardFocus)
+        || buttons.find(button => !button.disabled);
+      (next || get('undo')).focus({ preventScroll: true });
+      boardFocus = -1;
+    }
   }
   function finish(move, token) {
     if (token !== generation) return;
     worker?.terminate(); worker = null; busy = false;
-    if (move < 0 || move >= cells.length || cells[move]) { render('The computer could not choose a move. Start a new game.'); return; }
+    if (!Number.isInteger(move) || move < 0 || move >= cells.length || cells[move]) { render('The computer could not choose a move. Start a new game.'); return; }
     cells[move] = 3 - human; last = move; toMove = human; render();
   }
   async function fallback(token) {
@@ -75,7 +100,7 @@ document.querySelectorAll('[data-hex-game]').forEach(game => {
     finish(search.best(), token);
   }
   function computerTurn() {
-    if (toMove === human || winner(cells, size)) { render(); return; }
+    if (local || toMove === human || winner(cells, size)) { render(); return; }
     busy = true; render();
     const token = generation;
     try {
@@ -86,31 +111,39 @@ document.querySelectorAll('[data-hex-game]').forEach(game => {
     } catch { fallback(token); }
   }
   function newGame() {
-    cancel(); size = Number(get('size').value); human = Number(get('order').value);
+    cancel(); size = Number(get('size').value);
+    const order = orderControls.find(control => control.type !== 'radio' || control.checked)?.value || String(RED);
+    local = order === 'local'; human = local ? RED : Number(order);
+    showSize();
     cells = Array(size * size).fill(0); history = []; last = -1; toMove = RED; computerTurn();
   }
   function play(move) {
-    if (busy || toMove !== human || winner(cells, size)) return;
+    if (busy || (!local && toMove !== human) || winner(cells, size)) return;
+    if (!Number.isInteger(move) || move < 0 || move >= cells.length) return;
     if (cells[move]) { render('That cell is occupied. Choose an empty cell.'); return; }
-    history.push({ cells: cells.slice(), last });
-    cells[move] = human; last = move; toMove = 3 - human; computerTurn();
+    history.push({ cells: cells.slice(), last, toMove });
+    cells[move] = toMove; last = move; toMove = 3 - toMove; computerTurn();
   }
   get('board').addEventListener('click', event => {
     const button = event.target.closest('[data-hex-cell]');
     if (button) play(Number(button.dataset.hexCell));
   });
   get('new').addEventListener('click', newGame);
+  get('size').addEventListener('input', showSize);
   get('size').addEventListener('change', newGame);
-  get('order').addEventListener('change', newGame);
+  orderControls.forEach(control => control.addEventListener('change', newGame));
   get('undo').addEventListener('click', () => {
     if (!history.length) return;
-    cancel(); const previous = history.pop(); cells = previous.cells; last = previous.last; toMove = human; render('Your last turn has been undone, including the computer’s reply.');
+    cancel(); const previous = history.pop(); cells = previous.cells; last = previous.last; toMove = previous.toMove;
+    render(local ? `${name(toMove)}’s move has been undone. ${name(toMove)} to play.` : 'Your last turn has been undone, including the computer’s reply.');
   });
-  game.querySelectorAll('select, [data-hex-new]').forEach(control => { control.disabled = false; });
-  render();
-});
+  game.querySelectorAll('select, input, [data-hex-new]').forEach(control => { control.disabled = false; });
+  newGame();
+}
 
-document.querySelectorAll('[data-hex-proof]').forEach(widget => {
+if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-game]').forEach(initializeHexGame);
+
+if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-proof]').forEach(widget => {
   const get = key => widget.querySelector(`[data-hex-proof-${key}]`);
   let cells = PROOF_EXAMPLE.slice(), coast = coastline(cells, 5), step = 0;
   function render() {

@@ -1,0 +1,28 @@
+---
+layout: default
+title: Puzzles
+section: puzzles
+permalink: /puzzles/
+description: A place to play. Pick a puzzle, take your time, and see where it leads.
+search: true
+---
+<div class="page-wrap puzzles-wrap">
+  <header class="page-heading">
+    <p class="eyebrow">A little time to play</p>
+    <h1>Puzzles</h1>
+    <p class="page-description">{{ page.description }}</p>
+  </header>
+  <div class="puzzle-grid">
+    {% for puzzle in site.data.puzzles %}
+    <a class="puzzle-card" href="{{ puzzle.url | relative_url }}">
+      <div class="puzzle-card-art"><img src="{{ puzzle.image | relative_url }}" alt="{{ puzzle.image_alt | escape }}" width="600" height="410"></div>
+      <div class="puzzle-card-copy">
+        <span class="puzzle-card-meta">{{ puzzle.players }}</span>
+        <h2>{{ puzzle.title }} <span aria-hidden="true">↗</span></h2>
+        <p>{{ puzzle.description }}</p>
+        <span class="puzzle-card-play">Play {{ puzzle.title }} {% include icon.html name='arrow' %}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>

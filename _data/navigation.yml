@@ -18,6 +18,10 @@
   url: /learning/
   key: module
   icon: learning
+- title: Puzzles
+  url: /puzzles/
+  key: puzzles
+  icon: puzzle
 - title: Research
   url: /research/
   key: research
