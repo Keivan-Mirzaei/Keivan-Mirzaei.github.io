@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { initializeTilingGame } from '../assets/js/widgets/tiling.mjs';
+import { CATALOGUE } from '../assets/js/lib/tiling-catalogue.mjs';
 
 // Native-button fixture: verify state, anchor coordinates and focus without a browser dependency.
 class Element {
@@ -53,15 +54,15 @@ class Holder extends Element {
     return this.children.find(child => child.dataset[property] === key[2] && (!selector.startsWith('button') || child.tagName === 'BUTTON'));
   }
 }
-function fixture(storage) {
+function fixture(storage, catalogue) {
   globalThis.document = { activeElement: null, body: new Element() };
   const root = new Element();
-  const fields = Object.fromEntries(['challenge', 'challenge-label', 'name', 'progress', 'instruction', 'tray-count', 'selected', 'selected-label', 'selected-shape', 'remove', 'undo', 'redo', 'hint', 'refresh', 'reset', 'status'].map(name => [name, new Element({ parent: root })]));
+  const fields = Object.fromEntries(['challenge', 'challenge-label', 'name', 'progress', 'instruction', 'tray-count', 'selected', 'selected-label', 'selected-shape', 'remove', 'undo', 'redo', 'hint', 'refresh', 'reset', 'status', 'picker', 'jump', 'number', 'number-slider', 'open', 'completed'].map(name => [name, new Element({ parent: root })]));
   fields.challenge.value = '1'; fields.challenge.tagName = 'INPUT';
   fields.board = new Holder({ parent: root }); fields.tray = new Holder({ parent: root });
   root.querySelector = selector => fields[selector.match(/data-tiling-([^\]]+)/)?.[1]];
   root.setPointerCapture = () => {}; root.hasPointerCapture = () => false; root.releasePointerCapture = () => {};
-  const controller = initializeTilingGame(root, storage);
+  const controller = initializeTilingGame(root, storage, catalogue);
   const click = (holder, selector) => {
     const element = holder.querySelector(selector); element.focus(); holder.emit('click', { target: element });
   };
@@ -69,6 +70,7 @@ function fixture(storage) {
     fields, root, controller,
     tile: id => click(fields.tray, `[data-tiling-piece="${id}"]`),
     cell: (x, y) => click(fields.board, `[data-tiling-cell="${x},${y}"]`),
+    open: number => { fields.number.value = String(number); fields.jump.emit('submit'); },
     action: name => { fields[name].focus(); fields[name].emit('click'); },
   };
 }
@@ -109,12 +111,12 @@ test('hint outlines a valid move, places only on the second click, then complete
   for (let count = 0; count < 3; count++) { f.action('hint'); f.action('hint'); }
   assert.equal(f.controller.game.solved, true);
   assert.equal(f.fields.progress.textContent, '13 / 13 squares');
-  assert.match(f.fields.status.textContent, /Floor complete/);
+  assert.match(f.fields.status.textContent, /Puzzle complete/);
   assert.equal(f.fields.refresh.disabled, false);
   assert.equal(document.activeElement, f.fields.refresh);
   f.action('refresh');
   assert.equal(f.controller.game.level.difficulty, 0);
-  assert.equal(f.fields.name.textContent, 'Floor 2');
+  assert.match(f.fields.name.textContent, /^Puzzle \d+ \/ 1000$/);
   assert.equal(f.controller.game.filled, 0);
   assert.equal(document.activeElement, f.fields.refresh);
 });
@@ -301,4 +303,49 @@ test('reopening restores the generated floor, selected difficulty, placements an
   assert.deepEqual(f.controller.game.level, level); assert.deepEqual(f.controller.game.placements, placed);
   assert.equal(f.controller.game.canRedo, true); f.action('redo'); assert.equal(Object.keys(f.controller.game.placements).length, 2);
   f.action('undo'); f.action('undo'); assert.equal(f.controller.game.filled, 0);
+});
+
+test('solving then shuffling skips completion records, while a puzzle number explicitly allows replay', () => {
+  const storage = memoryStorage(); let f = fixture(storage);
+  const original = f.controller.game.level;
+  for (let count = 0; count < 4; count++) { f.action('hint'); f.action('hint'); }
+  assert.equal(f.fields.name.textContent, 'Puzzle 1 / 1000 ✓');
+  assert.equal(f.fields.completed.textContent, '1 / 1000 solved');
+  f.action('undo'); f.action('refresh');
+  assert.notEqual(f.controller.game.level.id, 1);
+  f = fixture(storage); assert.notEqual(f.controller.game.level.id, 1);
+  f.open(1); assert.deepEqual(f.controller.game.level, original);
+  assert.equal(f.controller.game.filled, 0); assert.equal(f.fields.picker.open, false);
+  assert.equal(f.fields.completed.textContent, '1 / 1000 solved');
+  assert.equal(document.activeElement, f.fields.name);
+});
+
+test('the final puzzle displays completion, disables shuffle and keeps numbered replays available', () => {
+  const catalogue = CATALOGUE.map(rows => rows.slice(0, 3)), f = fixture(memoryStorage(), catalogue);
+  for (let number = 1; number <= 3; number++) {
+    f.open(number);
+    for (let count = 0; count < f.controller.game.level.pieces.length; count++) { f.action('hint'); f.action('hint'); }
+  }
+  assert.equal(f.fields.completed.textContent, '3 / 3 solved');
+  assert.equal(f.fields.refresh.disabled, true);
+  assert.match(f.fields.status.textContent, /All 3 Easy puzzles complete/);
+  assert.equal(document.activeElement, f.fields.name);
+  f.open(1); assert.equal(f.controller.game.filled, 0); assert.equal(f.fields.name.textContent, 'Puzzle 1 / 3 ✓');
+});
+
+test('the number slider and typed number preview a destination until Open is pressed', () => {
+  const f = fixture(); f.fields['number-slider'].value = '60'; f.fields['number-slider'].emit('input');
+  assert.equal(f.fields.number.value, '60'); assert.equal(f.controller.game.level.id, 1);
+  f.open(60); const expected = f.controller.game.level;
+  f.open(2); f.open(60); assert.deepEqual(f.controller.game.level, expected);
+  f.fields.number.value = '120'; f.fields.number.emit('input'); assert.equal(f.fields['number-slider'].value, '120');
+  f.open(1001); assert.deepEqual(f.controller.game.level, expected); assert.match(f.fields.status.textContent, /1 to 1000/);
+});
+
+test('a fresh visit skips a solved floor, while a deliberate replay retains its progress', () => {
+  const storage = memoryStorage(); let f = fixture(storage);
+  for (let count = 0; count < 4; count++) { f.action('hint'); f.action('hint'); }
+  f = fixture(storage); assert.notEqual(f.controller.game.level.id, 1);
+  f.open(1); f.tile('A'); f.cell(0, 0);
+  f = fixture(storage); assert.equal(f.controller.game.level.id, 1); assert.equal(f.controller.game.filled, 3);
 });

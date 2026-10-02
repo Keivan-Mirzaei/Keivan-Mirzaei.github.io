@@ -1,6 +1,7 @@
 import { createGame, placementCells, occupiedCells, checkPlacement, key } from '../lib/tiling.mjs?v=20261002-5';
 
-import { DIFFICULTIES, createArrangement, randomSeed, arrangementFingerprint } from '../lib/tiling-arrangements.mjs?v=20261002-1';
+import { DIFFICULTIES } from '../lib/tiling-arrangements.mjs?v=20261002-1';
+import { createPuzzleBook } from '../lib/tiling-book.mjs?v=20261002-2';
 import { createPuzzleStorage } from '../lib/puzzle-storage.mjs?v=20261002-1';
 
 import { setActionLabel } from '../lib/puzzle-controls.mjs?v=20261002-4';
@@ -26,22 +27,14 @@ function shapeMarkup(cells, color, { anchor = true, label = '' } = {}) {
   return `<svg viewBox="0 0 ${width * 24} ${height * 24}" aria-hidden="true"${label ? ` data-tile-shape="${label}"` : ''}>${squares}${dot}</svg>`;
 }
 
-export function initializeTilingGame(root, storage = createPuzzleStorage('tiling', root)) {
+export function initializeTilingGame(root, storage = createPuzzleStorage('tiling', root), catalogue) {
   const get = name => root.querySelector(`[data-tiling-${name}]`);
-  const saved = storage.read();
-  const sessions = {};
-  DIFFICULTIES.forEach((_, index) => {
-    const session = saved?.sessions?.[index];
-    if (session && Number.isInteger(session.seed) && session.seed >= 1 && session.seed <= 0xffffffff
-      && Number.isSafeInteger(session.round) && session.round >= 1) sessions[index] = session;
-  });
-  let difficulty = Number.isInteger(saved?.difficulty) && DIFFICULTIES[saved.difficulty] ? saved.difficulty : 0;
-  let seed = sessions[difficulty]?.seed || (difficulty === 0 ? 1 : randomSeed());
-  let round = sessions[difficulty]?.round || 1;
-  let game = createGame(createArrangement(difficulty, seed), sessions[difficulty]?.state), selected = null;
+  const book = createPuzzleBook(storage.read(), catalogue);
+  book.resume();
+  let game = createGame(book.level, book.state), selected = null;
   function storedState() {
-    sessions[difficulty] = { seed, round, state: game.exportState() };
-    return { difficulty, sessions };
+    book.record(game.exportState(), game.solved);
+    return book.exportState();
   }
   storage.setSnapshotProvider(storedState);
   let anchor = null, boardCursor = game.level.floor[0], hintPreview = null;
@@ -89,6 +82,7 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
   }
 
   function render(message = '', notice = false) {
+    book.record(game.exportState(), game.solved);
     const active = document.activeElement;
     const hadFocus = root.contains(active);
     const focusCell = hadFocus ? active.dataset?.tilingCell : null;
@@ -122,7 +116,13 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
       const chosen = selected && labelFor(selected) === type.id;
       return `<button class="tiling-piece${chosen ? ' is-selected' : ''}${remaining === 0 ? ' is-placed' : ''}" type="button" data-tiling-piece="${type.id}" aria-pressed="${Boolean(chosen)}" aria-label="Tile ${type.id}, ${type.count} needed, ${remaining} left. ${remaining ? 'Select a copy to place.' : 'All copies placed. Select a copy to move or return.'} ${describeShape(type.cells)}"><span class="tiling-piece-name">${type.id}<span class="tiling-quantity">×${type.count}</span></span>${shapeMarkup(type.cells, colorFor(type.ids[0]))}<span class="tiling-piece-state">${remaining ? `${remaining} left` : 'Placed ✓'}</span></button>`;
     }).join('');
-    get('name').textContent = `Floor ${round}`;
+    get('name').textContent = `Puzzle ${book.number} / ${book.total}${book.currentCompleted ? ' ✓' : ''}`;
+    get('name').title = book.currentCompleted ? 'Solved puzzle. Choose a puzzle.' : 'Choose a puzzle';
+    get('completed').textContent = `${book.completedCount} / ${book.total} solved`;
+    for (const name of ['number', 'number-slider']) {
+      get(name).value = String(book.number); get(name).max = String(book.total);
+    }
+    get('number-slider').setAttribute('aria-valuetext', `Puzzle ${book.number} of ${book.total}`);
     get('progress').textContent = `${game.filled} / ${level.floor.length} squares`;
     const remaining = level.pieces.length - Object.keys(placed).length;
     get('tray-count').textContent = `${remaining} to place`;
@@ -132,9 +132,9 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     get('hint').disabled = game.solved;
     setActionLabel(get('hint'), hintPreview ? 'Place hint' : 'Hint');
     get('hint').classList.toggle('is-confirming', Boolean(hintPreview));
-    get('refresh').disabled = false;
+    get('refresh').disabled = !book.canRefresh;
     get('status').textContent = message || (game.solved
-      ? 'Floor complete!'
+      ? book.allCompleted ? `All ${book.total} ${DIFFICULTIES[book.difficulty].name} puzzles complete! Choose a puzzle number to replay.` : 'Puzzle complete!'
       : selected ? `Tile ${labelFor(selected)} selected.` : '');
     get('status').classList.toggle('puzzle-sr-only', !game.solved && !notice);
     root.classList.toggle('is-solved', game.solved);
@@ -142,12 +142,12 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     if (focusCell) board.querySelector(`button[data-tiling-cell="${focusCell}"]`)?.focus({ preventScroll: true });
     else if (focusPiece) get('tray').querySelector(`[data-tiling-piece="${focusPiece}"]`)?.focus({ preventScroll: true });
     else if (hadFocus && (active.disabled || active.hidden)) {
-      const destination = game.solved ? get('refresh')
+      const destination = game.solved ? get('refresh').disabled ? get('name') : get('refresh')
         : selected ? get('tray').querySelector(`[data-tiling-piece="${labelFor(selected)}"]`)
         : board.querySelector('button');
       destination?.focus({ preventScroll: true });
     }
-    storage.save(storedState());
+    storage.save(book.exportState());
   }
 
   function place(position = currentPosition()) {
@@ -191,24 +191,31 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
 
   function changeDifficulty() {
     storedState();
-    difficulty = Math.max(0, Math.min(DIFFICULTIES.length - 1, Number(get('challenge').value) - 1));
-    seed = sessions[difficulty]?.seed || randomSeed(); round = sessions[difficulty]?.round || 1;
-    game = createGame(createArrangement(difficulty, seed), sessions[difficulty]?.state);
+    book.changeDifficulty(Number(get('challenge').value) - 1);
+    game = createGame(book.level, book.state);
+    get('picker').open = false;
     clearSelection(); showChallenge(); render();
   }
 
   function refresh() {
-    const previous = arrangementFingerprint(game.level);
-    let candidate;
-    seed = randomSeed();
-    do { candidate = createArrangement(difficulty, seed); if (arrangementFingerprint(candidate) === previous) seed = seed % 0xffffffff + 1; }
-    while (arrangementFingerprint(candidate) === previous);
-    round++; game = createGame(candidate);
+    if (!book.next()) return;
+    game = createGame(book.level);
+    get('picker').open = false;
     clearSelection(); render();
   }
 
+  function openPuzzle(event) {
+    event.preventDefault();
+    if (!book.open(Number(get('number').value))) {
+      render(`Choose a puzzle from 1 to ${book.total}.`, true); get('number').focus(); return;
+    }
+    game = createGame(book.level);
+    get('picker').open = false;
+    clearSelection(); render(); get('name').focus({ preventScroll: true });
+  }
+
   function restart() {
-    game.reset(); clearSelection(); render();
+    book.replay(); game.reset(); clearSelection(); render();
   }
 
   function hint() {
@@ -363,11 +370,21 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
   get('reset').addEventListener('click', restart);
   get('hint').addEventListener('click', hint);
   get('refresh').addEventListener('click', refresh);
+  get('jump').addEventListener('submit', openPuzzle);
+  get('number-slider').addEventListener('input', () => { get('number').value = get('number-slider').value; });
+  get('number').addEventListener('input', () => {
+    const value = Number(get('number').value);
+    if (Number.isInteger(value) && value >= 1 && value <= book.total) get('number-slider').value = String(value);
+  });
+  const help = root.querySelector('.puzzle-help');
+  get('picker').addEventListener('toggle', () => { if (get('picker').open && help) help.open = false; });
+  help?.addEventListener('toggle', () => { if (help.open) get('picker').open = false; });
+  for (const name of ['number', 'number-slider', 'open']) get(name).disabled = false;
   get('challenge').addEventListener('input', showChallenge);
   get('challenge').addEventListener('change', changeDifficulty);
   get('challenge').disabled = false; get('reset').disabled = false;
-  get('challenge').value = String(difficulty + 1); showChallenge(); render();
-  return { get game() { return game; }, get selected() { return selected; } };
+  get('challenge').value = String(book.difficulty + 1); showChallenge(); render();
+  return { get game() { return game; }, get selected() { return selected; }, book };
 }
 
 if (typeof document !== 'undefined') document.querySelectorAll('[data-tiling-game]').forEach(root => initializeTilingGame(root));

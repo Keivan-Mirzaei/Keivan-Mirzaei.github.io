@@ -6,6 +6,17 @@
 .tiling-play { min-width: 0; }
 .tiling-info { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px 14px; margin-bottom: 12px; font: 12px/1.7 var(--mono); color: var(--muted); }
 .tiling-info [data-tiling-name] { color: var(--green); }
+.tiling-info { align-items: center; }
+.tiling-picker { position: relative; }
+.tiling-picker > summary { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; cursor: pointer; list-style: none; }
+.tiling-picker > summary::-webkit-details-marker { display: none; }
+.tiling-picker > summary::after { content: ''; width: 6px; height: 6px; margin-top: -3px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg); }
+.tiling-picker[open] > summary::after { margin-top: 3px; transform: rotate(225deg); }
+.tiling-picker-content { position: absolute; top: calc(100% + 8px); left: 0; z-index: 16; width: 250px; max-width: calc(100vw - 32px); padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); box-shadow: 0 5px 20px #282e2914; font: 13px/1.7 var(--sans); }
+.tiling-number-entry { display: flex; gap: 10px; margin: 8px 0; }
+.tiling-number-entry input { flex: 1; width: 0; min-height: 44px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); }
+.tiling-picker-content input[type='range'] { width: 100%; min-height: 44px; margin: 0; accent-color: var(--green); }
+.tiling-picker-content p { margin: 8px 0 0; color: var(--muted); font: 12px var(--mono); }
 .tiling-board { --tiling-columns: 4; --tiling-rows: 4; display: grid; grid-template-columns: repeat(var(--tiling-columns), 1fr); grid-template-rows: repeat(var(--tiling-rows), 1fr); width: min(100%, 442px); aspect-ratio: var(--tiling-columns) / var(--tiling-rows); gap: 0; padding: 10px; margin: 0 auto; border: 1px solid var(--line); border-radius: 8px; background: #eeeFE8; }
 .tiling-board > img { display: block; width: 100%; height: auto; grid-column: 1 / -1; grid-row: 1 / -1; }
 .tiling-cell { position: relative; min-width: 0; padding: 0; border: 1px solid #d8ddd1; border-radius: 0; background: var(--paper); color: #222e2a; font: 16px var(--mono) !important; }
