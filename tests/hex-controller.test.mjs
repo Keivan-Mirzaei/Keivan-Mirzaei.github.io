@@ -5,7 +5,7 @@ import { initializeHexGame } from '../assets/js/widgets/hex.mjs';
 // A small DOM fixture keeps controller checks independent of a browser package.
 class Element {
   constructor(properties = {}) {
-    Object.assign(this, { disabled: true, textContent: '', style: {}, dataset: {}, listeners: new Map(), attributes: new Map() }, properties);
+    Object.assign(this, { disabled: true, textContent: '', style: { setProperty() {} }, dataset: {}, listeners: new Map(), attributes: new Map() }, properties);
   }
   addEventListener(event, callback) { this.listeners.set(event, callback); }
   emit(event, detail = {}) { this.listeners.get(event)?.(detail); }
@@ -23,7 +23,7 @@ class Board extends Element {
       disabled: /\bdisabled\b/.test(attributes),
     }));
   }
-  contains(element) { return this.buttons?.includes(element) || false; }
+  contains(element) { return element === this || this.buttons?.includes(element) || false; }
   querySelectorAll() { return this.buttons || []; }
   querySelector(selector) { return this.buttons?.find(button => button.dataset.hexCell === selector.match(/"(\d+)"/)[1]); }
 }
@@ -46,7 +46,9 @@ function game({ order = 'local', size = 3, legacy = false } = {}) {
   const orders = legacy
     ? [new Element({ type: 'select-one', value: order })]
     : ['1', '2', 'local'].map(value => new Element({ type: 'radio', value, checked: value === order }));
+  const root = new Element();
   const fixture = {
+    addEventListener: (name, handler) => root.addEventListener(name, handler),
     querySelector: selector => elements[selector.match(/^\[data-hex-(.+)\]$/)[1]],
     querySelectorAll: selector => selector === '[data-hex-order]' ? orders : [elements.size, elements.new, ...orders],
   };
@@ -54,6 +56,7 @@ function game({ order = 'local', size = 3, legacy = false } = {}) {
   return {
     elements,
     orders,
+    key: (key, modifiers = {}) => root.emit('keydown', {key, target: document.activeElement, preventDefault() {}, ...modifiers}),
     click: move => {
       const button = elements.board.buttons[move];
       if (!button.disabled) elements.board.emit('click', { target: button });
@@ -143,6 +146,7 @@ test('playing second gives the computer a Red opening that undo cannot remove', 
   assert.equal(fixture.elements.undo.disabled, true);
   opening.reply(4);
   assert.equal(fixture.colors()[4], 1);
+  assert.equal(fixture.elements.board.buttons.filter(button => !button.disabled && button.tabIndex === 0).length, 1);
   assert.match(fixture.elements.status.textContent, /^Your turn · Blue/);
   fixture.click(0);
   Computer.instances[1].reply(8);
@@ -175,7 +179,7 @@ test('keyboard focus resumes on an empty cell after local and computer moves', (
   const versus = game({ order: '1' });
   versus.elements.board.buttons[0].focus();
   versus.click(0);
-  assert.equal(document.activeElement, document.body);
+  assert.equal(document.activeElement, versus.elements.board);
   Computer.instances[0].reply(1);
   assert.equal(document.activeElement, versus.elements.board.buttons[2]);
   assert.equal(document.activeElement.disabled, false);
@@ -220,4 +224,25 @@ test('the existing exploration select controls retain computer play and reset be
   Computer.instances[2].reply(24);
   assert.equal(fixture.colors()[24], 1);
   assert.match(fixture.elements.status.textContent, /^Your turn · Blue/);
+});
+
+test('keyboard undo cancels a pending reply and shares the button undo history', () => {
+  const f = game({ order: '1' });
+  f.elements.board.buttons[0].focus(); f.click(0);
+  f.key('z', { ctrlKey: true });
+  assert.equal(f.elements.count.textContent, '0 stones');
+  assert.equal(Computer.instances[0].terminated, true);
+  f.click(1); Computer.instances[1].reply(4);
+  f.key('u');
+  assert.equal(f.elements.count.textContent, '0 stones');
+});
+
+test('arrow navigation skips occupied cells and stays within a board row', () => {
+  const f = game();
+  f.click(1);
+  const button = f.elements.board.buttons[0]; button.focus();
+  f.elements.board.emit('keydown', { target: button, key: 'ArrowRight', preventDefault() {} });
+  assert.equal(document.activeElement.dataset.hexCell, '2');
+  f.elements.board.emit('keydown', { target: document.activeElement, key: 'ArrowRight', preventDefault() {} });
+  assert.equal(document.activeElement.dataset.hexCell, '2');
 });

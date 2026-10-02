@@ -1,9 +1,11 @@
-import { LEVELS, createGame, transformShape, placementCells, occupiedCells, checkPlacement, key } from '../lib/tiling.mjs';
+import { LEVELS, createGame, placementCells, occupiedCells, checkPlacement, key } from '../lib/tiling.mjs?v=20261002-3';
+
+import { bindUndoShortcut } from '../lib/puzzle-controls.mjs';
 
 const colors = ['#c67b67', '#70968c', '#839bbc', '#c4a168', '#a68cad', '#8eaa72', '#b68d9e', '#769fac'];
 const reasonText = {
-  outside: 'That tile reaches beyond the floor. Try a different square or rotate it.',
-  hole: 'That tile covers a missing square. Try a different square or rotate it.',
+  outside: 'That tile reaches beyond the floor. Choose another square.',
+  hole: 'That tile covers a missing square. Choose another square.',
   overlap: 'Tiles cannot overlap. Choose a clear space or move the other tile first.',
 };
 
@@ -23,23 +25,24 @@ function shapeMarkup(cells, color, { anchor = true, label = '' } = {}) {
 
 export function initializeTilingGame(root) {
   const get = name => root.querySelector(`[data-tiling-${name}]`);
-  let game = createGame(), selected = null, rotation = 0, flipped = false;
+  let game = createGame(), selected = null;
   let anchor = null, boardCursor = game.level.floor[0], hintPreview = null;
-  let drag = null, dragGhost = null, suppressClickUntil = 0;
-  const colorFor = id => colors[game.level.pieces.findIndex(piece => piece.id === id) % colors.length];
+  let drag = null, dragGhost = null, suppressClickUntil = 0, lastTap = null;
+  const pieceFor = id => game.level.pieces.find(piece => piece.id === id);
+  const typeFor = id => game.level.types.find(type => type.id === pieceFor(id)?.typeId);
+  const labelFor = id => pieceFor(id)?.typeId || id;
+  const colorFor = id => colors[game.level.types.indexOf(typeFor(id)) % colors.length];
   const selectedPiece = () => game.level.pieces.find(piece => piece.id === selected);
-  const currentShape = () => selected ? transformShape(selectedPiece().cells, { rotation, flipped }) : [];
+  const currentShape = () => selected ? selectedPiece().cells : [];
   const currentPosition = () => {
     if (!selected || !anchor) return null;
     const [dx, dy] = currentShape()[0];
-    return { x: anchor[0] - dx, y: anchor[1] - dy, rotation, flipped };
+    return { x: anchor[0] - dx, y: anchor[1] - dy };
   };
   const select = (id, message = '') => {
     selected = id;
-    const saved = game.placements[id];
-    rotation = saved?.rotation || 0; flipped = saved?.flipped || false;
     anchor = null; hintPreview = null;
-    render(message || `Tile ${id} selected. Tap a floor square for its marked anchor; rotate or flip to find a fit.`);
+    render(message || `Tile ${labelFor(id)} selected. Tap a floor square for its marked anchor, or drag the tile.`);
   };
 
   function showChallenge() {
@@ -90,34 +93,33 @@ export function initializeTilingGame(root) {
         continue;
       }
       const id = occupied.get(cellKey), isAnchor = pieceAnchors.has(cellKey);
+      const edges = id ? [['top', 0, -1], ['right', 1, 0], ['bottom', 0, 1], ['left', -1, 0]].filter(([, dx, dy]) => occupied.get(key(x + dx, y + dy)) !== id).map(([edge]) => ` edge-${edge}`).join('') : '';
       const style = id ? ` style="--tile-color:${colorFor(id)}"` : '';
-      markup += `<button type="button" class="tiling-cell${id ? ' is-filled' : ''}${id === selected ? ' is-selected' : ''}" data-tiling-cell="${cellKey}"${id ? ` data-tiling-occupant="${id}"` : ''}${style} tabindex="${boardCursor[0] === x && boardCursor[1] === y ? '0' : '-1'}" aria-label="Row ${y + 1}, column ${x + 1}: ${id ? `tile ${id}${isAnchor ? ', anchor square' : ''}. Select or move tile ${id}.` : 'empty floor. Place the selected tile here.'}">${id ? `<span>${id}</span>${isAnchor ? '<i class="tiling-anchor-dot" aria-hidden="true"></i>' : ''}` : ''}</button>`;
+      markup += `<button type="button" class="tiling-cell${id ? ` is-filled${edges}` : ''}${id === selected ? ' is-selected' : ''}" data-tiling-cell="${cellKey}"${id ? ` data-tiling-occupant="${id}"` : ''}${style} tabindex="${boardCursor[0] === x && boardCursor[1] === y ? '0' : '-1'}" aria-label="Row ${y + 1}, column ${x + 1}: ${id ? `tile ${labelFor(id)}${isAnchor ? ', anchor square' : ''}. Select tile ${labelFor(id)}; double tap to return it.` : 'empty floor. Place the selected tile here.'}">${isAnchor ? `<span>${labelFor(id)}</span><i class="tiling-anchor-dot" aria-hidden="true"></i>` : ''}</button>`;
     }
     board.innerHTML = markup;
-    get('tray').innerHTML = level.pieces.map(piece => {
-      const saved = placed[piece.id], orientation = selected === piece.id ? { rotation, flipped } : saved || {};
-      const shape = transformShape(piece.cells, orientation);
-      return `<button class="tiling-piece${selected === piece.id ? ' is-selected' : ''}${saved ? ' is-placed' : ''}" type="button" data-tiling-piece="${piece.id}" aria-pressed="${selected === piece.id}" aria-label="Tile ${piece.id}, ${saved ? 'placed. Select to move or return it' : 'ready to place'}. ${describeShape(shape)}"><span class="tiling-piece-name">${piece.id}${saved ? '<span aria-hidden="true">✓</span>' : ''}</span>${shapeMarkup(shape, colorFor(piece.id))}<span class="tiling-piece-state">${saved ? 'Placed' : 'Ready'}</span></button>`;
+    get('tray').innerHTML = level.types.map(type => {
+      const remaining = type.ids.filter(id => !placed[id]).length;
+      const chosen = selected && labelFor(selected) === type.id;
+      return `<button class="tiling-piece${chosen ? ' is-selected' : ''}${remaining === 0 ? ' is-placed' : ''}" type="button" data-tiling-piece="${type.id}" aria-pressed="${Boolean(chosen)}" aria-label="Tile ${type.id}, ${type.count} needed, ${remaining} left. ${remaining ? 'Select a copy to place.' : 'All copies placed. Select a copy to move or return.'} ${describeShape(type.cells)}"><span class="tiling-piece-name">Tile ${type.id}<span class="tiling-quantity">×${type.count}</span></span>${shapeMarkup(type.cells, colorFor(type.ids[0]))}<span class="tiling-piece-state">${remaining ? `${remaining} of ${type.count} left` : 'All placed ✓'}</span></button>`;
     }).join('');
     get('name').textContent = level.name;
     get('progress').textContent = `${game.filled} / ${level.floor.length} squares`;
     const remaining = level.pieces.length - Object.keys(placed).length;
     get('tray-count').textContent = `${remaining} to place`;
-    get('selected-label').textContent = selected ? `Tile ${selected}${placed[selected] ? ' · on the floor' : ' · ready to place'}` : 'Pick a tile to begin.';
+    get('selected-label').textContent = selected ? `Tile ${labelFor(selected)}${placed[selected] ? ' · on the floor' : ' · ready to place'}` : 'Pick a tile to begin.';
     get('selected-shape').innerHTML = selected ? shapeMarkup(currentShape(), colorFor(selected)) : '';
     get('selected').classList.toggle('has-selection', Boolean(selected));
-    get('rotate').disabled = !selected;
-    get('flip').disabled = !selected;
     get('remove').disabled = !selected || !placed[selected];
     get('undo').disabled = !game.canUndo;
     get('hint').disabled = game.solved;
     get('hint').textContent = hintPreview ? 'Place hint' : 'Hint';
     get('next').hidden = !game.solved || level.id === LEVELS.length;
     get('next').disabled = !game.solved;
-    get('instruction').textContent = 'Fill the floor. Pick a tile, then tap where its marked square should go. Rotate or flip it to find a fit.';
+    get('instruction').textContent = 'Pick a tile, then tap a floor square for its marked anchor. Dragging works too.';
     get('status').textContent = message || (game.solved
       ? 'Floor complete! Every square is covered and every tile fits.'
-      : selected ? `Tile ${selected} selected. Tap a floor square for its marked anchor.`
+      : selected ? `Tile ${labelFor(selected)} selected. Tap a square to place it; its orientation stays fixed.`
       : 'Choose a tile to start filling the floor.');
     root.classList.toggle('is-solved', game.solved);
     preview();
@@ -125,7 +127,7 @@ export function initializeTilingGame(root) {
     else if (focusPiece) get('tray').querySelector(`[data-tiling-piece="${focusPiece}"]`)?.focus({ preventScroll: true });
     else if (hadFocus && (active.disabled || active.hidden)) {
       const destination = game.solved && !get('next').hidden ? get('next')
-        : selected ? get('tray').querySelector(`[data-tiling-piece="${selected}"]`)
+        : selected ? get('tray').querySelector(`[data-tiling-piece="${labelFor(selected)}"]`)
         : board.querySelector('button');
       destination?.focus({ preventScroll: true });
     }
@@ -139,36 +141,37 @@ export function initializeTilingGame(root) {
       render(reasonText[result.reason] || 'That tile does not fit there. Try another square.');
       return false;
     }
-    selected = null; anchor = null;
-    render(game.solved ? '' : `Tile ${id} placed. Choose another tile, or select a placed tile to move it.`);
+    const type = typeFor(id);
+    selected = type.ids.find(copy => !game.placements[copy]) || null; anchor = null; lastTap = null;
+    render(game.solved ? '' : `Tile ${type.id} placed. ${selected ? 'Another copy is selected.' : 'Choose a tile to continue.'}`);
     return true;
   }
 
-  function turn(kind) {
-    if (!selected) return;
-    if (kind === 'rotate') rotation = (rotation + 1) % 4;
-    else flipped = !flipped;
-    hintPreview = null;
-    render(`Tile ${selected} ${kind === 'rotate' ? 'rotated' : 'flipped'}. Tap a square for its marked anchor.`);
+  function remove(id = selected) {
+    if (!id || !game.remove(id)) return;
+    selected = id; anchor = null; hintPreview = null; lastTap = null;
+    render(`Tile ${labelFor(id)} returned. Its copy is available in the tray again.`);
   }
 
-  function remove() {
-    if (!selected || !game.remove(selected)) return;
-    anchor = null; hintPreview = null;
-    render(`Tile ${selected} returned to the tray. Place it in a new spot.`);
+  function undo() {
+    endDrag();
+    if (!game.undo()) return;
+    selected = null; anchor = null; hintPreview = null; lastTap = null;
+    render('Last move undone.');
   }
 
   function newFloor(index = Number(get('challenge').value) - 1) {
     endDrag();
     const value = Math.max(0, Math.min(LEVELS.length - 1, index));
     get('challenge').value = String(value + 1); showChallenge();
-    game = createGame(LEVELS[value]); selected = null; anchor = null; hintPreview = null;
+    game = createGame(LEVELS[value]); selected = null; anchor = null; hintPreview = null; lastTap = null;
     boardCursor = game.level.floor[0];
     render();
   }
 
   function hint() {
     if (game.solved) return;
+    lastTap = null;
     if (hintPreview && hintPreview.id === selected) { place(hintPreview.position); return; }
     const solution = game.hint();
     if (!solution) {
@@ -178,16 +181,24 @@ export function initializeTilingGame(root) {
     }
     const id = selected && !game.placements[selected] ? selected : game.level.pieces.find(piece => !game.placements[piece.id]).id;
     selected = id;
-    const position = solution[id]; rotation = position.rotation; flipped = position.flipped;
+    const position = solution[id];
     const [dx, dy] = currentShape()[0]; anchor = [position.x + dx, position.y + dy];
     hintPreview = { id, position };
-    render(`Place tile ${id} on the outlined squares. Tap its marked square, or choose Place hint.`);
+    render(`Place tile ${labelFor(id)} on the outlined squares. Tap its marked square, or choose Place hint.`);
   }
 
   get('tray').addEventListener('click', event => {
     if (performance.now() < suppressClickUntil) return;
     const button = event.target.closest('[data-tiling-piece]');
-    if (button) select(button.dataset.tilingPiece);
+    if (!button) return;
+    const type = game.level.types.find(type => type.id === button.dataset.tilingPiece);
+    lastTap = null;
+    select(type.ids.find(id => !game.placements[id]) || type.ids[0]);
+    if (event.detail === 0) get('board').querySelector(`button[data-tiling-cell="${key(...boardCursor)}"]`)?.focus({ preventScroll: true });
+    const bounds = get('board').getBoundingClientRect?.();
+    if (typeof window !== 'undefined' && window.innerWidth <= 620 && bounds && (bounds.top < 0 || bounds.bottom > window.innerHeight)) {
+      get('board').scrollIntoView({ block: 'center', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    }
   });
   get('board').addEventListener('click', event => {
     if (performance.now() < suppressClickUntil) return;
@@ -195,7 +206,13 @@ export function initializeTilingGame(root) {
     if (!cell) return;
     const coordinates = cell.dataset.tilingCell.split(',').map(Number), occupant = cell.dataset.tilingOccupant;
     if (cell.tagName === 'BUTTON') boardCursor = coordinates;
-    if (occupant && (!selected || (game.placements[selected] && selected !== occupant))) { select(occupant); return; }
+    if (occupant) {
+      const time = performance.now();
+      if (event.detail !== 0 && (event.detail === 2 || (lastTap?.id === occupant && time - lastTap.time < 360))) { remove(occupant); return; }
+      lastTap = event.detail === 0 ? null : { id: occupant, time };
+      select(occupant); return;
+    }
+    lastTap = null;
     if (!selected) { get('status').textContent = 'Pick a tile from the tray first.'; return; }
     anchor = coordinates; place();
   });
@@ -229,17 +246,16 @@ export function initializeTilingGame(root) {
       }
       return;
     }
-    if (event.key.toLowerCase() === 'r' && selected) { event.preventDefault(); turn('rotate'); }
-    else if (event.key.toLowerCase() === 'f' && selected) { event.preventDefault(); turn('flip'); }
-    else if ((event.key === 'Delete' || event.key === 'Backspace') && selected) { event.preventDefault(); remove(); }
-    else if (event.key === 'Escape' && selected) { event.preventDefault(); selected = null; anchor = null; hintPreview = null; render('Selection cleared. Choose a tile to continue.'); }
+    if ((event.key === 'Delete' || event.key === 'Backspace') && selected) { event.preventDefault(); remove(); }
+    else if (event.key === 'Escape' && selected) { event.preventDefault(); selected = null; anchor = null; hintPreview = null; lastTap = null; render('Selection cleared. Choose a tile to continue.'); }
   });
 
   // Pointer drag is an extra convenience; every action is also available by tap and keyboard.
   root.addEventListener('pointerdown', event => {
     if (event.button !== 0 || event.isPrimary === false) return;
     const tile = event.target.closest('[data-tiling-piece]'), cell = event.target.closest('[data-tiling-occupant]');
-    const id = tile?.dataset.tilingPiece || cell?.dataset.tilingOccupant;
+    const type = tile && game.level.types.find(type => type.id === tile.dataset.tilingPiece);
+    const id = type ? type.ids.find(id => !game.placements[id]) || type.ids[0] : cell?.dataset.tilingOccupant;
     if (!id) return;
     endDrag();
     drag = { id, pointer: event.pointerId, startX: event.clientX, startY: event.clientY, active: false, grabbed: cell ? cell.dataset.tilingCell.split(',').map(Number) : null };
@@ -248,58 +264,60 @@ export function initializeTilingGame(root) {
     if (!drag || drag.pointer !== event.pointerId) return;
     if (!drag.active && Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < 8) return;
     if (!drag.active) {
-      const pending = drag;
+      const pending = drag; lastTap = null;
       if (selected !== pending.id) select(pending.id);
-      else { hintPreview = null; anchor = null; render(`Tile ${selected} selected. Drag it onto the floor.`); }
+      else { hintPreview = null; anchor = null; render(`Tile ${labelFor(selected)} selected. Drag onto the floor, or off it to return the tile.`); }
       drag = pending; drag.active = true;
       const saved = game.placements[selected];
-      const sameOrientation = saved && saved.rotation === rotation && saved.flipped === flipped;
-      drag.offset = drag.grabbed && sameOrientation ? [drag.grabbed[0] - saved.x, drag.grabbed[1] - saved.y] : currentShape()[0];
+      drag.wasPlaced = Boolean(saved);
+      drag.offset = drag.grabbed && saved ? [drag.grabbed[0] - saved.x, drag.grabbed[1] - saved.y] : currentShape()[0];
       root.setPointerCapture(event.pointerId);
       dragGhost = document.createElement('div'); dragGhost.className = 'tiling-drag-ghost';
       const shape = currentShape();
       dragGhost.innerHTML = shapeMarkup(shape, colorFor(selected));
-      dragGhost.style.width = `${(Math.max(...shape.map(part => part[0])) + 1) * 30}px`;
+      drag.cellSize = get('board').querySelector('button')?.getBoundingClientRect?.().width || 30;
+      dragGhost.style.width = `${(Math.max(...shape.map(part => part[0])) + 1) * drag.cellSize}px`;
+      get('board').querySelectorAll(`[data-tiling-occupant="${selected}"]`).forEach(cell => cell.classList.add('is-drag-origin'));
       document.body.append(dragGhost);
       root.classList.add('is-dragging');
     }
     event.preventDefault();
-    dragGhost.style.left = `${event.clientX - drag.offset[0] * 30 - 15}px`;
-    dragGhost.style.top = `${event.clientY - drag.offset[1] * 30 - 15}px`;
+    dragGhost.style.left = `${event.clientX - drag.offset[0] * drag.cellSize - drag.cellSize / 2}px`;
+    dragGhost.style.top = `${event.clientY - drag.offset[1] * drag.cellSize - drag.cellSize / 2}px`;
     const cell = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-tiling-cell]');
     if (cell && get('board').contains(cell)) {
       const target = cell.dataset.tilingCell.split(',').map(Number), first = currentShape()[0];
       anchor = [target[0] - drag.offset[0] + first[0], target[1] - drag.offset[1] + first[1]];
     } else anchor = null;
+    const bounds = get('board').getBoundingClientRect?.();
+    drag.outside = !bounds || event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom;
+    get('status').textContent = drag.outside && drag.wasPlaced ? 'Release to return this tile to the tray.' : 'Release on the highlighted squares to place the tile.';
     preview();
   });
   root.addEventListener('pointerup', event => {
     if (!drag || drag.pointer !== event.pointerId) return;
-    const active = drag.active;
-    if (active) {
-      suppressClickUntil = performance.now() + 350;
-      if (anchor) place();
-      else { anchor = null; render('Drop the tile onto the floor, or tap a square for its marked anchor.'); }
-    }
+    const current = drag;
     endDrag();
+    if (!current.active) return;
+    suppressClickUntil = performance.now() + 350;
+    if (anchor) place();
+    else if (current.wasPlaced && current.outside) remove(current.id);
+    else { anchor = null; render('Drop onto a floor square to place the tile.'); }
   });
   root.addEventListener('pointercancel', () => endDrag(true));
   root.addEventListener('lostpointercapture', () => endDrag(true));
   function endDrag(cancelled = false) {
+    if (!drag) return;
     const previous = drag;
+    get('board').querySelectorAll('.is-drag-origin').forEach(cell => cell.classList.remove('is-drag-origin'));
     drag = null; dragGhost?.remove(); dragGhost = null; root.classList.remove('is-dragging');
     if (previous?.active && root.hasPointerCapture?.(previous.pointer)) root.releasePointerCapture(previous.pointer);
     if (cancelled && previous?.active) { anchor = null; preview(); }
   }
 
-  get('rotate').addEventListener('click', () => turn('rotate'));
-  get('flip').addEventListener('click', () => turn('flip'));
-  get('remove').addEventListener('click', remove);
-  get('undo').addEventListener('click', () => {
-    if (!game.undo()) return;
-    selected = null; anchor = null; hintPreview = null;
-    render('Last move undone. Choose a tile to continue.');
-  });
+  get('remove').addEventListener('click', () => remove());
+  get('undo').addEventListener('click', undo);
+  bindUndoShortcut(root, get('undo'), undo);
   get('reset').addEventListener('click', () => newFloor(game.level.id - 1));
   get('hint').addEventListener('click', hint);
   get('next').addEventListener('click', () => newFloor(game.level.id));

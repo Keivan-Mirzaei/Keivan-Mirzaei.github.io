@@ -1,4 +1,5 @@
 import { createKlotski, slideKlotski, undoKlotski, canSlide, maxSlide } from '../lib/klotski.mjs';
+import { bindUndoShortcut } from '../lib/puzzle-controls.mjs';
 
 const keyboardDirections = { ArrowUp: 'up', ArrowRight: 'right', ArrowDown: 'down', ArrowLeft: 'left' };
 
@@ -127,7 +128,7 @@ export function initializeKlotski(game) {
     if (block) selected = block.dataset.klotskiBlock;
     move(direction);
   });
-  get('undo').addEventListener('click', () => {
+  function undo() {
     clearDrag();
     const previous = undoKlotski(state);
     if (previous) {
@@ -135,7 +136,9 @@ export function initializeKlotski(game) {
       state = previous; render('Move undone.');
       if (focused && get('undo').disabled && selected) blocks.get(selected).focus({ preventScroll: true });
     }
-  });
+  }
+  get('undo').addEventListener('click', undo);
+  bindUndoShortcut(game, get('undo'), undo);
   get('restart').addEventListener('click', () => {
     clearDrag(); state = createKlotski(); selected = null; render('Back to the start.');
   });

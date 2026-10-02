@@ -32,6 +32,10 @@
 .puzzle-back:hover { color: var(--green) !important; }
 .puzzle-heading h1 { margin: 0 0 5px; font: 52px/1.1 var(--serif); letter-spacing: -1.7px; }
 .puzzle-heading > p { margin: 0; font-size: 14px; color: var(--muted); }
+.puzzle-page .puzzle-actions button { min-height: 48px; padding: 11px 18px; font-size: 14px; border-radius: 6px; }
+.puzzle-page .puzzle-undo::before { content: '↶'; margin-right: 8px; font-size: 20px; line-height: 1; vertical-align: -1px; }
+.puzzle-controls-hint { margin: 14px 0 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+.puzzle-controls-hint kbd { padding: 2px 5px; border: 1px solid var(--line); border-radius: 4px; background: #f4f5ef; color: var(--ink); font: 11px var(--sans); white-space: nowrap; }
 .hex-play { display: grid; grid-template-columns: minmax(0, 1fr) 258px; gap: 48px; align-items: start; }
 .hex-play-area { grid-column: 1; grid-row: 1; min-width: 0; }
 .hex-play .hex-settings { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; align-items: stretch; gap: 28px; margin: 0; padding: 24px; background: #f4f5ef; border: 1px solid var(--line); border-radius: 8px; }
@@ -39,6 +43,7 @@
 .hex-play [data-hex-count] { font: 11px/1.6 var(--mono); color: var(--muted); }
 .hex-play .hex-caption { font-size: 12px; margin: 0; }
 .hex-play .hex-board { max-width: 660px; margin: 10px auto 16px; }
+.hex-board-viewport { min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; padding: 4px; }
 .hex-play .hex-board .hex-cell { font-size: clamp(11px, 1.3vw, 16px); }
 .hex-play .hex-legend { gap: 10px 22px; }
 .hex-play .hex-status { margin: 22px 0 14px; min-height: 3.4em; font-size: 14px; }
@@ -103,7 +108,10 @@
   .puzzle-heading { margin-bottom: 20px; }
   .hex-play .hex-settings { grid-template-columns: 1fr; gap: 16px; padding: 16px; }
   .hex-play .hex-mode-option { display: flex; align-items: center; gap: 6px; min-height: 60px; }
+  .hex-play .hex-mode-option span { font-size: 12px; }
+  .hex-play .hex-mode-option small { font-size: 11px; }
   .hex-play .hex-size-heading label { flex: initial; }
   .hex-play .hex-board .hex-cell { font-size: 10px; }
+  .hex-play .hex-board { min-width: calc(var(--hex-size, 5) * 70px); }
   .hex-play .hex-legend { gap: 8px 12px; font-size: 10px; }
 }

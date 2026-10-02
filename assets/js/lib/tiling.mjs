@@ -17,33 +17,25 @@ export function normalizeShape(cells) {
   return cells.map(([x, y]) => [x - minX, y - minY]).sort((a, b) => a[1] - b[1] || a[0] - b[0]);
 }
 
-export function transformShape(cells, { rotation = 0, flipped = false } = {}) {
-  let transformed = cells.map(([x, y]) => [flipped ? -x : x, y]);
-  for (let turn = 0; turn < ((rotation % 4) + 4) % 4; turn++) transformed = transformed.map(([x, y]) => [-y, x]);
-  return normalizeShape(transformed);
-}
-
-export function orientations(cells) {
-  const seen = new Set(), result = [];
-  for (const flipped of [false, true]) for (let rotation = 0; rotation < 4; rotation++) {
-    const shape = transformShape(cells, { rotation, flipped }), signature = shape.map(cell => cell.join(',')).join(';');
-    if (seen.has(signature)) continue;
-    seen.add(signature); result.push({ rotation, flipped, cells: shape });
-  }
-  return result;
-}
-
 function buildLevel({ name, rows }, index) {
   const width = rows[0].length, height = rows.length, floor = [], holes = [], byId = {};
   rows.forEach((row, y) => [...row].forEach((id, x) => {
     if (id === '.') { holes.push([x, y]); return; }
     floor.push([x, y]); (byId[id] ||= []).push([x, y]);
   }));
-  const solution = {}, pieces = Object.entries(byId).sort(([a], [b]) => a.localeCompare(b)).map(([id, cells]) => {
-    solution[id] = { x: Math.min(...cells.map(cell => cell[0])), y: Math.min(...cells.map(cell => cell[1])), rotation: 0, flipped: false };
-    return { id, cells: normalizeShape(cells) };
+  const solution = {}, types = [], byShape = new Map();
+  const pieces = Object.entries(byId).sort(([a], [b]) => a.localeCompare(b)).map(([id, cells]) => {
+    const shape = normalizeShape(cells), signature = JSON.stringify(shape);
+    let type = byShape.get(signature);
+    if (!type) {
+      type = { id, cells: shape, ids: [], count: 0 };
+      byShape.set(signature, type); types.push(type);
+    }
+    type.ids.push(id); type.count++;
+    solution[id] = { x: Math.min(...cells.map(cell => cell[0])), y: Math.min(...cells.map(cell => cell[1])) };
+    return { id, typeId: type.id, cells: shape };
   });
-  return { id: index + 1, name, width, height, floor, holes, pieces, solution };
+  return { id: index + 1, name, width, height, floor, holes, pieces, types, solution };
 }
 function freeze(value) {
   Object.values(value).forEach(child => { if (child && typeof child === 'object') freeze(child); });
@@ -52,14 +44,15 @@ function freeze(value) {
 export const LEVELS = freeze(definitions.map(buildLevel));
 
 export function placementCells(piece, position) {
-  return transformShape(piece.cells, position).map(([x, y]) => [x + position.x, y + position.y]);
+  return piece.cells.map(([x, y]) => [x + position.x, y + position.y]);
 }
 
 export function checkPlacement(level, placements, pieceId, position) {
   const piece = level.pieces.find(candidate => candidate.id === pieceId);
   if (!piece) return { valid: false, reason: 'unknown', cells: [] };
-  if (!position || !Number.isInteger(position.x) || !Number.isInteger(position.y)
-    || (position.rotation !== undefined && !Number.isInteger(position.rotation))) return { valid: false, reason: 'position', cells: [] };
+  if (!position || !Number.isInteger(position.x) || !Number.isInteger(position.y)) return { valid: false, reason: 'position', cells: [] };
+  if ((position.rotation !== undefined && position.rotation !== 0)
+    || (position.flipped !== undefined && position.flipped !== false)) return { valid: false, reason: 'orientation', cells: [] };
   const cells = placementCells(piece, position), floor = new Set(level.floor.map(([x, y]) => key(x, y)));
   const occupied = new Set();
   Object.entries(placements).forEach(([id, placed]) => {
@@ -98,15 +91,13 @@ export function solveTiling(level, placements = {}) {
   const byCell = new Map([...floor].map(cell => [cell, []]));
   for (const piece of level.pieces) {
     if (!unused.has(piece.id)) continue;
-    for (const orientation of orientations(piece.cells)) {
-      const width = Math.max(...orientation.cells.map(cell => cell[0])) + 1;
-      const height = Math.max(...orientation.cells.map(cell => cell[1])) + 1;
-      for (let y = 0; y <= level.height - height; y++) for (let x = 0; x <= level.width - width; x++) {
-        const cells = orientation.cells.map(([dx, dy]) => key(x + dx, y + dy));
-        if (cells.some(cell => !floor.has(cell) || occupied.has(cell))) continue;
-        const candidate = { id: piece.id, position: { x, y, rotation: orientation.rotation, flipped: orientation.flipped }, cells };
-        cells.forEach(cell => byCell.get(cell).push(candidate));
-      }
+    const width = Math.max(...piece.cells.map(cell => cell[0])) + 1;
+    const height = Math.max(...piece.cells.map(cell => cell[1])) + 1;
+    for (let y = 0; y <= level.height - height; y++) for (let x = 0; x <= level.width - width; x++) {
+      const cells = piece.cells.map(([dx, dy]) => key(x + dx, y + dy));
+      if (cells.some(cell => !floor.has(cell) || occupied.has(cell))) continue;
+      const candidate = { id: piece.id, position: { x, y }, cells };
+      cells.forEach(cell => byCell.get(cell).push(candidate));
     }
   }
   const answer = clonePlacements(placements);
@@ -146,7 +137,7 @@ export function createGame(level = LEVELS[0]) {
     place(id, position) {
       const result = checkPlacement(level, placements, id, position);
       if (!result.valid) return result;
-      const next = { x: position.x, y: position.y, rotation: ((position.rotation || 0) % 4 + 4) % 4, flipped: Boolean(position.flipped) };
+      const next = { x: position.x, y: position.y };
       if (placements[id] && Object.keys(next).every(property => next[property] === placements[id][property])) return { ...result, changed: false };
       save(); placements[id] = next; moves++;
       return { ...result, changed: true };

@@ -30,6 +30,7 @@ class Element {
 }
 class Holder extends Element {
   set innerHTML(markup) {
+    this.markup = markup;
     if (this.contains(document.activeElement)) document.activeElement = document.body;
     this.children = [...markup.matchAll(/<(button|span)\b([^>]*)>/g)].flatMap(([, tag, attributes]) => {
       const key = attributes.match(/data-tiling-(cell|piece)="([^"]*)"/);
@@ -55,7 +56,7 @@ class Holder extends Element {
 function fixture() {
   globalThis.document = { activeElement: null, body: new Element() };
   const root = new Element();
-  const fields = Object.fromEntries(['challenge', 'challenge-label', 'name', 'progress', 'instruction', 'tray-count', 'selected', 'selected-label', 'selected-shape', 'rotate', 'flip', 'remove', 'undo', 'hint', 'next', 'reset', 'status'].map(name => [name, new Element({ parent: root })]));
+  const fields = Object.fromEntries(['challenge', 'challenge-label', 'name', 'progress', 'instruction', 'tray-count', 'selected', 'selected-label', 'selected-shape', 'remove', 'undo', 'hint', 'next', 'reset', 'status'].map(name => [name, new Element({ parent: root })]));
   fields.challenge.value = '1'; fields.challenge.tagName = 'INPUT';
   fields.board = new Holder({ parent: root }); fields.tray = new Holder({ parent: root });
   root.querySelector = selector => fields[selector.match(/data-tiling-([^\]]+)/)[1]];
@@ -72,13 +73,12 @@ function fixture() {
   };
 }
 
-test('a rotated tile uses its marked occupied square as anchor even when its bounding-box corner is empty', () => {
+test('placing a copy uses the anchor and undo restores its quantity and board focus', () => {
   const f = fixture();
-  f.tile('A'); f.action('rotate'); f.action('rotate');
-  f.cell(1, 0);
+  f.tile('A'); f.cell(0, 0);
   assert.equal(f.controller.game.filled, 3);
-  assert.deepEqual(f.controller.game.placements.A, { x: 0, y: 0, rotation: 2, flipped: false });
-  assert.equal(document.activeElement.dataset.tilingCell, '1,0');
+  assert.deepEqual(f.controller.game.placements.A, { x: 0, y: 0 });
+  assert.equal(document.activeElement.dataset.tilingCell, '0,0');
   f.action('undo');
   assert.equal(f.controller.game.filled, 0);
   assert.equal(document.activeElement.tagName, 'BUTTON');
@@ -91,9 +91,9 @@ test('invalid taps keep the selected tile and announce the rule without altering
   assert.equal(f.controller.game.filled, 0);
   assert.equal(f.controller.selected, 'A');
   assert.match(f.fields.status.textContent, /missing square/);
-  f.cell(0, 0); f.tile('B'); f.cell(0, 0);
-  assert.equal(f.controller.game.filled, 3);
-  assert.equal(f.controller.selected, 'B');
+  f.cell(0, 0); f.tile('B'); f.cell(2, 0); f.tile('A'); f.cell(1, 1);
+  assert.equal(f.controller.game.filled, 6);
+  assert.equal(f.controller.selected, 'D');
   assert.match(f.fields.status.textContent, /cannot overlap/);
 });
 
@@ -139,10 +139,10 @@ test('slider input previews the challenge before change resets the active floor'
   f.fields.challenge.emit('change');
   assert.equal(f.controller.game.level.id, 6);
   assert.equal(f.controller.game.filled, 0);
-  assert.equal(f.fields.tray.children.length, 8);
+  assert.equal(f.fields.tray.children.length, f.controller.game.level.types.length);
 });
 
-test('arrow keys skip missing squares and rotation shortcuts keep a board square focused', () => {
+test('arrow keys skip missing squares and unsupported rotation keys leave the selection unchanged', () => {
   const f = fixture();
   f.tile('C');
   const cell = f.fields.board.querySelector('[data-tiling-cell="1,3"]'); cell.focus();
@@ -151,24 +151,94 @@ test('arrow keys skip missing squares and rotation shortcuts keep a board square
   f.root.emit('keydown', { target: cell, key: 'ArrowRight' });
   assert.equal(document.activeElement.dataset.tilingCell, '2,3');
   f.root.emit('keydown', { target: document.activeElement, key: 'r' });
-  assert.match(f.fields.status.textContent, /rotated/);
+  f.root.emit('keydown', { target: document.activeElement, key: 'f' });
+  assert.equal(f.controller.selected, 'C');
+  assert.doesNotMatch(f.fields.status.textContent, /rotated|flipped/);
   assert.equal(document.activeElement.dataset.tilingCell, '2,3');
   f.root.emit('keydown', { target: document.activeElement, key: 'Escape' });
   assert.equal(f.controller.selected, null);
 });
 
 
-test('dragging a selected rotated tray tile preserves its previewed orientation and clears the ghost', () => {
+test('dragging a tray copy preserves its fixed orientation and clears the ghost', () => {
   const f = fixture();
-  f.tile('A'); f.action('rotate'); f.action('rotate');
+  f.tile('A');
   document.createElement = () => new Element();
-  document.elementFromPoint = () => f.fields.board.querySelector('[data-tiling-cell="1,0"]');
+  document.elementFromPoint = () => f.fields.board.querySelector('[data-tiling-cell="0,0"]');
   const tile = f.fields.tray.querySelector('[data-tiling-piece="A"]');
   f.root.emit('pointerdown', { target: tile, button: 0, isPrimary: true, pointerId: 1, clientX: 0, clientY: 0 });
   f.root.emit('pointermove', { pointerId: 1, clientX: 20, clientY: 20 });
   f.root.emit('pointerup', { pointerId: 1 });
   assert.equal(f.controller.game.filled, 3);
-  assert.deepEqual(f.controller.game.placements.A, { x: 0, y: 0, rotation: 2, flipped: false });
+  assert.deepEqual(f.controller.game.placements.A, { x: 0, y: 0 });
   assert.equal(document.body.children.length, 0);
   assert.equal(f.root.classes.has('is-dragging'), false);
+});
+
+test('repeated shapes share a tray card and placing or undoing updates the remaining copies', () => {
+  const f = fixture();
+  assert.equal(f.fields.tray.children.length, 3);
+  assert.match(f.fields.tray.markup, /2 needed, 2 left/);
+  f.tile('A'); f.cell(0, 0);
+  assert.equal(f.controller.selected, 'D');
+  assert.match(f.fields.tray.markup, /2 needed, 1 left/);
+  f.cell(2, 2);
+  assert.match(f.fields.tray.markup, /2 needed, 0 left/);
+  f.root.emit('keydown', { target: document.activeElement, key: 'z', metaKey: true });
+  assert.deepEqual(f.controller.game.placements, { A: { x: 0, y: 0 } });
+  assert.match(f.fields.tray.markup, /2 needed, 1 left/);
+});
+
+test('two quick taps return a placed copy and keyboard undo restores it', () => {
+  const f = fixture();
+  f.tile('A'); f.cell(0, 0);
+  f.cell(0, 0);
+  assert.equal(f.controller.game.filled, 3);
+  f.cell(1, 0);
+  assert.equal(f.controller.game.filled, 0);
+  assert.match(f.fields.tray.markup, /2 needed, 2 left/);
+  assert.match(f.fields.status.textContent, /returned/);
+  f.root.emit('keydown', { target: document.activeElement, key: 'u' });
+  assert.equal(f.controller.game.filled, 3);
+});
+
+function dragCopy(f, x, y, target) {
+  document.createElement = () => new Element();
+  document.elementFromPoint = () => target();
+  const cell = f.fields.board.querySelector(`[data-tiling-cell="${x},${y}"]`);
+  f.root.emit('pointerdown', { target: cell, button: 0, isPrimary: true, pointerId: 7, clientX: 0, clientY: 0 });
+  f.root.emit('pointermove', { pointerId: 7, clientX: 30, clientY: 30 });
+}
+
+test('dragging a placed copy off the floor returns it as one undoable move', () => {
+  const f = fixture();
+  f.tile('A'); f.cell(0, 0);
+  dragCopy(f, 0, 0, () => null);
+  f.root.emit('pointerup', { pointerId: 7 });
+  assert.equal(f.controller.game.filled, 0);
+  assert.equal(f.controller.game.moves, 2);
+  assert.equal(document.body.children.length, 0);
+  f.action('undo');
+  assert.deepEqual(f.controller.game.placements.A, { x: 0, y: 0 });
+  assert.equal(f.controller.game.moves, 1);
+});
+
+test('dragging from a non-anchor square keeps that grabbed square under the pointer', () => {
+  const f = fixture();
+  f.tile('A'); f.cell(0, 0);
+  dragCopy(f, 1, 0, () => f.fields.board.querySelector('[data-tiling-cell="2,2"]'));
+  f.root.emit('pointerup', { pointerId: 7 });
+  assert.deepEqual(f.controller.game.placements.A, { x: 1, y: 2 });
+  assert.equal(f.controller.game.filled, 3);
+});
+
+test('a cancelled drag leaves the copy and inventory unchanged', () => {
+  const f = fixture();
+  f.tile('A'); f.cell(0, 0);
+  dragCopy(f, 0, 0, () => null);
+  f.root.emit('pointercancel');
+  assert.deepEqual(f.controller.game.placements.A, { x: 0, y: 0 });
+  assert.equal(f.controller.game.moves, 1);
+  assert.equal(document.body.children.length, 0);
+  assert.match(f.fields.tray.markup, /2 needed, 1 left/);
 });

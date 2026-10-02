@@ -16,12 +16,13 @@
   <div class="hex-play-area">
     <div class="hex-game-info"><span data-hex-count>0 stones</span></div>
     <p class="hex-caption" data-hex-instruction>Choose an empty cell. Red connects top to bottom; Blue connects left to right.</p>
-    <div class="hex-board" data-hex-board>
+    <div class="hex-board-viewport"><div class="hex-board" data-hex-board>
       <img src="{{ '/assets/images/hex-board.svg' | relative_url }}" width="600" height="410" alt="An empty five by five Hex board. Red connects the top and bottom edges; Blue connects the left and right edges.">
-    </div>
+    </div></div>
     <div class="hex-legend"><span><i class="hex-key hex-red" aria-hidden="true">R</i>Red · top ↔ bottom</span><span><i class="hex-key hex-blue" aria-hidden="true">B</i>Blue · left ↔ right</span></div>
     <p class="hex-status" data-hex-status role="status">Enable JavaScript to play Hex.</p>
-    <div class="hex-actions"><button class="secondary-button" type="button" data-hex-new disabled>New game</button><button class="hex-secondary" type="button" data-hex-undo disabled>Undo your turn</button></div>
+    <div class="hex-actions puzzle-actions"><button class="secondary-button" type="button" data-hex-new disabled>New game</button><button class="hex-secondary puzzle-undo" type="button" data-hex-undo disabled>Undo your turn</button></div>
+    <p class="puzzle-controls-hint">Arrow keys choose a cell · Enter or Space places a stone · <kbd>U</kbd> or <kbd>Ctrl/⌘ Z</kbd> to undo</p>
     <noscript><p class="hex-caption">This game needs JavaScript. Enable it to place stones and use the game controls.</p></noscript>
   </div>
 </section>

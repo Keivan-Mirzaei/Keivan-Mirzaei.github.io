@@ -17,7 +17,7 @@
   {% endfor %}
   {% for widget in page.widgets %}
     {% assign widget_script = site.data.widgets[widget] %}
-    {% if widget_script %}<script src="{{ widget_script | relative_url }}"{% if widget_script contains '.mjs' %} type="module"{% else %} defer{% endif %}></script>{% endif %}
+    {% if widget_script %}<script src="{{ widget_script | relative_url }}?v={{ site.time | date: '%s' }}"{% if widget_script contains '.mjs' %} type="module"{% else %} defer{% endif %}></script>{% endif %}
   {% endfor %}
 </head>
 <body class="puzzle-page">

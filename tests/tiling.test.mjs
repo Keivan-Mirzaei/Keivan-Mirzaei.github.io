@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { LEVELS, normalizeShape, transformShape, orientations, placementCells, checkPlacement, occupiedCells, isSolved, solveTiling, createGame, key } from '../assets/js/lib/tiling.mjs';
+import { LEVELS, normalizeShape, placementCells, checkPlacement, occupiedCells, isSolved, solveTiling, createGame, key } from '../assets/js/lib/tiling.mjs';
 
 function connected(cells) {
   const remaining = new Set(cells.map(([x, y]) => key(x, y))), pending = [cells[0]];
@@ -39,22 +39,40 @@ for (const level of LEVELS) {
   });
 }
 
-test('rotation and flipping keep geometry connected and preserve every square', () => {
+test('tile orientations are fixed in placements and hints', () => {
   const shape = [[4, 3], [4, 4], [4, 5], [5, 5]];
   assert.deepEqual(normalizeShape(shape), [[0, 0], [0, 1], [0, 2], [1, 2]]);
-  const all = orientations(shape);
-  assert.equal(all.length, 8);
-  for (const orientation of all) {
-    assert.equal(orientation.cells.length, shape.length);
-    assert.equal(new Set(orientation.cells.map(([x, y]) => key(x, y))).size, shape.length);
-    assert.ok(connected(orientation.cells));
-    assert.equal(Math.min(...orientation.cells.map(cell => cell[0])), 0);
-    assert.equal(Math.min(...orientation.cells.map(cell => cell[1])), 0);
+  const game = createGame();
+  for (const position of [{ x: 0, y: 0, rotation: 1 }, { x: 0, y: 0, flipped: true }]) {
+    assert.equal(game.place('A', position).reason, 'orientation');
+    assert.equal(game.filled, 0);
+    assert.equal(game.canUndo, false);
+    assert.equal(solveTiling(game.level, { A: position }), null);
   }
-  assert.deepEqual(transformShape(shape, { rotation: 4 }), normalizeShape(shape));
-  assert.deepEqual(transformShape(shape, { rotation: -1 }), transformShape(shape, { rotation: 3 }));
-  assert.equal(orientations([[0, 0], [1, 0], [0, 1], [1, 1]]).length, 1);
-  assert.equal(orientations([[0, 0], [1, 0], [2, 0]]).length, 2);
+  for (const level of LEVELS) {
+    const answer = solveTiling(level);
+    assert.ok(isSolved(level, answer));
+    assert.ok(Object.values(answer).every(position => position.rotation === undefined && position.flipped === undefined));
+  }
+});
+
+test('repeated shapes have a required quantity and independent, limited copies', () => {
+  const level = LEVELS[0], type = level.types.find(type => type.count > 1), game = createGame(level);
+  assert.equal(type.count, 2);
+  assert.equal(type.ids.length, type.count);
+  assert.ok(type.ids.every(id => JSON.stringify(level.pieces.find(piece => piece.id === id).cells) === JSON.stringify(type.cells)));
+  for (const id of type.ids) assert.equal(game.place(id, level.solution[id]).valid, true);
+  assert.equal(game.filled, type.count * type.cells.length);
+  const first = type.ids[0], second = type.ids[1];
+  const before = game.placements;
+  assert.equal(game.place(first, before[second]).reason, 'overlap');
+  assert.deepEqual(game.placements, before);
+  assert.equal(game.place('extra-copy', level.solution[first]).reason, 'unknown');
+  game.remove(second);
+  assert.equal(game.filled, type.cells.length);
+  assert.deepEqual(game.placements[first], before[first]);
+  game.undo();
+  assert.deepEqual(game.placements, before);
 });
 
 test('placements reject outside squares, holes, overlapping pieces and malformed coordinates', () => {
@@ -64,7 +82,7 @@ test('placements reject outside squares, holes, overlapping pieces and malformed
   assert.equal(checkPlacement(level, {}, 'A', { x: 2, y: 0 }).reason, 'hole');
   assert.equal(checkPlacement(level, { A: level.solution.A }, 'B', { x: 0, y: 0 }).reason, 'overlap');
   assert.equal(checkPlacement(level, {}, 'A', { x: 0.5, y: 0 }).reason, 'position');
-  assert.equal(checkPlacement(level, {}, 'A', { x: 0, y: 0, rotation: NaN }).reason, 'position');
+  assert.equal(checkPlacement(level, {}, 'A', { x: 0, y: 0, rotation: NaN }).reason, 'orientation');
   assert.equal(checkPlacement(level, {}, 'X', { x: 0, y: 0 }).reason, 'unknown');
   assert.equal(checkPlacement(level, { A: level.solution.A }, 'A', level.solution.A).valid, true);
 });
@@ -93,9 +111,9 @@ test('returning, moving, undoing and reset preserve a legal complete game', () =
 test('solver finds alternative solutions and does not move already placed pieces', () => {
   const level = LEVELS[0];
   let alternate = null;
-  for (const piece of level.pieces) for (const orientation of orientations(piece.cells)) {
+  for (const piece of level.pieces) {
     for (let y = 0; y < level.height && !alternate; y++) for (let x = 0; x < level.width && !alternate; x++) {
-      const position = { x, y, rotation: orientation.rotation, flipped: orientation.flipped };
+      const position = { x, y };
       if (JSON.stringify(position) === JSON.stringify(level.solution[piece.id])) continue;
       if (!checkPlacement(level, {}, piece.id, position).valid) continue;
       const answer = solveTiling(level, { [piece.id]: position });
@@ -110,9 +128,9 @@ test('solver finds alternative solutions and does not move already placed pieces
 test('solver reports legal placements that block all remaining tiles', () => {
   const level = LEVELS[0];
   let blocked = null;
-  for (const piece of level.pieces) for (const orientation of orientations(piece.cells)) {
+  for (const piece of level.pieces) {
     for (let y = 0; y < level.height && !blocked; y++) for (let x = 0; x < level.width && !blocked; x++) {
-      const position = { x, y, rotation: orientation.rotation, flipped: orientation.flipped };
+      const position = { x, y };
       if (checkPlacement(level, {}, piece.id, position).valid && !solveTiling(level, { [piece.id]: position })) blocked = { [piece.id]: position };
     }
   }

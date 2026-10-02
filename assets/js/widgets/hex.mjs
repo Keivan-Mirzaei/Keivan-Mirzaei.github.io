@@ -1,4 +1,5 @@
 import { RED, BLUE, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs';
+import { bindUndoShortcut } from '../lib/puzzle-controls.mjs';
 
 const name = color => color === RED ? 'Red' : 'Blue';
 const goal = color => color === RED ? 'top to bottom' : 'left to right';
@@ -17,6 +18,7 @@ function drawBoard(holder, cells, size, { playable = false, editing = false, pat
   const focused = holder.contains(document.activeElement) ? document.activeElement.dataset.hexCell : undefined;
   const geometry = coast?.geometry || hexGeometry(size), box = layout(geometry);
   holder.style.aspectRatio = `${box.width} / ${box.height}`;
+  holder.style.setProperty('--hex-size', size);
   const borders = geometry.edges.filter(e => e.faces[1] < 0 && e.faces[0] >= 0).map(e =>
     `<path class="hex-border hex-${e.faces[1] === -1 || e.faces[1] === -2 ? 'red' : 'blue'}" d="M${pair(geometry.points.get(e.from))}L${pair(geometry.points.get(e.to))}"/>`).join('');
   const backdrop = geometry.cells.map(cell => `<polygon class="hex-outline" points="${cell.vertices.map(pair).join(' ')}"/>`).join('');
@@ -46,7 +48,7 @@ export function initializeHexGame(game) {
   const get = key => game.querySelector(`[data-hex-${key}]`);
   const orderControls = [...game.querySelectorAll('[data-hex-order]')];
   let size = 5, human = RED, local = false, cells = Array(25).fill(0), toMove = RED;
-  let history = [], last = -1, busy = false, worker = null, generation = 0, boardFocus = -1;
+  let history = [], last = -1, busy = false, worker = null, generation = 0, boardFocus = -1, boardCursor = 0;
   function cancel() { generation++; worker?.terminate(); worker = null; busy = false; }
   function showSize() {
     const label = get('size-label'), value = Number(get('size').value);
@@ -56,7 +58,7 @@ export function initializeHexGame(game) {
   function render(message = '') {
     const win = winner(cells, size), count = cells.filter(Boolean).length;
     const board = get('board'), active = document.activeElement, focused = board.contains(active);
-    if (focused) boardFocus = Number(active.dataset.hexCell);
+    if (focused && active.dataset.hexCell !== undefined) boardFocus = Number(active.dataset.hexCell);
     const returnToBoard = focused || (boardFocus >= 0 && (!active || active === document.body));
     if (!returnToBoard) boardFocus = -1;
     // Keep cells as native buttons even while locked, for a consistent board.
@@ -65,6 +67,9 @@ export function initializeHexGame(game) {
     buttons.forEach(button => {
       button.disabled = busy || Boolean(win) || (!local && toMove !== human) || Boolean(cells[Number(button.dataset.hexCell)]);
     });
+    if (boardCursor < 0 || !buttons[boardCursor] || buttons[boardCursor].disabled) boardCursor = buttons.findIndex(button => !button.disabled);
+    buttons.forEach((button, index) => { button.tabIndex = index === boardCursor ? 0 : -1; });
+    board.tabIndex = busy ? 0 : -1;
     get('count').textContent = `${count} ${count === 1 ? 'stone' : 'stones'}`;
     get('instruction').textContent = local
       ? 'Take turns choosing an empty cell. Red connects top to bottom; Blue connects left to right.'
@@ -77,11 +82,13 @@ export function initializeHexGame(game) {
       : local ? `${name(toMove)}’s turn · connect ${goal(toMove)}.`
       : `Your turn · ${name(human)} connects ${goal(human)}.`);
     board.setAttribute('aria-busy', String(busy));
+    if (returnToBoard && busy) board.focus({ preventScroll: true });
     if (returnToBoard && !busy) {
       // Resume keyboard play after a replaced or temporarily locked cell.
       const next = buttons.find(button => !button.disabled && Number(button.dataset.hexCell) >= boardFocus)
         || buttons.find(button => !button.disabled);
       (next || get('undo')).focus({ preventScroll: true });
+      next?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
       boardFocus = -1;
     }
   }
@@ -128,15 +135,38 @@ export function initializeHexGame(game) {
     const button = event.target.closest('[data-hex-cell]');
     if (button) play(Number(button.dataset.hexCell));
   });
+  get('board').addEventListener('focusin', event => {
+    const button = event.target.closest('[data-hex-cell]');
+    if (!button) return;
+    boardCursor = Number(button.dataset.hexCell);
+    get('board').querySelectorAll('button').forEach(cell => { cell.tabIndex = cell === button ? 0 : -1; });
+  });
+  get('board').addEventListener('keydown', event => {
+    const button = event.target.closest('[data-hex-cell]');
+    const delta = { ArrowLeft: [0, -1], ArrowRight: [0, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] }[event.key];
+    if (!button || !delta || event.altKey || event.ctrlKey || event.metaKey) return;
+    event.preventDefault();
+    let row = Math.floor(Number(button.dataset.hexCell) / size), column = Number(button.dataset.hexCell) % size;
+    while (true) {
+      row += delta[0]; column += delta[1];
+      if (row < 0 || row >= size || column < 0 || column >= size) break;
+      const next = get('board').querySelector(`[data-hex-cell="${row * size + column}"]`);
+      if (!next.disabled) { next.focus({ preventScroll: true }); next.scrollIntoView?.({ block: 'nearest', inline: 'nearest' }); break; }
+    }
+  });
   get('new').addEventListener('click', newGame);
   get('size').addEventListener('input', showSize);
   get('size').addEventListener('change', newGame);
   orderControls.forEach(control => control.addEventListener('change', newGame));
-  get('undo').addEventListener('click', () => {
+  function undo() {
     if (!history.length) return;
+    const fromUndo = document.activeElement === get('undo');
     cancel(); const previous = history.pop(); cells = previous.cells; last = previous.last; toMove = previous.toMove;
     render(local ? `${name(toMove)}’s move has been undone. ${name(toMove)} to play.` : 'Your last turn has been undone, including the computer’s reply.');
-  });
+    if (fromUndo && get('undo').disabled) [...get('board').querySelectorAll('button')].find(button => !button.disabled)?.focus({ preventScroll: true });
+  }
+  get('undo').addEventListener('click', undo);
+  bindUndoShortcut(game, get('undo'), undo);
   game.querySelectorAll('select, input, [data-hex-new]').forEach(control => { control.disabled = false; });
   newGame();
 }

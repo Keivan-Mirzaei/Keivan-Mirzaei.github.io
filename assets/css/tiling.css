@@ -4,19 +4,28 @@
 .tiling-challenge-heading output { font: 12px var(--mono); color: var(--green); }
 .tiling-settings input { grid-column: 1; width: 100%; min-height: 44px; margin: 0; accent-color: var(--green); cursor: pointer; }
 .tiling-scale { grid-column: 1; display: flex; justify-content: space-between; color: var(--muted); font: 10px var(--mono); }
-.tiling-setting-caption { grid-column: 2; grid-row: 1 / 4; margin: 0; color: var(--muted); font-size: 11px; }
+.tiling-setting-caption { grid-column: 2; grid-row: 1 / 4; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
 .tiling-play { min-width: 0; }
-.tiling-info { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px 14px; margin-bottom: 12px; font: 11px/1.7 var(--mono); color: var(--muted); }
+.tiling-info { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px 14px; margin-bottom: 12px; font: 12px/1.7 var(--mono); color: var(--muted); }
 .tiling-info [data-tiling-name] { color: var(--green); }
-.tiling-instruction { max-width: 520px; margin: 0 0 18px; color: var(--muted); font-size: 12px; line-height: 1.8; }
-.tiling-board { --tiling-columns: 4; --tiling-rows: 4; display: grid; grid-template-columns: repeat(var(--tiling-columns), 1fr); grid-template-rows: repeat(var(--tiling-rows), 1fr); width: min(100%, 442px); aspect-ratio: var(--tiling-columns) / var(--tiling-rows); gap: 3px; padding: 10px; margin: 0 auto; border: 1px solid var(--line); border-radius: 8px; background: #eeeFE8; }
+.tiling-instruction { max-width: 520px; margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.tiling-board { --tiling-columns: 4; --tiling-rows: 4; display: grid; grid-template-columns: repeat(var(--tiling-columns), 1fr); grid-template-rows: repeat(var(--tiling-rows), 1fr); width: min(100%, 442px); aspect-ratio: var(--tiling-columns) / var(--tiling-rows); gap: 0; padding: 10px; margin: 0 auto; border: 1px solid var(--line); border-radius: 8px; background: #eeeFE8; }
 .tiling-board > img { display: block; width: 100%; height: auto; grid-column: 1 / -1; grid-row: 1 / -1; }
-.tiling-cell { position: relative; min-width: 0; padding: 0; border: 1px solid #d8ddd1; border-radius: 3px; background: var(--paper); color: #222e2a; font: 14px var(--mono) !important; }
-.tiling-cell.is-filled { background: var(--tile-color); border-color: color-mix(in srgb, var(--tile-color) 65%, #35473c); }
+.tiling-cell { position: relative; min-width: 0; padding: 0; border: 1px solid #d8ddd1; border-radius: 0; background: var(--paper); color: #222e2a; font: 16px var(--mono) !important; }
+.tiling-cell.is-filled { --tile-edge: color-mix(in srgb, var(--tile-color) 60%, #35473c); background: var(--tile-color); border-color: var(--tile-color); }
+.tiling-cell.edge-top { border-top: 2px solid var(--tile-edge); }
+.tiling-cell.edge-right { border-right: 2px solid var(--tile-edge); }
+.tiling-cell.edge-bottom { border-bottom: 2px solid var(--tile-edge); }
+.tiling-cell.edge-left { border-left: 2px solid var(--tile-edge); }
 .tiling-cell.is-filled > span { position: relative; z-index: 1; }
-.tiling-cell.is-selected { box-shadow: inset 0 0 0 2px #285b46; }
+.tiling-cell.is-selected { --tile-edge: var(--green); background: color-mix(in srgb, var(--tile-color) 82%, white); border-color: color-mix(in srgb, var(--tile-color) 82%, white); }
+.tiling-cell.is-selected.edge-top { border-top-color: var(--green); }
+.tiling-cell.is-selected.edge-right { border-right-color: var(--green); }
+.tiling-cell.is-selected.edge-bottom { border-bottom-color: var(--green); }
+.tiling-cell.is-selected.edge-left { border-left-color: var(--green); }
+.tiling-cell.is-drag-origin { opacity: .25; }
 .tiling-cell.tiling-hole { border: 1px dashed #c6ccbf; background: repeating-linear-gradient(135deg, transparent, transparent 5px, #d9ded3 5px, #d9ded3 6px); }
-.tiling-cell:not(.tiling-hole):hover { border-color: var(--green); }
+.tiling-cell:not(.tiling-hole):not(.is-filled):hover { border-color: var(--green); }
 .tiling-cell:focus-visible { z-index: 2; outline-offset: 1px; }
 .tiling-cell.is-preview::after, .tiling-cell.is-preview-invalid::after { content: ''; position: absolute; inset: 2px; border: 2px solid var(--green); border-radius: 2px; background: color-mix(in srgb, var(--preview-color) 45%, transparent); pointer-events: none; }
 .tiling-cell.is-preview-invalid::after { border: 2px dashed #aa4940; background: repeating-linear-gradient(135deg, #c97c6c50, #c97c6c50 4px, #fcfcf960 4px, #fcfcf960 7px); }
@@ -28,36 +37,36 @@
 .tiling-empty-key { border: 1px solid #d8ddd1; background: var(--paper); }
 .tiling-hole-key { border: 1px dashed #bec7b7; background: repeating-linear-gradient(135deg, #eff1e9, #eff1e9 3px, #d9ded3 3px, #d9ded3 4px); }
 .tiling-pieces { min-width: 0; }
-.tiling-tray-heading { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+.tiling-tray-heading { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
 .tiling-tray-heading h2 { margin: 0; font: 25px/1.2 var(--serif); letter-spacing: -.5px; }
-.tiling-tray-heading > span { color: var(--muted); font: 10px var(--mono); }
-.tiling-tray { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.tiling-piece { display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 120px; padding: 9px 8px; border: 1px solid var(--line); border-radius: 5px; background: var(--paper); touch-action: none; }
+.tiling-tray-heading > span { color: var(--muted); font: 12px var(--mono); }
+.tiling-tray-caption { margin: 0 0 16px; color: var(--muted); font-size: 12px; }
+.tiling-tray { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.tiling-piece { display: flex; flex-direction: column; align-items: center; gap: 10px; min-height: 144px; padding: 12px; border: 1px solid var(--line); border-radius: 7px; background: var(--paper); touch-action: none; }
 .tiling-piece:hover { border-color: #aebfaa; background: #f4f7ef; }
 .tiling-piece.is-selected { border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); background: #eef2e9; }
 .tiling-piece.is-placed { background: #f4f5ef; }
 .tiling-piece.is-placed svg { opacity: .65; }
 .tiling-piece.is-selected svg { opacity: 1; }
-.tiling-piece-name { display: flex; justify-content: space-between; width: 100%; text-align: left; font: 11px var(--mono); color: var(--green); }
-.tiling-piece svg { display: block; height: 48px; max-width: 100%; margin: auto; overflow: visible; }
-.tiling-piece-state { font-size: 9px; color: var(--muted); }
+.tiling-piece-name { display: flex; align-items: center; justify-content: space-between; width: 100%; text-align: left; font: 13px var(--sans); color: var(--green); }
+.tiling-quantity { padding: 2px 7px; border-radius: 4px; background: var(--tint); font: 12px var(--mono); }
+.tiling-piece svg { display: block; height: 60px; max-width: 100%; margin: auto; overflow: visible; }
+.tiling-piece-state { font-size: 12px; color: var(--muted); }
 .tiling-selected { display: flex; gap: 16px; align-items: center; justify-content: space-between; margin-top: 16px; min-height: 60px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 5px; background: #f4f5ef; }
-.tiling-selected-label { font-size: 11px; color: var(--muted); }
+.tiling-selected-label { font-size: 13px; color: var(--muted); }
 .tiling-selected.has-selection .tiling-selected-label { color: var(--green); }
 .tiling-selected [data-tiling-selected-shape] { flex: 0 0 65px; display: flex; justify-content: center; }
 .tiling-selected svg { display: block; max-width: 65px; height: 42px; }
-.tiling-transform { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-.tiling-transform button, .tiling-actions button:not(.secondary-button) { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--ink); font-size: 12px; }
-.tiling-transform button:hover:not(:disabled), .tiling-actions button:not(.secondary-button):hover:not(:disabled) { background: var(--tint); border-color: #b6c7b0; }
-.tiling-transform [data-tiling-remove] { grid-column: 1 / -1; }
-.tiling-transform button > span { margin-right: 3px; font-size: 16px; }
-.tiling-help { margin: 13px 0 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
-.tiling-footer { grid-column: 1 / -1; }
-.tiling-status { min-height: 2em; margin: 0 0 14px; color: var(--green); font-size: 13px; line-height: 1.7; }
+.tiling-return, .tiling-actions button:not(.secondary-button) { min-height: 48px; padding: 11px 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); font-size: 14px; }
+.tiling-return { display: flex; width: 100%; align-items: center; justify-content: space-between; margin-top: 10px; }
+.tiling-return:hover:not(:disabled), .tiling-actions button:not(.secondary-button):hover:not(:disabled) { background: var(--tint); border-color: #b6c7b0; }
+.tiling-help { margin: 13px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.tiling-status { min-height: 3.4em; margin: 0 0 12px; color: var(--green); font-size: 14px; line-height: 1.7; }
+.tiling-play > .puzzle-controls-hint { margin: 10px 0 18px; }
 .tiling-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .tiling-actions .secondary-button { min-height: 44px; }
-.tiling-keyboard-help { margin-top: 18px; color: var(--muted); font-size: 11px; }
-.tiling-keyboard-help summary { display: inline-block; padding: 4px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.tiling-keyboard-help { margin-top: 14px; color: var(--muted); font-size: 12px; }
+.tiling-keyboard-help summary { display: inline-block; min-height: 44px; padding: 10px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .tiling-keyboard-help p { max-width: 660px; margin: 6px 0 0; line-height: 1.8; }
 .tiling-game.is-solved .tiling-board { border-color: #9ab28d; background: #e4edde; }
 .tiling-cell.is-filled { touch-action: none; }
@@ -67,27 +76,28 @@
 @media (max-width: 760px) {
   .tiling-game { grid-template-columns: minmax(0, 1fr) 250px; gap: 24px; }
   .tiling-tray { gap: 6px; }
-  .tiling-piece { min-height: 112px; padding: 8px 5px; }
-  .tiling-board { padding: 7px; gap: 2px; }
+  .tiling-piece { min-height: 136px; padding: 10px; }
+  .tiling-board { padding: 7px; }
 }
 @media (max-width: 620px) {
-  .tiling-game { grid-template-columns: 1fr; gap: 24px; }
-  .tiling-settings { grid-template-columns: 1fr; padding: 14px 17px; gap: 0; }
+  .tiling-game { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .tiling-settings { grid-column: 1 / -1; grid-row: 1; grid-template-columns: 1fr; padding: 14px 17px; gap: 0; margin-bottom: 8px; }
   .tiling-setting-caption { grid-column: 1; grid-row: auto; margin-top: 10px; }
-  .tiling-play, .tiling-pieces, .tiling-footer { grid-column: 1; }
+  .tiling-play { grid-column: 1 / -1; grid-row: 4; margin-top: 6px; }
+  .tiling-pieces { display: contents; }
+  .tiling-tray-heading { grid-column: 1 / -1; grid-row: 2; margin: 0; }
+  .tiling-tray-caption { display: none; }
   .tiling-board { max-width: 400px; }
-  .tiling-tray { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-  .tiling-piece { min-height: 108px; }
-  .tiling-selected { margin-top: 14px; }
-  .tiling-transform { grid-template-columns: 1fr 1fr 1.3fr; }
-  .tiling-transform [data-tiling-remove] { grid-column: auto; }
-  .tiling-help { font-size: 10px; }
-  .tiling-cell { font-size: 12px !important; }
-  .tiling-status { min-height: 3.4em; }
-}
-@media (max-width: 360px) {
-  .tiling-tray { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .tiling-piece { padding: 7px 4px; }
-  .tiling-piece svg { height: 42px; }
-  .tiling-transform button { padding: 8px 5px; font-size: 11px; }
+  .tiling-tray { grid-column: 1 / -1; grid-row: 3; display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding: 5px 3px 10px; position: sticky; top: 0; z-index: 5; background: var(--paper); }
+  .tiling-piece { flex: 0 0 112px; min-height: 128px; padding: 9px; gap: 6px; scroll-snap-align: start; touch-action: pan-x; }
+  .tiling-piece svg { height: 48px; }
+  .tiling-piece-name, .tiling-piece-state { font-size: 12px; }
+  .tiling-quantity { padding: 2px 5px; }
+  .tiling-selected { grid-column: 1; grid-row: 5; margin: 0; padding: 10px; }
+  .tiling-selected [data-tiling-selected-shape] { display: none; }
+  .tiling-return { grid-column: 2; grid-row: 5; margin: 0; padding: 10px; font-size: 13px; }
+  .tiling-help { grid-column: 1 / -1; grid-row: 6; margin: 0; }
+  .tiling-keyboard-help { grid-column: 1 / -1; grid-row: 7; margin: 0; }
+  .tiling-pieces > noscript { grid-column: 1 / -1; }
+  .tiling-cell { font-size: 14px !important; }
 }
