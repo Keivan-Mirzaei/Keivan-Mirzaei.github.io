@@ -20,6 +20,8 @@ links:
 
 Each vertex of a finite simple graph carries a light. Pressing a vertex toggles that vertex and each of its neighbors.
 
+[Play the interactive Lights Out exploration]({{ '/notes/lights-out/' | relative_url }}): try grid and graph puzzles, reveal solutions, and follow the complement construction.
+
 The paper gives an elementary inductive proof that any starting configuration can be turned into its complement: every light changes state.
 
 ## Parity invariance

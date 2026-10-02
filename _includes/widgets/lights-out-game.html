@@ -1,0 +1,37 @@
+<section class="graph-widget lo-widget" data-lights-out aria-labelledby="lo-game-title">
+  <div class="graph-heading"><h3 id="lo-game-title">Can you turn them all off?</h3><span class="activity-badge" data-lo-count>0 presses · even</span></div>
+  <div class="lo-settings">
+    <label for="lo-board">Board <select id="lo-board" data-lo-board disabled><option value="grid-3">3 × 3 grid</option><option value="grid-4">4 × 4 grid</option><option value="grid-5">5 × 5 grid</option><option value="path-4">Path of four</option><option value="cycle-5">Five-light cycle</option><option value="triangle">Triangle</option><option value="star-5">Four-leaf star</option><option value="pair">Two joined lights</option></select></label>
+    <label for="lo-goal">Goal <select id="lo-goal" data-lo-goal disabled><option value="off">All lights off</option><option value="complement">Complement the start</option></select></label>
+  </div>
+  <p class="lo-caption" data-lo-instruction>Press a light to flip it and its neighbors. On a grid, neighbors are above, below, left, and right.</p>
+  <div class="lo-stage">
+    <div class="lo-board" data-lo-play>
+      <svg viewBox="0 0 360 360" role="img" aria-label="Nine lights in a square. Lights 1, 2, 3, 5, and 8 are on. Press lights 1, 3, and 5 to turn them all off.">
+        <g class="lo-static-off"><rect x="10" y="130" width="100" height="100" rx="12"/><rect x="250" y="130" width="100" height="100" rx="12"/><rect x="10" y="250" width="100" height="100" rx="12"/><rect x="250" y="250" width="100" height="100" rx="12"/></g>
+        <g class="lo-static-on"><rect x="10" y="10" width="100" height="100" rx="12"/><rect x="130" y="10" width="100" height="100" rx="12"/><rect x="250" y="10" width="100" height="100" rx="12"/><rect x="130" y="130" width="100" height="100" rx="12"/><rect x="130" y="250" width="100" height="100" rx="12"/></g>
+        <g class="lo-static-label" text-anchor="middle"><text x="60" y="68">1</text><text x="180" y="68">2</text><text x="300" y="68">3</text><text x="60" y="188">4</text><text x="180" y="188">5</text><text x="300" y="188">6</text><text x="60" y="308">7</text><text x="180" y="308">8</text><text x="300" y="308">9</text></g>
+      </svg>
+    </div>
+    <div class="lo-target" data-lo-target-region hidden><span class="lo-mini-title">Target</span><div data-lo-target></div></div>
+  </div>
+  <div class="lo-legend"><span><i class="lo-key lo-key-on" aria-hidden="true"></i>On</span><span><i class="lo-key" aria-hidden="true"></i>Off</span><span data-lo-plan-key hidden><i class="lo-key lo-key-plan" aria-hidden="true">1</i>Press order</span></div>
+  <div class="lo-control-row">
+    <button class="secondary-button" type="button" data-lo-show disabled>Show solution</button>
+    <button class="lo-secondary" type="button" data-lo-new disabled>New puzzle</button>
+    <button class="lo-secondary" type="button" data-lo-undo disabled>Undo</button>
+    <button class="lo-secondary" type="button" data-lo-restart disabled>Restart</button>
+  </div>
+  <div class="lo-solution" data-lo-solution hidden>
+    <p class="lo-plan-label" data-lo-plan-label></p>
+    <div class="lo-control-row">
+      <button class="secondary-button" type="button" data-lo-next>Next press</button>
+      <button class="lo-secondary" type="button" data-lo-finish>Finish solution</button>
+      <button class="lo-secondary" type="button" data-lo-alternative>Another solution</button>
+    </div>
+    <p class="lo-caption" data-lo-parity></p>
+  </div>
+  <p class="lo-status" data-lo-status role="status">The starting pattern is solvable. Try a few presses, then reveal a solution.</p>
+  <div class="lo-experiments"><button class="lo-text-button" type="button" data-lo-edit aria-pressed="false" disabled>Edit starting lights</button><button class="lo-text-button" type="button" data-lo-impossible disabled>Try an impossible board</button></div>
+  <noscript><p>The example above is solved by pressing lights <strong>1, 3, and 5</strong>, in any order. Enable JavaScript to play and explore other boards. Both proofs below remain readable without it.</p></noscript>
+</section>

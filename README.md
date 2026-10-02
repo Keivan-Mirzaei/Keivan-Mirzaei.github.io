@@ -73,4 +73,6 @@ Advanced graphs add two optional components: `scientific-plot` reads Plotly JSON
 
 The [advanced graph guide](docs/advanced-graphs.md) covers authoring, supported plot types, generating data in Python, and extending the scene. No Node packages or front-end build step are needed. Node.js 18 or newer is used only for the small geometry test suite.
 
+The Lights Out exploration connects the arXiv preprint to eight playable grid and graph boards. It includes minimum-press solutions, alternative press sets and their parity, fixed complement targets, editable starting lights, an impossibility witness, and a step-through of the paper’s inductive construction. The game runs locally in the browser without additional libraries; its binary solver and combinatorial construction are checked against every simple graph through five vertices. The full proofs and a solved static example remain available without JavaScript.
+
 The `.gitignore` excludes generated output, dependency folders, caches, local environment files, editor settings, and temporary files. Keep source Markdown, required assets, `Gemfile.lock`, and the thesis PDF in Git. The original trigonometry figure and compatibility redirects remain so existing links continue to work.
