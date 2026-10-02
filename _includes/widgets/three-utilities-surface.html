@@ -1,11 +1,12 @@
 <section class="graph-widget tu-widget tu-surface-widget" data-three-utilities-surface aria-labelledby="tu-surface-title">
   <div class="graph-heading"><h3 id="tu-surface-title">Follow the hole</h3><span class="activity-badge" data-tu-stage>A mug</span></div>
   <img data-tu-surface-preview src="{{ '/assets/images/three-utilities-transformation.svg' | relative_url }}" alt="Mug, donut, open tube, square: one handle opening, then two cuts, with opposite sides paired." width="720" height="360">
-  <canvas class="tu-transformation" hidden role="img" aria-label="A mug becomes a donut. Cutting its surface along two loops gives a square with opposite sides paired."></canvas>
+  <p class="tu-caption">Drag the surface to rotate it and look inside the mug. The same 3D surface reshapes continuously into the donut.</p>
+  <canvas class="tu-transformation" hidden role="img" tabindex="0" aria-label="A 3D mug becomes a donut. Drag or use arrow keys to rotate the surface. Home resets the view."></canvas>
   <div class="tu-phase-buttons" aria-label="Transformation stages"><button type="button" data-tu-jump="0" aria-pressed="true" disabled>Mug</button><button type="button" data-tu-jump="1" aria-pressed="false" disabled>Donut</button><button type="button" data-tu-jump="2" aria-pressed="false" disabled>Open tube</button><button type="button" data-tu-jump="3" aria-pressed="false" disabled>Square</button></div>
   <label class="tu-slider-label" for="tu-phase">Move through the transformation<input id="tu-phase" type="range" min="0" max="3" step="0.01" value="0" data-tu-phase disabled></label>
-  <div class="tu-actions"><button class="secondary-button" type="button" data-tu-play disabled>Play transformation</button><label class="tu-checkbox"><input type="checkbox" data-tu-surface-pipes disabled>Carry the nine pipes (donut onward)</label></div>
-  <p class="tu-status" data-tu-caption role="status">Follow the purple handle opening. The bowl has a bottom: it is a dent in the surface, not a second through-hole.</p>
-  <p class="tu-footnote">The mug-to-donut deformation is schematic. Opening the donut into a square uses two cuts; matching edges remembers how to glue it back.</p>
+  <div class="tu-actions"><button class="secondary-button" type="button" data-tu-play disabled>Play transformation</button><button class="lo-secondary" type="button" data-tu-reset-view disabled>Reset view</button><label class="tu-checkbox"><input type="checkbox" data-tu-surface-pipes disabled>Carry the nine pipes</label></div>
+  <p class="tu-status" data-tu-caption role="status">Drag to rotate the 3D mug and look inside. Its bowl has a bottom; the handle supplies the one through-hole.</p>
+  <p class="tu-footnote">The mug and donut use the same continuous surface, with no cuts between them. Opening the donut into a square uses two cuts; matching edges remembers how to glue it back.</p>
   <noscript><p>The diagram shows the four stages. Enable JavaScript to move through the deformation.</p></noscript>
 </section>

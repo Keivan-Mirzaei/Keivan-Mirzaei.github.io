@@ -1,4 +1,4 @@
-import { NODES, nodeById, surfacePoint, sampleRoute } from './three-utilities-math.mjs';
+import { NODES, nodeById, surfacePoint, sampleRoute, smoothWaypoints } from './three-utilities-math.mjs?v=20261002-3';
 
 export function boardGeometry(width) {
   const w = Math.max(220, width);
@@ -8,6 +8,10 @@ export const boardPoint = (point, g) => [g.left + point[0] * g.size, g.top + poi
 const number = x => Number(x.toFixed(2));
 export function pathData(points, g) {
   return points.map((p, i) => `${i ? 'L' : 'M'}${boardPoint(p, g).map(number).join(' ')}`).join(' ');
+}
+export function curvePathData(curves, g) {
+  if(!curves.length)return '';
+  return `M${boardPoint(curves[0][0],g).map(number).join(' ')} `+curves.map(curve=>`C${curve.slice(1).map(p=>boardPoint(p,g).map(number).join(' ')).join(' ')}`).join(' ');
 }
 
 function nodeMarkup(node, g, interactive, selected) {
@@ -19,11 +23,11 @@ function nodeMarkup(node, g, interactive, selected) {
   return `<g transform="translate(${number(x)} ${number(y)})" class="tu-node ${selected === node.id ? 'is-selected' : ''}" ${button}><circle class="tu-hit" r="22" fill="transparent"/>${node.kind === 'house' ? house : utility}${label}</g>`;
 }
 
-export function boardSVG(routes, { width = 620, square = false, selected = null, hits = [], draft = null, focus = null, interactive = false } = {}) {
+export function boardSVG(routes, { width = 620, square = false, selected = null, hits = [], draft = null, focus = null, interactive = false, cursor = null } = {}) {
   const g = boardGeometry(width);
   const right = g.left + g.size, bottom = g.top + g.size;
-  const routeMarkup = routes.map(edge => edge.parts.map(part => `<path d="${pathData(part, g)}" fill="none" stroke="${nodeById(edge.utility).color}" stroke-width="${focus === edge.id ? 4 : 2.5}" opacity="${focus && focus !== edge.id ? .22 : 1}" stroke-linejoin="round" stroke-linecap="round"/>`).join('')).join('');
-  const plane = `<rect x="${g.left}" y="${g.top}" width="${g.size}" height="${g.size}" rx="2" fill="url(#tu-dots)" stroke="#dfe3dc"/>`;
+  const routeMarkup = routes.map(edge => edge.parts.map((part,i) => `<path data-pipe="${edge.id}" d="${edge.curves?curvePathData(edge.curves[i],g):pathData(part, g)}" fill="none" stroke="${nodeById(edge.utility).color}" stroke-width="${focus === edge.id ? 4 : 2.5}" opacity="${focus && focus !== edge.id ? .22 : 1}" stroke-linejoin="round" stroke-linecap="round" pointer-events="none"/>`).join('')).join('');
+  const plane = `<rect class="tu-paper" ${interactive?'data-tu-paper role="button" tabindex="0" aria-label="Place a path point. Arrow keys move the cursor; Enter adds a point."':''} x="${g.left}" y="${g.top}" width="${g.size}" height="${g.size}" rx="2" fill="url(#tu-dots)" stroke="#dfe3dc"/>`;
   const boundary = square ? `<rect x="${g.left}" y="${g.top}" width="${g.size}" height="${g.size}" fill="url(#tu-dots)"/>
     <path d="M${g.left} ${g.top}H${right} M${g.left} ${bottom}H${right}" stroke="#285b46" stroke-width="2.5"/>
     <path d="M${g.left} ${g.top}V${bottom} M${right} ${g.top}V${bottom}" stroke="#8769a2" stroke-width="2.5"/>
@@ -37,63 +41,20 @@ export function boardSVG(routes, { width = 620, square = false, selected = null,
     const [x, y] = boardPoint(hit.point, g);
     return `<circle cx="${number(x)}" cy="${number(y)}" r="8" fill="#fff0ee" stroke="#c83c38" stroke-width="2"/><path d="M${number(x - 3)} ${number(y - 3)}l6 6m0 -6l-6 6" stroke="#c83c38" stroke-width="1.5"/>`;
   }).join('');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${g.width} ${g.height}" ${interactive ? 'role="group"' : 'role="img"'} aria-label="${square ? 'Three houses connected to gas, water and electricity on a square with paired opposite sides.' : 'Connect every house to each utility. Drag between nodes or select two endpoints.'}">
+  const draftMarkup=draft?`<path d="${curvePathData(smoothWaypoints(draft),g)}" fill="none" stroke="#285b46" stroke-width="2.5" stroke-dasharray="5 4" pointer-events="none"/>`+draft.slice(1).map(p=>{const [x,y]=boardPoint(p,g);return `<circle cx="${number(x)}" cy="${number(y)}" r="4" fill="#fcfcf9" stroke="#285b46" stroke-width="1.5" pointer-events="none"/>`;}).join(''):'';
+  const cursorMarkup=cursor?(()=>{const[x,y]=boardPoint(cursor,g);return `<path d="M${x-7} ${y}h14M${x} ${y-7}v14" stroke="#285b46" stroke-width="1.5" pointer-events="none"/>`;})():'';
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${g.width} ${g.height}" ${interactive ? 'role="group"' : 'role="img"'} aria-label="${square ? 'Three houses connected to gas, water and electricity on a square with paired opposite sides.' : 'Choose a house, place points for its path, then choose a utility. The pipe is a smooth curve.'}">
     <style>text { font-family: system-ui, sans-serif; }</style><defs><pattern id="tu-dots" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="9" cy="9" r=".65" fill="#dfe3dc"/></pattern></defs>
-    ${boundary}${routeMarkup}${draft ? `<path d="${pathData(draft, g)}" fill="none" stroke="#285b46" stroke-width="2.5" stroke-dasharray="5 4"/>` : ''}${exits}${NODES.map(node => nodeMarkup(node, g, interactive, selected)).join('')}${hitMarkup}
+    ${boundary}${routeMarkup}${draftMarkup}${cursorMarkup}${exits}${NODES.map(node => nodeMarkup(node, g, interactive, selected)).join('')}<g pointer-events="none">${hitMarkup}</g>
   </svg>`;
 }
 
-// A continuous silhouette deformation highlights the mug's handle opening.
-// The bowl is an indentation (drawn with an opaque bottom), not another through-hole.
-const mugPoints = [[180,155],[395,155],[400,180],[548,218],[534,287],[400,287],[395,330],[180,330]];
-const mugControls = [[[180,122],[395,122]],[[395,162],[400,170]],[[455,146],[537,159]],[[563,251],[556,275]],[[499,318],[438,313]],[[400,300],[395,318]],[[395,369],[180,369]],[[176,280],[176,190]]];
 const mix = (a, b, t) => a + (b - a) * t;
-const mixPoint = (a, b, t) => a.map((value, i) => mix(value, b[i], t));
-const ellipsePoint = angle => [350 + 210 * Math.cos(angle), 240 + 130 * Math.sin(angle)];
-const ellipseTangent = angle => [-210 * Math.sin(angle), 130 * Math.cos(angle)];
-
-function drawMug(ctx, width, height, progress, alpha = 1) {
-  const t = progress * progress * (3 - 2 * progress), scale = Math.min(width / 480, height / 430);
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  ctx.translate(width / 2 - 350 * scale, height / 2 - 240 * scale);
-  ctx.scale(scale, scale);
-  ctx.beginPath();
-  const start = mixPoint(mugPoints[0], ellipsePoint(5 * Math.PI / 4), t);
-  ctx.moveTo(...start);
-  const k = 4 / 3 * Math.tan(Math.PI / 16);
-  for (let i = 0; i < 8; i++) {
-    const angle = 5 * Math.PI / 4 + i * Math.PI / 4, next = angle + Math.PI / 4;
-    const a = ellipsePoint(angle), b = ellipsePoint(next), da = ellipseTangent(angle), db = ellipseTangent(next);
-    const c1 = mixPoint(mugControls[i][0], a.map((value, j) => value + k * da[j]), t);
-    const c2 = mixPoint(mugControls[i][1], b.map((value, j) => value - k * db[j]), t);
-    const end = mixPoint(mugPoints[(i + 1) % 8], b, t);
-    ctx.bezierCurveTo(...c1, ...c2, ...end);
-  }
-  ctx.closePath();
-  const hx = mix(480, 350, t), hy = mix(235, 240, t), rx = mix(36, 103, t), ry = mix(43, 53, t);
-  ctx.moveTo(hx + rx, hy);
-  ctx.ellipse(hx, hy, rx, ry, 0, 0, Math.PI * 2);
-  const gradient = ctx.createLinearGradient(200, 110, 420, 365);
-  gradient.addColorStop(0, '#e1eade'); gradient.addColorStop(.5, '#b8ccac'); gradient.addColorStop(1, '#819c78');
-  ctx.fillStyle = gradient; ctx.fill('evenodd');
-  ctx.lineWidth = 2.5; ctx.strokeStyle = '#42664b'; ctx.stroke();
-  ctx.strokeStyle = '#8769a2'; ctx.lineWidth = 4;
-  ctx.beginPath(); ctx.ellipse(hx, hy, rx, ry, 0, 0, Math.PI * 2); ctx.stroke();
-  if (t < .9) {
-    ctx.globalAlpha = alpha * Math.max(0, 1 - t / .9);
-    const bowlX = mix(287.5, 320, t), bowlY = mix(155, 205, t);
-    ctx.fillStyle = '#e9eee5'; ctx.strokeStyle = '#42664b'; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.ellipse(bowlX, bowlY, 105 * (1 - .65 * t), 25 * (1 - .7 * t), 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#75936d';
-    ctx.beginPath(); ctx.ellipse(bowlX, bowlY, 86 * (1 - .65 * t), 16 * (1 - .7 * t), 0, 0, Math.PI * 2); ctx.fill();
-  }
-  ctx.restore();
-}
-
-function projection(phase) {
-  const flatten = Math.max(0, phase - 2);
-  const yaw = .22 * (1 - flatten), pitch = .90 * (1 - flatten);
+function projection(phase, rotation) {
+  const flatten = Math.max(0, phase - 2), round = Math.min(1,phase);
+  const ease = round * round * (3 - 2 * round);
+  const yaw = .22 * (1 - flatten) + rotation.yaw;
+  const pitch = (phase < 1 ? -.50 + 1.40 * ease : .90 * (1 - flatten)) + rotation.pitch;
   return p => {
     const x = Math.cos(yaw) * p[0] + Math.sin(yaw) * p[2];
     const z = -Math.sin(yaw) * p[0] + Math.cos(yaw) * p[2];
@@ -101,15 +62,15 @@ function projection(phase) {
   };
 }
 
-function drawSurface(ctx, width, height, phase, routes, alpha = 1) {
-  const project = projection(phase), cols = 40, rows = 24, faces = [], lines = [], all = [];
+function drawSurface(ctx, width, height, phase, routes, rotation) {
+  const project = projection(phase, rotation), cols = 84, rows = 56, faces = [], lines = [], all = [];
   for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
     const points = [[i/cols,j/rows],[(i+1)/cols,j/rows],[(i+1)/cols,(j+1)/rows],[i/cols,(j+1)/rows]].map(([u,v]) => project(surfacePoint(u,v,phase)));
     all.push(...points);
     const a = points[1].map((x,k) => x-points[0][k]), b = points[3].map((x,k) => x-points[0][k]);
     const normal = [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
     const length = Math.hypot(...normal) || 1;
-    const light = .55 + .45 * Math.abs((normal[0]*-.3 + normal[1]*-.4 + normal[2]*.86)/length);
+    const light = .32 + .68 * Math.max(0, (normal[0]*.35 + normal[1]*.55 - normal[2]*.76)/length);
     faces.push({ points, depth: points.reduce((sum,p)=>sum+p[2],0)/4, fill: `rgb(${Math.round(115+70*light)},${Math.round(139+63*light)},${Math.round(102+63*light)})` });
   }
   // Stable framing lets the object open without shrinking the tube out of view.
@@ -122,8 +83,10 @@ function drawSurface(ctx, width, height, phase, routes, alpha = 1) {
   };
   const samples = Array.from({length:101},(_,i)=>i/100);
   // a = top/bottom, b = left/right, with equal directions on each paired side.
-  addLine(samples.map(v=>[0,v]), '#8769a2', 2.5); addLine(samples.map(v=>[1,v]), '#8769a2', 2.5);
-  addLine(samples.map(u=>[u,0]), '#285b46', 2.5); addLine(samples.map(u=>[u,1]), '#285b46', 2.5);
+  if(phase>=1){
+    addLine(samples.map(v=>[0,v]), '#8769a2', 2.5); addLine(samples.map(v=>[1,v]), '#8769a2', 2.5);
+    addLine(samples.map(u=>[u,0]), '#285b46', 2.5); addLine(samples.map(u=>[u,1]), '#285b46', 2.5);
+  }
   for (const edge of routes) for (const part of sampleRoute(edge, 65)) addLine(part, nodeById(edge.utility).color, 3);
   // A small depth buffer hides rear pipes without gaps from patch-average sorting.
   const cell=3, bw=Math.ceil(width/cell), bh=Math.ceil(height/cell), depths=new Float32Array(bw*bh).fill(-Infinity);
@@ -148,7 +111,7 @@ function drawSurface(ctx, width, height, phase, routes, alpha = 1) {
     return p[2]+.045>=depths[key];
   };
   faces.sort((a,b)=>a.depth-b.depth);
-  ctx.save(); ctx.globalAlpha=alpha; ctx.lineJoin='round'; ctx.lineCap='round';
+  ctx.save(); ctx.lineJoin='round'; ctx.lineCap='round';
   for (const face of faces) {
     ctx.beginPath(); face.points.map(screen).forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));
     ctx.closePath();ctx.fillStyle=face.fill;ctx.fill();ctx.strokeStyle=face.fill;ctx.lineWidth=.5;ctx.stroke();
@@ -175,15 +138,11 @@ function drawSurface(ctx, width, height, phase, routes, alpha = 1) {
   ctx.restore();
 }
 
-export function drawTransformation(canvas, phase, routes = []) {
+export function drawTransformation(canvas, phase, routes = [], rotation = {yaw:0,pitch:0}) {
   const width = canvas.clientWidth, height = canvas.clientHeight;
   if (!width || !height) return;
   const ratio = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
   const ctx = canvas.getContext('2d'); ctx.scale(ratio, ratio); ctx.clearRect(0,0,width,height);
-  if (phase < .82) drawMug(ctx,width,height,phase);
-  else if (phase < 1) {
-    const alpha = (phase-.82)/.18;
-    drawMug(ctx,width,height,phase,1-alpha); drawSurface(ctx,width,height,1,[],alpha);
-  } else drawSurface(ctx,width,height,phase,routes);
+  drawSurface(ctx,width,height,phase,routes,rotation);
 }

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { NODES, TORUS_ROUTES, PLANE_EIGHT, edgeId, nodeById, obstruction, segmentIntersection, surfacePoint, distance } from '../assets/js/lib/three-utilities-math.mjs';
+import { NODES, TORUS_ROUTES, PLANE_EIGHT, edgeId, nodeById, obstruction, segmentIntersection, surfacePoint, distance, bezierPoint, smoothWaypoints, curveRoute, updateConnection, simplifyPath } from '../assets/js/lib/three-utilities-math.mjs';
 
 test('the square contains every house–utility connection exactly once, without crossings or other junctions', () => {
   const expected = NODES.filter(n=>n.kind==='house').flatMap(h=>NODES.filter(n=>n.kind==='utility').map(u=>edgeId(h.id,u.id)));
@@ -52,7 +52,7 @@ test('route validation catches crossings, overlaps, self intersections, and unre
 test('surface deformation is finite and continuous at both cuts and finishes as a square', () => {
   for (let i=0;i<=10;i++) for(let j=0;j<=10;j++) {
     const u=i/10,v=j/10;
-    for(let phase=1;phase<=3.001;phase+=.025) assert.ok(surfacePoint(u,v,phase).every(Number.isFinite));
+    for(let phase=0;phase<=3.001;phase+=.025) assert.ok(surfacePoint(u,v,phase).every(Number.isFinite));
     for(const boundary of [1,2,3]) {
       const a=surfacePoint(u,v,boundary-1e-7),b=surfacePoint(u,v,boundary+1e-7);
       assert.ok(Math.hypot(...a.map((x,k)=>x-b[k]))<1e-5);
@@ -61,6 +61,56 @@ test('surface deformation is finite and continuous at both cuts and finishes as 
     assert.ok(Math.abs(flat[0]-side*(u-.5))<1e-12);
     assert.ok(Math.abs(flat[1]-side*(v-.5))<1e-12);
     assert.equal(flat[2],0);
+  }
+});
+
+test('solution curves have matching tangents within each pipe and across the glued edges', () => {
+  const tangent=(a,b)=>b.map((x,i)=>x-a[i]);
+  const parallel=(a,b)=>Math.abs(a[0]*b[1]-a[1]*b[0])<1e-12&&a[0]*b[0]+a[1]*b[1]>0;
+  for(const edge of [...TORUS_ROUTES,...PLANE_EIGHT])for(const part of edge.curves)for(let i=1;i<part.length;i++){
+    const a=part[i-1],b=part[i];
+    assert.deepEqual(a[3],b[0]);
+    assert.ok(parallel(tangent(a[2],a[3]),tangent(b[0],b[1])));
+  }
+  for(const edge of TORUS_ROUTES.filter(r=>r.seam)){
+    const a=edge.curves[0].at(-1),b=edge.curves[1][0];
+    assert.ok(parallel(tangent(a[2],a[3]),tangent(b[0],b[1])));
+  }
+  // Check the actual cubic shapes at a denser sampling than the drawing validator.
+  const dense=TORUS_ROUTES.map(edge=>({...edge,parts:edge.curves.map(part=>part.flatMap((c,i)=>Array.from({length:161},(_,j)=>bezierPoint(c,j/160)).slice(i?1:0)))}));
+  assert.deepEqual(obstruction(dense),{intersections:[],throughNodes:[]});
+});
+
+test('chosen path points are interpolated by bounded, continuously tangent cubic curves', () => {
+  const points=[[.24,.25],[.08,.42],[.12,.65],[.24,.76]],curves=smoothWaypoints(points);
+  assert.equal(curves.length,3);
+  curves.forEach((curve,i)=>{assert.deepEqual(bezierPoint(curve,0),points[i]);assert.deepEqual(bezierPoint(curve,1),points[i+1]);assert.ok(curve.flat().every(x=>x>=0&&x<=1));});
+  for(let i=1;i<curves.length;i++)for(let k=0;k<2;k++)assert.ok(Math.abs((curves[i-1][3][k]-curves[i-1][2][k])-(curves[i][1][k]-curves[i][0][k]))<1e-12);
+  assert.ok(simplifyPath([[0,0],[.01,.01],[.02,.02],[.5,.5],[1,1]]).length===2);
+});
+
+test('choosing an existing pair toggles deletion, while a new path replaces only that pair', () => {
+  const first=TORUS_ROUTES[0],other=TORUS_ROUTES[1];
+  const added=updateConnection([],first);
+  assert.equal(added.action,'added');assert.deepEqual(added.routes,[first]);
+  const removed=updateConnection([first,other],first);
+  assert.equal(removed.action,'removed');assert.deepEqual(removed.routes,[other]);
+  const changed=curveRoute('h1','gas',[smoothWaypoints([[.24,.25],[.08,.5],[.24,.76]])]);
+  const replaced=updateConnection([first,other],changed,true);
+  assert.equal(replaced.action,'replaced');assert.deepEqual(replaced.routes,[changed,other]);
+  assert.deepEqual([first,other],[TORUS_ROUTES[0],TORUS_ROUTES[1]]);
+});
+
+test('the mug and intermediate 3D shapes remain closed at both seams and never pinch locally', () => {
+  const close=(a,b)=>Math.hypot(...a.map((x,i)=>x-b[i]))<1e-11;
+  const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+  for(let phase=0;phase<=1.001;phase+=.1){
+    for(let t=0;t<=1;t+=.05){assert.ok(close(surfacePoint(0,t,phase),surfacePoint(1,t,phase)));assert.ok(close(surfacePoint(t,0,phase),surfacePoint(t,1,phase)));}
+    for(let i=0;i<20;i++)for(let j=0;j<20;j++){
+      const u=i/20,v=j/20,p=surfacePoint(u,v,phase),a=surfacePoint(u+.0001,v,phase),b=surfacePoint(u,v+.0001,phase);
+      const normal=cross(a.map((x,k)=>(x-p[k])/.0001),b.map((x,k)=>(x-p[k])/.0001));
+      assert.ok(Math.hypot(...normal)>.01);
+    }
   }
 });
 
