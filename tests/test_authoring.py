@@ -84,8 +84,9 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             module = page("fixture-lesson")
             self.assertIn("Before you start", module)
             self.assertIn('data-widget="quadratic"', module)
-            self.assertIn('src="/assets/js/widgets/quadratic.js"', module)
-            self.assertNotIn('src="/assets/js/widgets/quadratic.js"', problem)
+            widget_source = r'src="/assets/js/widgets/quadratic\.js(?:\?[^\"]+)?"'
+            self.assertRegex(module, widget_source)
+            self.assertNotRegex(problem, widget_source)
             # Optional graph modules must stay off ordinary pages.
             self.assertNotIn('type="importmap"', problem)
             self.assertNotIn('scientific-plot.mjs', problem)
