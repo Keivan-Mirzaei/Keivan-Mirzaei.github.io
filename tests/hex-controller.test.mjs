@@ -40,7 +40,7 @@ function game({ order = 'local', size = 3, legacy = false } = {}) {
   globalThis.document = { activeElement: null, body: new Element() };
   globalThis.Worker = Computer;
   Computer.instances = [];
-  const elements = Object.fromEntries(['count', 'instruction', 'status', 'new', 'undo', 'size-label'].map(key => [key, new Element()]));
+  const elements = Object.fromEntries(['count', 'instruction', 'status', 'new', 'undo', 'redo', 'size-label'].map(key => [key, new Element()]));
   elements.size = new Element({ type: legacy ? 'select-one' : 'range', value: String(size) });
   elements.board = new Board();
   const orders = legacy
@@ -62,6 +62,7 @@ function game({ order = 'local', size = 3, legacy = false } = {}) {
       if (!button.disabled) elements.board.emit('click', { target: button });
     },
     undo: () => elements.undo.emit('click'),
+    redo: () => elements.redo.emit('click'),
     colors: () => elements.board.buttons.map(button => button.className.includes('hex-red') ? 1 : button.className.includes('hex-blue') ? 2 : 0),
     changeOrder: value => {
       if (legacy) { orders[0].value = value; orders[0].emit('change'); }
@@ -84,7 +85,7 @@ test('local play starts Red, alternates both colours, and undoes one move', () =
   assert.equal(Computer.instances.length, 0);
   fixture.undo();
   assert.deepEqual(fixture.colors().slice(0, 3), [1, 0, 0]);
-  assert.match(fixture.elements.status.textContent, /Blue to play/);
+  assert.match(fixture.elements.status.textContent, /Blue’s turn/);
   fixture.click(2);
   assert.deepEqual(fixture.colors().slice(0, 3), [1, 0, 2]);
   fixture.elements.new.emit('click');
@@ -100,7 +101,7 @@ test('winning locks a local board, and undo restores the winning player’s turn
   fixture.undo();
   assert.equal(fixture.colors()[6], 0);
   assert.equal(fixture.elements.board.buttons[6].disabled, false);
-  assert.match(fixture.elements.status.textContent, /Red to play/);
+  assert.match(fixture.elements.status.textContent, /Red’s turn/);
   fixture.click(6);
   assert.match(fixture.elements.status.textContent, /^Red wins!/);
 });
@@ -154,7 +155,7 @@ test('playing second gives the computer a Red opening that undo cannot remove', 
   assert.equal(fixture.elements.count.textContent, '1 stone');
   assert.equal(fixture.colors()[4], 1);
   assert.equal(fixture.elements.undo.disabled, true);
-  assert.match(fixture.elements.status.textContent, /Your last turn has been undone/);
+  assert.match(fixture.elements.status.textContent, /Your turn · Blue/);
 });
 
 test('changing mode cancels a pending reply and starts local play with Red', () => {
@@ -226,14 +227,45 @@ test('the existing exploration select controls retain computer play and reset be
   assert.match(fixture.elements.status.textContent, /^Your turn · Blue/);
 });
 
-test('keyboard undo cancels a pending reply and shares the button undo history', () => {
+test('redo restores a computer reply exactly without asking for a new move', () => {
   const f = game({ order: '1' });
-  f.elements.board.buttons[0].focus(); f.click(0);
-  f.key('z', { ctrlKey: true });
-  assert.equal(f.elements.count.textContent, '0 stones');
-  assert.equal(Computer.instances[0].terminated, true);
-  f.click(1); Computer.instances[1].reply(4);
-  f.key('u');
+  f.click(0); Computer.instances[0].reply(4);
+  const before = f.colors();
+  f.undo();
+  assert.equal(f.elements.redo.disabled, false);
+  f.redo();
+  assert.deepEqual(f.colors(), before);
+  assert.equal(Computer.instances.length, 1);
+  assert.equal(f.elements.redo.disabled, true);
+  assert.equal(f.elements.undo.disabled, false);
+});
+
+test('redo restarts an interrupted reply and ignores the stale worker', () => {
+  const f = game({ order: '1' });
+  f.click(0); const original = Computer.instances[0];
+  f.undo(); f.redo();
+  assert.equal(f.elements.count.textContent, '1 stone');
+  assert.equal(Computer.instances.length, 2);
+  original.reply(1);
+  assert.equal(f.elements.count.textContent, '1 stone');
+  Computer.instances[1].reply(4);
+  assert.deepEqual(f.colors().slice(0, 5), [1, 0, 0, 0, 2]);
+  f.undo(); f.redo();
+  assert.equal(Computer.instances.length, 2);
+  assert.equal(f.elements.count.textContent, '2 stones');
+});
+
+test('local redo restores a win and a new move or new game clears redo', () => {
+  const f = game();
+  [0, 1, 3, 2, 6].forEach(f.click);
+  f.undo(); f.redo();
+  assert.match(f.elements.status.textContent, /^Red wins!/);
+  assert.ok(f.elements.board.buttons.every(button => button.disabled));
+  f.undo(); f.click(7);
+  assert.equal(f.elements.redo.disabled, true);
+  f.undo(); f.elements.new.emit('click');
+  assert.equal(f.elements.redo.disabled, true);
+  assert.equal(f.elements.undo.disabled, true);
   assert.equal(f.elements.count.textContent, '0 stones');
 });
 

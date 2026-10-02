@@ -1,6 +1,6 @@
 <section class="klotski-game" data-klotski-game aria-label="Klotski game">
   <div class="klotski-play-area">
-    <div class="klotski-board-heading"><span>Slide the marked square to the exit.</span><span data-klotski-count>0 moves</span></div>
+    <div class="klotski-board-heading"><span data-klotski-count>0 moves</span></div>
     <div class="klotski-board-wrap">
       <div class="klotski-board" data-klotski-board>
         <img src="{{ '/assets/images/klotski-board.svg' | relative_url }}" width="400" height="530" alt="The classic Klotski board: a marked square surrounded by nine smaller blocks, with two empty spaces and an exit at the bottom centre.">
@@ -9,7 +9,6 @@
     </div>
   </div>
   <div class="klotski-controls">
-    <p class="klotski-instructions">Drag a block to slide it. You can also select a block and use the arrows below or your keyboard.</p>
     <p class="klotski-selection" data-klotski-selection>Select a block</p>
     <div class="klotski-directions" role="group" aria-label="Move selected block">
       <button type="button" class="klotski-direction klotski-up" data-klotski-direction="up" aria-label="Move selected block up" disabled>↑</button>
@@ -18,12 +17,15 @@
       <button type="button" class="klotski-direction klotski-right" data-klotski-direction="right" aria-label="Move selected block right" disabled>→</button>
     </div>
     <p class="klotski-status" data-klotski-status role="status">Enable JavaScript to play Klotski.</p>
-    <div class="klotski-actions puzzle-actions">
-      <button class="secondary-button" type="button" data-klotski-restart disabled>Restart</button>
-      <button class="klotski-secondary puzzle-undo" type="button" data-klotski-undo disabled>Undo move</button>
+    <div class="klotski-actions puzzle-actions" role="group" aria-label="Game controls">
+      {% include puzzles/action.html game='klotski' action='undo' icon='undo' label='Undo move' %}
+      {% include puzzles/action.html game='klotski' action='redo' icon='redo' label='Redo move' %}
+      {% include puzzles/action.html game='klotski' action='restart' icon='restart' label='Start again' %}
+      <details class="puzzle-help">
+        <summary class="puzzle-icon-button" aria-label="How to play" data-tooltip="How to play">{% include icon.html name='help' %}</summary>
+        <div class="puzzle-help-content"><p>Slide the marked square to the exit at the bottom.</p><p>Drag a block, or select it and use the arrows. Blocks slide into empty space without overlapping.</p></div>
+      </details>
     </div>
-    <p class="puzzle-controls-hint">Arrow keys slide the selected block · <kbd>U</kbd> or <kbd>Ctrl/⌘ Z</kbd> to undo</p>
-    <p class="klotski-caption">Blocks slide into empty space. They cannot overlap, turn, or lift off the board.</p>
     <noscript><p class="klotski-caption">This game needs JavaScript. Enable it to slide the blocks and use the game controls.</p></noscript>
   </div>
 </section>

@@ -56,7 +56,7 @@ class Holder extends Element {
 function fixture() {
   globalThis.document = { activeElement: null, body: new Element() };
   const root = new Element();
-  const fields = Object.fromEntries(['challenge', 'challenge-label', 'name', 'progress', 'instruction', 'tray-count', 'selected', 'selected-label', 'selected-shape', 'remove', 'undo', 'hint', 'next', 'reset', 'status'].map(name => [name, new Element({ parent: root })]));
+  const fields = Object.fromEntries(['challenge', 'challenge-label', 'name', 'progress', 'instruction', 'tray-count', 'selected', 'selected-label', 'selected-shape', 'remove', 'undo', 'redo', 'hint', 'next', 'reset', 'status'].map(name => [name, new Element({ parent: root })]));
   fields.challenge.value = '1'; fields.challenge.tagName = 'INPUT';
   fields.board = new Holder({ parent: root }); fields.tray = new Holder({ parent: root });
   root.querySelector = selector => fields[selector.match(/data-tiling-([^\]]+)/)[1]];
@@ -184,12 +184,12 @@ test('repeated shapes share a tray card and placing or undoing updates the remai
   assert.match(f.fields.tray.markup, /2 needed, 1 left/);
   f.cell(2, 2);
   assert.match(f.fields.tray.markup, /2 needed, 0 left/);
-  f.root.emit('keydown', { target: document.activeElement, key: 'z', metaKey: true });
+  f.action('undo');
   assert.deepEqual(f.controller.game.placements, { A: { x: 0, y: 0 } });
   assert.match(f.fields.tray.markup, /2 needed, 1 left/);
 });
 
-test('two quick taps return a placed copy and keyboard undo restores it', () => {
+test('two quick taps return a placed copy and undo restores it', () => {
   const f = fixture();
   f.tile('A'); f.cell(0, 0);
   f.cell(0, 0);
@@ -198,7 +198,7 @@ test('two quick taps return a placed copy and keyboard undo restores it', () => 
   assert.equal(f.controller.game.filled, 0);
   assert.match(f.fields.tray.markup, /2 needed, 2 left/);
   assert.match(f.fields.status.textContent, /returned/);
-  f.root.emit('keydown', { target: document.activeElement, key: 'u' });
+  f.action('undo');
   assert.equal(f.controller.game.filled, 3);
 });
 
@@ -241,4 +241,21 @@ test('a cancelled drag leaves the copy and inventory unchanged', () => {
   assert.equal(f.controller.game.moves, 1);
   assert.equal(document.body.children.length, 0);
   assert.match(f.fields.tray.markup, /2 needed, 1 left/);
+});
+
+test('redo restores repeated copies and removal, while a new placement clears it', () => {
+  const f = fixture();
+  f.tile('A'); f.cell(0, 0); f.cell(2, 2);
+  const before = f.controller.game.placements;
+  f.action('undo');
+  assert.equal(f.fields.redo.disabled, false);
+  f.action('redo');
+  assert.deepEqual(f.controller.game.placements, before);
+  assert.match(f.fields.tray.markup, /2 needed, 0 left/);
+  assert.equal(f.fields.redo.disabled, true);
+  f.cell(0, 0); f.action('remove'); f.action('undo'); f.action('redo');
+  assert.equal(f.controller.game.placements.A, undefined);
+  assert.match(f.fields.tray.markup, /2 needed, 1 left/);
+  f.action('undo'); f.tile('B'); f.cell(2, 0);
+  assert.equal(f.fields.redo.disabled, true);
 });

@@ -125,14 +125,16 @@ export function solveTiling(level, placements = {}) {
 }
 
 export function createGame(level = LEVELS[0]) {
-  let placements = {}, history = [], moves = 0;
-  const save = () => history.push({ placements: clonePlacements(placements), moves });
+  let placements = {}, history = [], future = [], moves = 0;
+  const snapshot = () => ({ placements: clonePlacements(placements), moves });
+  const save = () => { history.push(snapshot()); future = []; };
   return {
     level,
     get placements() { return clonePlacements(placements); },
     get filled() { return occupiedCells(level, placements).size; },
     get solved() { return isSolved(level, placements); },
     get canUndo() { return history.length > 0; },
+    get canRedo() { return future.length > 0; },
     get moves() { return moves; },
     place(id, position) {
       const result = checkPlacement(level, placements, id, position);
@@ -148,9 +150,15 @@ export function createGame(level = LEVELS[0]) {
     },
     undo() {
       if (!history.length) return false;
+      future.push(snapshot());
       const previous = history.pop(); placements = previous.placements; moves = previous.moves; return true;
     },
-    reset() { placements = {}; history = []; moves = 0; },
+    redo() {
+      if (!future.length) return false;
+      history.push(snapshot());
+      const next = future.pop(); placements = next.placements; moves = next.moves; return true;
+    },
+    reset() { placements = {}; history = []; future = []; moves = 0; },
     hint() { return solveTiling(level, placements); },
   };
 }

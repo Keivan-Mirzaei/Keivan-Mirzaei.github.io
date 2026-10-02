@@ -48,7 +48,7 @@ export function isSolved(pieces) {
 
 export function createKlotski(pieces = CLASSIC_LAYOUT) {
   if (!validPieces(pieces)) throw new RangeError('The blocks must fit inside the board without overlapping.');
-  return { pieces: copy(pieces), history: [], moves: 0, won: isSolved(pieces) };
+  return { pieces: copy(pieces), history: [], future: [], moves: 0, won: isSolved(pieces) };
 }
 
 function stepPieces(pieces, id, direction) {
@@ -82,6 +82,7 @@ export function slideKlotski(state, id, direction, distance = 1) {
   return {
     pieces,
     history: [...state.history, state.pieces],
+    future: [],
     moves: state.moves + 1,
     won: isSolved(pieces)
   };
@@ -90,5 +91,11 @@ export function slideKlotski(state, id, direction, distance = 1) {
 export function undoKlotski(state) {
   if (!state.history.length) return null;
   const pieces = state.history.at(-1);
-  return { pieces, history: state.history.slice(0, -1), moves: state.moves - 1, won: isSolved(pieces) };
+  return { pieces, history: state.history.slice(0, -1), future: [...state.future, state.pieces], moves: state.moves - 1, won: isSolved(pieces) };
+}
+
+export function redoKlotski(state) {
+  if (!state.future.length) return null;
+  const pieces = state.future.at(-1);
+  return { pieces, history: [...state.history, state.pieces], future: state.future.slice(0, -1), moves: state.moves + 1, won: isSolved(pieces) };
 }

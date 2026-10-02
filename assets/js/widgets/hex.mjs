@@ -1,5 +1,5 @@
 import { RED, BLUE, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs';
-import { bindUndoShortcut } from '../lib/puzzle-controls.mjs';
+import { setActionLabel } from '../lib/puzzle-controls.mjs?v=20261002-4';
 
 const name = color => color === RED ? 'Red' : 'Blue';
 const goal = color => color === RED ? 'top to bottom' : 'left to right';
@@ -48,7 +48,8 @@ export function initializeHexGame(game) {
   const get = key => game.querySelector(`[data-hex-${key}]`);
   const orderControls = [...game.querySelectorAll('[data-hex-order]')];
   let size = 5, human = RED, local = false, cells = Array(25).fill(0), toMove = RED;
-  let history = [], last = -1, busy = false, worker = null, generation = 0, boardFocus = -1, boardCursor = 0;
+  let history = [], future = [], last = -1, busy = false, worker = null, generation = 0, boardFocus = -1, boardCursor = 0;
+  const snapshot = () => ({ cells: cells.slice(), last, toMove });
   function cancel() { generation++; worker?.terminate(); worker = null; busy = false; }
   function showSize() {
     const label = get('size-label'), value = Number(get('size').value);
@@ -75,12 +76,14 @@ export function initializeHexGame(game) {
       ? 'Take turns choosing an empty cell. Red connects top to bottom; Blue connects left to right.'
       : `You play ${human === RED ? 'first' : 'second'} as ${name(human)}: connect ${goal(human)}. Choose an empty cell; stones stay put.`;
     get('undo').disabled = !history.length;
-    get('undo').textContent = local ? 'Undo move' : 'Undo your turn';
+    if (get('redo')) get('redo').disabled = !future.length;
+    setActionLabel(get('undo'), local ? 'Undo move' : 'Undo your turn');
+    setActionLabel(get('redo'), local ? 'Redo move' : 'Redo your turn');
     get('status').textContent = message || (win
-      ? `${local ? `${name(win)} wins!` : win === human ? 'You win!' : 'The computer wins.'} ${name(win)} has connected ${goal(win)}. The dashed line marks a winning chain.`
+      ? `${local ? `${name(win)} wins!` : win === human ? 'You win!' : 'The computer wins.'}`
       : busy ? `${name(3 - human)} is thinking…`
-      : local ? `${name(toMove)}’s turn · connect ${goal(toMove)}.`
-      : `Your turn · ${name(human)} connects ${goal(human)}.`);
+      : local ? `${name(toMove)}’s turn.`
+      : `Your turn · ${name(human)}.`);
     board.setAttribute('aria-busy', String(busy));
     if (returnToBoard && busy) board.focus({ preventScroll: true });
     if (returnToBoard && !busy) {
@@ -122,13 +125,13 @@ export function initializeHexGame(game) {
     const order = orderControls.find(control => control.type !== 'radio' || control.checked)?.value || String(RED);
     local = order === 'local'; human = local ? RED : Number(order);
     showSize();
-    cells = Array(size * size).fill(0); history = []; last = -1; toMove = RED; computerTurn();
+    cells = Array(size * size).fill(0); history = []; future = []; last = -1; toMove = RED; computerTurn();
   }
   function play(move) {
     if (busy || (!local && toMove !== human) || winner(cells, size)) return;
     if (!Number.isInteger(move) || move < 0 || move >= cells.length) return;
     if (cells[move]) { render('That cell is occupied. Choose an empty cell.'); return; }
-    history.push({ cells: cells.slice(), last, toMove });
+    history.push(snapshot()); future = [];
     cells[move] = toMove; last = move; toMove = 3 - toMove; computerTurn();
   }
   get('board').addEventListener('click', event => {
@@ -161,12 +164,21 @@ export function initializeHexGame(game) {
   function undo() {
     if (!history.length) return;
     const fromUndo = document.activeElement === get('undo');
-    cancel(); const previous = history.pop(); cells = previous.cells; last = previous.last; toMove = previous.toMove;
-    render(local ? `${name(toMove)}’s move has been undone. ${name(toMove)} to play.` : 'Your last turn has been undone, including the computer’s reply.');
+    future.push(snapshot()); cancel();
+    const previous = history.pop(); cells = previous.cells; last = previous.last; toMove = previous.toMove;
+    render();
     if (fromUndo && get('undo').disabled) [...get('board').querySelectorAll('button')].find(button => !button.disabled)?.focus({ preventScroll: true });
   }
+  function redo() {
+    if (!future.length) return;
+    const fromRedo = document.activeElement === get('redo');
+    history.push(snapshot()); cancel();
+    const next = future.pop(); cells = next.cells; last = next.last; toMove = next.toMove;
+    computerTurn();
+    if (fromRedo && get('redo').disabled) (busy ? get('board') : [...get('board').querySelectorAll('button')].find(button => !button.disabled) || get('undo')).focus({ preventScroll: true });
+  }
   get('undo').addEventListener('click', undo);
-  bindUndoShortcut(game, get('undo'), undo);
+  get('redo')?.addEventListener('click', redo);
   game.querySelectorAll('select, input, [data-hex-new]').forEach(control => { control.disabled = false; });
   newGame();
 }

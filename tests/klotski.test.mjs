@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { BOARD_WIDTH, BOARD_HEIGHT, CLASSIC_LAYOUT, createKlotski, validPieces, isSolved, maxSlide, canSlide, slideKlotski, undoKlotski } from '../assets/js/lib/klotski.mjs';
+import { BOARD_WIDTH, BOARD_HEIGHT, CLASSIC_LAYOUT, createKlotski, validPieces, isSolved, maxSlide, canSlide, slideKlotski, undoKlotski, redoKlotski } from '../assets/js/lib/klotski.mjs';
 
 const target = (x = 1, y = 0) => ({ id: 'target', label: 'Exit block', x, y, width: 2, height: 2 });
 const square = (id, x, y) => ({ id, label: `Block ${id}`, x, y, width: 1, height: 1 });
@@ -63,7 +63,8 @@ test('undo restores every block and move count after a longer slide', () => {
   const state = createKlotski([target(), square('moving', 0, 4)]);
   const next = slideKlotski(state, 'moving', 'right', 3);
   const restored = undoKlotski(next);
-  assert.deepEqual(restored, state);
+  assert.deepEqual({ ...restored, future: [] }, state);
+  assert.deepEqual(restored.future, [next.pieces]);
   assert.equal(undoKlotski(restored), null);
 });
 
@@ -79,7 +80,8 @@ test('the marked square wins only at the bottom-centre opening', () => {
   assert.equal(maxSlide(win, 'target', 'up'), 0);
   const restored = undoKlotski(win);
   assert.equal(restored.won, false);
-  assert.deepEqual(restored, state);
+  assert.deepEqual({ ...restored, future: [] }, state);
+  assert.equal(redoKlotski(restored).won, true);
 });
 
 test('the exit stops a long drag as soon as the square reaches the opening', () => {
@@ -130,5 +132,21 @@ test('the complete classic starting puzzle has a collision-free solution and can
   assert.equal(state.won, true);
   assert.equal(state.moves, classicSolution.length);
   while (state.history.length) state = undoKlotski(state);
-  assert.deepEqual(state, createKlotski());
+  assert.deepEqual({ ...state, future: [] }, createKlotski());
+  while (state.future.length) { state = redoKlotski(state); assert.ok(validPieces(state.pieces)); }
+  assert.equal(state.won, true);
+  assert.equal(state.moves, classicSolution.length);
+});
+
+test('redo restores long moves and only a successful new move clears its history', () => {
+  const before = createKlotski([target(), square('moving', 0, 4)]);
+  const moved = slideKlotski(before, 'moving', 'right', 3);
+  const undone = undoKlotski(moved);
+  assert.deepEqual(redoKlotski(undone), moved);
+  assert.equal(slideKlotski(undone, 'moving', 'left'), null);
+  assert.deepEqual(redoKlotski(undone), moved);
+  const alternate = slideKlotski(undone, 'moving', 'right');
+  assert.deepEqual(alternate.future, []);
+  assert.equal(redoKlotski(alternate), null);
+  assert.equal(redoKlotski(createKlotski()), null);
 });

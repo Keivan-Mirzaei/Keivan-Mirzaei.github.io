@@ -1,5 +1,4 @@
-import { createKlotski, slideKlotski, undoKlotski, canSlide, maxSlide } from '../lib/klotski.mjs';
-import { bindUndoShortcut } from '../lib/puzzle-controls.mjs';
+import { createKlotski, slideKlotski, undoKlotski, redoKlotski, canSlide, maxSlide } from '../lib/klotski.mjs?v=20261002-4';
 
 const keyboardDirections = { ArrowUp: 'up', ArrowRight: 'right', ArrowDown: 'down', ArrowLeft: 'left' };
 
@@ -42,14 +41,11 @@ export function initializeKlotski(game) {
       button.setAttribute('aria-label', `Move ${piece ? piece.label.toLowerCase() : 'selected block'} ${direction}`);
     }
     get('undo').disabled = !state.history.length;
+    get('redo').disabled = !state.future.length;
     get('restart').disabled = false;
     get('status').textContent = state.won
       ? `You found the way out! Solved in ${state.moves} ${state.moves === 1 ? 'move' : 'moves'}.`
-      : message || (selected
-        ? canSlide(state, selected, 'up') || canSlide(state, selected, 'right') || canSlide(state, selected, 'down') || canSlide(state, selected, 'left')
-          ? 'Slide into the empty space. The highlighted block is selected.'
-          : 'This block has no room yet. Move another block to make space.'
-        : 'Find a path to the opening at the bottom.');
+      : message;
   }
 
   function select(id) {
@@ -133,14 +129,22 @@ export function initializeKlotski(game) {
     const previous = undoKlotski(state);
     if (previous) {
       const focused = document.activeElement === get('undo');
-      state = previous; render('Move undone.');
+      state = previous; render();
       if (focused && get('undo').disabled && selected) blocks.get(selected).focus({ preventScroll: true });
     }
   }
+  function redo() {
+    clearDrag();
+    const next = redoKlotski(state);
+    if (!next) return;
+    const focused = document.activeElement === get('redo');
+    state = next; render();
+    if (focused && get('redo').disabled) (state.won || !selected ? get('undo') : blocks.get(selected)).focus({ preventScroll: true });
+  }
   get('undo').addEventListener('click', undo);
-  bindUndoShortcut(game, get('undo'), undo);
+  get('redo').addEventListener('click', redo);
   get('restart').addEventListener('click', () => {
-    clearDrag(); state = createKlotski(); selected = null; render('Back to the start.');
+    clearDrag(); state = createKlotski(); selected = null; render();
   });
   render();
 }

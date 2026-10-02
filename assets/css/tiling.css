@@ -1,14 +1,11 @@
 .tiling-game { display: grid; grid-template-columns: minmax(0, 1fr) 304px; gap: 28px 42px; }
-.tiling-settings { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(170px, 310px) 1fr; gap: 0 28px; align-items: center; padding: 18px 22px; border: 1px solid var(--line); border-radius: 7px; background: #f4f5ef; }
+.tiling-settings { grid-column: 1 / -1; display: grid; grid-template-columns: 180px minmax(160px, 1fr); gap: 20px; align-items: center; width: min(100%, 540px); }
 .tiling-challenge-heading { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
 .tiling-challenge-heading output { font: 12px var(--mono); color: var(--green); }
-.tiling-settings input { grid-column: 1; width: 100%; min-height: 44px; margin: 0; accent-color: var(--green); cursor: pointer; }
-.tiling-scale { grid-column: 1; display: flex; justify-content: space-between; color: var(--muted); font: 10px var(--mono); }
-.tiling-setting-caption { grid-column: 2; grid-row: 1 / 4; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.tiling-settings input { width: 100%; min-height: 44px; margin: 0; accent-color: var(--green); cursor: pointer; }
 .tiling-play { min-width: 0; }
 .tiling-info { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px 14px; margin-bottom: 12px; font: 12px/1.7 var(--mono); color: var(--muted); }
 .tiling-info [data-tiling-name] { color: var(--green); }
-.tiling-instruction { max-width: 520px; margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .tiling-board { --tiling-columns: 4; --tiling-rows: 4; display: grid; grid-template-columns: repeat(var(--tiling-columns), 1fr); grid-template-rows: repeat(var(--tiling-rows), 1fr); width: min(100%, 442px); aspect-ratio: var(--tiling-columns) / var(--tiling-rows); gap: 0; padding: 10px; margin: 0 auto; border: 1px solid var(--line); border-radius: 8px; background: #eeeFE8; }
 .tiling-board > img { display: block; width: 100%; height: auto; grid-column: 1 / -1; grid-row: 1 / -1; }
 .tiling-cell { position: relative; min-width: 0; padding: 0; border: 1px solid #d8ddd1; border-radius: 0; background: var(--paper); color: #222e2a; font: 16px var(--mono) !important; }
@@ -31,16 +28,10 @@
 .tiling-cell.is-preview-invalid::after { border: 2px dashed #aa4940; background: repeating-linear-gradient(135deg, #c97c6c50, #c97c6c50 4px, #fcfcf960 4px, #fcfcf960 7px); }
 .tiling-cell.is-preview-anchor::before { content: ''; position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; transform: translate(-50%, -50%); background: var(--green); border-radius: 50%; border: 1px solid var(--paper); z-index: 3; pointer-events: none; }
 .tiling-anchor-dot { position: absolute; bottom: 7px; right: 7px; width: 5px; height: 5px; border-radius: 50%; background: #282e29; box-shadow: 0 0 0 1px #fcfcf9; }
-.tiling-board-key { display: flex; gap: 18px; justify-content: center; margin-top: 14px; color: var(--muted); font-size: 10px; }
-.tiling-board-key > span { display: inline-flex; align-items: center; gap: 6px; }
-.tiling-board-key i { display: inline-block; width: 13px; height: 13px; border-radius: 2px; }
-.tiling-empty-key { border: 1px solid #d8ddd1; background: var(--paper); }
-.tiling-hole-key { border: 1px dashed #bec7b7; background: repeating-linear-gradient(135deg, #eff1e9, #eff1e9 3px, #d9ded3 3px, #d9ded3 4px); }
 .tiling-pieces { min-width: 0; }
-.tiling-tray-heading { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.tiling-tray-heading { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
 .tiling-tray-heading h2 { margin: 0; font: 25px/1.2 var(--serif); letter-spacing: -.5px; }
 .tiling-tray-heading > span { color: var(--muted); font: 12px var(--mono); }
-.tiling-tray-caption { margin: 0 0 16px; color: var(--muted); font-size: 12px; }
 .tiling-tray { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .tiling-piece { display: flex; flex-direction: column; align-items: center; gap: 10px; min-height: 144px; padding: 12px; border: 1px solid var(--line); border-radius: 7px; background: var(--paper); touch-action: none; }
 .tiling-piece:hover { border-color: #aebfaa; background: #f4f7ef; }
@@ -52,22 +43,8 @@
 .tiling-quantity { padding: 2px 7px; border-radius: 4px; background: var(--tint); font: 12px var(--mono); }
 .tiling-piece svg { display: block; height: 60px; max-width: 100%; margin: auto; overflow: visible; }
 .tiling-piece-state { font-size: 12px; color: var(--muted); }
-.tiling-selected { display: flex; gap: 16px; align-items: center; justify-content: space-between; margin-top: 16px; min-height: 60px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 5px; background: #f4f5ef; }
-.tiling-selected-label { font-size: 13px; color: var(--muted); }
-.tiling-selected.has-selection .tiling-selected-label { color: var(--green); }
-.tiling-selected [data-tiling-selected-shape] { flex: 0 0 65px; display: flex; justify-content: center; }
-.tiling-selected svg { display: block; max-width: 65px; height: 42px; }
-.tiling-return, .tiling-actions button:not(.secondary-button) { min-height: 48px; padding: 11px 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); font-size: 14px; }
-.tiling-return { display: flex; width: 100%; align-items: center; justify-content: space-between; margin-top: 10px; }
-.tiling-return:hover:not(:disabled), .tiling-actions button:not(.secondary-button):hover:not(:disabled) { background: var(--tint); border-color: #b6c7b0; }
-.tiling-help { margin: 13px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
-.tiling-status { min-height: 3.4em; margin: 0 0 12px; color: var(--green); font-size: 14px; line-height: 1.7; }
-.tiling-play > .puzzle-controls-hint { margin: 10px 0 18px; }
-.tiling-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.tiling-actions .secondary-button { min-height: 44px; }
-.tiling-keyboard-help { margin-top: 14px; color: var(--muted); font-size: 12px; }
-.tiling-keyboard-help summary { display: inline-block; min-height: 44px; padding: 10px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
-.tiling-keyboard-help p { max-width: 660px; margin: 6px 0 0; line-height: 1.8; }
+.tiling-status { margin: 0 0 12px; color: var(--green); font-size: 14px; line-height: 1.7; }
+.tiling-actions { margin-bottom: 16px; }
 .tiling-game.is-solved .tiling-board { border-color: #9ab28d; background: #e4edde; }
 .tiling-cell.is-filled { touch-action: none; }
 .tiling-game.is-dragging { cursor: grabbing; user-select: none; }
@@ -81,23 +58,16 @@
 }
 @media (max-width: 620px) {
   .tiling-game { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
-  .tiling-settings { grid-column: 1 / -1; grid-row: 1; grid-template-columns: 1fr; padding: 14px 17px; gap: 0; margin-bottom: 8px; }
-  .tiling-setting-caption { grid-column: 1; grid-row: auto; margin-top: 10px; }
+  .tiling-settings { grid-column: 1 / -1; grid-row: 1; grid-template-columns: 1fr; gap: 0; margin-bottom: 8px; }
   .tiling-play { grid-column: 1 / -1; grid-row: 4; margin-top: 6px; }
   .tiling-pieces { display: contents; }
   .tiling-tray-heading { grid-column: 1 / -1; grid-row: 2; margin: 0; }
-  .tiling-tray-caption { display: none; }
   .tiling-board { max-width: 400px; }
   .tiling-tray { grid-column: 1 / -1; grid-row: 3; display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding: 5px 3px 10px; position: sticky; top: 0; z-index: 5; background: var(--paper); }
   .tiling-piece { flex: 0 0 112px; min-height: 128px; padding: 9px; gap: 6px; scroll-snap-align: start; touch-action: pan-x; }
   .tiling-piece svg { height: 48px; }
   .tiling-piece-name, .tiling-piece-state { font-size: 12px; }
   .tiling-quantity { padding: 2px 5px; }
-  .tiling-selected { grid-column: 1; grid-row: 5; margin: 0; padding: 10px; }
-  .tiling-selected [data-tiling-selected-shape] { display: none; }
-  .tiling-return { grid-column: 2; grid-row: 5; margin: 0; padding: 10px; font-size: 13px; }
-  .tiling-help { grid-column: 1 / -1; grid-row: 6; margin: 0; }
-  .tiling-keyboard-help { grid-column: 1 / -1; grid-row: 7; margin: 0; }
   .tiling-pieces > noscript { grid-column: 1 / -1; }
   .tiling-cell { font-size: 14px !important; }
 }

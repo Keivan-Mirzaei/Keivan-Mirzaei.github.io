@@ -2,33 +2,34 @@
   <div class="tiling-settings">
     <div class="tiling-challenge-heading"><label for="puzzle-tiling-challenge">Challenge</label><output for="puzzle-tiling-challenge" data-tiling-challenge-label>1 of 6</output></div>
     <input id="puzzle-tiling-challenge" type="range" min="1" max="6" step="1" value="1" data-tiling-challenge disabled>
-    <div class="tiling-scale" aria-hidden="true"><span>1</span><span>6</span></div>
-    <p class="tiling-setting-caption">Fill every floor square with the tiles provided.<br>Shapes stay in the orientation shown.</p>
   </div>
   <div class="tiling-play">
     <div class="tiling-info"><span data-tiling-name>Little nook</span><span data-tiling-progress>0 / 13 squares</span></div>
-    <p class="tiling-instruction" data-tiling-instruction>Pick a tile, then tap a floor square for its marked anchor. Dragging works too.</p>
     <p class="tiling-status" data-tiling-status role="status">Enable JavaScript to play Tiling.</p>
-    <div class="tiling-actions puzzle-actions">
-      <button class="puzzle-undo" type="button" data-tiling-undo disabled>Undo</button>
-      <button type="button" data-tiling-hint disabled>Hint</button>
-      <button type="button" data-tiling-reset disabled>Start again</button>
-      <button class="secondary-button" type="button" data-tiling-next hidden disabled>Next floor</button>
+    <div class="tiling-actions puzzle-actions" role="group" aria-label="Game controls">
+      {% include puzzles/action.html game='tiling' action='undo' icon='undo' label='Undo' %}
+      {% include puzzles/action.html game='tiling' action='redo' icon='redo' label='Redo' %}
+      {% include puzzles/action.html game='tiling' action='hint' icon='hint' label='Hint' %}
+      {% include puzzles/action.html game='tiling' action='remove' icon='return' label='Return selected tile' %}
+      {% include puzzles/action.html game='tiling' action='reset' icon='restart' label='Start again' %}
+      {% include puzzles/action.html game='tiling' action='next' icon='arrow' label='Next floor' hidden=true %}
+      <details class="puzzle-help">
+        <summary class="puzzle-icon-button" aria-label="How to play" data-tooltip="How to play">{% include icon.html name='help' %}</summary>
+        <div class="puzzle-help-content">
+          <p>Fill every floor square. Tiles keep the orientation shown; striped squares are missing.</p>
+          <p>Drag a tile onto the floor, or select it and tap a square for its marked anchor. The × badge shows how many copies are needed.</p>
+          <p>To return a placed tile, drag it off the floor, double tap it, or select it and use the return icon.</p>
+          <p>A hint outlines a placement. Tap the check mark to place it.</p>
+        </div>
+      </details>
     </div>
-    <p class="puzzle-controls-hint"><kbd>U</kbd> or <kbd>Ctrl/⌘ Z</kbd> to undo</p>
     <div class="tiling-board" data-tiling-board>
       <img src="{{ '/assets/images/tiling-board.svg' | relative_url }}" width="440" height="360" alt="A square floor with three missing squares, and colourful tiles ready to fit into it.">
     </div>
-    <div class="tiling-board-key"><span><i class="tiling-empty-key" aria-hidden="true"></i>Floor</span><span><i class="tiling-hole-key" aria-hidden="true"></i>Missing square</span></div>
   </div>
   <div class="tiling-pieces">
     <div class="tiling-tray-heading"><h2>Tile tray</h2><span data-tiling-tray-count>4 to place</span></div>
-    <p class="tiling-tray-caption">The badge shows how many copies you need.</p>
     <div class="tiling-tray" data-tiling-tray></div>
-    <div class="tiling-selected" data-tiling-selected aria-label="Selected tile"><span class="tiling-selected-label" data-tiling-selected-label>Pick a tile to begin.</span><div data-tiling-selected-shape aria-hidden="true"></div></div>
-    <button class="tiling-return" type="button" data-tiling-remove disabled>Return selected tile <span aria-hidden="true">↗</span></button>
-    <p class="tiling-help">Tap a placed tile to select it. Drag it off the floor, double click or double tap it, or use Return selected tile to put it back.</p>
-    <details class="tiling-keyboard-help"><summary>Keyboard controls</summary><p>Tab to a tile and press Enter to pick it up. Arrow keys choose a floor square; Enter or Space places it. Delete returns a selected tile, Escape clears the selection, and U or Ctrl/⌘ Z undoes the last move.</p></details>
     <noscript><p class="tiling-help">This game needs JavaScript. Enable it to place tiles and use the game controls.</p></noscript>
   </div>
 </section>

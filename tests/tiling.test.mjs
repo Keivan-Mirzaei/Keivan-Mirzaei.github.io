@@ -150,3 +150,27 @@ test('winning requires the whole floor and all tiles, without overlap or holes',
   assert.equal(occupiedCells(level, level.solution).size, level.floor.length);
   assert.equal(isSolved(level, { ...level.solution, Unknown: level.solution.A }), false);
 });
+
+test('redo restores copies, move counts and removal and rejects stale branches after reset', () => {
+  const level = LEVELS[0], game = createGame(level);
+  assert.equal(game.redo(), false);
+  for (const piece of level.pieces) game.place(piece.id, level.solution[piece.id]);
+  game.remove('D');
+  assert.equal(game.undo(), true);
+  assert.equal(game.solved, true);
+  assert.equal(game.redo(), true);
+  assert.equal(game.solved, false);
+  assert.equal(game.moves, 5);
+  game.undo(); game.undo();
+  assert.equal(game.moves, 3);
+  assert.equal(game.place('A', level.solution.A).changed, false);
+  assert.equal(game.place('A', { x: 99, y: 0 }).valid, false);
+  assert.equal(game.canRedo, true);
+  game.redo();
+  assert.deepEqual(game.placements, level.solution);
+  game.remove('A');
+  assert.equal(game.canRedo, false);
+  game.undo(); game.reset();
+  assert.equal(game.canRedo, false);
+  assert.equal(game.redo(), false);
+});
