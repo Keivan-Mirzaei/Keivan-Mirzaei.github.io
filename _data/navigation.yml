@@ -6,6 +6,8 @@
   url: /notes/
   key: notes
   icon: notebook
+  collapsible: true
+  overview: All posts
   children:
     - title: Problems
       url: /problems/
@@ -13,16 +15,21 @@
     - title: Explorations
       url: /explorations/
       key: exploration
-- title: Learning modules
-  url: /learning/
-  key: module
-  icon: learning
-  separate: true
 - title: Puzzles
   url: /puzzles/
   key: puzzles
   icon: puzzle
-- title: Research
+- title: Learning
+  url: /learning/
+  key: module
+  icon: learning
+  collapsible: true
+  overview: All learning modules
+- title: About
+  url: /about/
+  key: about
+  icon: person
+- title: My research
   url: /research/
   key: research
   icon: research

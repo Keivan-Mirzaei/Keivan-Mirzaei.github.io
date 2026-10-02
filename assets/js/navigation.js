@@ -59,7 +59,9 @@
         closeMobile();
       }
       if (event.key === 'Tab') {
-        const controls = [...sidebar.querySelectorAll('a[href]'), toggle];
+        const controls = [...sidebar.querySelectorAll('a[href], summary'), toggle]
+          .filter(control => control.getClientRects().length > 0
+            && (control.matches('summary') || !control.closest('details:not([open])')));
         const index = controls.indexOf(document.activeElement);
         event.preventDefault();
         controls[(index + (event.shiftKey ? -1 : 1) + controls.length) % controls.length].focus();

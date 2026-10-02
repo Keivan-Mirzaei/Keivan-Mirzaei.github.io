@@ -123,7 +123,9 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertIn("Derivatives: from rates to local linearity", learning)
             self.assertNotIn('aria-label="Browse post formats"', learning)
             for archive in [destination / "notes/index.html", *(destination / "notes/page").glob("*/index.html")]:
-                archive_content = archive.read_text()
+                # Learning links in the shared sidebar do not make modules posts.
+                archive_content = archive.read_text().partition('<main ')[2].partition('</main>')[0]
+                self.assertTrue(archive_content)
                 self.assertNotIn("Fixture lesson", archive_content)
                 self.assertNotIn("Fixture sphere", archive_content)
                 self.assertNotIn("Derivatives: from rates to local linearity", archive_content)
