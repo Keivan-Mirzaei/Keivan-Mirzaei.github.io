@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { mugDistance, mugMesh } from '../assets/js/lib/three-utilities-mug.mjs';
 import assert from 'node:assert/strict';
 import { NODES, TORUS_ROUTES, PLANE_EIGHT, edgeId, nodeById, obstruction, segmentIntersection, surfacePoint, distance, bezierPoint, smoothWaypoints, curveRoute, updateConnection, simplifyPath } from '../assets/js/lib/three-utilities-math.mjs';
 
@@ -49,10 +50,10 @@ test('route validation catches crossings, overlaps, self intersections, and unre
   assert.deepEqual(obstruction(TORUS_ROUTES.slice(0,5)),{intersections:[],throughNodes:[]});
 });
 
-test('surface deformation is finite and continuous at both cuts and finishes as a square', () => {
+test('the torus unfolding is finite and continuous at both cuts and finishes as a square', () => {
   for (let i=0;i<=10;i++) for(let j=0;j<=10;j++) {
     const u=i/10,v=j/10;
-    for(let phase=0;phase<=3.001;phase+=.025) assert.ok(surfacePoint(u,v,phase).every(Number.isFinite));
+    for(let phase=1;phase<=3.001;phase+=.025) assert.ok(surfacePoint(u,v,phase).every(Number.isFinite));
     for(const boundary of [1,2,3]) {
       const a=surfacePoint(u,v,boundary-1e-7),b=surfacePoint(u,v,boundary+1e-7);
       assert.ok(Math.hypot(...a.map((x,k)=>x-b[k]))<1e-5);
@@ -101,15 +102,44 @@ test('choosing an existing pair toggles deletion, while a new path replaces only
   assert.deepEqual([first,other],[TORUS_ROUTES[0],TORUS_ROUTES[1]]);
 });
 
-test('the mug and intermediate 3D shapes remain closed at both seams and never pinch locally', () => {
-  const close=(a,b)=>Math.hypot(...a.map((x,i)=>x-b[i]))<1e-11;
-  const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
-  for(let phase=0;phase<=1.001;phase+=.1){
-    for(let t=0;t<=1;t+=.05){assert.ok(close(surfacePoint(0,t,phase),surfacePoint(1,t,phase)));assert.ok(close(surfacePoint(t,0,phase),surfacePoint(t,1,phase)));}
-    for(let i=0;i<20;i++)for(let j=0;j<20;j++){
-      const u=i/20,v=j/20,p=surfacePoint(u,v,phase),a=surfacePoint(u+.0001,v,phase),b=surfacePoint(u,v+.0001,phase);
-      const normal=cross(a.map((x,k)=>(x-p[k])/.0001),b.map((x,k)=>(x-p[k])/.0001));
-      assert.ok(Math.hypot(...normal)>.01);
+test('the starting mug has a level rim, an open bowl, a solid bottom, and an open handle', () => {
+  assert.ok(mugDistance(-.7,-.8,0)>0, 'the bowl contains air');
+  assert.ok(mugDistance(-.7,.8,0)<0, 'ceramic closes the bottom');
+  assert.ok(mugDistance(-.7,1.1,0)>0, 'air lies below the base');
+  assert.ok(mugDistance(-1.35,0,0)<0, 'the upright wall contains ceramic');
+  assert.ok(mugDistance(.6,0,0)<0, 'the handle contains ceramic');
+  assert.ok(mugDistance(.25,0,0)>0, 'the handle hole is open');
+  for(let i=0;i<32;i++){
+    const angle=2*Math.PI*i/32;
+    assert.ok(Math.abs(mugDistance(-.7+.65*Math.cos(angle),-.975,.65*Math.sin(angle)))<1e-10, 'the rim lies in a horizontal plane');
+  }
+});
+
+test('the mug deformation has one closed, connected, genus-one boundary throughout', () => {
+  for(let step=0;step<=20;step++){
+    const phase=step/20,mesh=mugMesh(phase,52,false),edges=new Map(),parent=mesh.vertices.map((_,i)=>i);
+    const root=i=>parent[i]===i?i:(parent[i]=root(parent[i]));
+    for(const triangle of mesh.triangles)for(let k=0;k<3;k++){
+      let a=triangle[k],b=triangle[(k+1)%3];parent[root(b)]=root(a);
+      if(a>b)[a,b]=[b,a];const key=a*mesh.vertices.length+b;
+      edges.set(key,(edges.get(key)||0)+1);
+    }
+    assert.equal(new Set(mesh.vertices.map((_,i)=>root(i))).size,1, `connected at phase ${phase}`);
+    assert.ok([...edges.values()].every(n=>n===2), `closed at phase ${phase}`);
+    assert.equal(mesh.vertices.length-edges.size+mesh.triangles.length,0, `one handle at phase ${phase}`);
+  }
+});
+
+test('the mug field varies continuously and finishes on exactly the torus boundary', () => {
+  for(let i=0;i<=16;i++)for(let j=0;j<=16;j++){
+    const [x,y,z]=surfacePoint(i/16,j/16,1);
+    assert.ok(Math.abs(mugDistance(x,-z,y,1))<1e-10);
+  }
+  for(const x of [-1.4,-.7,0,.7])for(const y of [-1,0,1])for(const z of [-.5,0,.5]){
+    let previous=mugDistance(x,y,z,0);
+    for(let step=1;step<=100;step++){
+      const next=mugDistance(x,y,z,step/100);
+      assert.ok(Number.isFinite(next));assert.ok(Math.abs(next-previous)<.09);previous=next;
     }
   }
 });

@@ -1,4 +1,6 @@
-import { NODES, nodeById, surfacePoint, sampleRoute, smoothWaypoints } from './three-utilities-math.mjs?v=20261002-3';
+import { NODES, nodeById, surfacePoint, smoothWaypoints } from './three-utilities-math.mjs?v=20261002-4';
+import { mugMesh } from './three-utilities-mug.mjs?v=20261002-4';
+import { draw3DSurface } from './three-utilities-renderer.mjs?v=20261002-4';
 
 export function boardGeometry(width) {
   const w = Math.max(220, width);
@@ -17,10 +19,9 @@ export function curvePathData(curves, g) {
 function nodeMarkup(node, g, interactive, selected) {
   const [x, y] = boardPoint(node.point, g);
   const button = interactive ? `role="button" tabindex="0" data-node="${node.id}" aria-label="${node.label}" aria-pressed="${selected === node.id}"` : '';
-  const house = `<path d="M-14 -2 L0 -15 L14 -2 M-11 -5 V12 H11 V-5" fill="#fcfcf9" stroke="#285b46" stroke-width="2"/><text y="7" text-anchor="middle" fill="#285b46" font-size="13">${node.short}</text>`;
+  const house = `<path d="M-14 -2 L0 -15 L14 -2 H11 V12 H-11 V-2 Z" fill="#fcfcf9" stroke="#285b46" stroke-width="2"/><text y="7" text-anchor="middle" fill="#285b46" font-size="13">${node.short}</text>`;
   const utility = `<circle r="16" fill="#fcfcf9" stroke="${node.color}" stroke-width="2"/><text y="5" text-anchor="middle" fill="${node.color}" font-size="14">${node.short}</text>`;
-  const label = g.width >= 350 ? `<text y="${node.kind === 'house' ? -27 : 34}" text-anchor="middle" fill="#686e66" font-size="12">${node.kind === 'house' ? node.label : node.id === 'power' ? 'Power' : node.label}</text>` : '';
-  return `<g transform="translate(${number(x)} ${number(y)})" class="tu-node ${selected === node.id ? 'is-selected' : ''}" ${button}><circle class="tu-hit" r="22" fill="transparent"/>${node.kind === 'house' ? house : utility}${label}</g>`;
+  return `<g transform="translate(${number(x)} ${number(y)})" class="tu-node ${selected === node.id ? 'is-selected' : ''}" ${button}><circle class="tu-hit" r="22" fill="transparent"/>${node.kind === 'house' ? house : utility}</g>`;
 }
 
 export function boardSVG(routes, { width = 620, square = false, selected = null, hits = [], draft = null, focus = null, interactive = false, cursor = null } = {}) {
@@ -28,14 +29,14 @@ export function boardSVG(routes, { width = 620, square = false, selected = null,
   const right = g.left + g.size, bottom = g.top + g.size;
   const routeMarkup = routes.map(edge => edge.parts.map((part,i) => `<path data-pipe="${edge.id}" d="${edge.curves?curvePathData(edge.curves[i],g):pathData(part, g)}" fill="none" stroke="${nodeById(edge.utility).color}" stroke-width="${focus === edge.id ? 4 : 2.5}" opacity="${focus && focus !== edge.id ? .22 : 1}" stroke-linejoin="round" stroke-linecap="round" pointer-events="none"/>`).join('')).join('');
   const plane = `<rect class="tu-paper" ${interactive?'data-tu-paper role="button" tabindex="0" aria-label="Place a path point. Arrow keys move the cursor; Enter adds a point."':''} x="${g.left}" y="${g.top}" width="${g.size}" height="${g.size}" rx="2" fill="url(#tu-dots)" stroke="#dfe3dc"/>`;
-  const boundary = square ? `<rect x="${g.left}" y="${g.top}" width="${g.size}" height="${g.size}" fill="url(#tu-dots)"/>
+  const boundary = square ? `<rect x="${g.left}" y="${g.top}" width="${g.size}" height="${g.size}" fill="#fcfcf9"/>
     <path d="M${g.left} ${g.top}H${right} M${g.left} ${bottom}H${right}" stroke="#285b46" stroke-width="2.5"/>
     <path d="M${g.left} ${g.top}V${bottom} M${right} ${g.top}V${bottom}" stroke="#8769a2" stroke-width="2.5"/>
     ${[g.top, bottom].map(y => `<path d="M${g.width / 2 - 14} ${y}h28m-7 -5l7 5 -7 5" fill="none" stroke="#285b46" stroke-width="2.5"/><text x="${g.width / 2}" y="${y === g.top ? y - 12 : y + 23}" text-anchor="middle" fill="#285b46" font-size="14">a</text>`).join('')}
     ${[g.left, right].map(x => `<path d="M${x} ${g.top + g.size / 2 + 14}v-28m-5 7l5 -7 5 7" fill="none" stroke="#8769a2" stroke-width="2.5"/><text x="${x === g.left ? x - 19 : x + 19}" y="${g.top + g.size / 2 + 5}" text-anchor="middle" fill="#8769a2" font-size="14">b</text>`).join('')}` : plane;
   const exits = square ? routes.filter(edge => edge.seam).map(edge => edge.parts.flatMap((part, index) => [index === 0 ? part.at(-1) : part[0]]).map(p => {
     const [x, y] = boardPoint(p, g);
-    return `<circle cx="${number(x)}" cy="${number(y)}" r="5" fill="#fcfcf9" stroke="${nodeById(edge.utility).color}" stroke-width="2.5"/><text x="${number(x + (edge.seam === 'a' ? 10 : p[0] === 0 ? 12 : -12))}" y="${number(y + (edge.seam === 'a' ? p[1] === 0 ? 16 : -10 : -9))}" text-anchor="middle" font-size="12" fill="${nodeById(edge.utility).color}">${edge.seam}</text>`;
+    return `<circle cx="${number(x)}" cy="${number(y)}" r="4" fill="#fcfcf9" stroke="${nodeById(edge.utility).color}" stroke-width="2"/>`;
   }).join('')).join('') : '';
   const hitMarkup = hits.map(hit => {
     const [x, y] = boardPoint(hit.point, g);
@@ -62,16 +63,25 @@ function projection(phase, rotation) {
   };
 }
 
-function drawSurface(ctx, width, height, phase, routes, rotation) {
+let cachedMug=null;
+function drawSurface(ctx, width, height, phase, rotation) {
   const project = projection(phase, rotation), cols = 84, rows = 56, faces = [], lines = [], all = [];
-  for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
-    const points = [[i/cols,j/rows],[(i+1)/cols,j/rows],[(i+1)/cols,(j+1)/rows],[i/cols,(j+1)/rows]].map(([u,v]) => project(surfacePoint(u,v,phase)));
+  const addFace=(points,inward=false)=>{
     all.push(...points);
-    const a = points[1].map((x,k) => x-points[0][k]), b = points[3].map((x,k) => x-points[0][k]);
+    const a = points[1].map((x,k) => x-points[0][k]), b = points.at(-1).map((x,k) => x-points[0][k]);
     const normal = [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
     const length = Math.hypot(...normal) || 1;
-    const light = .32 + .68 * Math.max(0, (normal[0]*.35 + normal[1]*.55 - normal[2]*.76)/length);
-    faces.push({ points, depth: points.reduce((sum,p)=>sum+p[2],0)/4, fill: `rgb(${Math.round(115+70*light)},${Math.round(139+63*light)},${Math.round(102+63*light)})` });
+    const light = .32 + .68 * Math.max(0, (normal[0]*-.35 + normal[1]*-.55 + normal[2]*.76)*(inward?-1:1)/length);
+    faces.push({ points, depth: points.reduce((sum,p)=>sum+p[2],0)/points.length, fill: `rgb(${Math.round(115+70*light)},${Math.round(139+63*light)},${Math.round(102+63*light)})` });
+  };
+  if(phase<1){
+    if(cachedMug?.phase!==phase)cachedMug={phase,mesh:mugMesh(phase,44)};
+    const projected=cachedMug.mesh.vertices.map(project);
+    for(const triangle of cachedMug.mesh.triangles)addFace(triangle.map(i=>projected[i]));
+  }else{
+    for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
+      addFace([[i/cols,j/rows],[(i+1)/cols,j/rows],[(i+1)/cols,(j+1)/rows],[i/cols,(j+1)/rows]].map(([u,v]) => project(surfacePoint(u,v,phase))),true);
+    }
   }
   // Stable framing lets the object open without shrinking the tube out of view.
   const extentX = Math.max(...all.map(p=>Math.abs(p[0]))), extentY = Math.max(...all.map(p=>Math.abs(p[1])));
@@ -87,7 +97,6 @@ function drawSurface(ctx, width, height, phase, routes, rotation) {
     addLine(samples.map(v=>[0,v]), '#8769a2', 2.5); addLine(samples.map(v=>[1,v]), '#8769a2', 2.5);
     addLine(samples.map(u=>[u,0]), '#285b46', 2.5); addLine(samples.map(u=>[u,1]), '#285b46', 2.5);
   }
-  for (const edge of routes) for (const part of sampleRoute(edge, 65)) addLine(part, nodeById(edge.utility).color, 3);
   // A small depth buffer hides rear pipes without gaps from patch-average sorting.
   const cell=3, bw=Math.ceil(width/cell), bh=Math.ceil(height/cell), depths=new Float32Array(bw*bh).fill(-Infinity);
   const rasterize=(a,b,c)=>{
@@ -104,7 +113,7 @@ function drawSurface(ctx, width, height, phase, routes, rotation) {
   };
   for(const face of faces){
     const ps=face.points.map(p=>[...screen(p).map(x=>x/cell),p[2]]);
-    rasterize(ps[0],ps[1],ps[2]);rasterize(ps[0],ps[2],ps[3]);
+    rasterize(ps[0],ps[1],ps[2]);if(ps.length===4)rasterize(ps[0],ps[2],ps[3]);
   }
   const visible=p=>{
     const [x,y]=screen(p),key=Math.floor(y/cell)*bw+Math.floor(x/cell);
@@ -126,23 +135,15 @@ function drawSurface(ctx, width, height, phase, routes, rotation) {
       ctx.beginPath();ctx.moveTo(...screen(a.map((x,k)=>mix(x,b[k],i/count))));ctx.lineTo(...screen(a.map((x,k)=>mix(x,b[k],(i+1)/count))));ctx.stroke();
     }
   }
-  if (routes.length) {
-    for (const node of NODES) {
-      const p=project(surfacePoint(...node.point,phase));
-      // Nodes on the rear are deliberately hidden, like the rear parts of pipes.
-      if (!visible(p)) continue;
-      const [x,y]=screen(p);ctx.beginPath();ctx.arc(x,y,9,0,Math.PI*2);ctx.fillStyle='#fcfcf9';ctx.fill();ctx.strokeStyle=node.color||'#285b46';ctx.lineWidth=1.5;ctx.stroke();
-      ctx.fillStyle=node.color||'#285b46';ctx.font='11px system-ui, sans-serif';ctx.textAlign='center';ctx.fillText(node.short,x,y+4);
-    }
-  }
   ctx.restore();
 }
 
-export function drawTransformation(canvas, phase, routes = [], rotation = {yaw:0,pitch:0}) {
+export function drawTransformation(canvas, phase, rotation = {yaw:0,pitch:0}) {
   const width = canvas.clientWidth, height = canvas.clientHeight;
   if (!width || !height) return;
+  if(draw3DSurface(canvas,phase,projection(phase,rotation)))return;
   const ratio = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
   const ctx = canvas.getContext('2d'); ctx.scale(ratio, ratio); ctx.clearRect(0,0,width,height);
-  drawSurface(ctx,width,height,phase,routes,rotation);
+  drawSurface(ctx,width,height,phase,rotation);
 }

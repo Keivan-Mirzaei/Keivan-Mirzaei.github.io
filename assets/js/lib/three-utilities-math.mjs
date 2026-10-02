@@ -146,32 +146,11 @@ export function obstruction(routes) {
   return { intersections, throughNodes };
 }
 
-// A torus opens into a curved tube, then a straight tube, then a flat square.
+// After the mug becomes a torus, it opens into a tube and then a flat square.
 // The cuts separate u=0 from u=1, then v=0 from v=1. No twisting occurs.
 export function surfacePoint(u, v, phase) {
   const R = 1.25, r = .48;
-  const p = Math.max(0, Math.min(3, phase));
-  if(p<1){
-    // The same periodic torus mesh forms a fat cup body and a thin handle.
-    // Compressing vertical columns makes a bowl with a closed bottom. The
-    // indentation vanishes as the tube radius becomes uniform; then the whole
-    // surface rotates into the torus used by the unfolding, with no crossfade.
-    const t=p*p*(3-2*p),theta=Math.PI/2-2*Math.PI*(u-.5),phi=2*Math.PI*(v-.5);
-    const w=1.1+(R-1.1)*t,h=1+(R-1)*t;
-    const length=Math.hypot(h*Math.cos(theta),w*Math.sin(theta));
-    const radius=(.16+.64*((1-Math.cos(theta))/2)**1.5)*(1-t)+r*t;
-    let x=.15*(1-t)+w*Math.cos(theta)+radius*Math.cos(phi)*h*Math.cos(theta)/length;
-    const rawY=h*Math.sin(theta)+radius*Math.cos(phi)*w*Math.sin(theta)/length;
-    const z=radius*Math.sin(phi);
-    const compression=1-.82*(1-t)*Math.exp(-((x+.85)**2+z*z)/.24);
-    let y=1.15+(rawY-1.15)*compression;
-    // Shorten the handle while leaving the cup body tall. Both axis maps are
-    // strictly monotone, so the bowl stays closed and the handle stays open.
-    y*=1-.5*(1-t)/(1+Math.exp(-6*(x+.05)));
-    x-=.1*(1-t)*Math.log1p(Math.exp(4*(x-.15)));
-    const angle=-Math.PI/2*t;
-    return [x,Math.cos(angle)*y-Math.sin(angle)*z,Math.sin(angle)*y+Math.cos(angle)*z];
-  }
+  const p = Math.max(1, Math.min(3, phase));
   if (p <= 2) {
     const beta = 2 * Math.PI * (2 - p), theta = beta * (u - .5), phi = 2 * Math.PI * (v - .5);
     const cx = beta < 1e-5 ? 2 * Math.PI * R * (u - .5) : 2 * Math.PI * R / beta * Math.sin(theta);

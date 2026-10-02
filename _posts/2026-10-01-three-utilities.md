@@ -2,7 +2,7 @@
 title: "Three utilities: from the plane to a mug"
 description: "Connect three houses to gas, water, and electricity. The plane refuses—but a mug, a donut, and a square with joined edges reveal a way through."
 date: 2026-10-01 22:17:46 -0600
-format: problem
+format: exploration
 tags: [topology, graph theory, puzzles]
 math: true
 widgets: [three-utilities]
@@ -19,8 +19,6 @@ Pipes can bend as much as you like. They may meet at a shared house or utility, 
 Choose endpoints and place points along the route; the board joins them with a smooth curve. To delete a pipe, choose its two endpoints again without placing path points. To change its route, choose those endpoints with new path points in between. **Undo** restores a removed or redrawn pipe.
 
 If you get stuck, choose **Try eight connections**. Only one pipe remains. Is there somewhere else it could go—or is the surface itself the problem?
-
-<!-- solution -->
 
 ## Why the plane refuses
 
@@ -72,7 +70,7 @@ The **House 1 → Water** pipe leaves through the top and continues from the mat
 
 All nine pipes now connect their required endpoints. None crosses another pipe in the square, and the two seam continuations occur at distinct points. Gluing the edges therefore gives a valid drawing on the donut. Reshaping the donut back into a mug carries the drawing with it and preserves the absence of crossings.
 
-Return to the transformation and select **Carry the nine pipes**. Move from the square back to the donut to watch the split routes join, then continue back to the mug. Rotate it to follow the routes around the handle and inside the bowl. Some pipes move behind the surface and disappear from view; that is occlusion, not a crossing. The flat square is where you can inspect every route at once.
+Use **Trace a pipe** to follow one connection at a time. The square shows every route at once, including the two that use the joined edges.
 
 **The answer changes because the surface changes.** On the plane there is no way to fit the ninth pipe. On the mug, its handle gives the routes room to go around the obstruction.
 

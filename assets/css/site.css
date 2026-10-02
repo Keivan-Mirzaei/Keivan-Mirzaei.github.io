@@ -453,8 +453,6 @@ mark { color: var(--ink); background: #e1ebbd; border-radius: 2px; }
 .tu-phase-buttons button[aria-pressed="true"] { border-color: var(--green); background: var(--tint); }
 .tu-slider-label { display: block; margin: 16px 0; font: 12px/1.8 var(--sans); }
 .tu-slider-label input { display: block; width: 100%; min-height: 44px; accent-color: var(--green); }
-.tu-checkbox { display: flex; align-items: center; gap: 8px; font: 12px/1.7 var(--sans); min-height: 44px; }
-.tu-checkbox input { width: 18px; height: 18px; accent-color: var(--green); }
 .tu-trace-label { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 18px; font: 12px var(--sans); }
 .tu-trace-label select { max-width: 100%; padding: 8px 10px; min-height: 44px; border: 1px solid var(--line); background: var(--paper); border-radius: 3px; color: var(--ink); font: 13px var(--sans); }
 .tu-widget .tu-footnote { color: var(--muted); font: 12px/1.7 var(--sans); margin: 0; }

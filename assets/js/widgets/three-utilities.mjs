@@ -1,5 +1,5 @@
-import { NODES, nodeById, TORUS_ROUTES, PLANE_EIGHT, distance, obstruction, curveRoute, smoothWaypoints, simplifyPath, updateConnection } from '../lib/three-utilities-math.mjs?v=20261002-3';
-import { boardSVG, boardGeometry, drawTransformation } from '../lib/three-utilities-diagrams.mjs?v=20261002-3';
+import { NODES, nodeById, TORUS_ROUTES, PLANE_EIGHT, distance, obstruction, curveRoute, smoothWaypoints, simplifyPath, updateConnection } from '../lib/three-utilities-math.mjs?v=20261002-4';
+import { boardSVG, boardGeometry, drawTransformation } from '../lib/three-utilities-diagrams.mjs?v=20261002-4';
 import { observeSize } from '../lib/interactive-view.mjs';
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -33,7 +33,7 @@ function preparePlane(widget) {
     if(change.action==='removed')status.textContent=`${label} removed. Choose endpoints and path points to add it again.`;
     else if(bad.intersections.length||bad.throughNodes.length)status.textContent=`${label} ${change.action==='replaced'?'redrawn':'connected'}. Red marks show a crossing, overlap, or another endpoint in a pipe’s way. Choose a new path to redraw it.`;
     else status.textContent=`${label} ${change.action==='replaced'?'redrawn':'connected'} with a smooth curve. ${9-routes.length} pipes still to connect.`;
-    if(routes.length===9)status.textContent='All nine are drawn. A crossing is unavoidable on the plane. Try changing a route, or open the solution to see why.';
+    if(routes.length===9)status.textContent='All nine are drawn. A crossing is unavoidable on the plane. Try changing a route, or continue below to see why.';
     render();
   }
   function choose(id,keyboard=false) {
@@ -119,7 +119,6 @@ const PHASES = [
 function prepareSurface(widget) {
   const canvas=widget.querySelector('canvas'), slider=widget.querySelector('[data-tu-phase]'), title=widget.querySelector('[data-tu-stage]');
   const caption=widget.querySelector('[data-tu-caption]'), play=widget.querySelector('[data-tu-play]');
-  const pipes=widget.querySelector('[data-tu-surface-pipes]');
   widget.querySelector('[data-tu-surface-preview]').hidden=true;canvas.hidden=false;
   let phase=0, frame=null, orbit=null;
   const rotation={yaw:0,pitch:0};
@@ -132,21 +131,21 @@ function prepareSurface(widget) {
     if(caption.textContent!==explanation)caption.textContent=explanation;
     slider.value=phase;
     widget.querySelectorAll('[data-tu-jump]').forEach(button=>button.setAttribute('aria-pressed',Math.abs(Number(button.dataset.tuJump)-phase)<.02));
-    drawTransformation(canvas,phase,pipes.checked?TORUS_ROUTES:[],rotation);
-    const description=`${stage}. ${explanation}${pipes.checked?' The nine pipes are carried with the surface. Rear pipes are hidden.':''} Drag to rotate, or use arrow keys. Home resets the view.`;
+    drawTransformation(canvas,phase,rotation);
+    const description=`${stage}. ${explanation} Drag to rotate, or use arrow keys. Home resets to the mug.`;
     if(canvas.getAttribute('aria-label')!==description)canvas.setAttribute('aria-label',description);
   }
-  function stop() {cancelAnimationFrame(frame);frame=null;play.textContent='Play transformation';}
-  function animate(target) {
+  function stop() {cancelAnimationFrame(frame);frame=null;play.textContent='Play from mug';}
+  function animate(target,hold=0) {
     stop();
     if (reducedMotion.matches) {phase=target;render();return;}
-    const start=phase, begin=performance.now(), duration=Math.abs(target-start)*2400;
+    const start=phase, begin=performance.now()+hold, duration=Math.abs(target-start)*2400;
     const direction=Math.sign(target-start),stages=[start];
     if(direction)for(let boundary=direction>0?Math.floor(start)+1:Math.ceil(start)-1;direction>0?boundary<target:boundary>target;boundary+=direction)stages.push(boundary);
     stages.push(target);
     play.textContent='Pause';
     const tick=now=>{
-      const t=Math.min(1,(now-begin)/Math.max(1,duration));
+      const t=Math.max(0,Math.min(1,(now-begin)/Math.max(1,duration)));
       let elapsed=Math.abs(target-start)*t;
       for(let i=1;i<stages.length;i++){
         const length=Math.abs(stages[i]-stages[i-1]);
@@ -159,9 +158,8 @@ function prepareSurface(widget) {
     frame=requestAnimationFrame(tick);
   }
   slider.addEventListener('input',()=>{stop();phase=Number(slider.value);render();});
-  widget.querySelectorAll('[data-tu-jump]').forEach(button=>button.addEventListener('click',()=>animate(Number(button.dataset.tuJump))));
-  play.addEventListener('click',()=>{if(frame)stop();else {if(phase>=2.99)phase=0;animate(3);}});
-  pipes.addEventListener('change',render);
+  widget.querySelectorAll('[data-tu-jump]').forEach(button=>button.addEventListener('click',()=>{const target=Number(button.dataset.tuJump);if(target===0)resetMug();else animate(target);}));
+  play.addEventListener('click',()=>{if(frame)stop();else {resetMug();animate(3,700);}});
   canvas.addEventListener('pointerdown',event=>{if(event.button!==0)return;stop();orbit={x:event.clientX,y:event.clientY,pointer:event.pointerId};canvas.setPointerCapture(event.pointerId);});
   canvas.addEventListener('pointermove',event=>{
     if(!orbit||event.pointerId!==orbit.pointer)return;
@@ -170,13 +168,13 @@ function prepareSurface(widget) {
   });
   canvas.addEventListener('pointerup',event=>{orbit=null;if(canvas.hasPointerCapture(event.pointerId))canvas.releasePointerCapture(event.pointerId);});
   canvas.addEventListener('pointercancel',()=>{orbit=null;});
-  const resetView=()=>{rotation.yaw=rotation.pitch=0;render();};
-  widget.querySelector('[data-tu-reset-view]').addEventListener('click',resetView);
+  function resetMug(){stop();phase=0;rotation.yaw=rotation.pitch=0;render();}
+  widget.querySelector('[data-tu-reset-view]').addEventListener('click',resetMug);
   canvas.addEventListener('keydown',event=>{
     const directions={ArrowLeft:[-.12,0],ArrowRight:[.12,0],ArrowUp:[0,-.12],ArrowDown:[0,.12]};
     const delta=directions[event.key];
     if(delta){event.preventDefault();stop();rotation.yaw+=delta[0];rotation.pitch=Math.max(-1.3,Math.min(1.3,rotation.pitch+delta[1]));render();}
-    if(event.key==='Home'){event.preventDefault();resetView();}
+    if(event.key==='Home'){event.preventDefault();resetMug();}
   });
   widget.querySelectorAll('button,input').forEach(control=>control.disabled=false);
   observeSize(canvas,render);render();
@@ -204,7 +202,6 @@ function prepareSquare(widget) {
     trace.value=routes.some(edge=>edge.id===prior)?prior:'';
   }
   next.addEventListener('click',()=>{number=Math.min(9,number+1);trace.value='';status.textContent=messages[number-7];render();});
-  widget.querySelector('[data-tu-all]').addEventListener('click',()=>{number=9;trace.value='';status.textContent=messages[2];render();});
   widget.querySelector('[data-tu-reset]').addEventListener('click',()=>{number=7;trace.value='';status.textContent=messages[0];render();});
   trace.addEventListener('change',()=>{
     const edge=TORUS_ROUTES.find(route=>route.id===trace.value);
