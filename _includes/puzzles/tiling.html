@@ -1,10 +1,10 @@
 <section class="tiling-game" data-tiling-game aria-label="Tiling game">
   <div class="tiling-settings">
-    <div class="tiling-challenge-heading"><label for="puzzle-tiling-challenge">Challenge</label><output for="puzzle-tiling-challenge" data-tiling-challenge-label>1 of 6</output></div>
-    <input id="puzzle-tiling-challenge" type="range" min="1" max="6" step="1" value="1" data-tiling-challenge disabled>
+    <div class="tiling-challenge-heading"><label for="puzzle-tiling-challenge">Difficulty</label><output for="puzzle-tiling-challenge" data-tiling-challenge-label>Easy</output></div>
+    <input id="puzzle-tiling-challenge" type="range" min="1" max="4" step="1" value="1" data-tiling-challenge disabled>
   </div>
   <div class="tiling-play">
-    <div class="tiling-info"><span data-tiling-name>Little nook</span><span data-tiling-progress>0 / 13 squares</span></div>
+    <div class="tiling-info"><span data-tiling-name>Floor 1</span><span data-tiling-progress>0 / 13 squares</span></div>
     <p class="tiling-status" data-tiling-status role="status">Enable JavaScript to play Tiling.</p>
     <div class="tiling-actions puzzle-actions" role="group" aria-label="Game controls">
       {% include puzzles/action.html game='tiling' action='undo' icon='undo' label='Undo' %}
@@ -12,14 +12,16 @@
       {% include puzzles/action.html game='tiling' action='hint' icon='hint' label='Hint' %}
       {% include puzzles/action.html game='tiling' action='remove' icon='return' label='Return selected tile' %}
       {% include puzzles/action.html game='tiling' action='reset' icon='restart' label='Start again' %}
-      {% include puzzles/action.html game='tiling' action='next' icon='arrow' label='Next floor' hidden=true %}
+      {% include puzzles/action.html game='tiling' action='refresh' icon='shuffle' label='New arrangement' %}
       <details class="puzzle-help">
-        <summary class="puzzle-icon-button" aria-label="How to play" data-tooltip="How to play">{% include icon.html name='help' %}</summary>
+        <summary class="puzzle-icon-button" aria-label="How to play" data-tooltip="Help">{% include icon.html name='help' %}</summary>
         <div class="puzzle-help-content">
           <p>Fill every floor square. Tiles keep the orientation shown; striped squares are missing.</p>
           <p>Drag a tile onto the floor, or select it and tap a square for its marked anchor. The × badge shows how many copies are needed.</p>
           <p>To return a placed tile, drag it off the floor, double tap it, or select it and use the return icon.</p>
           <p>A hint outlines a placement. Tap the check mark to place it.</p>
+          <p>Shuffle gives a new arrangement at the same difficulty. Start again clears this floor.</p>
+          {% include puzzles/remember.html %}
         </div>
       </details>
     </div>

@@ -1,4 +1,7 @@
-import { LEVELS, createGame, placementCells, occupiedCells, checkPlacement, key } from '../lib/tiling.mjs?v=20261002-4';
+import { createGame, placementCells, occupiedCells, checkPlacement, key } from '../lib/tiling.mjs?v=20261002-5';
+
+import { DIFFICULTIES, createArrangement, randomSeed, arrangementFingerprint } from '../lib/tiling-arrangements.mjs?v=20261002-1';
+import { createPuzzleStorage } from '../lib/puzzle-storage.mjs?v=20261002-1';
 
 import { setActionLabel } from '../lib/puzzle-controls.mjs?v=20261002-4';
 
@@ -23,9 +26,24 @@ function shapeMarkup(cells, color, { anchor = true, label = '' } = {}) {
   return `<svg viewBox="0 0 ${width * 24} ${height * 24}" aria-hidden="true"${label ? ` data-tile-shape="${label}"` : ''}>${squares}${dot}</svg>`;
 }
 
-export function initializeTilingGame(root) {
+export function initializeTilingGame(root, storage = createPuzzleStorage('tiling', root)) {
   const get = name => root.querySelector(`[data-tiling-${name}]`);
-  let game = createGame(), selected = null;
+  const saved = storage.read();
+  const sessions = {};
+  DIFFICULTIES.forEach((_, index) => {
+    const session = saved?.sessions?.[index];
+    if (session && Number.isInteger(session.seed) && session.seed >= 1 && session.seed <= 0xffffffff
+      && Number.isSafeInteger(session.round) && session.round >= 1) sessions[index] = session;
+  });
+  let difficulty = Number.isInteger(saved?.difficulty) && DIFFICULTIES[saved.difficulty] ? saved.difficulty : 0;
+  let seed = sessions[difficulty]?.seed || (difficulty === 0 ? 1 : randomSeed());
+  let round = sessions[difficulty]?.round || 1;
+  let game = createGame(createArrangement(difficulty, seed), sessions[difficulty]?.state), selected = null;
+  function storedState() {
+    sessions[difficulty] = { seed, round, state: game.exportState() };
+    return { difficulty, sessions };
+  }
+  storage.setSnapshotProvider(storedState);
   let anchor = null, boardCursor = game.level.floor[0], hintPreview = null;
   let drag = null, dragGhost = null, suppressClickUntil = 0, lastTap = null;
   const pieceFor = id => game.level.pieces.find(piece => piece.id === id);
@@ -47,8 +65,9 @@ export function initializeTilingGame(root) {
 
   function showChallenge() {
     const value = Number(get('challenge').value);
-    get('challenge-label').textContent = `${value} of ${LEVELS.length}`;
-    get('challenge').setAttribute('aria-valuetext', `Challenge ${value} of ${LEVELS.length}`);
+    const name = DIFFICULTIES[value - 1].name;
+    get('challenge-label').textContent = name;
+    get('challenge').setAttribute('aria-valuetext', name);
   }
 
   function preview() {
@@ -103,7 +122,7 @@ export function initializeTilingGame(root) {
       const chosen = selected && labelFor(selected) === type.id;
       return `<button class="tiling-piece${chosen ? ' is-selected' : ''}${remaining === 0 ? ' is-placed' : ''}" type="button" data-tiling-piece="${type.id}" aria-pressed="${Boolean(chosen)}" aria-label="Tile ${type.id}, ${type.count} needed, ${remaining} left. ${remaining ? 'Select a copy to place.' : 'All copies placed. Select a copy to move or return.'} ${describeShape(type.cells)}"><span class="tiling-piece-name">${type.id}<span class="tiling-quantity">×${type.count}</span></span>${shapeMarkup(type.cells, colorFor(type.ids[0]))}<span class="tiling-piece-state">${remaining ? `${remaining} left` : 'Placed ✓'}</span></button>`;
     }).join('');
-    get('name').textContent = level.name;
+    get('name').textContent = `Floor ${round}`;
     get('progress').textContent = `${game.filled} / ${level.floor.length} squares`;
     const remaining = level.pieces.length - Object.keys(placed).length;
     get('tray-count').textContent = `${remaining} to place`;
@@ -113,8 +132,7 @@ export function initializeTilingGame(root) {
     get('hint').disabled = game.solved;
     setActionLabel(get('hint'), hintPreview ? 'Place hint' : 'Hint');
     get('hint').classList.toggle('is-confirming', Boolean(hintPreview));
-    get('next').hidden = !game.solved || level.id === LEVELS.length;
-    get('next').disabled = !game.solved;
+    get('refresh').disabled = false;
     get('status').textContent = message || (game.solved
       ? 'Floor complete!'
       : selected ? `Tile ${labelFor(selected)} selected.` : '');
@@ -124,11 +142,12 @@ export function initializeTilingGame(root) {
     if (focusCell) board.querySelector(`button[data-tiling-cell="${focusCell}"]`)?.focus({ preventScroll: true });
     else if (focusPiece) get('tray').querySelector(`[data-tiling-piece="${focusPiece}"]`)?.focus({ preventScroll: true });
     else if (hadFocus && (active.disabled || active.hidden)) {
-      const destination = game.solved && !get('next').hidden ? get('next')
+      const destination = game.solved ? get('refresh')
         : selected ? get('tray').querySelector(`[data-tiling-piece="${labelFor(selected)}"]`)
         : board.querySelector('button');
       destination?.focus({ preventScroll: true });
     }
+    storage.save(storedState());
   }
 
   function place(position = currentPosition()) {
@@ -165,13 +184,31 @@ export function initializeTilingGame(root) {
     render('Last move restored.');
   }
 
-  function newFloor(index = Number(get('challenge').value) - 1) {
-    endDrag();
-    const value = Math.max(0, Math.min(LEVELS.length - 1, index));
-    get('challenge').value = String(value + 1); showChallenge();
-    game = createGame(LEVELS[value]); selected = null; anchor = null; hintPreview = null; lastTap = null;
+  function clearSelection() {
+    endDrag(); selected = null; anchor = null; hintPreview = null; lastTap = null;
     boardCursor = game.level.floor[0];
-    render();
+  }
+
+  function changeDifficulty() {
+    storedState();
+    difficulty = Math.max(0, Math.min(DIFFICULTIES.length - 1, Number(get('challenge').value) - 1));
+    seed = sessions[difficulty]?.seed || randomSeed(); round = sessions[difficulty]?.round || 1;
+    game = createGame(createArrangement(difficulty, seed), sessions[difficulty]?.state);
+    clearSelection(); showChallenge(); render();
+  }
+
+  function refresh() {
+    const previous = arrangementFingerprint(game.level);
+    let candidate;
+    seed = randomSeed();
+    do { candidate = createArrangement(difficulty, seed); if (arrangementFingerprint(candidate) === previous) seed = seed % 0xffffffff + 1; }
+    while (arrangementFingerprint(candidate) === previous);
+    round++; game = createGame(candidate);
+    clearSelection(); render();
+  }
+
+  function restart() {
+    game.reset(); clearSelection(); render();
   }
 
   function hint() {
@@ -323,14 +360,14 @@ export function initializeTilingGame(root) {
   get('remove').addEventListener('click', () => remove());
   get('undo').addEventListener('click', undo);
   get('redo').addEventListener('click', redo);
-  get('reset').addEventListener('click', () => newFloor(game.level.id - 1));
+  get('reset').addEventListener('click', restart);
   get('hint').addEventListener('click', hint);
-  get('next').addEventListener('click', () => newFloor(game.level.id));
+  get('refresh').addEventListener('click', refresh);
   get('challenge').addEventListener('input', showChallenge);
-  get('challenge').addEventListener('change', () => newFloor());
+  get('challenge').addEventListener('change', changeDifficulty);
   get('challenge').disabled = false; get('reset').disabled = false;
-  newFloor();
+  get('challenge').value = String(difficulty + 1); showChallenge(); render();
   return { get game() { return game; }, get selected() { return selected; } };
 }
 
-if (typeof document !== 'undefined') document.querySelectorAll('[data-tiling-game]').forEach(initializeTilingGame);
+if (typeof document !== 'undefined') document.querySelectorAll('[data-tiling-game]').forEach(root => initializeTilingGame(root));

@@ -35,13 +35,13 @@ class Element {
   }
 }
 
-function fixture() {
+function fixture(storage) {
   globalThis.document = { activeElement: null, createElement: () => new Element() };
   const root = new Element();
   const fields = Object.fromEntries(['count', 'undo', 'redo', 'restart', 'status'].map(name => [name, new Element()]));
   fields.board = new Element({ clientWidth: 400, clientHeight: 500, clientLeft: 0, clientTop: 0 });
-  root.querySelector = selector => fields[selector.match(/data-klotski-([^\]]+)/)[1]];
-  initializeKlotski(root);
+  root.querySelector = selector => fields[selector.match(/data-klotski-([^\]]+)/)?.[1]];
+  initializeKlotski(root, storage);
   const block = id => fields.board.children.find(button => button.dataset.klotskiBlock === id);
   const pointer = (name, id, x, y, extras = {}) => fields.board.emit(name, { target: block(id), pointerId: 1, clientX: x, clientY: y, button: 0, isPrimary: true, ...extras });
   const drag = (id, x, y) => { pointer('pointerdown', id, 0, 0); pointer('pointermove', id, x, y); pointer('pointerup', id, x, y); };
@@ -140,4 +140,17 @@ test('secondary pointers cannot replace an active drag and restart clears a gest
   assert.equal(f.fields.redo.disabled, true);
   assert.equal(f.block('8').classes.has('is-dragging'), false);
   assert.equal(f.block('8').capture, null);
+});
+
+
+test('reopening Klotski resumes the board and retains undo and redo', () => {
+  let saved = null;
+  const storage = { read: () => saved, save: value => { saved = structuredClone(value); }, setSnapshotProvider() {} };
+  let f = fixture(storage); f.drag('8', 100, 0); f.drag('9', -100, 0); f.action('undo');
+  f = fixture(storage);
+  assert.equal(f.fields.count.textContent, '1 move'); assert.equal(f.position('8').left, 100);
+  assert.equal(f.position('9').left, 300); assert.equal(f.fields.redo.disabled, false);
+  f.action('redo'); assert.equal(f.position('9').left, 200);
+  f.action('undo'); f.action('undo'); assert.equal(f.position('8').left, 0);
+  f.action('restart'); f = fixture(storage); assert.equal(f.fields.count.textContent, '0 moves');
 });

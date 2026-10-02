@@ -1,11 +1,14 @@
 import { BOARD_WIDTH, BOARD_HEIGHT, createKlotski, slideKlotski, undoKlotski, redoKlotski, maxSlide } from '../lib/klotski.mjs?v=20261002-4';
+import { createPuzzleStorage } from '../lib/puzzle-storage.mjs?v=20261002-1';
+import { serializeKlotski, restoreKlotski } from '../lib/klotski-storage.mjs?v=20261002-1';
 
 const keyboardDirections = { ArrowUp: 'up', ArrowRight: 'right', ArrowDown: 'down', ArrowLeft: 'left' };
 
-export function initializeKlotski(game) {
+export function initializeKlotski(game, storage = createPuzzleStorage('klotski', game)) {
   const get = name => game.querySelector(`[data-klotski-${name}]`);
   const board = get('board');
-  let state = createKlotski(), selected = null, drag = null;
+  let state = restoreKlotski(storage.read()), selected = null, drag = null;
+  storage.setSnapshotProvider(() => serializeKlotski(state));
   const blocks = new Map();
   board.replaceChildren();
   board.setAttribute('role', 'group');
@@ -41,6 +44,7 @@ export function initializeKlotski(game) {
     get('status').textContent = state.won
       ? `You found the way out! Solved in ${state.moves} ${state.moves === 1 ? 'move' : 'moves'}.`
       : message;
+    storage.save(serializeKlotski(state));
   }
 
   function select(id) {
@@ -174,5 +178,5 @@ export function initializeKlotski(game) {
 }
 
 if (typeof document !== 'undefined') {
-  document.querySelectorAll('[data-klotski-game]').forEach(initializeKlotski);
+  document.querySelectorAll('[data-klotski-game]').forEach(root => initializeKlotski(root));
 }

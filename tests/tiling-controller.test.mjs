@@ -53,15 +53,15 @@ class Holder extends Element {
     return this.children.find(child => child.dataset[property] === key[2] && (!selector.startsWith('button') || child.tagName === 'BUTTON'));
   }
 }
-function fixture() {
+function fixture(storage) {
   globalThis.document = { activeElement: null, body: new Element() };
   const root = new Element();
-  const fields = Object.fromEntries(['challenge', 'challenge-label', 'name', 'progress', 'instruction', 'tray-count', 'selected', 'selected-label', 'selected-shape', 'remove', 'undo', 'redo', 'hint', 'next', 'reset', 'status'].map(name => [name, new Element({ parent: root })]));
+  const fields = Object.fromEntries(['challenge', 'challenge-label', 'name', 'progress', 'instruction', 'tray-count', 'selected', 'selected-label', 'selected-shape', 'remove', 'undo', 'redo', 'hint', 'refresh', 'reset', 'status'].map(name => [name, new Element({ parent: root })]));
   fields.challenge.value = '1'; fields.challenge.tagName = 'INPUT';
   fields.board = new Holder({ parent: root }); fields.tray = new Holder({ parent: root });
-  root.querySelector = selector => fields[selector.match(/data-tiling-([^\]]+)/)[1]];
+  root.querySelector = selector => fields[selector.match(/data-tiling-([^\]]+)/)?.[1]];
   root.setPointerCapture = () => {}; root.hasPointerCapture = () => false; root.releasePointerCapture = () => {};
-  const controller = initializeTilingGame(root);
+  const controller = initializeTilingGame(root, storage);
   const click = (holder, selector) => {
     const element = holder.querySelector(selector); element.focus(); holder.emit('click', { target: element });
   };
@@ -110,12 +110,13 @@ test('hint outlines a valid move, places only on the second click, then complete
   assert.equal(f.controller.game.solved, true);
   assert.equal(f.fields.progress.textContent, '13 / 13 squares');
   assert.match(f.fields.status.textContent, /Floor complete/);
-  assert.equal(f.fields.next.hidden, false);
-  assert.equal(document.activeElement, f.fields.next);
-  f.action('next');
-  assert.equal(f.controller.game.level.id, 2);
+  assert.equal(f.fields.refresh.disabled, false);
+  assert.equal(document.activeElement, f.fields.refresh);
+  f.action('refresh');
+  assert.equal(f.controller.game.level.difficulty, 0);
+  assert.equal(f.fields.name.textContent, 'Floor 2');
   assert.equal(f.controller.game.filled, 0);
-  assert.equal(document.activeElement.dataset.tilingCell, '0,0');
+  assert.equal(document.activeElement, f.fields.refresh);
 });
 
 test('returning a tile moves focus to its tray button and undo recovers completion', () => {
@@ -129,17 +130,20 @@ test('returning a tile moves focus to its tray button and undo recovers completi
   assert.equal(f.controller.game.solved, true);
 });
 
-test('slider input previews the challenge before change resets the active floor', () => {
+test('slider input previews difficulty before committing and returning restores the earlier floor', () => {
   const f = fixture();
   f.tile('A'); f.cell(0, 0);
-  f.fields.challenge.value = '6'; f.fields.challenge.emit('input');
-  assert.equal(f.fields['challenge-label'].textContent, '6 of 6');
+  f.fields.challenge.value = '4'; f.fields.challenge.emit('input');
+  assert.equal(f.fields['challenge-label'].textContent, 'Expert');
   assert.equal(f.controller.game.level.id, 1);
   assert.equal(f.controller.game.filled, 3);
   f.fields.challenge.emit('change');
-  assert.equal(f.controller.game.level.id, 6);
+  assert.equal(f.controller.game.level.difficulty, 3);
   assert.equal(f.controller.game.filled, 0);
   assert.equal(f.fields.tray.children.length, f.controller.game.level.types.length);
+  f.fields.challenge.value = '1'; f.fields.challenge.emit('change');
+  assert.equal(f.controller.game.filled, 3);
+  assert.deepEqual(f.controller.game.placements.A, { x: 0, y: 0 });
 });
 
 test('arrow keys skip missing squares and unsupported rotation keys leave the selection unchanged', () => {
@@ -258,4 +262,43 @@ test('redo restores repeated copies and removal, while a new placement clears it
   assert.match(f.fields.tray.markup, /2 needed, 1 left/);
   f.action('undo'); f.tile('B'); f.cell(2, 0);
   assert.equal(f.fields.redo.disabled, true);
+});
+
+function memoryStorage() {
+  let value = null;
+  return { read: () => structuredClone(value), save: next => { value = structuredClone(next); }, setSnapshotProvider() {} };
+}
+
+test('refresh keeps difficulty and tile budget, changes the arrangement, and restart keeps that arrangement', () => {
+  const f = fixture();
+  for (let index = 0; index < 4; index++) {
+    f.fields.challenge.value = String(index + 1); f.fields.challenge.emit('change');
+    for (let count = 0; count < 12; count++) {
+      const previous = JSON.stringify(f.controller.game.level);
+      const before = f.controller.game.level;
+      f.action('refresh');
+      const after = f.controller.game.level;
+      assert.equal(after.difficulty, index);
+      assert.equal(after.width, before.width); assert.equal(after.height, before.height);
+      assert.equal(after.holes.length, before.holes.length);
+      assert.deepEqual(after.pieces.map(p => p.cells.length).sort(), before.pieces.map(p => p.cells.length).sort());
+      assert.notEqual(JSON.stringify(after), previous);
+      const seed = after.seed;
+      f.action('hint'); f.action('hint'); f.action('reset');
+      assert.equal(f.controller.game.level.seed, seed); assert.equal(f.controller.game.filled, 0);
+    }
+  }
+});
+
+test('reopening restores the generated floor, selected difficulty, placements and undo/redo', () => {
+  const storage = memoryStorage(); let f = fixture(storage);
+  f.fields.challenge.value = '3'; f.fields.challenge.emit('change'); f.action('refresh');
+  const level = f.controller.game.level;
+  f.action('hint'); f.action('hint'); f.action('hint'); f.action('hint'); f.action('undo');
+  const placed = f.controller.game.placements;
+  f = fixture(storage);
+  assert.equal(f.fields.challenge.value, '3'); assert.equal(f.fields['challenge-label'].textContent, 'Hard');
+  assert.deepEqual(f.controller.game.level, level); assert.deepEqual(f.controller.game.placements, placed);
+  assert.equal(f.controller.game.canRedo, true); f.action('redo'); assert.equal(Object.keys(f.controller.game.placements).length, 2);
+  f.action('undo'); f.action('undo'); assert.equal(f.controller.game.filled, 0);
 });

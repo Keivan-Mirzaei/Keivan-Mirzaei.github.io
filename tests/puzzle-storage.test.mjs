@@ -1,0 +1,81 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createPuzzleStorage, storageKey } from '../assets/js/lib/puzzle-storage.mjs';
+import { createGame, LEVELS } from '../assets/js/lib/tiling.mjs';
+import { createKlotski, slideKlotski, undoKlotski, redoKlotski } from '../assets/js/lib/klotski.mjs';
+import { serializeKlotski, restoreKlotski } from '../assets/js/lib/klotski-storage.mjs';
+import { restoreHex } from '../assets/js/lib/hex-storage.mjs';
+
+function environment(protocol = 'https:') {
+  let cookie = '', lastWrite = '', writes = 0;
+  const values = new Map(), document = {};
+  Object.defineProperty(document, 'cookie', { get: () => cookie, set: value => { lastWrite = value; cookie = value.split(';')[0]; } });
+  return { document, location: { protocol }, values, get lastWrite() { return lastWrite; }, get writes() { return writes; },
+    localStorage: { getItem: key => values.get(key) || null, setItem: (key, value) => { values.set(key, value); writes++; }, removeItem: key => values.delete(key) } };
+}
+function control() {
+  let listener;
+  const checkbox = { checked: true, disabled: true, addEventListener: (_, fn) => { listener = fn; }, change(value) { this.checked = value; listener(); } };
+  return { checkbox, querySelector: () => checkbox };
+}
+
+test('the first-party cookie remembers the preference and boards survive a new page load', () => {
+  const env = environment(), root = control(), store = createPuzzleStorage('tiling', root, env);
+  assert.equal(root.checkbox.disabled, false); assert.match(env.lastWrite, /ao_puzzles=1; Max-Age=31536000; Path=\/; SameSite=Lax; Secure/);
+  store.save({ seed: 123, state: { placements: {} } }); store.save({ seed: 123, state: { placements: {} } });
+  assert.equal(env.writes, 1);
+  assert.deepEqual(createPuzzleStorage('tiling', control(), env).read(), { seed: 123, state: { placements: {} } });
+});
+
+test('turning Remember progress off clears all puzzles, survives reload, and turning it on saves the current game', () => {
+  const env = environment(), root = control(), store = createPuzzleStorage('hex', root, env);
+  for (const id of ['hex', 'klotski', 'tiling']) env.localStorage.setItem(storageKey(id), '{"moves":1}');
+  store.setSnapshotProvider(() => ({ moves: 7 })); root.checkbox.change(false);
+  assert.equal(env.document.cookie, 'ao_puzzles=0'); assert.equal(env.values.size, 0);
+  store.save({ moves: 5 }); assert.equal(env.values.size, 0);
+  const reloaded = control(); assert.equal(createPuzzleStorage('hex', reloaded, env).read(), null);
+  assert.equal(reloaded.checkbox.checked, false);
+  root.checkbox.change(true); assert.deepEqual(store.read(), { moves: 7 });
+});
+
+test('a preference changed in another puzzle prevents further saving', () => {
+  const env = environment(), first = control(), second = control();
+  const a = createPuzzleStorage('hex', first, env); createPuzzleStorage('tiling', second, env);
+  a.save({ moves: 1 }); second.checkbox.change(false); a.save({ moves: 2 });
+  assert.equal(env.values.size, 0); assert.equal(first.checkbox.checked, false);
+});
+
+test('missing, malformed and unavailable storage never interrupt play; local preview omits Secure', () => {
+  const env = environment('http:'), store = createPuzzleStorage('hex', control(), env);
+  assert.doesNotMatch(env.lastWrite, /Secure/); assert.equal(store.read(), null);
+  env.localStorage.setItem(storageKey('hex'), 'invalid json'); assert.equal(store.read(), null);
+  Object.defineProperty(env, 'localStorage', { get() { throw new Error('Storage disabled'); } });
+  assert.doesNotThrow(() => store.save({ moves: 1 })); assert.equal(store.read(), null);
+  const noControl = createPuzzleStorage('hex', { querySelector: () => null }, env);
+  assert.equal(noControl.read(), null); assert.doesNotThrow(() => noControl.save({}));
+});
+
+test('Tiling restores placements and history defensively and rejects corrupt or rotated boards', () => {
+  const game = createGame(); game.place('A', LEVELS[0].solution.A); game.place('B', LEVELS[0].solution.B); game.undo();
+  const saved = game.exportState(), restored = createGame(LEVELS[0], saved);
+  assert.deepEqual(restored.placements, game.placements); assert.equal(restored.canRedo, true);
+  restored.redo(); assert.equal(restored.filled, 6); restored.undo(); restored.undo(); assert.equal(restored.filled, 0);
+  for (const placements of [{ A: null }, { A: { x: 99, y: 0 } }, { A: { x: 0, y: 0, rotation: 1 } }, { Unknown: { x: 0, y: 0 } }]) {
+    assert.equal(createGame(LEVELS[0], { ...saved, placements }).filled, 0);
+  }
+  saved.placements.A.x = 99; assert.equal(game.placements.A.x, 0);
+});
+
+test('Klotski compact saves preserve moves and history and reject overlaps or bad coordinates', () => {
+  let state = slideKlotski(createKlotski(), '8', 'right'); state = slideKlotski(state, '9', 'left'); state = undoKlotski(state);
+  const saved = serializeKlotski(state), restored = restoreKlotski(saved);
+  assert.deepEqual(restored, state); assert.equal(redoKlotski(restored).moves, 2);
+  for (const positions of [[], saved.positions.map(() => 0), saved.positions.map(() => 99)]) assert.equal(restoreKlotski({ ...saved, positions }).moves, 0);
+  assert.equal(restoreKlotski({ ...saved, history: [null] }).moves, 0);
+});
+
+test('Hex save validation rejects corrupt boards, invalid turns and impossible colour counts', () => {
+  const saved = { size: 3, human: 1, local: true, cells: [1, 2, 0, 0, 0, 0, 0, 0, 0], last: 1, toMove: 1, history: [], future: [] };
+  assert.deepEqual(restoreHex(saved), saved);
+  for (const invalid of [{ size: 12 }, { cells: [] }, { toMove: 2 }, { last: 8 }, { cells: [2, 2, 0, 0, 0, 0, 0, 0, 0] }, { history: [null] }]) assert.equal(restoreHex({ ...saved, ...invalid }), null);
+});

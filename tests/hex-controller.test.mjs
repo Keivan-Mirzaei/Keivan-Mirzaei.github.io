@@ -36,7 +36,7 @@ class Computer {
   reply(move) { this.onmessage({ data: { move } }); }
 }
 
-function game({ order = 'local', size = 3, legacy = false } = {}) {
+function game({ order = 'local', size = 3, legacy = false, storage } = {}) {
   globalThis.document = { activeElement: null, body: new Element() };
   globalThis.Worker = Computer;
   Computer.instances = [];
@@ -49,10 +49,10 @@ function game({ order = 'local', size = 3, legacy = false } = {}) {
   const root = new Element();
   const fixture = {
     addEventListener: (name, handler) => root.addEventListener(name, handler),
-    querySelector: selector => elements[selector.match(/^\[data-hex-(.+)\]$/)[1]],
+    querySelector: selector => elements[selector.match(/^\[data-hex-(.+)\]$/)?.[1]],
     querySelectorAll: selector => selector === '[data-hex-order]' ? orders : [elements.size, elements.new, ...orders],
   };
-  initializeHexGame(fixture);
+  initializeHexGame(fixture, storage);
   return {
     elements,
     orders,
@@ -277,4 +277,37 @@ test('arrow navigation skips occupied cells and stays within a board row', () =>
   assert.equal(document.activeElement.dataset.hexCell, '2');
   f.elements.board.emit('keydown', { target: document.activeElement, key: 'ArrowRight', preventDefault() {} });
   assert.equal(document.activeElement.dataset.hexCell, '2');
+});
+
+
+function memoryStorage() {
+  let value = null;
+  return { read: () => structuredClone(value), save: next => { value = structuredClone(next); }, setSnapshotProvider() {} };
+}
+
+test('reopening local Hex restores settings, colours, turn and redo', () => {
+  const storage = memoryStorage(); let f = game({ size: 5, storage });
+  f.click(0); f.click(1); f.undo();
+  f = game({ size: 3, order: '1', storage });
+  assert.equal(f.elements.size.value, '5'); assert.equal(f.orders.find(o => o.checked).value, 'local');
+  assert.deepEqual(f.colors().slice(0, 3), [1, 0, 0]); assert.match(f.elements.status.textContent, /Blue’s turn/);
+  f.redo(); assert.deepEqual(f.colors().slice(0, 3), [1, 2, 0]);
+  f.undo(); f.undo(); assert.ok(f.colors().every(c => c === 0));
+});
+
+test('reopening a pending computer turn resumes its reply and still undoes the whole turn', () => {
+  const storage = memoryStorage(); let f = game({ order: '1', storage }); f.click(0);
+  f = game({ storage });
+  assert.equal(f.orders.find(o => o.checked).value, '1'); assert.equal(Computer.instances.length, 1);
+  assert.equal(f.elements.board.attributes.get('aria-busy'), 'true');
+  Computer.instances[0].reply(1); assert.deepEqual(f.colors().slice(0, 3), [1, 2, 0]);
+  f.undo(); assert.ok(f.colors().every(c => c === 0));
+});
+
+test('a saved second-player opening resumes with Red and cannot undo the opening', () => {
+  const storage = memoryStorage(); let f = game({ order: '2', storage });
+  f = game({ storage }); assert.equal(Computer.instances[0].position.color, 1);
+  Computer.instances[0].reply(0); assert.equal(f.elements.undo.disabled, true);
+  f = game({ storage }); assert.equal(Computer.instances.length, 0);
+  assert.equal(f.colors()[0], 1); assert.equal(f.orders.find(o => o.checked).value, '2');
 });

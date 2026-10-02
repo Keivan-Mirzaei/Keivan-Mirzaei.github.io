@@ -1,4 +1,6 @@
 import { RED, BLUE, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs';
+import { createPuzzleStorage } from '../lib/puzzle-storage.mjs?v=20261002-1';
+import { restoreHex } from '../lib/hex-storage.mjs?v=20261002-1';
 import { setActionLabel } from '../lib/puzzle-controls.mjs?v=20261002-4';
 
 const name = color => color === RED ? 'Red' : 'Blue';
@@ -44,12 +46,14 @@ function drawBoard(holder, cells, size, { playable = false, editing = false, pat
   if (restoreFocus && focused !== undefined) holder.querySelector(`[data-hex-cell="${focused}"]`)?.focus({ preventScroll: true });
 }
 
-export function initializeHexGame(game) {
+export function initializeHexGame(game, storage = createPuzzleStorage('hex', game)) {
   const get = key => game.querySelector(`[data-hex-${key}]`);
   const orderControls = [...game.querySelectorAll('[data-hex-order]')];
   let size = 5, human = RED, local = false, cells = Array(25).fill(0), toMove = RED;
   let history = [], future = [], last = -1, busy = false, worker = null, generation = 0, boardFocus = -1, boardCursor = 0;
   const snapshot = () => ({ cells: cells.slice(), last, toMove });
+  const storedState = () => ({ size, human, local, ...snapshot(), history, future });
+  storage.setSnapshotProvider(storedState);
   function cancel() { generation++; worker?.terminate(); worker = null; busy = false; }
   function showSize() {
     const label = get('size-label'), value = Number(get('size').value);
@@ -85,6 +89,7 @@ export function initializeHexGame(game) {
       : local ? `${name(toMove)}’s turn.`
       : `Your turn · ${name(human)}.`);
     board.setAttribute('aria-busy', String(busy));
+    storage.save(storedState());
     if (returnToBoard && busy) board.focus({ preventScroll: true });
     if (returnToBoard && !busy) {
       // Resume keyboard play after a replaced or temporarily locked cell.
@@ -180,10 +185,20 @@ export function initializeHexGame(game) {
   get('undo').addEventListener('click', undo);
   get('redo')?.addEventListener('click', redo);
   game.querySelectorAll('select, input, [data-hex-new]').forEach(control => { control.disabled = false; });
-  newGame();
+  const saved = restoreHex(storage.read());
+  if (saved) {
+    ({ size, human, local, cells, last, toMove, history, future } = saved);
+    get('size').value = String(size);
+    const order = local ? 'local' : String(human);
+    orderControls.forEach(control => {
+      if (control.type === 'radio') control.checked = control.value === order;
+      else control.value = order;
+    });
+    showSize(); computerTurn();
+  } else newGame();
 }
 
-if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-game]').forEach(initializeHexGame);
+if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-game]').forEach(root => initializeHexGame(root));
 
 if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-proof]').forEach(widget => {
   const get = key => widget.querySelector(`[data-hex-proof-${key}]`);
