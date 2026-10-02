@@ -11,4 +11,4 @@ magicians-problem: /assets/js/widgets/magicians-problem.mjs
 cevian-triangles: /assets/js/widgets/cevian-triangles.mjs?v=20261001-2
 lights-out: /assets/js/widgets/lights-out.mjs
 three-utilities: /assets/js/widgets/three-utilities.mjs?v=20261002-5
-hex: /assets/js/widgets/hex.mjs
+hex: /assets/js/widgets/hex.mjs?v=20261002-2

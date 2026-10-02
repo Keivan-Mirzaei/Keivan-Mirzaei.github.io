@@ -1,10 +1,10 @@
 /* Hex keeps its two goals distinct through both colour and letter labels. */
 .hex-widget { --hex-red: #a74740; --hex-blue: #306a97; --hex-red-tint: #f0d9d1; --hex-blue-tint: #d6e5ef; }
-.hex-settings { display: flex; flex-wrap: wrap; gap: 12px 22px; margin: 18px 0 12px; }
+.hex-settings { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin: 18px 0 12px; }
+.hex-widget .hex-opponent { margin: 0; font: 13px/1.6 var(--sans); }
 .hex-settings label { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font: 13px/1.6 var(--sans); }
 .hex-settings select { max-width: 100%; min-height: 44px; padding: 8px 26px 8px 10px; border: 1px solid var(--line); border-radius: 3px; color: var(--ink); background: var(--paper); font: 13px var(--sans); }
-.hex-widget .hex-caption, .hex-widget .hex-level-detail { margin: 12px 0; font: 13px/1.7 var(--sans); color: var(--muted); }
-.hex-widget .hex-level-detail { min-height: 3.4em; }
+.hex-widget .hex-caption { margin: 12px 0; font: 13px/1.7 var(--sans); color: var(--muted); }
 .hex-board { position: relative; width: 100%; max-width: 600px; margin: 20px auto 14px; isolation: isolate; }
 .hex-board > svg, .hex-board > img { display: block; width: 100%; height: 100%; margin: 0; }
 .hex-board > .hex-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
@@ -36,9 +36,6 @@
 .hex-actions button { min-height: 44px; }
 .hex-secondary { padding: 9px 14px; border: 1px solid var(--green); border-radius: 3px; background: var(--paper); color: var(--green); font-size: 12px; }
 .hex-secondary:hover { background: var(--tint); }
-.prose .hex-picker { margin: 16px 0; padding: 0; border: 0; background: transparent; font: 13px/1.7 var(--sans); }
-.hex-picker summary { min-height: 44px; padding: 10px 0; color: var(--green); }
-.hex-picker .hex-settings { margin: 6px 0; }
 @media (max-width: 500px) {
   .hex-widget .hex-settings { gap: 10px 16px; }
   .hex-settings label { flex: 1 1 100%; justify-content: space-between; }

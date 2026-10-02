@@ -1,4 +1,4 @@
-import { RED, BLUE, PROOF_EXAMPLE, hexGeometry, winningPath, winner, chooseMove, createSearch, coastline } from '../lib/hex-math.mjs';
+import { RED, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs';
 
 const name = color => color === RED ? 'Red' : 'Blue';
 const goal = color => color === RED ? 'top to bottom' : 'left to right';
@@ -42,15 +42,9 @@ function drawBoard(holder, cells, size, { playable = false, editing = false, pat
   if (focused !== undefined) holder.querySelector(`[data-hex-cell="${focused}"]`)?.focus({ preventScroll: true });
 }
 
-const details = {
-  easy: 'Easy chooses randomly. Try building a connected chain before it does.',
-  medium: 'Medium builds short connections and takes or blocks an immediate win.',
-  hard: 'Hard also searches thousands of simulated games. It is a challenging practice opponent, but does not play perfectly.'
-};
-
 document.querySelectorAll('[data-hex-game]').forEach(game => {
   const get = key => game.querySelector(`[data-hex-${key}]`);
-  let size = 5, human = RED, level = 'medium', cells = Array(25).fill(0), toMove = RED;
+  let size = 5, human = RED, cells = Array(25).fill(0), toMove = RED;
   let history = [], last = -1, busy = false, worker = null, generation = 0;
   function cancel() { generation++; worker?.terminate(); worker = null; busy = false; }
   function render(message = '') {
@@ -61,15 +55,8 @@ document.querySelectorAll('[data-hex-game]').forEach(game => {
       button.disabled = busy || Boolean(win) || toMove !== human || Boolean(cells[Number(button.dataset.hexCell)]);
     });
     get('count').textContent = `${count} ${count === 1 ? 'stone' : 'stones'}`;
-    get('instruction').textContent = `You are ${name(human)}: connect ${goal(human)}. Red moves first. Choose an empty cell; stones stay put.`;
-    get('level-detail').textContent = details[level];
+    get('instruction').textContent = `You play ${human === RED ? 'first' : 'second'} as ${name(human)}: connect ${goal(human)}. Choose an empty cell; stones stay put.`;
     get('undo').disabled = !history.length;
-    for (const key of ['row', 'column']) {
-      const control = get(key), selected = Math.min(size, Number(control.value) || 1);
-      if (control.options.length !== size) control.innerHTML = Array.from({ length: size }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('');
-      control.value = String(selected);
-    }
-    get('place').disabled = busy || Boolean(win) || toMove !== human;
     get('status').textContent = message || (win ? `${win === human ? 'You win!' : 'The computer wins.'} ${name(win)} has connected ${goal(win)}. The dashed line marks a winning chain.` : busy ? `${name(3 - human)} is thinking…` : `Your turn · ${name(human)} connects ${goal(human)}.`);
     get('board').setAttribute('aria-busy', String(busy));
   }
@@ -80,7 +67,6 @@ document.querySelectorAll('[data-hex-game]').forEach(game => {
     cells[move] = 3 - human; last = move; toMove = human; render();
   }
   async function fallback(token) {
-    if (level !== 'hard') { finish(chooseMove(cells, size, 3 - human, level), token); return; }
     const search = createSearch(cells, size, 3 - human), deadline = performance.now() + 1100;
     while (!search.solved && search.visits() < (size === 5 ? 6000 : 8000) && performance.now() < deadline) {
       if (token !== generation) return;
@@ -93,14 +79,14 @@ document.querySelectorAll('[data-hex-game]').forEach(game => {
     busy = true; render();
     const token = generation;
     try {
-      worker = new Worker(new URL('../lib/hex-worker.mjs', import.meta.url), { type: 'module' });
+      worker = new Worker(new URL('../lib/hex-worker.mjs?v=20261002-2', import.meta.url), { type: 'module' });
       worker.onmessage = ({ data }) => finish(data.move, token);
       worker.onerror = event => { event.preventDefault(); if (token !== generation) return; worker?.terminate(); worker = null; fallback(token); };
-      worker.postMessage({ cells, size, color: 3 - human, level });
+      worker.postMessage({ cells, size, color: 3 - human });
     } catch { fallback(token); }
   }
   function newGame() {
-    cancel(); size = Number(get('size').value); human = Number(get('side').value);
+    cancel(); size = Number(get('size').value); human = Number(get('order').value);
     cells = Array(size * size).fill(0); history = []; last = -1; toMove = RED; computerTurn();
   }
   function play(move) {
@@ -113,11 +99,9 @@ document.querySelectorAll('[data-hex-game]').forEach(game => {
     const button = event.target.closest('[data-hex-cell]');
     if (button) play(Number(button.dataset.hexCell));
   });
-  get('place').addEventListener('click', () => play((Number(get('row').value) - 1) * size + Number(get('column').value) - 1));
   get('new').addEventListener('click', newGame);
   get('size').addEventListener('change', newGame);
-  get('side').addEventListener('change', newGame);
-  get('level').addEventListener('change', () => { level = get('level').value; cancel(); computerTurn(); });
+  get('order').addEventListener('change', newGame);
   get('undo').addEventListener('click', () => {
     if (!history.length) return;
     cancel(); const previous = history.pop(); cells = previous.cells; last = previous.last; toMove = human; render('Your last turn has been undone, including the computer’s reply.');

@@ -1,19 +1,17 @@
 <section class="graph-widget hex-widget" data-hex-game aria-labelledby="hex-game-title">
   <div class="graph-heading"><h3 id="hex-game-title">Find your way across</h3><span class="activity-badge" data-hex-count>0 stones</span></div>
   <div class="hex-settings">
-    <label for="hex-level">Opponent <select id="hex-level" data-hex-level disabled><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select></label>
+    <p class="hex-opponent">Opponent: <strong>Hard</strong></p>
     <label for="hex-size">Board <select id="hex-size" data-hex-size disabled><option value="5">5 × 5</option><option value="7">7 × 7</option></select></label>
-    <label for="hex-side">Play as <select id="hex-side" data-hex-side disabled><option value="1">Red · top to bottom</option><option value="2">Blue · left to right</option></select></label>
+    <label for="hex-order">Turn order <select id="hex-order" data-hex-order disabled><option value="1">Play first</option><option value="2">Play second</option></select></label>
   </div>
   <p class="hex-caption" data-hex-instruction>Red moves first and joins top to bottom. Blue joins left to right. Choose an empty cell.</p>
-  <p class="hex-level-detail" data-hex-level-detail>Medium builds short connections and takes or blocks an immediate win.</p>
   <div class="hex-board" data-hex-board>
     <img src="{{ '/assets/images/hex-board.svg' | relative_url }}" width="600" height="410" alt="A five by five Hex board. Red connects the top and bottom edges; Blue connects the left and right edges. Each cell has up to six neighbors sharing a side.">
   </div>
   <div class="hex-legend"><span><i class="hex-key hex-red" aria-hidden="true">R</i>Red · top ↔ bottom</span><span><i class="hex-key hex-blue" aria-hidden="true">B</i>Blue · left ↔ right</span></div>
   <p class="hex-status" data-hex-status role="status">Enable JavaScript to play against the computer.</p>
   <div class="hex-actions"><button class="secondary-button" type="button" data-hex-new disabled>New game</button><button class="hex-secondary" type="button" data-hex-undo disabled>Undo your turn</button></div>
-  <details class="hex-picker"><summary>Choose a cell by coordinates</summary><div class="hex-settings"><label for="hex-row">Row <select id="hex-row" data-hex-row disabled><option value="1">1</option></select></label><label for="hex-column">Column <select id="hex-column" data-hex-column disabled><option value="1">1</option></select></label><button class="hex-secondary" type="button" data-hex-place disabled>Place stone</button></div><p class="hex-caption">Rows run from top to bottom; columns run from left to right within each row. You can use these controls when the board is too small to tap comfortably.</p></details>
-  <p class="hex-caption">Practice games use no swap rule. Changing the board or your colour starts a new game; difficulty can change during a game.</p>
+  <p class="hex-caption">Practice games use no swap rule. Changing the board or turn order starts a new game.</p>
   <noscript><p>Play on paper with the rules above. The coastline diagram and the complete proof below are available without JavaScript.</p></noscript>
 </section>

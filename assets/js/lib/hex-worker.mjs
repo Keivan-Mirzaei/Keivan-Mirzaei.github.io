@@ -1,10 +1,6 @@
-import { chooseMove, createSearch } from './hex-math.mjs';
+import { createSearch } from './hex-math.mjs';
 
-self.onmessage = ({ data: { cells, size, color, level } }) => {
-  if (level !== 'hard') {
-    self.postMessage({ move: chooseMove(cells, size, color, level) });
-    return;
-  }
+self.onmessage = ({ data: { cells, size, color } }) => {
   const search = createSearch(cells, size, color);
   const deadline = performance.now() + 1100;
   const limit = size === 5 ? 6000 : 8000;
