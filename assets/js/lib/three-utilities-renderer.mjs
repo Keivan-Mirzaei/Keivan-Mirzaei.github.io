@@ -1,7 +1,32 @@
-import { surfacePoint } from './three-utilities-math.mjs?v=20261002-4';
-import { mugMesh } from './three-utilities-mug.mjs?v=20261002-4';
+import { surfacePoint } from './three-utilities-math.mjs?v=20261002-5';
+import { mugMesh } from './three-utilities-mug.mjs?v=20261002-5';
 
 const renderers=new WeakMap();
+export const BOUNDARY_STYLE={width:6,dash:14,gap:9};
+
+// Use the same dash positions on both members of an edge pair. Their shared
+// pattern follows the surface through the unfolding, including around curves.
+export function boundaryHighlights(phase,project,pixelPoint) {
+  return [
+    {horizontal:true,color:'#285b46',rgb:[40/255,91/255,70/255]},
+    {horizontal:false,color:'#8769a2',rgb:[135/255,105/255,162/255]},
+  ].map(pair=>{
+    const at=(t,side)=>project(surfacePoint(...(pair.horizontal?[t,side]:[side,t]),phase));
+    const length=[0,1].reduce((sum,side)=>{
+      let previous=pixelPoint(at(0,side)),total=0;
+      for(let i=1;i<=120;i++){
+        const next=pixelPoint(at(i/120,side));total+=Math.hypot(next[0]-previous[0],next[1]-previous[1]);previous=next;
+      }
+      return sum+total/2;
+    },0);
+    const period=BOUNDARY_STYLE.dash+BOUNDARY_STYLE.gap;
+    const count=Math.max(4,Math.round(length/period)),fraction=BOUNDARY_STYLE.dash/period;
+    const steps=Math.max(2,Math.ceil(120*fraction/count));
+    const parts=[0,1].flatMap(side=>Array.from({length:count},(_,dash)=>
+      Array.from({length:steps+1},(_,i)=>at((dash+fraction*i/steps)/count,side))));
+    return {...pair,width:BOUNDARY_STYLE.width,parts};
+  });
+}
 function makeRenderer(canvas) {
   const gl=canvas.getContext('webgl',{alpha:true,antialias:true});
   if(!gl)return null;
@@ -138,20 +163,19 @@ export function draw3DSurface(canvas,phase,project) {
   gl.drawElements(gl.TRIANGLES,mesh.triangles.length*3,gl.UNSIGNED_SHORT,0);gl.disable(gl.POLYGON_OFFSET_FILL);
   if(phase>=1){
     gl.uniform1f(r.line,1);gl.disableVertexAttribArray(r.normal);gl.vertexAttrib3f(r.normal,0,0,1);
-    const seam=(kind,color)=>{
+    for(const highlight of boundaryHighlights(phase,project,p=>[p[0]*scale,p[1]*scale])){
       const line=[];
-      for(const side of [0,1])for(let i=0;i<120;i++){
-        const [a,b]=[i/120,(i+1)/120].map(t=>clip(project(surfacePoint(...(kind==='a'?[t,side]:[side,t]),phase))));
+      for(const part of highlight.parts)for(let i=1;i<part.length;i++){
+        const [a,b]=[part[i-1],part[i]].map(clip);
         const dx=(b[0]-a[0])*width,dy=(b[1]-a[1])*height,length=Math.hypot(dx,dy);
         if(length<.0001)continue;
-        const offset=[-dy/length*2.5/width,dx/length*2.5/height,0];
+        const offset=[-dy/length*highlight.width/width,dx/length*highlight.width/height,0];
         const am=a.map((x,k)=>x-offset[k]),ap=a.map((x,k)=>x+offset[k]);
         const bm=b.map((x,k)=>x-offset[k]),bp=b.map((x,k)=>x+offset[k]);
         line.push(...am,...bm,...ap,...ap,...bm,...bp);
       }
-      attribute(r.positions,r.position,line);gl.uniform3f(r.color,...color);gl.drawArrays(gl.TRIANGLES,0,line.length/3);
-    };
-    seam('a',[.157,.357,.275]);seam('b',[.529,.412,.635]);
+      attribute(r.positions,r.position,line);gl.uniform3f(r.color,...highlight.rgb);gl.drawArrays(gl.TRIANGLES,0,line.length/3);
+    }
   }
   return true;
 }

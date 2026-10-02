@@ -1,5 +1,5 @@
-import { NODES, nodeById, TORUS_ROUTES, PLANE_EIGHT, distance, obstruction, curveRoute, smoothWaypoints, simplifyPath, updateConnection } from '../lib/three-utilities-math.mjs?v=20261002-4';
-import { boardSVG, boardGeometry, drawTransformation } from '../lib/three-utilities-diagrams.mjs?v=20261002-4';
+import { NODES, nodeById, TORUS_ROUTES, PLANE_EIGHT, distance, obstruction, curveRoute, smoothWaypoints, simplifyPath, updateConnection } from '../lib/three-utilities-math.mjs?v=20261002-5';
+import { boardSVG, boardGeometry, drawTransformation } from '../lib/three-utilities-diagrams.mjs?v=20261002-5';
 import { observeSize } from '../lib/interactive-view.mjs';
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -112,8 +112,8 @@ function preparePlane(widget) {
 const PHASES = [
   ['A mug', 'Drag to rotate the 3D mug and look inside. Its bowl has a bottom; the handle supplies the one through-hole.'],
   ['A donut', 'Round the body and shrink its indentation. The handle opening becomes the donut’s hole; the surface stays connected.'],
-  ['An open tube', 'Cut along the purple loop b and straighten the ring. The two purple ends will be joined again.'],
-  ['A square', 'Slit the tube along the green loop a and flatten it. Pair left with right, and top with bottom, in the same direction.'],
+  ['An open tube', 'Cut along the purple dashed loop and straighten the ring. The two purple ends will be joined again.'],
+  ['A square', 'Slit the tube along the green dashed loop and flatten it. Matching dashed sides belong together: green top and bottom, purple left and right.'],
 ];
 
 function prepareSurface(widget) {
@@ -187,8 +187,8 @@ function prepareSquare(widget) {
   let number=7;
   const messages=[
     'Seven pipes fit inside the square. House 1 → Water and House 3 → Gas still need routes. Add the next pipe.',
-    'House 1 → Water leaves through the top a and returns at the matching point on the bottom a. These two dots are one point on the glued surface.',
-    'House 3 → Gas leaves through the right b and returns at the matching point on the left b. All nine pipes now fit, with no crossings.',
+    'House 1 → Water leaves through the green top side and returns at the matching point on the green bottom side. These two dots are one point on the glued surface.',
+    'House 3 → Gas leaves through the purple right side and returns at the matching point on the purple left side. All nine pipes now fit, with no crossings.',
   ];
   status.textContent=messages[0];
   function render() {
@@ -198,14 +198,14 @@ function prepareSquare(widget) {
     count.textContent=`${number} / 9 pipes · no crossings`;next.disabled=number===9;
     next.textContent=number===7?'Add top ↔ bottom pipe':number===8?'Add left ↔ right pipe':'All nine connected';
     const prior=trace.value;
-    trace.innerHTML='<option value="">All pipes</option>'+routes.map(edge=>`<option value="${edge.id}">${nodeById(edge.house).label} → ${nodeById(edge.utility).label}${edge.seam?` (through ${edge.seam})`:''}</option>`).join('');
+    trace.innerHTML='<option value="">All pipes</option>'+routes.map(edge=>`<option value="${edge.id}">${nodeById(edge.house).label} → ${nodeById(edge.utility).label}${edge.seam?` (${edge.seam==='a'?'top/bottom':'left/right'})`:''}</option>`).join('');
     trace.value=routes.some(edge=>edge.id===prior)?prior:'';
   }
   next.addEventListener('click',()=>{number=Math.min(9,number+1);trace.value='';status.textContent=messages[number-7];render();});
   widget.querySelector('[data-tu-reset]').addEventListener('click',()=>{number=7;trace.value='';status.textContent=messages[0];render();});
   trace.addEventListener('change',()=>{
     const edge=TORUS_ROUTES.find(route=>route.id===trace.value);
-    status.textContent=edge?`${nodeById(edge.house).label} → ${nodeById(edge.utility).label}: ${edge.seam==='a'?'follow the matching top and bottom a dots.':edge.seam==='b'?'follow the matching right and left b dots.':'the entire pipe stays inside the square.'}`:messages[number-7];render();
+    status.textContent=edge?`${nodeById(edge.house).label} → ${nodeById(edge.utility).label}: ${edge.seam==='a'?'follow the matching dots on the green top and bottom sides.':edge.seam==='b'?'follow the matching dots on the purple left and right sides.':'the entire pipe stays inside the square.'}`:messages[number-7];render();
   });
   widget.querySelectorAll('button,select').forEach(control=>control.disabled=false);
   observeSize(board,render);render();

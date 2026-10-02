@@ -58,7 +58,7 @@ The cuts create pairs of edges that belonged together. To recover the torus, ide
 
 $$ (x,0)\sim(x,1),\qquad (0,y)\sim(1,y). $$
 
-In ordinary words: **top matches bottom at the same horizontal position; left matches right at the same vertical position**. The arrows on each pair point the same way. No edge is flipped.
+In ordinary words: **top matches bottom at the same horizontal position; left matches right at the same vertical position**. Matching dashed sides show the pairs. No edge is flipped.
 
 ## Solve it on the square
 

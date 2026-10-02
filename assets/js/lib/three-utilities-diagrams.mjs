@@ -1,6 +1,6 @@
-import { NODES, nodeById, surfacePoint, smoothWaypoints } from './three-utilities-math.mjs?v=20261002-4';
-import { mugMesh } from './three-utilities-mug.mjs?v=20261002-4';
-import { draw3DSurface } from './three-utilities-renderer.mjs?v=20261002-4';
+import { NODES, nodeById, surfacePoint, smoothWaypoints } from './three-utilities-math.mjs?v=20261002-5';
+import { mugMesh } from './three-utilities-mug.mjs?v=20261002-5';
+import { draw3DSurface, boundaryHighlights, BOUNDARY_STYLE } from './three-utilities-renderer.mjs?v=20261002-5';
 
 export function boardGeometry(width) {
   const w = Math.max(220, width);
@@ -30,10 +30,8 @@ export function boardSVG(routes, { width = 620, square = false, selected = null,
   const routeMarkup = routes.map(edge => edge.parts.map((part,i) => `<path data-pipe="${edge.id}" d="${edge.curves?curvePathData(edge.curves[i],g):pathData(part, g)}" fill="none" stroke="${nodeById(edge.utility).color}" stroke-width="${focus === edge.id ? 4 : 2.5}" opacity="${focus && focus !== edge.id ? .22 : 1}" stroke-linejoin="round" stroke-linecap="round" pointer-events="none"/>`).join('')).join('');
   const plane = `<rect class="tu-paper" ${interactive?'data-tu-paper role="button" tabindex="0" aria-label="Place a path point. Arrow keys move the cursor; Enter adds a point."':''} x="${g.left}" y="${g.top}" width="${g.size}" height="${g.size}" rx="2" fill="url(#tu-dots)" stroke="#dfe3dc"/>`;
   const boundary = square ? `<rect x="${g.left}" y="${g.top}" width="${g.size}" height="${g.size}" fill="#fcfcf9"/>
-    <path d="M${g.left} ${g.top}H${right} M${g.left} ${bottom}H${right}" stroke="#285b46" stroke-width="2.5"/>
-    <path d="M${g.left} ${g.top}V${bottom} M${right} ${g.top}V${bottom}" stroke="#8769a2" stroke-width="2.5"/>
-    ${[g.top, bottom].map(y => `<path d="M${g.width / 2 - 14} ${y}h28m-7 -5l7 5 -7 5" fill="none" stroke="#285b46" stroke-width="2.5"/><text x="${g.width / 2}" y="${y === g.top ? y - 12 : y + 23}" text-anchor="middle" fill="#285b46" font-size="14">a</text>`).join('')}
-    ${[g.left, right].map(x => `<path d="M${x} ${g.top + g.size / 2 + 14}v-28m-5 7l5 -7 5 7" fill="none" stroke="#8769a2" stroke-width="2.5"/><text x="${x === g.left ? x - 19 : x + 19}" y="${g.top + g.size / 2 + 5}" text-anchor="middle" fill="#8769a2" font-size="14">b</text>`).join('')}` : plane;
+    <path d="M${g.left} ${g.top}H${right} M${g.left} ${bottom}H${right}" fill="none" stroke="#285b46" stroke-width="${BOUNDARY_STYLE.width}" stroke-dasharray="${BOUNDARY_STYLE.dash} ${BOUNDARY_STYLE.gap}"/>
+    <path d="M${g.left} ${g.top}V${bottom} M${right} ${g.top}V${bottom}" fill="none" stroke="#8769a2" stroke-width="${BOUNDARY_STYLE.width}" stroke-dasharray="${BOUNDARY_STYLE.dash} ${BOUNDARY_STYLE.gap}"/>` : plane;
   const exits = square ? routes.filter(edge => edge.seam).map(edge => edge.parts.flatMap((part, index) => [index === 0 ? part.at(-1) : part[0]]).map(p => {
     const [x, y] = boardPoint(p, g);
     return `<circle cx="${number(x)}" cy="${number(y)}" r="4" fill="#fcfcf9" stroke="${nodeById(edge.utility).color}" stroke-width="2"/>`;
@@ -87,17 +85,12 @@ function drawSurface(ctx, width, height, phase, rotation) {
   const extentX = Math.max(...all.map(p=>Math.abs(p[0]))), extentY = Math.max(...all.map(p=>Math.abs(p[1])));
   const scale = Math.min((width-44)/(extentX*2), (height-48)/(extentY*2));
   const screen = p => [width/2+p[0]*scale, height/2+p[1]*scale];
-  const addLine = (uvs, color, lineWidth) => {
-    const ps = uvs.map(([u,v])=>project(surfacePoint(u,v,phase)));
-    for (let i=1;i<ps.length;i++) lines.push({ points:[ps[i-1],ps[i]], color, lineWidth });
-  };
-  const samples = Array.from({length:101},(_,i)=>i/100);
-  // a = top/bottom, b = left/right, with equal directions on each paired side.
   if(phase>=1){
-    addLine(samples.map(v=>[0,v]), '#8769a2', 2.5); addLine(samples.map(v=>[1,v]), '#8769a2', 2.5);
-    addLine(samples.map(u=>[u,0]), '#285b46', 2.5); addLine(samples.map(u=>[u,1]), '#285b46', 2.5);
+    for(const highlight of boundaryHighlights(phase,project,screen))for(const part of highlight.parts){
+      for(let i=1;i<part.length;i++)lines.push({points:[part[i-1],part[i]],color:highlight.color,lineWidth:highlight.width});
+    }
   }
-  // A small depth buffer hides rear pipes without gaps from patch-average sorting.
+  // A small depth buffer hides the highlights on the rear of the surface.
   const cell=3, bw=Math.ceil(width/cell), bh=Math.ceil(height/cell), depths=new Float32Array(bw*bh).fill(-Infinity);
   const rasterize=(a,b,c)=>{
     const denominator=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]);
@@ -128,7 +121,7 @@ function drawSurface(ctx, width, height, phase, rotation) {
   for(const line of lines){
     const [a,b]=line.points, sa=screen(a),sb=screen(b);
     const count=Math.max(1,Math.ceil(Math.hypot(sa[0]-sb[0],sa[1]-sb[1])/cell));
-    ctx.strokeStyle=line.color;ctx.lineWidth=line.lineWidth;
+    ctx.strokeStyle=line.color;ctx.lineWidth=line.lineWidth;ctx.lineCap='butt';
     for(let i=0;i<count;i++){
       const mid=a.map((x,k)=>mix(x,b[k],(i+.5)/count));
       if(!visible(mid))continue;
