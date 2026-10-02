@@ -1,10 +1,10 @@
-import { createKlotski, slideKlotski, undoKlotski, redoKlotski, canSlide, maxSlide } from '../lib/klotski.mjs?v=20261002-4';
+import { BOARD_WIDTH, BOARD_HEIGHT, createKlotski, slideKlotski, undoKlotski, redoKlotski, maxSlide } from '../lib/klotski.mjs?v=20261002-4';
 
 const keyboardDirections = { ArrowUp: 'up', ArrowRight: 'right', ArrowDown: 'down', ArrowLeft: 'left' };
 
 export function initializeKlotski(game) {
   const get = name => game.querySelector(`[data-klotski-${name}]`);
-  const board = get('board'), directions = [...game.querySelectorAll('[data-klotski-direction]')];
+  const board = get('board');
   let state = createKlotski(), selected = null, drag = null;
   const blocks = new Map();
   board.replaceChildren();
@@ -17,29 +17,24 @@ export function initializeKlotski(game) {
     button.dataset.klotskiBlock = piece.id;
     button.innerHTML = piece.id === 'target'
       ? '<span><span class="klotski-target-arrow" aria-hidden="true">↓</span><span>Exit</span></span>'
-      : `<span aria-hidden="true">${piece.id}</span>`;
+      : '';
     board.append(button); blocks.set(piece.id, button);
   }
 
   function render(message = '') {
     for (const piece of state.pieces) {
       const button = blocks.get(piece.id);
-      button.style.left = `${piece.x * 25}%`; button.style.top = `${piece.y * 20}%`;
-      button.style.width = `${piece.width * 25}%`; button.style.height = `${piece.height * 20}%`;
+      button.style.width = `${piece.width / BOARD_WIDTH * 100}%`;
+      button.style.height = `${piece.height / BOARD_HEIGHT * 100}%`;
+      // Percentages are relative to the block, so positions also follow board resizing.
+      button.style.transform = `translate3d(${piece.x / piece.width * 100}%, ${piece.y / piece.height * 100}%, 0)`;
       button.classList.toggle('is-selected', selected === piece.id);
       button.setAttribute('aria-pressed', String(selected === piece.id));
-      button.setAttribute('aria-label', `${piece.label}, ${piece.width} ${piece.width === 1 ? 'column' : 'columns'} wide and ${piece.height} ${piece.height === 1 ? 'row' : 'rows'} tall, at row ${piece.y + 1}, column ${piece.x + 1}. ${piece.id === 'target' ? 'Slide this square to the exit.' : 'Select to move.'}`);
+      button.setAttribute('aria-label', `${piece.id === 'target' ? 'Exit block' : piece.width === piece.height ? 'Small square' : piece.width > piece.height ? 'Horizontal block' : 'Vertical block'}, ${piece.width} ${piece.width === 1 ? 'column' : 'columns'} wide and ${piece.height} ${piece.height === 1 ? 'row' : 'rows'} tall, at row ${piece.y + 1}, column ${piece.x + 1}. ${piece.id === 'target' ? 'Slide this square to the exit.' : 'Select to move.'}`);
       button.disabled = state.won;
     }
     board.classList.toggle('is-solved', state.won);
     get('count').textContent = `${state.moves} ${state.moves === 1 ? 'move' : 'moves'}`;
-    const piece = state.pieces.find(item => item.id === selected);
-    get('selection').textContent = piece ? piece.label : 'Select a block';
-    for (const button of directions) {
-      const direction = button.dataset.klotskiDirection;
-      button.disabled = !selected || !canSlide(state, selected, direction);
-      button.setAttribute('aria-label', `Move ${piece ? piece.label.toLowerCase() : 'selected block'} ${direction}`);
-    }
     get('undo').disabled = !state.history.length;
     get('redo').disabled = !state.future.length;
     get('restart').disabled = false;
@@ -57,30 +52,47 @@ export function initializeKlotski(game) {
     if (!selected || state.won) return false;
     const next = slideKlotski(state, selected, direction, distance);
     if (!next) { render('That way is blocked. Slide into an empty space.'); return false; }
-    const active = document.activeElement;
     state = next; render();
     if (state.won) get('undo').focus({ preventScroll: true });
-    else if (directions.includes(active) && active.disabled) blocks.get(selected).focus({ preventScroll: true });
     return true;
   }
 
-  function clearDrag() {
-    if (!drag) return;
+  function releaseDrag() {
+    if (!drag) return null;
     const current = drag;
     drag = null;
     const button = blocks.get(current.id);
-    button.style.transform = ''; button.classList.remove('is-dragging');
+    // Commit the pointer's current position before enabling the settling transition.
+    // Keep its transform here: resetting it would make the block jump on release.
+    button.getBoundingClientRect();
+    button.classList.remove('is-dragging');
     if (button.hasPointerCapture?.(current.pointerId)) button.releasePointerCapture(current.pointerId);
+    return current;
+  }
+
+  function cancelDrag() {
+    if (releaseDrag()) render();
   }
 
   function dragOffset(event) {
     const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
-    const horizontal = Math.abs(dx) > Math.abs(dy);
-    const direction = horizontal ? dx < 0 ? 'left' : 'right' : dy < 0 ? 'up' : 'down';
-    const offset = horizontal ? dx : dy;
-    const cell = horizontal ? drag.cellX : drag.cellY;
-    const limit = maxSlide(state, drag.id, direction) * cell;
-    return { direction, offset: Math.sign(offset) * Math.min(Math.abs(offset), limit), horizontal, cell };
+    if (!drag.axis) {
+      if (Math.hypot(dx, dy) < 6) return null;
+      const horizontal = Math.abs(dx) > Math.abs(dy);
+      const xDirection = dx < 0 ? 'left' : 'right', yDirection = dy < 0 ? 'up' : 'down';
+      // Choose an available direction, then keep that axis steady through the gesture.
+      if (horizontal && drag.limits[xDirection]) drag.axis = 'horizontal';
+      else if (!horizontal && drag.limits[yDirection]) drag.axis = 'vertical';
+      else if (Math.abs(dy) >= 6 && drag.limits[yDirection]) drag.axis = 'vertical';
+      else if (Math.abs(dx) >= 6 && drag.limits[xDirection]) drag.axis = 'horizontal';
+      else return null;
+    }
+    const horizontal = drag.axis === 'horizontal', cell = horizontal ? drag.cellX : drag.cellY;
+    const raw = horizontal ? drag.startX - drag.baseX + dx : drag.startY - drag.baseY + dy;
+    const offset = Math.max(-drag.limits[horizontal ? 'left' : 'up'] * cell,
+      Math.min(raw, drag.limits[horizontal ? 'right' : 'down'] * cell));
+    return { direction: horizontal ? offset < 0 ? 'left' : 'right' : offset < 0 ? 'up' : 'down',
+      offset, cell, x: drag.baseX + (horizontal ? offset : 0), y: drag.baseY + (horizontal ? 0 : offset) };
   }
 
   board.addEventListener('click', event => {
@@ -93,39 +105,49 @@ export function initializeKlotski(game) {
   });
   board.addEventListener('pointerdown', event => {
     const button = event.target.closest('[data-klotski-block]');
-    if (!button || state.won || event.isPrimary === false || event.button !== 0) return;
-    clearDrag(); select(button.dataset.klotskiBlock);
-    drag = { id: selected, pointerId: event.pointerId, x: event.clientX, y: event.clientY, cellX: board.clientWidth / 4, cellY: board.clientHeight / 5 };
+    if (!button || state.won || drag || event.isPrimary === false || event.button !== 0) return;
+    const piece = state.pieces.find(item => item.id === button.dataset.klotskiBlock);
+    const bounds = button.getBoundingClientRect(), boardBounds = board.getBoundingClientRect();
+    const cellX = board.clientWidth / BOARD_WIDTH, cellY = board.clientHeight / BOARD_HEIGHT;
+    const baseX = piece.x * cellX, baseY = piece.y * cellY;
+    const startX = bounds.left - boardBounds.left - board.clientLeft;
+    const startY = bounds.top - boardBounds.top - board.clientTop;
+    select(piece.id);
+    drag = { id: piece.id, pointerId: event.pointerId, x: event.clientX, y: event.clientY,
+      cellX, cellY, baseX, baseY, startX, startY,
+      // Picking up a settling block preserves its visible position and movement axis.
+      axis: Math.abs(startX - baseX) > .5 ? 'horizontal' : Math.abs(startY - baseY) > .5 ? 'vertical' : null,
+      limits: Object.fromEntries(['left', 'right', 'up', 'down'].map(direction => [direction, maxSlide(state, piece.id, direction)])) };
+    button.classList.add('is-dragging');
+    button.style.transform = `translate3d(${startX}px, ${startY}px, 0)`;
     button.setPointerCapture?.(event.pointerId);
   });
   board.addEventListener('pointermove', event => {
     if (!drag || event.pointerId !== drag.pointerId) return;
     event.preventDefault();
-    const offset = dragOffset(event), button = blocks.get(drag.id);
-    button.classList.add('is-dragging');
-    button.style.transform = `translate(${offset.horizontal ? offset.offset : 0}px, ${offset.horizontal ? 0 : offset.offset}px)`;
+    const offset = dragOffset(event);
+    if (offset) blocks.get(drag.id).style.transform = `translate3d(${offset.x}px, ${offset.y}px, 0)`;
   });
   board.addEventListener('pointerup', event => {
     if (!drag || event.pointerId !== drag.pointerId) return;
-    const { direction, offset, cell } = dragOffset(event);
-    const distance = Math.min(maxSlide(state, drag.id, direction), Math.floor(Math.abs(offset) / cell + .65));
-    clearDrag();
-    if (distance) move(direction, distance);
+    const offset = dragOffset(event);
+    const distance = offset ? Math.round(Math.abs(offset.offset) / offset.cell) : 0;
+    releaseDrag();
+    if (!distance || !move(offset.direction, distance)) render();
   });
-  board.addEventListener('pointercancel', clearDrag);
-  board.addEventListener('lostpointercapture', clearDrag);
-  directions.forEach(button => button.addEventListener('click', () => { clearDrag(); move(button.dataset.klotskiDirection); }));
+  board.addEventListener('pointercancel', cancelDrag);
+  board.addEventListener('lostpointercapture', cancelDrag);
   game.addEventListener('keydown', event => {
     const direction = keyboardDirections[event.key];
     if (!direction || event.altKey || event.ctrlKey || event.metaKey) return;
     const block = event.target.closest('[data-klotski-block]');
-    if (!block && !event.target.closest('[data-klotski-direction]')) return;
-    event.preventDefault(); clearDrag();
+    if (!block) return;
+    event.preventDefault(); cancelDrag();
     if (block) selected = block.dataset.klotskiBlock;
     move(direction);
   });
   function undo() {
-    clearDrag();
+    releaseDrag();
     const previous = undoKlotski(state);
     if (previous) {
       const focused = document.activeElement === get('undo');
@@ -134,7 +156,7 @@ export function initializeKlotski(game) {
     }
   }
   function redo() {
-    clearDrag();
+    releaseDrag();
     const next = redoKlotski(state);
     if (!next) return;
     const focused = document.activeElement === get('redo');
@@ -144,7 +166,9 @@ export function initializeKlotski(game) {
   get('undo').addEventListener('click', undo);
   get('redo').addEventListener('click', redo);
   get('restart').addEventListener('click', () => {
-    clearDrag(); state = createKlotski(); selected = null; render();
+    releaseDrag(); board.classList.add('is-resetting');
+    state = createKlotski(); selected = null; render();
+    board.getBoundingClientRect(); board.classList.remove('is-resetting');
   });
   render();
 }
