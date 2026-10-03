@@ -4,7 +4,7 @@ introductory-calculus:
   level: Single-variable calculus
   description: From a curve's slope to the area beneath it. Explore limits, derivatives, and integrals through questions, pictures, and problems.
   image: /assets/images/introductory-calculus.svg
-  image_alt: A curve with a tangent line showing its slope and a shaded region showing accumulated area.
+  image_alt: Two circular scenes show a tangent and accumulated area, connected by curved arrows linking differentiation and integration.
   lesson_count: 5
   start_label: Start the derivatives module
   modules:

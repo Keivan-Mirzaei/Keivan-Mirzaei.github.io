@@ -1,29 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="350" viewBox="0 0 600 350" fill="none">
-  <defs>
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" stroke="#e8ece4" stroke-width="1"/></pattern>
-    <clipPath id="area"><path d="M319.156 158.584C377.48 169.42 445.8 173.2 520 78V280H319.156Z"/></clipPath>
-  </defs>
-  <rect x="54" y="42" width="490" height="238" fill="url(#grid)"/>
-  <path d="M319.156 158.584C377.48 169.42 445.8 173.2 520 78V280H319.156Z" fill="#dce7d7"/>
-  <g clip-path="url(#area)" stroke="#a9bea2" stroke-width="1">
-    <path d="M340 45V285M364 45V285M388 45V285M412 45V285M436 45V285M460 45V285M484 45V285M508 45V285"/>
-  </g>
-  <path d="M54 280H551M64 289V36" stroke="#929d8b" stroke-width="1.5" stroke-linecap="round"/>
-  <path d="m546 276 5 4-5 4M60 41l4-5 4 5" stroke="#929d8b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M80 260C150 242 180 148 250 148C320 148 414 214 520 78" stroke="#285b46" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M120 233.021 284 106.319" stroke="#b47d4b" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M176 189.756H220V155.764" stroke="#b47d4b" stroke-width="1.3" stroke-dasharray="4 5"/>
-  <path d="M201.88 169.762V280M319.156 158.584V280M520 78V280" stroke="#bcc8b4" stroke-width="1.2" stroke-dasharray="4 5"/>
-  <circle cx="201.88" cy="169.762" r="5" fill="#b47d4b" stroke="#fcfcf9" stroke-width="2"/>
-  <g font-family="Georgia, 'Times New Roman', serif" font-style="italic">
-    <text x="152" y="125" fill="#a76c3b" font-size="24">f′(a)</text>
-    <text x="507" y="60" fill="#285b46" font-size="24">f(x)</text>
-    <text x="397" y="232" fill="#285b46" font-size="38">∫</text>
-    <text x="198" y="302" fill="#687361" font-size="19">a</text>
-    <text x="551" y="302" fill="#687361" font-size="19">x</text>
-  </g>
-  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="10" letter-spacing="2">
-    <text x="102" y="332" fill="#a76c3b">CHANGE</text>
-    <text x="355" y="332" fill="#687361">ACCUMULATION</text>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="350" viewBox="0 0 600 350" role="img" aria-labelledby="bridge-title bridge-desc">
+  <style>
+    .diagram-grid { stroke: #e8ece4; stroke-width: 1; fill: none; }
+    .axis { stroke: #686e66; stroke-width: 1.5; fill: none; stroke-linecap: round; }
+    .curve { stroke: #285b46; stroke-width: 3.5; fill: none; stroke-linecap: round; }
+    .tangent { stroke: #ad7647; stroke-width: 2.5; fill: none; stroke-linecap: round; }
+    .math-label { fill: #285b46; font: italic 30px Georgia, 'Times New Roman', serif; }
+  </style>
+            <title id="bridge-title">The calculus bridge</title><desc id="bridge-desc">Two circular scenes show a tangent and an accumulated area, connected by curved arrows for differentiation and integration.</desc>
+            <defs><pattern id="bridge-grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" class="diagram-grid"/></pattern><clipPath id="bridge-left"><circle cx="159" cy="172" r="101"/></clipPath><clipPath id="bridge-right"><circle cx="441" cy="172" r="101"/></clipPath></defs>
+            <circle cx="159" cy="172" r="101" fill="#fcfcf9" stroke="#e0e4dc" stroke-width="1.5"/><circle cx="441" cy="172" r="101" fill="#fcfcf9" stroke="#e0e4dc" stroke-width="1.5"/>
+            <g clip-path="url(#bridge-left)"><rect class="diagram-grid" x="50" y="64" width="218" height="218" style="fill:url(#bridge-grid);stroke:none"/><path d="M70 234H246M82 247V97" class="axis"/><path d="M91 223Q145 216 228 112" class="curve"/><path d="M115 221.931 227 131.184" class="tangent"/><circle cx="152.25" cy="191.75" r="5" fill="#ad7647" stroke="#fcfcf9" stroke-width="2"/></g>
+            <g clip-path="url(#bridge-right)"><rect class="diagram-grid" x="330" y="64" width="218" height="218" style="fill:url(#bridge-grid);stroke:none"/><path d="M379 224Q440 230 511 119V235H379Z" fill="#dce7d7"/><path d="M350 235H530M365 247V97" class="axis"/><path d="M379 224Q440 230 511 119" class="curve"/></g>
+            <path d="M209 64C257 27 343 27 391 64M390 58l1 6-7 1M391 288C343 325 257 325 209 288M210 294l-1-6 7-1" class="tangent" stroke-linejoin="round"/>
+            <g class="diagram-label"><text x="121" y="315" class="math-label">f′(x)</text><text x="407" y="319" class="math-label">∫ f(x) dx</text></g>
+          </svg>
