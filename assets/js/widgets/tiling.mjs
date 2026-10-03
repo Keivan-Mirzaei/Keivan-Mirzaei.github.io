@@ -19,12 +19,18 @@ function describeShape(cells) {
   return `Squares at ${[...rows].map(([y, columns]) => `row ${y + 1}, ${columns.length === 1 ? 'column' : 'columns'} ${columns.join(' and ')}`).join('; ')}. The anchor is row ${cells[0][1] + 1}, column ${cells[0][0] + 1}.`;
 }
 
-function shapeMarkup(cells, color, { anchor = true, label = '' } = {}) {
+const tileEdges = [['top', 0, -1], ['right', 1, 0], ['bottom', 0, 1], ['left', -1, 0]];
+
+// Board squares, tray shapes and drag ghosts share the same full-square artwork.
+function shapeMarkup(cells, color, singleSquareEdges = null) {
   const width = Math.max(...cells.map(cell => cell[0])) + 1, height = Math.max(...cells.map(cell => cell[1])) + 1;
-  const squares = cells.map(([x, y]) => `<rect x="${x * 24 + 1}" y="${y * 24 + 1}" width="22" height="22" rx="2" fill="${color}"/>`).join('');
-  const [x, y] = cells[0];
-  const dot = anchor ? `<circle cx="${x * 24 + 12}" cy="${y * 24 + 12}" r="3" fill="#282e29" stroke="#fcfcf9" stroke-width="1.5"/>` : '';
-  return `<svg viewBox="0 0 ${width * 24} ${height * 24}" aria-hidden="true"${label ? ` data-tile-shape="${label}"` : ''}>${squares}${dot}</svg>`;
+  const occupied = new Set(cells.map(cell => key(...cell)));
+  const squares = cells.map(([x, y]) => {
+    const edges = singleSquareEdges || tileEdges.filter(([, dx, dy]) => !occupied.has(key(x + dx, y + dy))).map(([edge]) => edge);
+    const outline = { top: 'M.5 .5H23.5', right: 'M23.5 .5V23.5', bottom: 'M23.5 23.5H.5', left: 'M.5 23.5V.5' };
+    return `<g transform="translate(${x * 24} ${y * 24})"><rect class="tiling-tile-face" width="24" height="24" fill="${color}"/><path class="tiling-tile-light" d="M.5 23.5V.5H23.5"/><path class="tiling-tile-shade" d="M23.5 .5V23.5H.5"/><path class="tiling-tile-edge" d="${edges.map(edge => outline[edge]).join(' ')}" stroke="color-mix(in srgb, ${color} 70%, #285b46)"/></g>`;
+  }).join('');
+  return `<svg class="tiling-shape" viewBox="0 0 ${width * 24} ${height * 24}" width="${width * 24}" height="${height * 24}" style="--tile-columns:${width};--tile-rows:${height}" aria-hidden="true">${squares}</svg>`;
 }
 
 export function initializeTilingGame(root, storage = createPuzzleStorage('tiling', root), catalogue) {
@@ -65,8 +71,8 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
 
   function preview() {
     const board = get('board');
-    board.querySelectorAll('.is-preview, .is-preview-invalid, .is-preview-anchor').forEach(cell => {
-      cell.classList.remove('is-preview', 'is-preview-invalid', 'is-preview-anchor');
+    board.querySelectorAll('.is-preview, .is-preview-invalid').forEach(cell => {
+      cell.classList.remove('is-preview', 'is-preview-invalid');
       cell.style.removeProperty('--preview-color');
     });
     const position = currentPosition();
@@ -77,7 +83,6 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
       if (!cell) continue;
       cell.classList.add(result.valid ? 'is-preview' : 'is-preview-invalid');
       cell.style.setProperty('--preview-color', colorFor(selected));
-      if (anchor && x === anchor[0] && y === anchor[1]) cell.classList.add('is-preview-anchor');
     }
   }
 
@@ -106,15 +111,17 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
         continue;
       }
       const id = occupied.get(cellKey), isAnchor = pieceAnchors.has(cellKey);
-      const edges = id ? [['top', 0, -1], ['right', 1, 0], ['bottom', 0, 1], ['left', -1, 0]].filter(([, dx, dy]) => occupied.get(key(x + dx, y + dy)) !== id).map(([edge]) => ` edge-${edge}`).join('') : '';
+      const exposed = id ? tileEdges.filter(([, dx, dy]) => occupied.get(key(x + dx, y + dy)) !== id).map(([edge]) => edge) : [];
+      const edges = exposed.map(edge => ` edge-${edge}`).join('');
       const style = id ? ` style="--tile-color:${colorFor(id)}"` : '';
-      markup += `<button type="button" class="tiling-cell${id ? ` is-filled${edges}` : ''}${id === selected ? ' is-selected' : ''}" data-tiling-cell="${cellKey}"${id ? ` data-tiling-occupant="${id}"` : ''}${style} tabindex="${boardCursor[0] === x && boardCursor[1] === y ? '0' : '-1'}" aria-label="Row ${y + 1}, column ${x + 1}: ${id ? `tile ${labelFor(id)}${isAnchor ? ', anchor square' : ''}. Select tile ${labelFor(id)}; double tap to return it.` : 'empty floor. Place the selected tile here.'}">${isAnchor ? `<span>${labelFor(id)}</span><i class="tiling-anchor-dot" aria-hidden="true"></i>` : ''}</button>`;
+      markup += `<button type="button" class="tiling-cell${id ? ` is-filled${edges}` : ''}${id === selected ? ' is-selected' : ''}" data-tiling-cell="${cellKey}"${id ? ` data-tiling-occupant="${id}"` : ''}${style} tabindex="${boardCursor[0] === x && boardCursor[1] === y ? '0' : '-1'}" aria-label="Row ${y + 1}, column ${x + 1}: ${id ? `tile ${labelFor(id)}${isAnchor ? ', anchor square' : ''}. Select tile ${labelFor(id)}; double tap to return it.` : 'empty floor. Place the selected tile here.'}">${id ? shapeMarkup([[0, 0]], colorFor(id), exposed) : ''}</button>`;
     }
     board.innerHTML = markup;
+    get('tray').classList.toggle('has-few-types', level.types.length <= 3);
     get('tray').innerHTML = level.types.map(type => {
       const remaining = type.ids.filter(id => !placed[id]).length;
       const chosen = selected && labelFor(selected) === type.id;
-      return `<button class="tiling-piece${chosen ? ' is-selected' : ''}${remaining === 0 ? ' is-placed' : ''}" type="button" data-tiling-piece="${type.id}" aria-pressed="${Boolean(chosen)}" aria-label="Tile ${type.id}, ${type.count} needed, ${remaining} left. ${remaining ? 'Select a copy to place.' : 'All copies placed. Select a copy to move or return.'} ${describeShape(type.cells)}"><span class="tiling-piece-name">${type.id}<span class="tiling-quantity">×${type.count}</span></span>${shapeMarkup(type.cells, colorFor(type.ids[0]))}<span class="tiling-piece-state">${remaining ? `${remaining} left` : 'Placed ✓'}</span></button>`;
+      return `<button class="tiling-piece${chosen ? ' is-selected' : ''}${remaining === 0 ? ' is-placed' : ''}" type="button" data-tiling-piece="${type.id}" aria-pressed="${Boolean(chosen)}" aria-label="Tile ${type.id}, ${type.count} needed, ${remaining} left. ${remaining ? 'Select a copy to place.' : 'All copies placed. Select a copy to move or return.'} ${describeShape(type.cells)}">${shapeMarkup(type.cells, colorFor(type.ids[0]))}<span class="tiling-piece-state">${remaining ? `${remaining} left` : '<span aria-hidden="true">✓</span> All placed'}</span></button>`;
     }).join('');
     get('name').textContent = `Puzzle ${book.number} / ${book.total}${book.currentCompleted ? ' ✓' : ''}`;
     get('name').title = book.currentCompleted ? 'Solved puzzle. Choose a puzzle.' : 'Choose a puzzle';
