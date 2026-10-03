@@ -20,7 +20,8 @@
 .panel-help-content p { margin: 0 0 10px; }
 .panel-help-content p:last-child { margin-bottom: 0; }
 .panel-actions > .panel-help:first-child .panel-help-content { right: auto; left: 0; }
-.graph-widget { min-width: 0; }
+/* Keep activity popovers below the sticky site navigation. */
+.graph-widget { min-width: 0; isolation: isolate; }
 .graph-widget img { max-width: 100%; height: auto; }
 .graph-widget button:not(.three-cups-cup):not(.lo-light) { min-height: 44px; }
 .graph-widget input[type='range'] { min-height: 44px; }

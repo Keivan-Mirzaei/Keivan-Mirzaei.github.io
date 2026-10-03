@@ -177,10 +177,11 @@ main:focus { outline: none; }
 .prose blockquote p { margin: 8px 0; }
 .prose hr { border: 0; border-top: 1px solid var(--line); margin: 35px 0; }
 .prose img { display: block; margin: 25px auto; border-radius: 4px; }
-.prose details { border: 1px solid var(--line); border-radius: 5px; background: #f7f8f2; padding: 16px 22px; margin: 28px 0; }
-.prose summary { color: var(--green); font-size: 14px; font-weight: 600; }
-.prose details[open] summary { margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
-.prose details > :last-child { margin-bottom: 0; }
+/* Keep article disclosure spacing outside the help and settings controls. */
+.prose details:not(:where(.panel-help, .hex-game-settings)) { border: 1px solid var(--line); border-radius: 5px; background: #f7f8f2; padding: 16px 22px; margin: 28px 0; }
+.prose summary:not(:where(.panel-help > summary, .hex-game-settings > summary)) { color: var(--green); font-size: 14px; font-weight: 600; }
+.prose details[open]:not(:where(.panel-help, .hex-game-settings)) > summary { margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.prose details:not(:where(.panel-help, .hex-game-settings)) > :last-child { margin-bottom: 0; }
 .prose table { display: block; overflow-x: auto; border-collapse: collapse; font-size: 14px; }
 .prose th, .prose td { padding: 10px; border-bottom: 1px solid var(--line); text-align: left; }
 code { font-family: var(--mono); font-size: .82em; padding: 2px 5px; background: #edf0e8; border-radius: 3px; }
@@ -362,7 +363,7 @@ mark { color: var(--ink); background: #e1ebbd; border-radius: 2px; }
   .page-heading h1 { font-size: 39px; }
   .page-description { font-size: 15px; }
   .prose { font-size: 15px; }
-  .prose details { padding: 15px; }
+  .prose details:not(:where(.panel-help, .hex-game-settings)) { padding: 15px; }
   .post-pagination { gap: 15px; }
   .site-footer { flex-wrap: wrap; gap: 7px; padding: 24px 23px; }
   .search-field { gap: 7px; padding-left: 10px; }
