@@ -1,0 +1,4 @@
+<details class="panel-help">
+  <summary class="panel-button" aria-label="Help" title="Help">{% include icon.html name='help' %}<span>Help</span></summary>
+  <div class="panel-help-content">{{ include.text }}{% if include.remember %}{% include puzzles/remember.html %}{% endif %}</div>
+</details>

@@ -125,11 +125,16 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertNotIn("Derivatives: from rates to local linearity", learning)
             self.assertNotIn('aria-label="Browse post formats"', learning)
             course = page("introductory-calculus", "learning")
-            for heading in ("About the course", "Table of contents", "Prerequisites", "References"):
+            for heading in ("About the course", "Learning objectives", "Table of contents",
+                            "How the notes develop understanding", "Prerequisites",
+                            "University objectives behind the course", "References"):
                 self.assertIn(heading, course)
             self.assertIn('href="/notes/derivatives/"', course)
             self.assertIn("Available · 5 lessons", course)
-            self.assertEqual(course.count('class="course-module-status">Forthcoming'), 4)
+            self.assertEqual(course.count('class="course-module-status">Forthcoming'), 12)
+            self.assertIn('id="calculus-i-heading"', course)
+            self.assertIn('id="calculus-ii-heading"', course)
+            self.assertIn('<ol class="course-module-list" start="7">', course)
             self.assertIn('href="/learning/introductory-calculus/"', page("derivatives"))
             sidebar = learning.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
             self.assertNotIn('<details', sidebar)

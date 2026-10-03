@@ -1,0 +1,50 @@
+/* Cevian diagrams share an interior point, so the pictures follow the proof. */
+.cevian-widget { --cv-gold: #bc8e46; --cv-blue: #879da7; --cv-rose: #bd8e82; }
+.cevian-widget .cv-diagram { display: block; width: 100%; height: auto; margin: 14px 0; }
+.cv-boundary { fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linejoin: round; }
+.cv-inner { fill: #91b6a0; fill-opacity: .38; stroke: var(--green); stroke-width: 2.2; stroke-linejoin: round; }
+.cv-outline-only { fill: none; }
+.cv-cevian { stroke: #64766a; stroke-width: 1; opacity: .7; }
+.cv-reference { fill: none; stroke: #74856b; stroke-width: 1.3; stroke-dasharray: 6 5; }
+.cv-point { fill: var(--green); stroke: var(--paper); stroke-width: 2; }
+.cv-point:focus-visible { outline: none; stroke: #bc8e46; stroke-width: 4; }
+.cv-contact { fill: var(--green); stroke: var(--paper); stroke-width: 1; }
+.cv-label { fill: var(--ink); font: 15px var(--sans); paint-order: stroke; stroke: #f7f8f3; stroke-width: 3px; stroke-linejoin: round; }
+.cv-small { font-size: 12px; stroke-width: 2px; }
+.cv-corner { stroke: none; fill-opacity: .5; }
+.cv-corner-a { fill: var(--cv-gold); }
+.cv-corner-b { fill: var(--cv-blue); }
+.cv-corner-c { fill: var(--cv-rose); }
+.cv-sum-bar { fill: var(--green); }
+.cv-root-bar { fill: var(--cv-gold); }
+.cv-peak { stroke: #f5f5f0; stroke-width: 2; }
+[data-cv-map-maximum]:focus-visible .cv-peak { stroke-width: 4; }
+.cv-outer-edge { stroke: #859082; stroke-width: 1.3; fill: none; }
+.cv-outer-back { stroke-dasharray: 5 4; opacity: .55; }
+.cv-inner-edge { stroke: var(--green); stroke-width: 1.8; }
+.cv-tetra-face { fill: var(--green); fill-opacity: .13; stroke: none; }
+.cv-movable { touch-action: pan-y; cursor: crosshair; }
+.cv-point[data-cv-point] { cursor: grab; }
+.cv-orbit { touch-action: pan-y; cursor: grab; }
+.cevian-widget .cv-caption { font: 13px/1.65 var(--sans); color: var(--muted); margin: 14px 0; }
+.cv-control-row { display: flex; gap: 12px 18px; flex-wrap: wrap; align-items: center; }
+.cevian-widget button, .cv-shape-control select { min-height: 44px; }
+.cv-position-controls, .cv-mass-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; margin: 20px 0; }
+.cv-position-controls label, .cv-mass-controls label, .cv-rotation-control, .cv-shape-control { font: 13px/1.6 var(--sans); min-width: 0; }
+.cevian-widget input[type="range"] { display: block; width: 100%; margin: 5px 0 0; min-height: 36px; accent-color: var(--green); }
+.cv-mass-controls output { float: right; color: var(--green); font-variant-numeric: tabular-nums; }
+.cv-shape-control select { display: inline-block; width: auto; margin-left: 10px; padding: 8px 28px 8px 10px; border: 1px solid var(--line); border-radius: 3px; color: var(--ink); background: var(--paper); font-size: 13px; }
+.cevian-widget .cv-status, .cevian-widget .cv-numeric { font: 13px/1.7 var(--sans); color: var(--green); margin: 16px 0 0; }
+.cv-status { min-height: 3em; }
+.cv-area-legend { display: flex; flex-wrap: wrap; gap: 10px 20px; font: 13px/1.6 var(--sans); margin-top: 14px; }
+.cv-area-legend > span { display: inline-flex; gap: 7px; align-items: center; }
+.cv-area-legend strong { font-weight: 500; font-variant-numeric: tabular-nums; }
+.cv-swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; }
+.cv-swatch-a { background: var(--cv-gold); }
+.cv-swatch-b { background: var(--cv-blue); }
+.cv-swatch-c { background: var(--cv-rose); }
+.cv-map-legend { display: flex; align-items: center; justify-content: center; gap: 10px; font: 12px var(--sans); color: var(--muted); margin: 12px 0; }
+.cv-map-legend i { width: 110px; height: 10px; border-radius: 2px; background: linear-gradient(90deg, hsl(149 27% 95%), hsl(149 27% 33%)); }
+
+
+@media (max-width: 560px) { .cv-position-controls, .cv-mass-controls { grid-template-columns: 1fr; } }

@@ -1,4 +1,4 @@
-import { LEVELS, buildLevel, normalizeShape, key } from './tiling.mjs?v=20261002-5';
+import { LEVELS, buildLevel, normalizeShape, key } from './tiling.mjs';
 
 export const DIFFICULTIES = Object.freeze([
   { name: 'Easy', width: 4, height: 4, holes: 3, sizes: [3, 3, 3, 4] },

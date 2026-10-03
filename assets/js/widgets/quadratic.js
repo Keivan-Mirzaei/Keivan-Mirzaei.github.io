@@ -1,3 +1,4 @@
+import { bindInputHistory } from '../lib/panel-history.mjs';
 /* A reusable, dependency-free lesson widget. Each instance owns its controls. */
 (() => {
   const left = 44;
@@ -48,7 +49,7 @@
       input.addEventListener('input', update);
     }
     reset.disabled = false;
-    reset.addEventListener('click', () => {
+    bindInputHistory(widget, controls, update, () => {
       for (const input of controls) input.value = input.defaultValue;
       update();
     });

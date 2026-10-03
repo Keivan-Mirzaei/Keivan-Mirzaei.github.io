@@ -1,0 +1,95 @@
+.glo-game {
+  --glo-paper: #fcfcf9; --glo-ink: #282e29; --glo-muted: #686e66;
+  --glo-line: #dfe4d9; --glo-on: #e9bd63; --glo-on-ink: #403116;
+  --glo-edge: #b6bfae; --glo-accent: #285b46; --glo-soft: #eaf0e6;
+  width: 100%; margin: 0 auto; color: var(--glo-ink); font: 13px/1.6 var(--sans);
+}
+.glo-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.glo-eyebrow { margin: 0 0 3px; color: var(--glo-muted); font: 10px/1.6 var(--mono); letter-spacing: 1px; text-transform: uppercase; }
+.glo-heading h1 { margin: 0; font: 40px/1.15 var(--serif); letter-spacing: -1.2px; }
+.glo-rule { margin: 10px 0 24px; color: var(--glo-muted); font-size: 12px; }
+.glo-difficulty { margin-bottom: 20px; }
+.glo-difficulty-heading { display: flex; align-items: baseline; justify-content: space-between; }
+.glo-difficulty-heading label { font-size: 12px; }
+.glo-difficulty-heading output { color: var(--glo-accent); font: 12px var(--mono); }
+.glo-difficulty input, .glo-picker input[type='range'] { width: 100%; min-height: 44px; margin: 0; accent-color: var(--glo-accent); cursor: pointer; }
+.glo-level-labels { display: flex; justify-content: space-between; margin-top: -8px; color: var(--glo-muted); font-size: 11px; }
+.glo-level-labels .is-active { color: var(--glo-accent); font-weight: 600; }
+.glo-level-detail { margin: 7px 0 0; color: var(--glo-muted); font-size: 11px; }
+.glo-book-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--glo-line); }
+.glo-picker { position: relative; z-index: 4; min-width: 0; }
+.glo-puzzle-name { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; min-height: 44px; font: 24px/1.2 var(--serif); letter-spacing: -.5px; cursor: pointer; list-style: none; }
+.glo-puzzle-name::-webkit-details-marker, .glo-icon-button::-webkit-details-marker { display: none; }
+.glo-puzzle-name::marker, .glo-icon-button::marker { content: ''; }
+.glo-puzzle-total { color: var(--glo-muted); font: 12px var(--mono); letter-spacing: 0; }
+.glo-caret { margin-left: 3px; color: var(--glo-muted); font: 16px var(--sans); }
+.glo-solved-mark { color: var(--glo-accent); font: 14px var(--sans); }
+.glo-navigation { display: flex; gap: 6px; flex-shrink: 0; }
+.glo-navigation .glo-button { border-color: transparent; font-size: 20px; }
+.glo-meta, .glo-under-board { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; color: var(--glo-muted); font-size: 11px; }
+.glo-meta { padding-bottom: 4px; }
+.glo-meta > span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.glo-meta-divider { padding-inline: 3px; }
+.glo-board { position: relative; width: 100%; max-width: 360px; aspect-ratio: 1; margin: 8px auto; isolation: isolate; }
+.glo-board > img { width: 100%; height: auto; }
+.glo-edges { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.glo-edges path { stroke: var(--glo-edge); stroke-width: 1.3; vector-effect: non-scaling-stroke; fill: none; stroke-linecap: round; transition: stroke 150ms ease; }
+.glo-edges path.is-preview { stroke: var(--glo-accent); stroke-width: 1.8; }
+.puzzle-page .glo-light { position: absolute; display: grid; place-items: center; width: 44px; height: 44px; margin: 0; padding: 0; transform: translate(-50%, -50%); background: transparent; border: 0; border-radius: 50%; color: var(--glo-ink); opacity: 1; touch-action: manipulation; }
+.glo-light-core { display: grid; place-items: center; width: 34px; height: 34px; border: 1.5px solid var(--glo-edge); border-radius: 50%; background: var(--glo-paper); color: var(--glo-muted); font: 12px/1 var(--mono); transition: background 160ms ease, box-shadow 160ms ease, border-color 160ms ease; }
+.glo-light.is-on .glo-light-core { background: var(--glo-on); border-color: #d8af60; color: var(--glo-on-ink); box-shadow: 0 0 0 5px #e9bd631c; }
+.glo-light.is-preview .glo-light-core { box-shadow: 0 0 0 5px #285b4620; border-color: var(--glo-accent); }
+.glo-light.is-hint::after { position: absolute; inset: -2px; border: 1.5px dashed var(--glo-accent); border-radius: inherit; content: ''; pointer-events: none; }
+.glo-hint-label { display: none; position: absolute; top: calc(100% + 2px); padding: 0 4px; background: var(--glo-paper); color: var(--glo-accent); font-size: 11px; }
+.glo-light.is-hint .glo-hint-label { display: block; }
+.glo-game[data-numbers='false'] .glo-light-number { visibility: hidden; }
+.glo-legend, .glo-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.glo-legend { gap: 16px; }
+.glo-key { display: inline-block; width: 10px; height: 10px; border: 1px solid var(--glo-edge); border-radius: 50%; background: var(--glo-paper); }
+.glo-key.is-on { border-color: #d8af60; background: var(--glo-on); }
+.glo-preview { min-height: 1.6em; margin: 6px 0 0; text-align: center; color: var(--glo-muted); font: 11px/1.6 var(--mono); }
+.glo-status { min-height: 3.2em; margin: 5px 0 10px; color: var(--glo-accent); font-size: 12px; text-align: center; }
+.glo-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.glo-button, .puzzle-page .glo-button { display: inline-flex; justify-content: center; align-items: center; gap: 7px; min-width: 44px; min-height: 44px; padding: 10px; border: 1px solid var(--glo-line); border-radius: 8px; background: var(--glo-paper); color: var(--glo-ink); font: 12px/1.4 var(--sans); cursor: pointer; text-decoration: none; touch-action: manipulation; }
+.glo-button .icon { width: 17px; height: 17px; flex: 0 0 17px; }
+.glo-button:not(:disabled):hover { background: var(--glo-soft); }
+.glo-actions .glo-button { flex-direction: column; gap: 5px; min-height: 57px; padding: 8px 5px; font-size: 11px; }
+.glo-hint-icon, .glo-confirm-icon { line-height: 0; }
+.glo-confirm-icon, .glo-actions .is-confirming .glo-hint-icon { display: none; }
+.glo-actions .is-confirming .glo-confirm-icon { display: inline; }
+.glo-actions .is-confirming { border-color: var(--glo-accent); background: var(--glo-soft); }
+.glo-next-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 8px; margin-top: 8px; }
+.glo-next-actions .glo-primary { justify-content: space-between; padding-inline: 16px; border-color: var(--glo-accent); background: var(--glo-accent); color: var(--glo-paper); }
+.glo-next-actions .glo-primary:hover { background: #214d3b; }
+.glo-completed { margin: 12px 0 0; text-align: center; color: var(--glo-muted); font: 11px/1.6 var(--mono); font-variant-numeric: tabular-nums; }
+.glo-icon-button { width: 44px; padding: 0; list-style: none; }
+.glo-help { position: relative; z-index: 5; flex: 0 0 44px; }
+.glo-popover { position: absolute; top: calc(100% + 8px); width: min(320px, calc(100vw - 44px)); max-height: calc(100dvh - 140px); overflow-y: auto; padding: 20px; border: 1px solid var(--glo-line); border-radius: 12px; background: var(--glo-paper); box-shadow: 0 8px 24px #282e2915; }
+.glo-help .glo-popover { right: 0; }
+.glo-picker .glo-popover { left: 0; }
+.glo-popover h2 { margin: 0 0 16px; font: 500 17px/1.4 var(--sans); }
+.glo-popover p { margin: 12px 0; color: var(--glo-muted); font-size: 12px; }
+.glo-popover > label { font-size: 12px; }
+.glo-preference, .glo-popover .puzzle-remember { display: flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 8px; }
+.glo-popover input[type='checkbox'] { accent-color: var(--glo-accent); }
+.glo-popover a { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; color: var(--glo-accent); font-size: 12px; }
+.glo-popover a .icon { width: 14px; height: 14px; }
+.glo-number-entry { display: flex; gap: 8px; margin: 8px 0; }
+.glo-number-entry input { width: 100%; min-width: 0; min-height: 44px; padding: 8px 10px; border: 1px solid var(--glo-line); border-radius: 6px; background: var(--glo-paper); color: var(--glo-ink); font-size: 16px; }
+.glo-number-entry button { flex-shrink: 0; }
+.glo-game[data-solved='true'] .glo-board { opacity: .75; }
+@media (max-width: 380px) {
+  .glo-heading h1 { font-size: 36px; }
+  .glo-rule { margin-bottom: 18px; }
+  .glo-light-core { width: 30px; height: 30px; }
+  .glo-actions, .glo-next-actions { gap: 6px; }
+  .glo-puzzle-name { font-size: 22px; }
+  .glo-meta { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .glo-light-core, .glo-edges path { transition: none; } }
+@media (forced-colors: active) {
+  .glo-light.is-on .glo-light-core, .glo-key.is-on { background: Highlight; color: HighlightText; border-color: Highlight; }
+  .glo-light-core, .glo-key { background: Canvas; color: CanvasText; border-color: CanvasText; }
+  .glo-edges path { stroke: CanvasText; }
+  .glo-light.is-preview .glo-light-core, .glo-light.is-hint::after { border-color: Highlight; }
+}

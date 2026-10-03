@@ -1,4 +1,4 @@
-import { CLASSIC_LAYOUT, createKlotski, validPieces } from './klotski.mjs?v=20261002-4';
+import { CLASSIC_LAYOUT, createKlotski, validPieces } from './klotski.mjs';
 
 const positions = pieces => CLASSIC_LAYOUT.flatMap(({ id }) => {
   const piece = pieces.find(value => value.id === id);

@@ -1,0 +1,17 @@
+{% if page.widgets.size > 0 %}
+<link rel="stylesheet" href="{{ '/assets/css/controls.css' | relative_url }}">
+{% assign loaded_styles = '' | split: ',' %}
+{% if page.layout == 'puzzle' or page.section == 'puzzles' %}{% assign loaded_styles = 'puzzles' | split: ',' %}{% endif %}
+{% assign widget_names = page.widgets | uniq %}
+{% for name in widget_names %}
+  {% assign widget = site.data.widgets[name] %}
+  {% for style in widget.styles %}
+    {% unless loaded_styles contains style %}{% unless page.layout == 'puzzle' and style == 'activities' %}
+    <link rel="stylesheet" href="{{ '/assets/css/' | append: style | append: '.css' | relative_url }}">
+    {% assign loaded_styles = loaded_styles | push: style %}
+    {% endunless %}{% endunless %}
+  {% endfor %}
+  {% if widget.script %}<script type="application/json" data-widget-src="{{ widget.script | relative_url }}" data-widget-selector="{{ widget.selector | escape }}"></script>{% endif %}
+{% endfor %}
+<script type="module" src="{{ '/assets/js/widgets.js' | relative_url }}"></script>
+{% endif %}

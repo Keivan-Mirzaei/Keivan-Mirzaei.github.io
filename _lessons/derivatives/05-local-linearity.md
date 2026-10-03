@@ -12,6 +12,8 @@ widgets: [differentiability]
 
 **Guiding question.** Must a function be smooth throughout a neighborhood to have a derivative at its center?
 
+**Core goal.** Understand the tangent line as a local approximation, using the parabola and absolute-value examples below. The later oscillatory and rational/irrational examples and their problems are optional proof extensions.
+
 ## The exact meaning of a tangent approximation
 
 A function is differentiable at $$a$$ with derivative $$L$$ if and only if
@@ -45,6 +47,8 @@ Both axes are magnified equally. Differentiability implies that these graphs app
 **Try.** First choose the parabola at $$a=1$$ and use candidate slope $$2$$. Zoom in. Then choose the absolute value at zero and try several slopes. Compare the normalized error bounds. Finally explore the oscillating and rational/irrational examples below. The inequalities, rather than the finite drawing, justify each conclusion.
 
 ## Oscillation need not prevent a derivative
+
+**Optional enrichment begins here.** The remaining examples and proof problems explore differentiability beyond the core requirements of introductory calculus.
 
 Define
 

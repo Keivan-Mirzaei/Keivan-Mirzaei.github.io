@@ -1,8 +1,9 @@
-import { RED, BLUE, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs?v=20261002-5';
-import { searchBudget } from '../lib/hex-search-settings.mjs?v=20261002-5';
-import { createPuzzleStorage } from '../lib/puzzle-storage.mjs?v=20261002-1';
-import { restoreHex } from '../lib/hex-storage.mjs?v=20261002-1';
-import { setActionLabel } from '../lib/puzzle-controls.mjs?v=20261002-4';
+import { bindPanelHistory } from '../lib/panel-history.mjs';
+import { RED, BLUE, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs';
+import { searchBudget } from '../lib/hex-search-settings.mjs';
+import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
+import { restoreHex } from '../lib/hex-storage.mjs';
+import { setActionLabel } from '../lib/puzzle-controls.mjs';
 
 const name = color => color === RED ? 'Red' : 'Blue';
 const goal = color => color === RED ? 'top to bottom' : 'left to right';
@@ -154,7 +155,7 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
     busy = true; render();
     const token = generation;
     try {
-      worker = new Worker(new URL('../lib/hex-worker.mjs?v=20261002-5', import.meta.url), { type: 'module' });
+      worker = new Worker(new URL('../lib/hex-worker.mjs', import.meta.url), { type: 'module' });
       worker.onmessage = ({ data }) => finish(data.move, token);
       worker.onerror = event => { event.preventDefault(); if (token !== generation) return; worker?.terminate(); worker = null; fallback(token); };
       worker.postMessage({ cells, size, color: 3 - human });
@@ -258,15 +259,21 @@ if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-proof]
       : step === 0 ? 'Start at the top-left corner, with the red top shore on one side and the blue left shore on the other.'
       : 'Keep walking between Red and Blue. At this vertex, exactly one onward edge separates the colours.';
   }
+  const history = bindPanelHistory(widget, {
+    read: () => ({ cells, step }),
+    restore: state => { ({ cells, step } = state); coast = coastline(cells, 5); render(); },
+    reset: () => { cells = PROOF_EXAMPLE.slice(); coast = coastline(cells, 5); step = 0; render(); }
+  });
   get('board').addEventListener('click', event => {
     const button = event.target.closest('[data-hex-cell]');
     if (!button) return;
+    history.remember();
     const i = Number(button.dataset.hexCell); cells[i] = 3 - cells[i]; coast = coastline(cells, 5); step = 0; render();
   });
-  get('step').addEventListener('click', () => { step = Math.min(step + 1, coast.tour.length); render(); });
-  get('finish').addEventListener('click', () => { step = coast.tour.length; render(); });
-  get('reset').addEventListener('click', () => { step = 0; render(); });
-  get('new').addEventListener('click', () => { cells = cells.map(() => Math.random() < .5 ? RED : BLUE); coast = coastline(cells, 5); step = 0; render(); });
-  widget.querySelectorAll('button').forEach(button => { button.disabled = false; });
+  get('step').addEventListener('click', () => { history.remember(); step = Math.min(step + 1, coast.tour.length); render(); });
+  get('finish').addEventListener('click', () => { history.remember(); step = coast.tour.length; render(); });
+  get('reset').addEventListener('click', () => { history.remember(); step = 0; render(); });
+  get('new').addEventListener('click', () => { history.remember(); cells = cells.map(() => Math.random() < .5 ? RED : BLUE); coast = coastline(cells, 5); step = 0; render(); });
+  widget.querySelectorAll('button').forEach(button => { button.disabled = button.hasAttribute('data-panel-undo'); });
   render();
 });

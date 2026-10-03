@@ -12,7 +12,7 @@ layout: default
     {% assign course = entry[1] %}
     {% assign available_modules = course.modules | where_exp: 'module', 'module.url != nil' %}
     <a class="learning-card" href="{{ course.url | relative_url }}">
-      <div class="learning-card-art"><img src="{{ course.image | relative_url }}?v={{ site.time | date: '%s' }}" alt="{{ course.image_alt | escape }}" width="600" height="350"></div>
+      <div class="learning-card-art"><img src="{{ course.image | relative_url }}" alt="{{ course.image_alt | escape }}" width="600" height="350"></div>
       <div class="learning-card-copy">
         <span class="learning-card-meta">{{ course.level }} · Self-paced</span>
         <h2>{{ course.title }} <span aria-hidden="true">↗</span></h2>

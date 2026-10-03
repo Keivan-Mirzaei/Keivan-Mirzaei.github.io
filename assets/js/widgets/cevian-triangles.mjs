@@ -1,5 +1,6 @@
+import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
 import { TRIANGLE_SHAPES, normalizeWeights, triangleData, positionWeights, barycentricPoint, simplexRatio } from '../lib/cevian-math.mjs';
-import { triangleDiagram, factorsDiagram, landscapeDiagram, landscapeMarker, tetrahedronDiagram } from '../lib/cevian-diagrams.mjs?v=20261001-2';
+import { triangleDiagram, factorsDiagram, landscapeDiagram, landscapeMarker, tetrahedronDiagram } from '../lib/cevian-diagrams.mjs';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 const percentage = value => `${(value * 100).toFixed(2)}%`;
@@ -86,6 +87,13 @@ if (explorer) {
     weights = positionWeights(clamp(t, .04, .94), clamp(q, .04, .96));
   }
 
+  const history = bindPanelHistory(explorer, {
+    read: () => ({ weights, shape }),
+    restore: state => { cancelMotion(); ({ weights, shape } = state); shapeControl.value = shape; draw(); },
+    reset: () => { cancelMotion(); weights = [.5, .1875, .3125]; shape = 'scalene'; shapeControl.value = shape; draw(); }
+  });
+  trackControlEdits([height, across, shapeControl], history);
+
   function pointerWeights(event, holder) {
     const svg = holder.querySelector('svg');
     const rect = svg.getBoundingClientRect();
@@ -98,6 +106,7 @@ if (explorer) {
 
   for (const holder of [main, map]) {
     holder.addEventListener('pointerdown', event => {
+      history.remember();
       if (event.button !== 0) return;
       if (holder === map && event.target.closest('[data-cv-map-maximum]')) {
         cancelMotion(); weights = [1/3,1/3,1/3]; draw(); return;
@@ -130,12 +139,12 @@ if (explorer) {
 
   map.addEventListener('keydown', event => {
     if (!event.target.closest('[data-cv-map-maximum]') || !['Enter',' '].includes(event.key)) return;
-    event.preventDefault(); cancelMotion(); weights = [1/3,1/3,1/3]; draw();
+    event.preventDefault(); history.remember(); cancelMotion(); weights = [1/3,1/3,1/3]; draw();
   });
 
   main.addEventListener('keydown', event => {
     if (!event.target.hasAttribute('data-cv-point') || !['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) return;
-    event.preventDefault(); cancelMotion();
+    event.preventDefault(); history.remember(); cancelMotion();
     const step = event.shiftKey ? .05 : .01;
     const t = weights[0], q = weights[2] / (1 - t);
     setPosition(t + (event.key === 'ArrowUp' ? step : event.key === 'ArrowDown' ? -step : 0), q + (event.key === 'ArrowRight' ? step : event.key === 'ArrowLeft' ? -step : 0));
@@ -150,7 +159,7 @@ if (explorer) {
   centerButtons.forEach(button => {
     button.disabled = false;
     button.addEventListener('click', () => {
-      cancelMotion();
+      history.remember(); cancelMotion();
       if (reducedMotion.matches) { weights = [1/3, 1/3, 1/3]; draw(); return; }
       const start = weights.slice();
       let startTime;
@@ -207,7 +216,14 @@ if (simplex) {
   });
   rotation.disabled = center.disabled = false;
   rotation.addEventListener('input', () => { angle = Number(rotation.value); redraw(); });
+  const history = bindPanelHistory(simplex, {
+    read: () => ({ weights, angle }),
+    restore: state => { cancelMotion(); ({ weights, angle } = state); draw(); },
+    reset: () => { cancelMotion(); weights = [42, 27, 19, 12]; angle = 32; draw(); }
+  });
+  trackControlEdits([...controls, rotation], history);
   holder.addEventListener('pointerdown', event => {
+    history.remember();
     if (event.button !== 0) return;
     drag = { x: event.clientX, angle };
     holder.setPointerCapture(event.pointerId);
@@ -224,7 +240,7 @@ if (simplex) {
   holder.addEventListener('pointerup', finish);
   holder.addEventListener('pointercancel', finish);
   center.addEventListener('click', () => {
-    cancelMotion();
+    history.remember(); cancelMotion();
     if (reducedMotion.matches) { weights = [25,25,25,25]; draw(); return; }
     const start = weights.slice();
     let startTime;

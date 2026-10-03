@@ -70,7 +70,7 @@ Use `format: exploration`. The body can be as short or as long as you like; ther
 - Use the reusable video and graph components below wherever they help.
 
 ```liquid
-[My CV]({{ '/cv/' | relative_url }})
+[My LinkedIn profile]({{ site.linkedin_url }})
 ![Describe what the diagram shows]({{ '/Figures/1001.png' | relative_url }})
 ```
 
@@ -118,6 +118,8 @@ Embedded players load lazily and contact their host when loaded. No video player
 ## Learning courses
 
 Course cards on `/learning/` come from `_data/courses.yml`. Each course has an illustration, description, module roadmap, prerequisites, and references. Its overview page lives in `learning/` and uses `layout: course` with the matching `course_id`.
+
+The Introductory Calculus course follows the design in [Introductory calculus course plan](introductory-calculus-plan.md). The course data stores sequence-wide outcomes, ordered `parts`, each module's `part` and measurable `outcome`, the study approach, and university sources. Use that plan to align lesson explanations, exercises, and checkpoints with the intended Calculus I–II level.
 
 Add a module's `url` and `module_id` to the course roadmap when it is ready; entries without a URL appear as forthcoming and have no link. Update the course's `lesson_count` as lessons are published. Set `course_id` on the module's front matter to group it under the course card. Modules without a course continue to appear separately in the learning index.
 
@@ -172,7 +174,7 @@ The graph uses a small local script and SVG; there is no graphing service or plo
 
 1. Put reusable markup in `_includes/widgets/`.
 2. Put a script in `assets/js/widgets/` that initializes only that widget's elements.
-3. Register the name and script path in `_data/widgets.yml`.
+3. Register its name, script, panel selector, and required styles in `_data/widgets.yml`. See [the directory guide](site-map.md#how-shared-activities-fit-together) for the shared loader and controls.
 4. List that widget name in the lesson's `widgets` field, then include its markup.
 
 Each script is loaded only on pages that request it. Keep instances independent, provide keyboard controls, and give the visualization a text alternative. New interactive behavior needs a component; ordinary lessons just reuse existing components.
@@ -261,17 +263,18 @@ These options are not used by the deployment workflow. Drafts are still readable
 - `_data/formats.yml`: post-format and learning-module names, descriptions, and destinations.
 - `_layouts/`, `_includes/`: shared presentation.
 - `assets/css/site.css`: grouped styles, with colors and dimensions at the top.
-- `cv.md`, `about.md`: standalone pages. Add new Markdown pages with a title, permalink, and `search: true` if they should be searchable.
+- `about.md`: biography and LinkedIn profile link. Add new Markdown pages with a title, permalink, and `search: true` if they should be searchable.
 - `search.json`: generated full-text index of posts, modules, lessons, research, and opted-in pages.
 
 Search ranks title matches before topic and body matches. It stays in the browser and loads its index only after a query is entered. Format lists show all matching posts; the combined post archive has numbered pagination. Learning modules are listed separately in title order. The old subject pages remain available for existing links.
 
-The CV's preprint list comes from research entries with `kind: Paper`. Update education, awards, experience, and the `updated` date in `cv.md`. The download uses `assets/cv/keivan-mirzaei-cv.pdf`, compiled from the CV source in `/Users/keivan/CV/CV.tex`. When updating the document, replace that PDF and update the date in the download label. The current document includes both 2026 awards and the Fall 2026 teaching roles.
+Professional experience is linked to LinkedIn. Update `linkedin_url` in `_config.yml` to change the shared profile link. The former CV addresses redirect to that profile; the website no longer hosts a CV or downloadable CV PDF.
 
 Run the checks before publishing:
 
 ```sh
 bundle exec jekyll build --strict_front_matter
+python3 scripts/optimize_build.py
 python3 scripts/check_site.py
 python3 -m unittest discover -s tests
 ```
@@ -282,4 +285,4 @@ The workflow tests create temporary content, check all formats, confirm solution
 
 The five retained old articles use April 1, 2024—the first archive commit date—for ordering. Their pages say “From the 2024 archive”; this is not a claim about their original publication day. All five are problems. Original source files remain in Git history. The unfinished probability article remains a draft exploration.
 
-The CV was refreshed from the supplied 2026 document and award announcements. Mathematical typesetting details were repaired in the Hilbert and factorial proofs. The remaining figures, the custom domain, and redirects from `/pages/math.html`, `/pages/code.html`, and `/pages/CV.html` are preserved.
+Mathematical typesetting details were repaired in the Hilbert and factorial proofs. The remaining figures, the custom domain, and redirects from `/pages/math.html`, `/pages/code.html`, and `/pages/CV.html` are preserved.

@@ -1,0 +1,53 @@
+<section class="glo-game" data-graph-lights-out data-look="paper" data-numbers="true" aria-label="Lights Out graph game">
+  <header class="glo-heading">
+    <div><p class="glo-eyebrow">Follow the connections</p><h1>Lights Out</h1></div>
+    <details class="glo-help" data-glo-help>
+      <summary class="glo-button glo-icon-button" aria-label="How to play">{% include icon.html name='help' %}</summary>
+      <div class="glo-popover">
+        <h2>One light, many changes</h2>
+        <p>Turn every light off. Pressing a light flips that light and every light joined directly to it. Filled amber lights are on; hollow lights are off.</p>
+        <p>Hover or focus to preview a move. Use the arrow keys to move between lights, then Enter or Space to press.</p>
+        <p>Hint marks one useful light. Press that light, or choose Use hint to make the move.</p>
+        <p>Each level has 1,000 numbered puzzles. Next puzzle and Shuffle skip solved puzzles. Choose a puzzle number to revisit any puzzle.</p>
+        <p>Lines that cross make no extra connections. Every puzzle has a solution.</p>
+        <label class="glo-preference"><input type="checkbox" data-glo-numbers checked disabled> Show light numbers</label>
+        {% include puzzles/remember.html %}
+        <a href="{{ '/notes/lights-out/' | relative_url }}">Explore the mathematics {% include icon.html name='arrow' %}</a>
+      </div>
+    </details>
+  </header>
+  <p class="glo-rule">One press flips a light and its neighbors. Turn them all off.</p>
+  <div class="glo-difficulty">
+    <div class="glo-difficulty-heading"><label for="glo-difficulty">Difficulty</label><output for="glo-difficulty" data-glo-difficulty-label>Easy</output></div>
+    <input id="glo-difficulty" type="range" min="1" max="4" step="1" value="1" data-glo-difficulty disabled>
+    <div class="glo-level-labels" aria-hidden="true"><span>Easy</span><span>Medium</span><span>Hard</span><span>Expert</span></div>
+    <p class="glo-level-detail" data-glo-level-detail>6–8 lights · 2–3 presses at best</p>
+  </div>
+  <div class="glo-book-heading">
+    <details class="glo-picker" data-glo-picker>
+      <summary class="glo-puzzle-name" data-glo-name aria-label="Choose a puzzle">Puzzle 1 <span class="glo-puzzle-total">/ 1,000</span><span class="glo-caret" aria-hidden="true">⌄</span></summary>
+      <form class="glo-popover" data-glo-jump>
+        <h2>Your puzzle book</h2>
+        <label for="glo-puzzle-number">Puzzle number</label>
+        <div class="glo-number-entry"><input id="glo-puzzle-number" type="number" min="1" max="1000" step="1" value="1" inputmode="numeric" data-glo-number required disabled><button class="glo-button" type="submit" data-glo-open disabled>Open {% include icon.html name='arrow' %}</button></div>
+        <input type="range" min="1" max="1000" step="1" value="1" aria-label="Puzzle number" data-glo-number-slider disabled>
+        <p data-glo-book-progress>0 / 1,000 solved at this level</p>
+      </form>
+    </details>
+    <div class="glo-navigation" role="group" aria-label="Browse puzzle numbers"><button class="glo-button glo-icon-button" type="button" data-glo-previous aria-label="Previous puzzle number" disabled><span aria-hidden="true">←</span></button><button class="glo-button glo-icon-button" type="button" data-glo-following aria-label="Next puzzle number" disabled><span aria-hidden="true">→</span></button></div>
+  </div>
+  <div class="glo-meta"><span data-glo-board-name>Open loop · 6 lights</span><span><span data-glo-moves>0 presses</span><span class="glo-meta-divider" aria-hidden="true"> · </span><span data-glo-target>Best: 2</span></span></div>
+  <div class="glo-board" data-glo-board role="group" aria-label="Connected lights"><img src="{{ '/assets/images/lights-out-board.svg' | relative_url }}" width="600" height="600" alt="Nine numbered lights connected by lines in an irregular network."></div>
+  <div class="glo-under-board"><span class="glo-legend"><span><i class="glo-key is-on" aria-hidden="true"></i>On</span><span><i class="glo-key" aria-hidden="true"></i>Off</span></span><span data-glo-remaining>Turn every light off</span></div>
+  <p class="glo-preview" data-glo-preview aria-hidden="true"></p>
+  <p class="glo-status" data-glo-status role="status" aria-atomic="true">Enable JavaScript to play.</p>
+  <div class="glo-actions" role="group" aria-label="Game controls">
+    <button class="glo-button" type="button" data-glo-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
+    <button class="glo-button" type="button" data-glo-redo disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
+    <button class="glo-button" type="button" data-glo-restart disabled>{% include icon.html name='restart' %}<span>Restart</span></button>
+    <button class="glo-button" type="button" data-glo-hint disabled><span class="glo-hint-icon">{% include icon.html name='hint' %}</span><span class="glo-confirm-icon">{% include icon.html name='confirm' %}</span><span data-glo-hint-label>Hint</span></button>
+  </div>
+  <div class="glo-next-actions"><button class="glo-button" type="button" data-glo-shuffle disabled>{% include icon.html name='shuffle' %}<span>Shuffle</span></button><button class="glo-button glo-primary" type="button" data-glo-new disabled><span>Next puzzle</span>{% include icon.html name='arrow' %}</button></div>
+  <p class="glo-completed" data-glo-completed>0 / 1,000 solved</p>
+  <noscript><p class="glo-rule">Enable JavaScript to play and browse the puzzle collection.</p></noscript>
+</section>

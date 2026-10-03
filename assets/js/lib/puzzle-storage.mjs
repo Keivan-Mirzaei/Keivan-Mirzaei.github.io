@@ -1,5 +1,5 @@
 const cookieName = 'ao_puzzles';
-const games = ['hex', 'klotski', 'tiling'];
+const games = ['hex', 'klotski', 'tiling', 'lights-out'];
 export const storageKey = game => `almost-obvious:puzzle:${game}:v1`;
 
 // A small first-party cookie holds the preference; board histories stay on this device.

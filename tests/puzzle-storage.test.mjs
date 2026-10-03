@@ -29,7 +29,7 @@ test('the first-party cookie remembers the preference and boards survive a new p
 
 test('turning Remember progress off clears all puzzles, survives reload, and turning it on saves the current game', () => {
   const env = environment(), root = control(), store = createPuzzleStorage('hex', root, env);
-  for (const id of ['hex', 'klotski', 'tiling']) env.localStorage.setItem(storageKey(id), '{"moves":1}');
+  for (const id of ['hex', 'klotski', 'tiling', 'lights-out']) env.localStorage.setItem(storageKey(id), '{"moves":1}');
   store.setSnapshotProvider(() => ({ moves: 7 })); root.checkbox.change(false);
   assert.equal(env.document.cookie, 'ao_puzzles=0'); assert.equal(env.values.size, 0);
   store.save({ moves: 5 }); assert.equal(env.values.size, 0);

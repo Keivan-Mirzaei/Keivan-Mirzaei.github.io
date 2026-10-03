@@ -1,3 +1,4 @@
+import { bindPanelHistory } from '../lib/panel-history.mjs';
 /* Translate four congruent triangles to turn the tilted square into a² + b². */
 (() => {
   const root = document.getElementById('the-tilted-square');
@@ -92,7 +93,14 @@
     showFinalState();
   }
 
+  function restoreArrangement(value) {
+    clearTimeout(motionTimer); solved = value; placePieces(); showFinalState();
+  }
+  const history = bindPanelHistory(root, {
+    read: () => solved, restore: restoreArrangement, reset: () => restoreArrangement(false)
+  });
   button.addEventListener('click', () => {
+    history.remember();
     if (!geometry) return;
     solved = !solved;
     button.disabled = true;

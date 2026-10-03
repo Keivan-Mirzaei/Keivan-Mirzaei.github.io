@@ -33,9 +33,11 @@ class Page(HTMLParser):
             self.headings += 1
         if tag == "meta" and attrs.get("http-equiv") == "refresh":
             self.redirect = True
-        for key in ("href", "src", "action"):
+        for key in ("href", "src", "action", "data-widget-src"):
             if key in attrs:
                 self.links.append(attrs[key])
+                if attrs[key].count("?v=") > 1:
+                    errors.append(f"{self.path}: asset has duplicate version queries: {attrs[key]}")
         if tag == "img" and not attrs.get("alt", "").strip():
             errors.append(f"{self.path}: image missing alternative text")
         if tag == "iframe" and not attrs.get("title", "").strip():
@@ -106,7 +108,7 @@ for name in ("feed.xml", "sitemap.xml"):
         ET.parse(ROOT / name)
     except (OSError, ET.ParseError) as error:
         errors.append(f"Invalid {name}: {error}")
-for private in ("legacy", "_drafts", "scripts", "tests", "Gemfile", "README.md"):
+for private in ("legacy", "_drafts", "docs", "scripts", "tests", "Gemfile", "Gemfile.lock", "README.md"):
     if (ROOT / private).exists():
         errors.append(f"Authoring material leaked into the build: {private}")
 

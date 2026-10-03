@@ -1,18 +1,73 @@
-# Widgets are loaded only on pages that list them in their front matter.
-quadratic: /assets/js/widgets/quadratic.js
-derivative: /assets/js/widgets/derivative.js
-differentiability: /assets/js/widgets/differentiability.mjs
-bayes: /assets/js/widgets/bayes.js
-card-trick: /assets/js/widgets/card-trick.js
-three-cups: /assets/js/widgets/three-cups.mjs
-random-walk: /assets/js/widgets/random-walk.js
-scientific-plot: /assets/js/widgets/scientific-plot.mjs
-sphere-slice: /assets/js/widgets/sphere-slice.mjs
-tilted-square: /assets/js/widgets/tilted-square.js
-magicians-problem: /assets/js/widgets/magicians-problem.mjs
-cevian-triangles: /assets/js/widgets/cevian-triangles.mjs?v=20261001-2
-lights-out: /assets/js/widgets/lights-out.mjs
-three-utilities: /assets/js/widgets/three-utilities.mjs?v=20261002-5
-hex: /assets/js/widgets/hex.mjs?v=20261002-6
-klotski: /assets/js/widgets/klotski.mjs?v=20261002-1
-tiling: /assets/js/widgets/tiling.mjs?v=20261002-1
+# Shared asset and loading registry. Used by both article and puzzle layouts.
+quadratic:
+  script: /assets/js/widgets/quadratic.js
+  selector: '[data-widget="quadratic"]'
+  styles: [activities]
+derivative:
+  script: /assets/js/widgets/derivative.js
+  selector: '[data-widget="derivative"]'
+  styles: [activities]
+differentiability:
+  script: /assets/js/widgets/differentiability.mjs
+  selector: '[data-widget="differentiability"]'
+  styles: [activities]
+bayes:
+  script: /assets/js/widgets/bayes.js
+  selector: '[data-widget="bayes"]'
+  styles: [activities]
+card-trick:
+  script: /assets/js/widgets/card-trick.js
+  selector: '[data-widget="card-trick"]'
+  styles: [activities]
+three-cups:
+  script: /assets/js/widgets/three-cups.mjs
+  selector: '[data-three-cups]'
+  styles: [activities, three-cups]
+random-walk:
+  script: /assets/js/widgets/random-walk.js
+  selector: '[data-widget="random-walk"]'
+  styles: [activities]
+scientific-plot:
+  script: /assets/js/widgets/scientific-plot.mjs
+  selector: '[data-widget="scientific-plot"]'
+  styles: [activities]
+sphere-slice:
+  script: /assets/js/widgets/sphere-slice.mjs
+  selector: '[data-widget="sphere-slice"]'
+  styles: [activities]
+tilted-square:
+  script: /assets/js/widgets/tilted-square.js
+  selector: '[data-widget="tilted-square"]'
+  styles: []
+magicians-problem:
+  script: /assets/js/widgets/magicians-problem.mjs
+  selector: '[data-magician-game], [data-magician-probability], [data-magician-routes]'
+  styles: [activities, magician]
+cevian-triangles:
+  script: /assets/js/widgets/cevian-triangles.mjs
+  selector: '[data-cevian-explorer], [data-cevian-simplex]'
+  styles: [activities, cevian]
+lights-out:
+  script: /assets/js/widgets/lights-out.mjs
+  selector: '[data-lights-out], [data-lights-out-proof]'
+  styles: [activities, lights-out]
+graph-lights-out:
+  script: /assets/js/widgets/graph-lights-out.mjs
+  selector: '[data-graph-lights-out]'
+  styles: [graph-lights-out]
+three-utilities:
+  script: /assets/js/widgets/three-utilities.mjs
+  selector: '[data-three-utilities-plane], [data-three-utilities-surface], [data-three-utilities-square]'
+  styles: [activities, three-utilities]
+hex:
+  script: /assets/js/widgets/hex.mjs
+  selector: '[data-hex-game], [data-hex-proof]'
+  styles: [activities, puzzles, hex]
+klotski:
+  script: /assets/js/widgets/klotski.mjs
+  selector: '[data-klotski-game]'
+  styles: [klotski]
+tiling:
+  script: /assets/js/widgets/tiling.mjs
+  selector: '[data-tiling-game]'
+  styles: [tiling]

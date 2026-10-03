@@ -1,5 +1,5 @@
-import { createSearch } from './hex-math.mjs?v=20261002-5';
-import { searchBudget } from './hex-search-settings.mjs?v=20261002-5';
+import { createSearch } from './hex-math.mjs';
+import { searchBudget } from './hex-search-settings.mjs';
 
 self.onmessage = ({ data: { cells, size, color } }) => {
   const budget = searchBudget(size), deadline = performance.now() + budget.timeMs;

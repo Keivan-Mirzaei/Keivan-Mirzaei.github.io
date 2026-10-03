@@ -4,7 +4,8 @@
   <canvas class="tu-transformation" hidden role="img" tabindex="0" aria-label="A 3D mug becomes a donut. Drag or use arrow keys to rotate the surface. Home resets to the mug."></canvas>
   <div class="tu-phase-buttons" aria-label="Transformation stages"><button type="button" data-tu-jump="0" aria-pressed="true" disabled>Mug</button><button type="button" data-tu-jump="1" aria-pressed="false" disabled>Donut</button><button type="button" data-tu-jump="2" aria-pressed="false" disabled>Open tube</button><button type="button" data-tu-jump="3" aria-pressed="false" disabled>Square</button></div>
   <label class="tu-slider-label" for="tu-phase">Move through the transformation<input id="tu-phase" type="range" min="0" max="3" step="0.01" value="0" data-tu-phase disabled></label>
-  <div class="tu-actions"><button class="secondary-button" type="button" data-tu-play disabled>Play from mug</button><button class="lo-secondary" type="button" data-tu-reset-view disabled>Reset to mug</button></div>
+  <div class="tu-actions"><button class="secondary-button panel-button" type="button" data-tu-play disabled>Play from mug</button></div>
   <p class="tu-status" data-tu-caption role="status">Drag to rotate the 3D mug and look inside. Its bowl has a bottom; the handle supplies the one through-hole.</p>
   <noscript><p>The diagram shows the four stages. Enable JavaScript to move through the deformation.</p></noscript>
+  {% include controls/panel.html help='<p>Drag or use arrow keys to rotate. Move the slider or choose a stage to unfold the mug into a square. Reset returns to the mug.</p>' %}
 </section>

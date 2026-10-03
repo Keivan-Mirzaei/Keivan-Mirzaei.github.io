@@ -1,5 +1,5 @@
-import { surfacePoint } from './three-utilities-math.mjs?v=20261002-5';
-import { mugMesh } from './three-utilities-mug.mjs?v=20261002-5';
+import { surfacePoint } from './three-utilities-math.mjs';
+import { mugMesh } from './three-utilities-mug.mjs';
 
 const renderers=new WeakMap();
 export const BOUNDARY_STYLE={width:6,dash:14,gap:9};

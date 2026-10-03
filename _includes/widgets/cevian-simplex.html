@@ -10,6 +10,7 @@
     <label>Weight at A₃ <output data-cv-weight-output="2">19%</output><input type="range" min="1" max="100" step="1" value="19" data-cv-weight="2" aria-label="Relative weight at A₃" disabled></label>
     <label>Weight at A₄ <output data-cv-weight-output="3">12%</output><input type="range" min="1" max="100" step="1" value="12" data-cv-weight="3" aria-label="Relative weight at A₄" disabled></label>
   </div>
-  <button class="secondary-button" type="button" data-cv-tetra-center disabled>Move to the face centers</button>
+  <button class="secondary-button panel-button" type="button" data-cv-tetra-center disabled>Move to the face centers</button>
   <p class="cv-status" data-cv-volume-status aria-live="polite">The maximum is 1/27 of the volume, about 3.704%.</p>
+  {% include controls/panel.html help='<p>Drag horizontally or use Rotate to change the view. Change the four weights to move the meeting point inside the tetrahedron.</p>' %}
 </section>

@@ -16,6 +16,7 @@
     <input id="{{ widget_id }}-step" type="range" min="0" max="256" step="1" value="256" disabled>
   </div>
   <p class="activity-result" data-feedback role="status">The walk starts at zero.</p>
-  <div class="activity-buttons"><button class="secondary-button" type="button" data-play disabled>Play path</button><button class="secondary-button" type="button" data-new disabled>New path</button></div>
+  <div class="activity-buttons"><button class="secondary-button panel-button" type="button" data-play disabled>Play path</button><button class="secondary-button panel-button" type="button" data-new disabled>New path</button></div>
   <noscript><p>The controls need JavaScript. The static figure and Python example below show the same construction.</p></noscript>
+  {% include controls/panel.html help='<p>Use the slider to reveal part of the walk. Play animates it; New path makes another reproducible walk. Reset shows the initial path.</p>' %}
 </section>

@@ -1,14 +1,12 @@
 <section class="klotski-game" data-klotski-game aria-label="Klotski game">
   <div class="klotski-board-heading">
     <span data-klotski-count>0 moves</span>
-    <div class="klotski-actions puzzle-actions" role="group" aria-label="Game controls">
-      {% include puzzles/action.html game='klotski' action='undo' icon='undo' label='Undo move' %}
-      {% include puzzles/action.html game='klotski' action='redo' icon='redo' label='Redo move' %}
-      {% include puzzles/action.html game='klotski' action='restart' icon='restart' label='Start again' %}
-      <details class="puzzle-help">
-        <summary class="puzzle-icon-button" aria-label="How to play" data-tooltip="How to play">{% include icon.html name='help' %}</summary>
-        <div class="puzzle-help-content"><p>Drag blocks into empty space. Guide the marked square to the exit at the bottom.</p>{% include puzzles/remember.html %}</div>
-      </details>
+    <div class="klotski-actions puzzle-actions panel-actions" role="group" aria-label="Game controls">
+      {% include controls/action.html game='klotski' action='undo' icon='undo' label='Undo move' %}
+      {% include controls/action.html game='klotski' action='redo' icon='redo' label='Redo move' %}
+      {% include controls/action.html game='klotski' action='restart' icon='restart' label='Start again' %}
+      {% capture game_help %}<p>Drag blocks into empty space. Guide the marked square to the exit at the bottom.</p>{% endcapture %}
+      {% include controls/help.html text=game_help remember=true %}
     </div>
   </div>
   <p class="klotski-status" data-klotski-status role="status">Enable JavaScript to play Klotski.</p>

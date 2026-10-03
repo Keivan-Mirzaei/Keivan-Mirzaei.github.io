@@ -1,10 +1,10 @@
-import { createGame, placementCells, occupiedCells, checkPlacement, key } from '../lib/tiling.mjs?v=20261002-5';
+import { createGame, placementCells, occupiedCells, checkPlacement, key } from '../lib/tiling.mjs';
 
-import { DIFFICULTIES } from '../lib/tiling-arrangements.mjs?v=20261002-1';
-import { createPuzzleBook } from '../lib/tiling-book.mjs?v=20261002-2';
-import { createPuzzleStorage } from '../lib/puzzle-storage.mjs?v=20261002-1';
+import { DIFFICULTIES } from '../lib/tiling-arrangements.mjs';
+import { createPuzzleBook } from '../lib/tiling-book.mjs';
+import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
 
-import { setActionLabel } from '../lib/puzzle-controls.mjs?v=20261002-4';
+import { setActionLabel } from '../lib/puzzle-controls.mjs';
 
 const colors = ['#c67b67', '#70968c', '#839bbc', '#c4a168', '#a68cad', '#8eaa72', '#b68d9e', '#769fac'];
 const reasonText = {

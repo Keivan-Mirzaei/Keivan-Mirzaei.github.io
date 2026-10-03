@@ -80,4 +80,30 @@
   root.classList.add('js');
   toggle.hidden = false;
   render();
+
+  // A brief hover or keyboard focus gives the next page a head start.
+  // Respect reduced-data connections and keep speculative work bounded.
+  const connection = navigator.connection;
+  if (!connection?.saveData && !/^(slow-)?2g$/.test(connection?.effectiveType || '')) {
+    const prefetched = new Set();
+    let prefetchTimer;
+    function prepareLink(event) {
+      const link = event.target.closest('a[href]');
+      clearTimeout(prefetchTimer);
+      if (!link || link.target || link.hasAttribute('download')) return;
+      const url = new URL(link.href, location.href);
+      if (url.origin !== location.origin || url.pathname === location.pathname || url.search || url.hash) return;
+      if (!url.pathname.endsWith('/') || prefetched.has(url.href) || prefetched.size >= 10) return;
+      prefetchTimer = setTimeout(() => {
+        prefetched.add(url.href);
+        const hint = document.createElement('link');
+        hint.rel = 'prefetch'; hint.href = url.href;
+        document.head.append(hint);
+      }, 100);
+    }
+    document.addEventListener('pointerover', event => { if (event.pointerType === 'mouse') prepareLink(event); });
+    document.addEventListener('focusin', prepareLink);
+    document.addEventListener('pointerout', () => clearTimeout(prefetchTimer));
+    document.addEventListener('focusout', () => clearTimeout(prefetchTimer));
+  }
 })();

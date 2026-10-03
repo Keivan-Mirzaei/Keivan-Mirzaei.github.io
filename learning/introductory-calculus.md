@@ -1,17 +1,17 @@
 ---
 layout: course
 title: Introductory Calculus
-description: Understand change and accumulation through limits, derivatives, and integrals.
+description: Understand change, accumulation, and approximation in a first-year university Calculus I–II sequence.
 permalink: /learning/introductory-calculus/
 format: module
 section: module
 course_id: introductory-calculus
-tags: [calculus, limits, derivatives, integrals]
+tags: [calculus, limits, derivatives, integrals, differential equations, series]
 search: true
 ---
 
-Calculus starts with two questions: **how fast is something changing, and how much has accumulated?** A tangent line answers the first; an area under a curve answers the second. This course builds those ideas from limits and explores the surprising connection between them.
+Calculus starts with two questions: **how fast is something changing, and how much has accumulated?** Derivatives describe instantaneous change; definite integrals describe accumulation. The Fundamental Theorem of Calculus connects the two. A third question carries us further: **how accurately can we approximate a function or a quantity?**
 
-Work through short explanations, interactive pictures, and problems. Make a prediction before trying an activity, and attempt a problem before opening its hint or solution. The aim is to become confident with calculations while understanding why they work.
+These course notes are organized around the learning objectives of introductory university calculus in the United States and Canada. The roadmap covers the full first-year single-variable sequence, with a clear boundary between Calculus I and Calculus II. The aim is to understand the ideas, calculate confidently, build useful models, and explain why a solution is valid.
 
-The **derivatives module is available now**, with five lessons of 60–90 minutes each, plus independent problem work. Start there if you already know limits and continuity. The remaining modules below are forthcoming; the final derivatives lesson includes optional extensions with proofs.
+The **derivatives module is available now**, with five lessons. Start there if you already know limits and continuity; otherwise follow the roadmap from the beginning as modules become available. The current lessons include challenging problems and optional proof extensions. The other modules are forthcoming, and their outcomes below describe the intended complete course.

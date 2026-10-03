@@ -1,3 +1,4 @@
+import { bindInputHistory } from '../lib/panel-history.mjs';
 /* For f(x) = x² at x = 1, the nonzero-step secant slope simplifies to 2 + h. */
 (() => {
   document.querySelectorAll('[data-widget="derivative"]').forEach((widget) => {
@@ -23,7 +24,7 @@
     }
     slider.disabled = reset.disabled = false;
     slider.addEventListener('input', update);
-    reset.addEventListener('click', () => { slider.value = 1; update(); });
+    bindInputHistory(widget, [slider], update, () => { slider.value = 1; update(); });
     update();
   });
 })();

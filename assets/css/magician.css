@@ -1,0 +1,30 @@
+/* The magician exploration keeps the numerical microscope separate from a sample game. */
+.magician-widget .mp-plot { display: block; width: 100%; height: auto; margin: 18px 0 0; }
+.mp-grid { stroke: var(--line); stroke-width: 1; }
+.mp-axis { fill: none; stroke: #87947e; stroke-width: 1; }
+.mp-label { fill: var(--muted); font: 12px var(--sans); }
+.mp-axis-title { fill: var(--ink); }
+.mp-curve { fill: none; stroke: var(--green); stroke-width: 2.2; stroke-linejoin: round; }
+.mp-other-route { stroke: var(--muted); stroke-dasharray: 6 4; }
+.mp-reference { stroke: #9da897; stroke-width: 1; stroke-dasharray: 3 4; }
+.mp-guide { stroke: #9da897; stroke-width: 1; stroke-dasharray: 3 4; }
+.mp-marker { fill: var(--green); stroke: var(--paper); stroke-width: 2; }
+.magician-widget .mp-caption { font: 13px/1.65 var(--sans); color: var(--muted); margin: 14px 0; }
+.mp-control-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.magician-widget button { min-height: 44px; }
+.mp-secondary { padding: 9px 14px; border: 1px solid var(--green); border-radius: 3px; background: var(--paper); color: var(--green); font-size: 12px; }
+.mp-secondary:hover { background: var(--tint); }
+.magician-widget button:disabled { opacity: .6; cursor: default; }
+.magician-widget .mp-status { min-height: 3em; font: 13px/1.6 var(--sans); color: var(--green); margin: 14px 0 0; }
+.mp-magnified { border-top: 1px solid var(--line); padding-top: 24px; margin-top: 24px; }
+.mp-scrubber { display: block; margin: 18px 0 14px; font: 13px var(--sans); }
+.mp-scrubber input { display: block; width: 100%; min-height: 36px; margin-top: 8px; accent-color: var(--green); }
+.mp-audience svg { display: block; width: 100%; margin: 20px 0 0; }
+.mp-person { fill: var(--green); stroke: var(--green); stroke-width: 1.2; }
+.mp-person.is-out { fill: var(--paper); stroke: #9da897; opacity: .5; }
+.mp-legend { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.mp-legend > span { display: inline-flex; gap: 8px; align-items: center; }
+.mp-key { display: inline-block; width: 22px; border-top: 2px solid var(--green); }
+.mp-key-other { border-color: var(--muted); border-top-style: dashed; }
+
+@media (prefers-reduced-motion: no-preference) { .mp-person { transition: opacity .35s ease, fill .35s ease; } }

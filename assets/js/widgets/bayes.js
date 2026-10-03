@@ -1,3 +1,4 @@
+import { bindInputHistory } from '../lib/panel-history.mjs';
 /* Expected counts keep the denominator of a conditional probability visible. */
 (() => {
   document.querySelectorAll('[data-widget="bayes"]').forEach((widget) => {
@@ -18,7 +19,7 @@
     }
     slider.disabled = reset.disabled = false;
     slider.addEventListener('input', update);
-    reset.addEventListener('click', () => { slider.value = 10; update(); });
+    bindInputHistory(widget, [slider], update, () => { slider.value = 10; update(); });
     update();
   });
 })();

@@ -1,5 +1,6 @@
-import { NODES, nodeById, TORUS_ROUTES, PLANE_EIGHT, distance, obstruction, curveRoute, smoothWaypoints, simplifyPath, updateConnection } from '../lib/three-utilities-math.mjs?v=20261002-5';
-import { boardSVG, boardGeometry, drawTransformation } from '../lib/three-utilities-diagrams.mjs?v=20261002-5';
+import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
+import { NODES, nodeById, TORUS_ROUTES, PLANE_EIGHT, distance, obstruction, curveRoute, smoothWaypoints, simplifyPath, updateConnection } from '../lib/three-utilities-math.mjs';
+import { boardSVG, boardGeometry, drawTransformation } from '../lib/three-utilities-diagrams.mjs';
 import { observeSize } from '../lib/interactive-view.mjs';
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -169,14 +170,23 @@ function prepareSurface(widget) {
   canvas.addEventListener('pointerup',event=>{orbit=null;if(canvas.hasPointerCapture(event.pointerId))canvas.releasePointerCapture(event.pointerId);});
   canvas.addEventListener('pointercancel',()=>{orbit=null;});
   function resetMug(){stop();phase=0;rotation.yaw=rotation.pitch=0;render();}
-  widget.querySelector('[data-tu-reset-view]').addEventListener('click',resetMug);
+
   canvas.addEventListener('keydown',event=>{
     const directions={ArrowLeft:[-.12,0],ArrowRight:[.12,0],ArrowUp:[0,-.12],ArrowDown:[0,.12]};
     const delta=directions[event.key];
     if(delta){event.preventDefault();stop();rotation.yaw+=delta[0];rotation.pitch=Math.max(-1.3,Math.min(1.3,rotation.pitch+delta[1]));render();}
     if(event.key==='Home'){event.preventDefault();resetMug();}
   });
-  widget.querySelectorAll('button,input').forEach(control=>control.disabled=false);
+  const panelHistory = bindPanelHistory(widget, {
+    read: () => ({ phase, rotation }),
+    restore: state => { stop(); phase = state.phase; Object.assign(rotation, state.rotation); render(); },
+    reset: resetMug
+  });
+  trackControlEdits([slider], panelHistory);
+  widget.querySelectorAll('[data-tu-jump], [data-tu-play], [data-tu-reset-view]').forEach(button => button.addEventListener('click', () => panelHistory.remember(), { capture: true }));
+  canvas.addEventListener('pointerdown', () => panelHistory.remember(), { capture: true });
+  canvas.addEventListener('keydown', event => { if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home'].includes(event.key)) panelHistory.remember(); }, { capture: true });
+  widget.querySelectorAll('button,input').forEach(control=>control.disabled=control.hasAttribute('data-panel-undo'));
   observeSize(canvas,render);render();
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
 }
@@ -201,6 +211,11 @@ function prepareSquare(widget) {
     trace.innerHTML='<option value="">All pipes</option>'+routes.map(edge=>`<option value="${edge.id}">${nodeById(edge.house).label} → ${nodeById(edge.utility).label}${edge.seam?` (${edge.seam==='a'?'top/bottom':'left/right'})`:''}</option>`).join('');
     trace.value=routes.some(edge=>edge.id===prior)?prior:'';
   }
+  const panelHistory = bindPanelHistory(widget, {
+    read: () => ({ number, trace: trace.value, message: status.textContent }),
+    restore: state => { number = state.number; trace.value = state.trace; status.textContent = state.message; render(); }
+  });
+  widget.querySelectorAll('[data-tu-next], [data-tu-reset]').forEach(button => button.addEventListener('click', () => panelHistory.remember(), { capture: true }));
   next.addEventListener('click',()=>{number=Math.min(9,number+1);trace.value='';status.textContent=messages[number-7];render();});
   widget.querySelector('[data-tu-reset]').addEventListener('click',()=>{number=7;trace.value='';status.textContent=messages[0];render();});
   trace.addEventListener('change',()=>{

@@ -1,3 +1,4 @@
+import { bindPanelHistory } from '../lib/panel-history.mjs';
 /* Deal across three columns; always collect the chosen column in the middle. */
 (() => {
   document.querySelectorAll('[data-widget="card-trick"]').forEach((widget) => {
@@ -27,6 +28,7 @@
         choose.textContent = `Column ${column + 1}`;
         choose.setAttribute('aria-label', `My card is in column ${column + 1}`);
         choose.addEventListener('click', () => {
+          history.remember();
           const others = piles.filter((_, index) => index !== column);
           deck = [...others[0], ...pile, ...others[1]];
           round += 1;
@@ -42,7 +44,10 @@
         group.append(label, cards, choose);
         columns.append(group);
       });
-      feedback.textContent = `Round ${round + 1} of 3. Which column contains your number?`;
+      if (round === 3) {
+        columns.querySelectorAll('button').forEach(button => { button.disabled = true; });
+        feedback.textContent = `Your card is ${deck[10]}. Three collections have moved it to position 11.`;
+      } else feedback.textContent = `Round ${round + 1} of 3. Which column contains your number?`;
     }
 
     function start() {
@@ -51,7 +56,11 @@
       deal();
     }
     reset.disabled = false;
-    reset.addEventListener('click', start);
+    const history = bindPanelHistory(widget, {
+      read: () => ({ deck, round }),
+      restore: state => { ({ deck, round } = state); deal(); },
+      reset: start
+    });
     start();
   });
 })();

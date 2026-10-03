@@ -4,6 +4,6 @@
   <p>Remember one number. Keep it secret! Select the column containing it, then repeat with the new arrangement.</p>
   <div class="card-columns" data-columns></div>
   <p class="activity-result" data-feedback role="status">Choose any number from 1 to 21. JavaScript is needed to deal the cards.</p>
-  <button class="secondary-button" type="button" data-reset disabled>Start again</button>
+  {% include controls/panel.html help='<p>Pick a number from 1 to 21 without telling us. Choose the column containing it three times. Undo lets you correct a column choice.</p>' %}
   <noscript><p>You can still follow the worked example below with 21 slips of paper.</p></noscript>
 </section>

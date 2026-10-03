@@ -34,7 +34,7 @@
   </div>
   <div class="graph-actions">
     <p class="graph-feedback" data-feedback role="status" aria-live="polite">The vertex is (0, 0). The curve opens upward.</p>
-    <button class="secondary-button" type="button" data-reset disabled>Reset</button>
+    {% include controls/panel.html help='<p>Change the three sliders to move and reshape the parabola. Undo restores your previous settings.</p>' %}
   </div>
   <details class="graph-values">
     <summary>Read the values as a table</summary>

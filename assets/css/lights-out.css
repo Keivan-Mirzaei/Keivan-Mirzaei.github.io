@@ -1,0 +1,66 @@
+/* Lights Out: native buttons keep both grid and graph boards keyboard playable. */
+.lo-widget .graph-heading h3 { margin: 0; }
+.lo-settings { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 18px 0 12px; }
+.lo-settings label { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font: 13px/1.6 var(--sans); }
+.lo-settings select { max-width: 100%; min-height: 44px; padding: 8px 30px 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--ink); font: 13px var(--sans); }
+.lo-widget .lo-caption { margin: 12px 0 16px; color: var(--muted); font: 13px/1.65 var(--sans); }
+.lo-stage { position: relative; display: flex; justify-content: center; align-items: flex-start; gap: 18px; margin: 20px 0; }
+.lo-board, .lo-proof-board, [data-lo-target] { position: relative; width: 100%; aspect-ratio: 1; }
+.lo-board { max-width: 360px; }
+.lo-proof-board { max-width: 440px; margin: 0 auto; }
+.lo-graph { aspect-ratio: 1.35; }
+.lo-board svg, .lo-proof-board svg { display: block; width: 100%; }
+.lo-target { flex: 0 0 100px; max-width: 24%; }
+.lo-mini-title { display: block; margin-bottom: 8px; color: var(--muted); font: 12px var(--sans); text-align: center; }
+.lo-edges { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.lo-edge { fill: none; stroke: var(--muted); stroke-width: 1.6; vector-effect: non-scaling-stroke; }
+.lo-removed-edge { opacity: .45; stroke-dasharray: 4 4; }
+.lo-light { position: absolute; transform: translate(-50%, -50%); display: grid; place-content: center; width: 54px; height: 54px; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); color: var(--ink); font: 16px var(--mono); user-select: none; touch-action: manipulation; }
+.lo-grid .lo-light { width: calc(var(--lo-cell) - 8px); height: auto; aspect-ratio: 1; border-radius: 9px; }
+.lo-grid[data-lo-side="5"] .lo-light { width: calc(var(--lo-cell) - 4px); font-size: 14px; }
+.lo-grid[data-lo-side="5"] .lo-pip { bottom: 5px; right: 6px; }
+.lo-light.is-on { background: var(--green); border-color: var(--green); color: var(--paper); }
+.lo-light.is-affected { box-shadow: 0 0 0 3px var(--tint), 0 0 0 4px var(--green); }
+.lo-light.is-plan { outline: 2px dashed var(--green); outline-offset: 3px; }
+.lo-light.is-next { outline-style: solid; outline-width: 3px; }
+.lo-light.is-omitted { outline: 2px dashed var(--muted); outline-offset: 5px; }
+.lo-light:focus-visible { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--green); }
+.lo-pip { position: absolute; bottom: 8px; right: 10px; width: 6px; height: 6px; border: 1px solid currentColor; border-radius: 50%; }
+.is-on .lo-pip { background: currentColor; }
+.lo-step { position: absolute; top: -5px; right: -5px; display: grid; place-items: center; min-width: 23px; height: 23px; padding: 0 4px; border: 2px solid var(--paper); border-radius: 50%; background: var(--ink); color: var(--paper); font: 11px var(--mono); }
+[data-lo-target] .lo-light { width: 19px; height: 19px; font-size: 9px; }
+[data-lo-target].lo-grid .lo-light { width: calc(var(--lo-cell) - 3px); height: auto; border-radius: 3px; }
+[data-lo-target] .lo-pip { display: none; }
+.lo-static-off { fill: var(--paper); stroke: var(--line); stroke-width: 1.5; }
+.lo-static-on { fill: var(--tint); stroke: var(--green); stroke-width: 1.5; }
+.lo-static-label { fill: var(--ink); font: 24px var(--mono); }
+.lo-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 22px; margin: 14px 0 20px; font: 12px var(--sans); color: var(--muted); }
+.lo-legend > span { display: inline-flex; gap: 8px; align-items: center; }
+.lo-key { width: 15px; height: 15px; border: 1px solid var(--line); border-radius: 3px; background: var(--paper); }
+.lo-key-on { background: var(--green); border-color: var(--green); }
+.lo-key-plan { display: grid; place-items: center; border: 0; border-radius: 50%; background: var(--ink); color: var(--paper); font: normal 10px var(--mono); }
+.lo-control-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.lo-widget button { min-height: 44px; }
+.lo-widget .lo-light { min-height: 0; }
+.lo-secondary { padding: 9px 14px; border: 1px solid var(--green); border-radius: 3px; background: var(--paper); color: var(--green); font-size: 12px; }
+.lo-secondary:hover { background: var(--tint); }
+.lo-widget button:disabled, .lo-widget select:disabled { opacity: .55; cursor: default; }
+.lo-solution { padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--line); }
+.lo-widget .lo-plan-label { margin: 0 0 14px; font: 13px/1.8 var(--mono); }
+.lo-widget .lo-status, .lo-widget .lo-proof-detail { min-height: 3em; margin: 16px 0; color: var(--green); font: 13px/1.7 var(--sans); }
+.lo-proof-detail { min-height: 6em; }
+.lo-experiments { display: flex; flex-wrap: wrap; gap: 6px 22px; border-top: 1px solid var(--line); padding-top: 8px; }
+.lo-text-button { padding: 5px 0; border: 0; background: transparent; color: var(--green); font-size: 12px; text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 500px) {
+  .lo-stage { flex-wrap: wrap; }
+  .lo-target { flex-basis: 90px; max-width: 100%; }
+  .lo-settings { gap: 10px 18px; }
+  .lo-light { width: 44px; height: 44px; }
+  .lo-light.is-plan { outline-offset: 1px; }
+  .lo-step { min-width: 20px; height: 20px; top: -3px; right: -3px; }
+  .lo-proof-widget .lo-graph { aspect-ratio: 1; }
+}
+@media (max-width: 500px) {
+  .cv-position-controls, .cv-mass-controls { grid-template-columns: 1fr; gap: 10px; }
+  .cv-control-row { align-items: flex-start; }
+}

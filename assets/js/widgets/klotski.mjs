@@ -1,6 +1,6 @@
-import { BOARD_WIDTH, BOARD_HEIGHT, createKlotski, slideKlotski, undoKlotski, redoKlotski, maxSlide } from '../lib/klotski.mjs?v=20261002-4';
-import { createPuzzleStorage } from '../lib/puzzle-storage.mjs?v=20261002-1';
-import { serializeKlotski, restoreKlotski } from '../lib/klotski-storage.mjs?v=20261002-1';
+import { BOARD_WIDTH, BOARD_HEIGHT, createKlotski, slideKlotski, undoKlotski, redoKlotski, maxSlide } from '../lib/klotski.mjs';
+import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
+import { serializeKlotski, restoreKlotski } from '../lib/klotski-storage.mjs';
 
 const keyboardDirections = { ArrowUp: 'up', ArrowRight: 'right', ArrowDown: 'down', ArrowLeft: 'left' };
 

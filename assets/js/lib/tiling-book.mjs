@@ -1,6 +1,6 @@
-import { CATALOGUE } from './tiling-catalogue.mjs?v=20261002-1';
-import { DIFFICULTIES, createArrangement, arrangementFingerprint } from './tiling-arrangements.mjs?v=20261002-1';
-import { buildLevel, occupiedCells, key, createGame, isSolved } from './tiling.mjs?v=20261002-5';
+import { CATALOGUE } from './tiling-catalogue.mjs';
+import { DIFFICULTIES, createArrangement, arrangementFingerprint } from './tiling-arrangements.mjs';
+import { buildLevel, occupiedCells, key, createGame, isSolved } from './tiling.mjs';
 
 const rowsFor = level => {
   const cells = occupiedCells(level, level.solution);

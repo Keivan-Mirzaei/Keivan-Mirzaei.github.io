@@ -1,6 +1,6 @@
-<section class="hex-widget hex-play hex-board-first" data-hex-game aria-label="Hex game">
+<section class="{% if include.embedded %}graph-widget {% endif %}hex-widget hex-play hex-board-first" data-hex-game aria-label="Hex game">
   <header class="hex-game-heading">
-    <h1 class="hex-game-title">Hex</h1>
+    {% if include.embedded %}<h3 class="hex-game-title" id="hex-game-title">Find your way across</h3>{% else %}<h1 class="hex-game-title">Hex</h1>{% endif %}
     <details class="hex-game-settings" data-hex-settings>
       <summary class="puzzle-icon-button hex-settings-toggle" aria-label="Game settings" data-tooltip="Game settings">{% include icon.html name='settings' %}</summary>
       <div class="hex-settings-panel">
@@ -33,10 +33,11 @@
     <div class="hex-board-viewport"><div class="hex-board" data-hex-board>
       <img src="{{ '/assets/images/hex-board.svg' | relative_url }}" width="410" height="600" alt="An empty five by five upright diamond Hex board. Red connects the upper-right and lower-left sides; Blue connects the upper-left and lower-right sides.">
     </div></div>
-    <div class="hex-actions puzzle-actions" role="group" aria-label="Game controls">
+    <div class="hex-actions puzzle-actions panel-actions" role="group" aria-label="Game controls">
       <button class="hex-main-action" type="button" data-hex-undo data-puzzle-icon aria-label="Undo your turn" disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
-      {% include puzzles/action.html game='hex' action='redo' icon='redo' label='Redo your turn' %}
+      {% include controls/action.html game='hex' action='redo' icon='redo' label='Redo your turn' %}
       <button class="hex-main-action" type="button" data-hex-new disabled>{% include icon.html name='restart' %}<span>New game</span></button>
+      {% include controls/help.html text='<p>Choose an empty cell. Connect the two sides of your colour. Red begins. Undo takes back a full turn against the computer, or one move in a local game.</p><p>Change the board size or players in Settings. New game clears the board.</p>' %}
     </div>
     <p class="hex-goal-caption" data-hex-goal>Connect your two red sides</p>
     <noscript><p class="hex-caption">This game needs JavaScript. Enable it to place stones and use the game controls.</p></noscript>

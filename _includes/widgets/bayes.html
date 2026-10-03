@@ -15,6 +15,6 @@
   <div class="probability-bar" role="img" aria-label="50 percent faulty, 50 percent good" data-bar><span data-faulty style="width:50%"></span></div>
   <p class="plot-legend">Solid green: faulty · Striped: good</p>
   <p class="activity-result" data-feedback role="status">90 of the 180 flagged items are faulty: 50.0%.</p>
-  <button class="secondary-button" type="button" data-reset disabled>Reset</button>
+  {% include controls/panel.html help='<p>Change the fault rate. The table and bar show how the same scanner behaves as faults become more or less common.</p>' %}
   <noscript><p>The table shows the 10% fault-rate example. JavaScript enables the slider.</p></noscript>
 </section>

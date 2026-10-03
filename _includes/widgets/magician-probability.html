@@ -2,19 +2,20 @@
   <div class="graph-heading"><h3 id="mp-probability-title">It looks settled</h3><span class="activity-badge">Calculated probabilities</span></div>
   <div data-overview>{% include widgets/magician-overview.svg %}</div>
   <p class="mp-caption">Each horizontal step multiplies the audience size. The dashed line marks the average level, about 72.134752%.</p>
-  <button class="secondary-button" type="button" data-magnify aria-expanded="false" aria-controls="mp-magnified" disabled>Magnify the ripple</button>
+  <button class="secondary-button panel-button" type="button" data-magnify aria-expanded="false" aria-controls="mp-magnified" disabled>Magnify the ripple</button>
   <div id="mp-magnified" class="mp-magnified" data-magnified>
     <div class="graph-heading"><h3>A ripple that remains</h3><span class="activity-badge" data-window>From 2¹⁴ to 2²⁰ people</span></div>
     <div data-ripple>{% include widgets/magician-ripple.svg %}</div>
     <p class="mp-caption">The vertical scale shows the difference from the average, in parts per million. This is the limiting pattern; the finite-audience probabilities approach it.</p>
     <label class="mp-scrubber">Move along the ripple<input type="range" data-position min="0" max="6" step="0.01" value="0" disabled></label>
     <div class="mp-control-row">
-      <button class="secondary-button" type="button" data-play-ripple disabled>Follow the ripple</button>
-      <button class="mp-secondary" type="button" data-farther disabled>Jump 20 more doublings</button>
+      <button class="secondary-button panel-button" type="button" data-play-ripple disabled>Follow the ripple</button>
+      <button class="mp-secondary panel-button" type="button" data-farther disabled>Jump 20 more doublings</button>
     </div>
     <p class="mp-status" data-ripple-status aria-live="polite">Chance: 72.1352103%. Difference from the average: +4.58 in a million.</p>
   </div>
   <noscript>
     <p class="mp-caption">Enable JavaScript to move along the ripple or jump to larger audience sizes.</p>
   </noscript>
+  {% include controls/panel.html help='<p>Magnify the tiny ripple, then scrub or animate along it. Jump advances the displayed audience sizes by twenty doublings.</p>' %}
 </section>

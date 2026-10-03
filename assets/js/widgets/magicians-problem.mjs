@@ -1,3 +1,4 @@
+import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
 import { limitingProbability, differencePerMillion, seededRandom } from '../lib/magician-math.mjs';
 import { overviewChart, rippleChart, routesChart, chartFrame, powerLabel } from '../lib/magician-charts.mjs';
 
@@ -58,7 +59,7 @@ document.querySelectorAll('[data-magician-game]').forEach(widget => {
     draw();
   }
 
-  flip.addEventListener('click', () => {
+  function advance() {
     const heads = random() >= .5;
     alive = alive.map(standing => standing && (random() >= .5) === heads);
     round += 1;
@@ -66,8 +67,14 @@ document.querySelectorAll('[data-magician-game]').forEach(widget => {
     const standing = count();
     const coin = heads ? 'Heads' : 'Tails';
     status.textContent = standing === 1 ? `${coin}. One person remains. This run succeeds!` : standing === 0 ? `${coin}. Everyone sat down. This run skipped over one survivor.` : `${coin}. ${standing} people remain. Each will make a fresh guess next round.`;
+    }
+  const history = bindPanelHistory(widget, {
+    read: () => ({ seed, round }),
+    restore: state => { seed = state.seed; start(); for (let i = 0; i < state.round; i++) advance(); },
+    reset: () => { seed = 42; start(); }
   });
-  reset.addEventListener('click', () => { seed += 1; start(); });
+  flip.addEventListener('click', () => { history.remember(); advance(); });
+  reset.addEventListener('click', () => { history.remember(); seed += 1; start(); });
   reset.disabled = false;
   start();
   if ('ResizeObserver' in window) {
@@ -89,6 +96,7 @@ document.querySelectorAll('[data-magician-probability]').forEach(widget => {
   const windowLabel = widget.querySelector('[data-window]');
   const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
   let startExponent = 14;
+  let currentPosition = 0;
   let animation = null;
   let lastFrame = 0;
   let frame;
@@ -96,6 +104,7 @@ document.querySelectorAll('[data-magician-probability]').forEach(widget => {
 
   function updateCursor(announce = true) {
     const position = Number(slider.value);
+    currentPosition = position;
     const chance = limitingProbability(position);
     const deviation = differencePerMillion(chance);
     if (frame) {
@@ -133,7 +142,19 @@ document.querySelectorAll('[data-magician-probability]').forEach(widget => {
     updateCursor(false);
   });
 
+  const history = bindPanelHistory(widget, {
+    read: () => ({ startExponent, position: currentPosition, hidden: detail.hidden }),
+    restore: state => {
+      stop(false); startExponent = state.startExponent; slider.value = state.position;
+      detail.hidden = state.hidden; magnify.setAttribute('aria-expanded', String(!detail.hidden));
+      magnify.textContent = detail.hidden ? 'Magnify the ripple' : 'Hide the magnification';
+      setWindow(); redrawRipple(); updateCursor(); play.textContent = playLabel();
+    },
+    reset: () => { stop(false); startExponent = 14; slider.value = 0; setWindow(); redrawRipple(); updateCursor(); }
+  });
+  trackControlEdits([slider], history);
   magnify.addEventListener('click', () => {
+    history.remember();
     stop(false);
     detail.hidden = !detail.hidden;
     magnify.setAttribute('aria-expanded', String(!detail.hidden));
@@ -143,6 +164,7 @@ document.querySelectorAll('[data-magician-probability]').forEach(widget => {
 
   slider.addEventListener('input', () => { stop(false); updateCursor(); });
   farther.addEventListener('click', () => {
+    history.remember();
     stop(false);
     startExponent += 20;
     setWindow();
@@ -152,6 +174,7 @@ document.querySelectorAll('[data-magician-probability]').forEach(widget => {
   });
 
   play.addEventListener('click', () => {
+    if (animation === null) history.remember();
     if (motionPreference.matches) {
       if (Number(slider.value) >= 6) {
         startExponent += 6;

@@ -1,0 +1,5 @@
+<div class="panel-actions" role="group" aria-label="Activity controls">
+  <button class="panel-button" type="button" data-panel-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
+  {% unless include.reset == false %}<button class="panel-button" type="button" data-reset data-panel-reset disabled>{% include icon.html name='restart' %}<span>Reset</span></button>{% endunless %}
+  {% include controls/help.html text=include.help %}
+</div>

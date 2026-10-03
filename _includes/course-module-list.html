@@ -1,0 +1,17 @@
+<ol class="course-module-list" start="{{ include.offset | plus: 1 }}">
+  {% for module in include.modules %}
+  {% assign module_number = forloop.index | plus: include.offset %}
+  <li>
+    {% if module.url %}<a class="course-module-entry is-available" href="{{ module.url | relative_url }}">{% else %}<div class="course-module-entry">{% endif %}
+      <span class="course-module-number" aria-hidden="true">{% if module_number < 10 %}0{% endif %}{{ module_number }}</span>
+      <div class="course-module-copy">
+        <span class="course-module-status">{% if module.url %}Available · {{ site.data.modules[module.module_id].lessons.size }} lessons{% else %}Forthcoming{% endif %}</span>
+        <h4>{{ module.title }}{% if module.url %} <span aria-hidden="true">↗</span>{% endif %}</h4>
+        <p>{{ module.description }}</p>
+        <p class="course-module-outcome"><strong>Goal:</strong> {{ module.outcome }}</p>
+        {% if module.url %}<span class="course-module-open">Open module →</span>{% endif %}
+      </div>
+    {% if module.url %}</a>{% else %}</div>{% endif %}
+  </li>
+  {% endfor %}
+</ol>

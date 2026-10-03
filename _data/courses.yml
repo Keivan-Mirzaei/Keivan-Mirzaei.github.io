@@ -1,29 +1,115 @@
 introductory-calculus:
   title: Introductory Calculus
   url: /learning/introductory-calculus/
-  level: Single-variable calculus
-  description: From a curve's slope to the area beneath it. Explore limits, derivatives, and integrals through questions, pictures, and problems.
+  level: University Calculus I–II
+  description: A first-year single-variable sequence, from limits and rates of change to integration, differential equations, and infinite series.
   image: /assets/images/introductory-calculus.svg
   image_alt: Two circular scenes show a tangent and accumulated area, connected by curved arrows linking differentiation and integration.
   lesson_count: 5
   start_label: Start the derivatives module
+  scope: These notes follow a standard first-year university sequence with trigonometry, suitable for mathematics, science, and engineering. Calculus I develops change and accumulation; Calculus II develops integration, models, and approximation. The division below is a study guide, since universities place some topics in different terms.
+  outcomes:
+    - Interpret functions, limits, and continuity using formulas, graphs, tables, and words, and calculate limits with an appropriate method.
+    - Explain a derivative as an instantaneous rate and tangent slope; compute derivatives from the definition and with differentiation rules.
+    - Use derivatives and the hypotheses of calculus theorems to analyze graphs, estimate values, and solve optimization and related-rates problems.
+    - Explain a definite integral as a limit of sums and as net accumulation, and use both parts of the Fundamental Theorem of Calculus.
+    - Choose and carry out integration methods, and assess numerical approximations and convergence of improper integrals.
+    - Build and interpret calculus models for motion, area, volume, and other accumulated quantities, with correct units and assumptions.
+    - Interpret direction fields and solve elementary separable differential equations and initial-value problems.
+    - Determine convergence of sequences and series, work with power and Taylor series, and justify approximation errors.
+    - Communicate complete mathematical reasoning, check theorem conditions, and assess the plausibility of an answer using estimates or technology.
+  parts:
+    - id: calculus-i
+      title: "Calculus I: change and accumulation"
+      description: Build the foundations, learn differentiation and its applications, and connect derivatives to definite integrals.
+    - id: calculus-ii
+      title: "Calculus II: integration, models, and series"
+      description: Extend integration, study elementary differential equations, and use convergence and series to understand approximation.
   modules:
     - title: Functions, limits, and continuity
-      description: Read a function's graph, make sense of approaching a value, and understand when limits describe the function itself.
+      part: calculus-i
+      description: Elementary functions and their graphs; one-sided, infinite, and at-infinity limits; limit laws, the squeeze theorem, continuity, and the Intermediate Value Theorem.
+      outcome: Evaluate limits, locate discontinuities and asymptotes, and justify an existence claim using continuity.
     - title: "Derivatives: from rates to local linearity"
-      description: Build the derivative from secant slopes, derive the rules, and discover what differentiability really requires.
+      part: calculus-i
+      description: Rates and tangent lines; the derivative definition; elementary and higher derivatives; product, quotient, and chain rules; implicit, inverse, and logarithmic differentiation.
+      outcome: Explain and calculate a derivative, find a tangent approximation, and recognize a failure of differentiability.
       url: /notes/derivatives/
       module_id: derivatives
+    - title: What derivatives tell us about functions
+      part: calculus-i
+      description: Extreme Value, Rolle's, and Mean Value Theorems; monotonicity and concavity; curve sketching; linear approximation and differentials; an introduction to Taylor polynomials, Newton's method, and L'Hôpital's rule.
+      outcome: Analyze a graph and construct a local approximation while checking the hypotheses of the method used.
     - title: Applications of derivatives
-      description: Use rates of change to understand motion, sketch curves, and solve optimization and related-rates problems.
+      part: calculus-i
+      description: Position, velocity, and acceleration; related rates; local and absolute extrema; constrained optimization with one independent variable.
+      outcome: Translate a contextual problem into a derivative calculation and interpret its solution with units and domain restrictions.
     - title: Integrals and accumulation
-      description: Approximate an area with small pieces, take a limit, and interpret the definite integral as accumulated change.
-    - title: The fundamental theorem of calculus
-      description: Connect differentiation with integration, find antiderivatives, and turn accumulation into a practical calculation.
+      part: calculus-i
+      description: Antiderivatives and initial conditions; Riemann sums; definite integral properties; signed area and net change; accumulation functions and both parts of the Fundamental Theorem of Calculus.
+      outcome: Move between a rate and its accumulated change, explaining why differentiation and integration are connected.
+    - title: Basic integration and its applications
+      part: calculus-i
+      description: Elementary antiderivatives and substitution, including changed bounds; total change and total distance; area between curves, average value, and volumes by cross-sections, disks, washers, and shells.
+      outcome: Evaluate basic integrals and set up a definite integral from a geometric or rate-based description.
+    - title: Techniques of integration
+      part: calculus-ii
+      description: Integration by parts; trigonometric integrals and substitutions; partial fractions; choosing and combining integration methods.
+      outcome: Select a suitable integration method and check an antiderivative by differentiation.
+    - title: Further applications of integrals
+      part: calculus-ii
+      description: Arc length and surface area; work, variable forces, and hydrostatic force; mass, moments, and centers of mass. Probability densities provide a syllabus-dependent application.
+      outcome: Derive an integral from small contributions and interpret the result in the original setting.
+    - title: Numerical integration and improper integrals
+      part: calculus-ii
+      description: Midpoint, trapezoidal, and Simpson's rules with error estimates; unbounded intervals and singular integrands; convergence and comparison of improper integrals.
+      outcome: Approximate an integral to a stated accuracy and determine whether an improper integral converges.
+    - title: Elementary differential equations
+      part: calculus-ii
+      description: Solution checking, direction fields, and Euler's method; separable equations and initial values; exponential growth and decay, equilibrium, and logistic models. First-order linear equations are an optional addition.
+      outcome: Solve a separable initial-value problem and compare its solution with the qualitative behavior of the model.
+    - title: Sequences and infinite series
+      part: calculus-ii
+      description: Sequence limits and partial sums; geometric, telescoping, harmonic, and p-series; divergence, integral, comparison, limit comparison, ratio, root, and alternating-series tests; absolute and conditional convergence.
+      outcome: Choose and justify a convergence test and bound the error of an alternating-series approximation.
+    - title: Power series and Taylor approximation
+      part: calculus-ii
+      description: Radius and interval of convergence, including endpoints; differentiation and integration of power series; Taylor and Maclaurin polynomials and series; remainder estimates and applications.
+      outcome: Represent a function by a power series where valid and justify the accuracy of a polynomial approximation.
+    - title: Parametric and polar curves
+      part: calculus-ii
+      description: Parametric motion, tangents, and arc length; polar graphs and area. This module supplies a common addition whose placement varies by university.
+      outcome: Apply differentiation and integration to a curve given parametrically or in polar coordinates.
+  study_approach:
+    - Each lesson connects a concept to graphical, numerical, verbal, and symbolic representations, then develops the relevant calculation.
+    - Practice progresses from short conceptual checks and routine calculations to applications and mixed problems that require choosing a method.
+    - Module checkpoints combine explanation, computation, and modeling. Cumulative reviews revisit earlier ideas and require complete solutions.
+    - Proofs of central results support the main course. Advanced counterexamples and analysis problems are marked as optional enrichment.
   prerequisites:
     - Algebra, including equations, inequalities, and manipulating fractions.
     - Function notation and graphs, including polynomial, exponential, and logarithmic functions.
     - Basic trigonometry, including sine, cosine, and radians.
+  alignment_note: This roadmap is a synthesis of the university sources below. Taylor polynomials, L'Hôpital's rule, integral applications, and differential equations may move between terms. Parametric and polar curves and probability applications are syllabus-dependent. A university requiring introductory partial derivatives needs an additional multivariable bridge; that material is outside this single-variable sequence.
+  curriculum_sources:
+    - title: University of British Columbia — MATH 100 learning objectives
+      url: https://secure.math.ubc.ca/php/MathNet/courseinfo.php?name=100%3A1A2&session=2023W&t=outline
+      description: The 2023 differential-calculus objectives emphasize functions, limits, derivatives, approximations, applications, and reasoning; additional multivariable topics are specific to that syllabus.
+    - title: University of British Columbia — MATH 101 learning objectives, 2025/26
+      url: https://personal.math.ubc.ca/~elyse/Math101Text/text-integral-calculus.pdf
+      description: The course text contains section objectives and a collected list in its appendix, covering integration, applications, numerical methods, sequences, and series. Earlier detailed objectives also inform the differential-equations component.
+      followup_url: https://www.math.ubc.ca/~wachs/Teaching/MATH101/MATH101_LearningObj.pdf
+      followup_label: Earlier detailed objectives
+    - title: University of Utah — Calculus I learning outcomes
+      url: https://class-tools.app.utah.edu/syllabus/1254/2533/CalcI_Syllabus_Spring2025.pdf
+      description: The Spring 2025 outcomes connect limits and differentiation to graph analysis, modeling, the Fundamental Theorem, and integral applications.
+    - title: University of Wisconsin–Madison — Calculus I and II
+      url: https://www.math.wisc.edu/undergraduate/courses-enrollment/calculus/
+      description: A two-semester sequence with differentiation and basic integration followed by integration techniques, series, and elementary differential equations.
+    - title: University of Alberta — MATH 144 and MATH 146
+      url: https://apps.ualberta.ca/catalogue/course/math/144
+      followup_url: https://apps.ualberta.ca/catalogue/course/math/146
+      followup_label: MATH 146
+      description: Illustrates variation in placement, with Taylor polynomials in the first course and integration, differential equations, and partial differentiation in the second.
   references:
     - title: Calculus, Volume 1
       author: OpenStax
@@ -35,4 +121,4 @@ introductory-calculus:
       description: A free text built around questions and activities for developing a conceptual understanding of calculus.
     - title: "Problems in Real Analysis: Advanced Calculus on the Real Axis"
       author: Teodora-Liliana Rădulescu, Vicențiu D. Rădulescu, and Titu Andreescu · Springer, 2009
-      description: Chapter 5 supplies selected ideas and extension problems for the derivatives module. Best used for the proof-based material.
+      description: Chapter 5 supplies optional proof extensions for the derivatives module. The core course follows the introductory university objectives above.

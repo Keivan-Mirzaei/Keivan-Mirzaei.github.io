@@ -1,0 +1,34 @@
+/* The utilities problem keeps text and touch targets readable as its board resizes. */
+.tu-widget .graph-heading h3 { margin: 0; }
+.tu-widget .tu-caption, .tu-widget .tu-status { font: 13px/1.7 var(--sans); margin: 14px 0; }
+.tu-widget .tu-status { color: var(--green); min-height: 3.4em; }
+.tu-board { width: 100%; max-width: 620px; margin: 16px auto 8px; }
+.tu-board svg, .tu-board img { display: block; width: 100%; height: auto; margin: 0; font-family: var(--sans); overflow: visible; }
+.tu-plane-board { touch-action: none; user-select: none; }
+.tu-node[role="button"] { cursor: crosshair; outline: none; }
+.tu-node.is-selected .tu-hit, .tu-node:focus-visible .tu-hit { fill: var(--tint); stroke: var(--green); stroke-width: 2; stroke-dasharray: 4 3; }
+.tu-paper[role="button"] { cursor: crosshair; outline: none; }
+.tu-paper:focus-visible { stroke: var(--green); stroke-width: 2; stroke-dasharray: 4 3; }
+.tu-legend { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; font: 12px/1.6 var(--mono); margin: 8px 0 22px; }
+.tu-gas { color: #95631f; }.tu-water { color: #386f98; }.tu-power { color: #a34f60; }
+.tu-seam-a { color: var(--green); }.tu-seam-b { color: #8769a2; }
+.tu-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.tu-widget button { min-height: 44px; }
+.tu-transformation { display: block; width: 100%; height: clamp(250px, 43vw, 390px); margin: 12px 0; touch-action: none; cursor: grab; }
+.tu-transformation:active { cursor: grabbing; }
+.tu-transformation:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.tu-phase-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.tu-phase-buttons button { color: var(--green); background: var(--paper); border: 1px solid var(--line); border-radius: 3px; font-size: 12px; padding: 8px 4px; }
+.tu-phase-buttons button[aria-pressed="true"] { border-color: var(--green); background: var(--tint); }
+.tu-slider-label { display: block; margin: 16px 0; font: 12px/1.8 var(--sans); }
+.tu-slider-label input { display: block; width: 100%; min-height: 44px; accent-color: var(--green); }
+.tu-trace-label { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 18px; font: 12px var(--sans); }
+.tu-trace-label select { max-width: 100%; padding: 8px 10px; min-height: 44px; border: 1px solid var(--line); background: var(--paper); border-radius: 3px; color: var(--ink); font: 13px var(--sans); }
+.tu-widget .tu-footnote { color: var(--muted); font: 12px/1.7 var(--sans); margin: 0; }
+@media (max-width: 500px) {
+  .tu-legend { gap: 8px 12px; font-size: 11px; }
+  .tu-phase-buttons { grid-template-columns: repeat(2, 1fr); }
+  .tu-transformation { height: 255px; }
+  .tu-widget .graph-heading { gap: 12px; }
+  .tu-widget .graph-heading h3 { font-size: 21px; }
+}

@@ -24,7 +24,7 @@ function fixture() {
     cup.querySelector = selector => selector === '[data-cup-orientation]' ? cup.orientation : cup.selection;
     return cup;
   });
-  const fields = Object.fromEntries(['count', 'status', 'flip', 'reset'].map(name => [name, new Control()]));
+  const fields = Object.fromEntries(['count', 'status', 'flip', 'reset', 'undo'].map(name => [name, new Control()]));
   const widget = {
     querySelectorAll: () => cups,
     querySelector: selector => fields[selector.match(/data-cups-([^\]]+)/)[1]],
@@ -35,6 +35,25 @@ function fixture() {
   const move = pair => { pair.forEach(index => cups[index].click()); fields.flip.click(); };
   return { cups, fields, state, selected, move };
 }
+
+test('undo restores a flip or reset and clears an unfinished selection', () => {
+  const f = fixture();
+  assert.equal(f.fields.undo.disabled, true);
+  f.move([0, 2]);
+  f.move([0, 1]);
+  f.cups[2].click();
+  f.fields.undo.click();
+  assert.deepEqual(f.state(), [true, false, true]);
+  assert.deepEqual(f.selected(), []);
+  assert.equal(f.fields.count.textContent, '1 move · 2 of 3 up');
+  f.fields.reset.click();
+  assert.deepEqual(f.state(), [false, false, false]);
+  f.fields.undo.click();
+  assert.deepEqual(f.state(), [true, false, true]);
+  f.fields.undo.click();
+  assert.deepEqual(f.state(), [false, false, false]);
+  assert.equal(f.fields.undo.disabled, true);
+});
 
 test('the puzzle starts down, allows deselection, and requires two distinct cups', () => {
   const f = fixture();

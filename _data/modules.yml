@@ -17,8 +17,8 @@ derivatives:
     - step: 4
       title: Choosing a more powerful technique
       url: /notes/derivatives/techniques/
-      description: Use implicit, inverse, logarithmic, and parametric differentiation with their hypotheses.
+      description: Use implicit, inverse, and logarithmic differentiation; revisit parametric differentiation with the later curves module.
     - step: 5
       title: Differentiability means local linearity
       url: /notes/derivatives/local-linearity/
-      description: Compare error bounds, explore dense branches and oscillations, and complete the synthesis tasks.
+      description: Understand tangent approximations, then explore optional proof extensions with oscillations and dense branches.

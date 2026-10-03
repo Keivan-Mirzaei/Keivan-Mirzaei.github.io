@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">Lights Out on a graph</title><desc id="desc">Nine numbered lights form an irregular network. Filled golden lights are on; hollow lights are off. Pressing a light flips it and every light directly connected to it.</desc>
+  <g stroke="#b9c1b3" stroke-width="2" fill="none"><path d="M114 108 300 72 486 132 402 252 198 228 114 108M300 72 198 228 96 396 276 384 402 252 300 72M198 228 276 384 492 438 402 252M276 384 300 528 492 438"/></g>
+  <g stroke="#b9c1b3" stroke-width="2" fill="#fcfcf9"><circle cx="114" cy="108" r="23"/><circle cx="486" cy="132" r="23"/><circle cx="96" cy="396" r="23"/><circle cx="492" cy="438" r="23"/></g>
+  <g fill="#e9bd63" stroke="#e9bd63" stroke-width="2"><circle cx="300" cy="72" r="23"/><circle cx="198" cy="228" r="23"/><circle cx="402" cy="252" r="23"/><circle cx="276" cy="384" r="23"/><circle cx="300" cy="528" r="23"/></g>
+  <g fill="#282e29" font-family="system-ui,sans-serif" font-size="16" text-anchor="middle" dominant-baseline="central"><text x="114" y="108">1</text><text x="300" y="72">2</text><text x="486" y="132">3</text><text x="198" y="228">4</text><text x="402" y="252">5</text><text x="96" y="396">6</text><text x="276" y="384">7</text><text x="492" y="438">8</text><text x="300" y="528">9</text></g>
+</svg>

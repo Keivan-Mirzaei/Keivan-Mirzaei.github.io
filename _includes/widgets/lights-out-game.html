@@ -16,22 +16,23 @@
     <div class="lo-target" data-lo-target-region hidden><span class="lo-mini-title">Target</span><div data-lo-target></div></div>
   </div>
   <div class="lo-legend"><span><i class="lo-key lo-key-on" aria-hidden="true"></i>On</span><span><i class="lo-key" aria-hidden="true"></i>Off</span><span data-lo-plan-key hidden><i class="lo-key lo-key-plan" aria-hidden="true">1</i>Press order</span></div>
-  <div class="lo-control-row">
-    <button class="secondary-button" type="button" data-lo-show disabled>Show solution</button>
-    <button class="lo-secondary" type="button" data-lo-new disabled>New puzzle</button>
-    <button class="lo-secondary" type="button" data-lo-undo disabled>Undo</button>
-    <button class="lo-secondary" type="button" data-lo-restart disabled>Restart</button>
-  </div>
+  <div class="lo-control-row panel-actions">
+    <button class="secondary-button panel-button" type="button" data-lo-show disabled>Show solution</button>
+    <button class="lo-secondary panel-button" type="button" data-lo-new disabled>New puzzle</button>
+    <button class="lo-secondary panel-button" type="button" data-lo-undo disabled>Undo</button>
+    <button class="lo-secondary panel-button" type="button" data-lo-restart disabled>Reset</button>
+  {% include controls/help.html text='<p>Press a light to flip it and its neighbours. Undo takes back a press. Reset restores the starting lights. Show solution reveals a press sequence.</p>' %}</div>
   <div class="lo-solution" data-lo-solution hidden>
     <p class="lo-plan-label" data-lo-plan-label></p>
     <div class="lo-control-row">
-      <button class="secondary-button" type="button" data-lo-next>Next press</button>
-      <button class="lo-secondary" type="button" data-lo-finish>Finish solution</button>
-      <button class="lo-secondary" type="button" data-lo-alternative>Another solution</button>
+      <button class="secondary-button panel-button" type="button" data-lo-next>Next press</button>
+      <button class="lo-secondary panel-button" type="button" data-lo-finish>Finish solution</button>
+      <button class="lo-secondary panel-button" type="button" data-lo-alternative>Another solution</button>
     </div>
     <p class="lo-caption" data-lo-parity></p>
   </div>
   <p class="lo-status" data-lo-status role="status">The starting pattern is solvable. Try a few presses, then reveal a solution.</p>
-  <div class="lo-experiments"><button class="lo-text-button" type="button" data-lo-edit aria-pressed="false" disabled>Edit starting lights</button><button class="lo-text-button" type="button" data-lo-impossible disabled>Try an impossible board</button></div>
+  <div class="lo-experiments"><button class="lo-text-button panel-button" type="button" data-lo-edit aria-pressed="false" disabled>Edit starting lights</button><button class="lo-text-button panel-button" type="button" data-lo-impossible disabled>Try an impossible board</button></div>
   <noscript><p>The example above is solved by pressing lights <strong>1, 3, and 5</strong>, in any order. Enable JavaScript to play and explore other boards. Both proofs below remain readable without it.</p></noscript>
+
 </section>

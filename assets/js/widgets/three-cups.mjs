@@ -4,6 +4,8 @@ export function initializeThreeCups(widget) {
   const status = widget.querySelector('[data-cups-status]');
   const flip = widget.querySelector('[data-cups-flip]');
   const reset = widget.querySelector('[data-cups-reset]');
+  const undo = widget.querySelector('[data-cups-undo]');
+  const history = [];
   let facingUp = [false, false, false];
   const selected = new Set();
   let moves = 0;
@@ -20,6 +22,7 @@ export function initializeThreeCups(widget) {
     });
     count.textContent = `${moves} ${moves === 1 ? 'move' : 'moves'} · ${facingUp.filter(Boolean).length} of 3 up`;
     flip.disabled = selected.size !== 2;
+    if (undo) undo.disabled = history.length === 0;
     status.textContent = message;
   }
 
@@ -45,6 +48,8 @@ export function initializeThreeCups(widget) {
 
   flip.addEventListener('click', () => {
     if (selected.size !== 2) return;
+    history.push({ facingUp: [...facingUp], moves });
+    if (history.length > 60) history.shift();
     const pair = [...selected].sort();
     pair.forEach(index => { facingUp[index] = !facingUp[index]; });
     moves += 1;
@@ -56,11 +61,20 @@ export function initializeThreeCups(widget) {
 
   reset.disabled = false;
   reset.addEventListener('click', () => {
+    history.push({ facingUp: [...facingUp], moves });
+    if (history.length > 60) history.shift();
     facingUp = [false, false, false];
     moves = 0;
     selected.clear();
     render('Reset: all three cups face down. Select two cups to begin.');
     cups[0].focus({ preventScroll: true });
+  });
+
+  undo?.addEventListener('click', () => {
+    if (!history.length) return;
+    ({ facingUp, moves } = history.pop());
+    selected.clear();
+    render('Move undone. Select two cups for your next move.');
   });
 
   render('Select two cups to begin.');

@@ -16,40 +16,60 @@ layout: default
     </div>
     <nav class="course-jump-links" aria-label="On this page">
       <a href="#course-description-heading">Description</a>
+      <a href="#course-outcomes-heading">Objectives</a>
       <a href="#course-contents-heading">Modules</a>
+      <a href="#course-study-heading">Study approach</a>
       <a href="#course-prerequisites-heading">Prerequisites</a>
+      <a href="#course-alignment-heading">University sources</a>
       <a href="#course-references-heading">References</a>
     </nav>
   </header>
   <section class="course-description" aria-labelledby="course-description-heading">
     <h2 id="course-description-heading">About the course</h2>
     <div class="prose">{{ content }}</div>
+    <p class="course-section-note">{{ course.scope }}</p>
     {% if first_module %}<a class="primary-link" href="{{ first_module.url | relative_url }}">{{ course.start_label | default: 'Start an available module' }} {% include icon.html name='arrow' %}</a>{% endif %}
+  </section>
+  <section class="course-outcomes" aria-labelledby="course-outcomes-heading">
+    <h2 id="course-outcomes-heading">Learning objectives</h2>
+    <p>By the end of the complete sequence, you should be able to:</p>
+    <ul>{% for outcome in course.outcomes %}<li>{{ outcome }}</li>{% endfor %}</ul>
   </section>
   <section class="course-contents" aria-labelledby="course-contents-heading">
     <h2 id="course-contents-heading">Table of contents</h2>
-    <p class="course-section-note">Follow the modules in order, or open the available module to begin.</p>
-    <ol class="course-module-list">
-      {% for module in course.modules %}
-      <li>
-        {% if module.url %}<a class="course-module-entry is-available" href="{{ module.url | relative_url }}">{% else %}<div class="course-module-entry">{% endif %}
-          <span class="course-module-number" aria-hidden="true">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
-          <div class="course-module-copy">
-            <span class="course-module-status">{% if module.url %}Available · {{ site.data.modules[module.module_id].lessons.size }} lessons{% else %}Forthcoming{% endif %}</span>
-            <h3>{{ module.title }}{% if module.url %} <span aria-hidden="true">↗</span>{% endif %}</h3>
-            <p>{{ module.description }}</p>
-            {% if module.url %}<span class="course-module-open">Open module →</span>{% endif %}
-          </div>
-        {% if module.url %}</a>{% else %}</div>{% endif %}
-      </li>
-      {% endfor %}
-    </ol>
+    <p class="course-section-note">Follow the modules in order. Each module states what you should be able to do; only modules with available lessons can be opened.</p>
+    {% assign module_offset = 0 %}
+    {% for part in course.parts %}
+    {% assign part_modules = course.modules | where: 'part', part.id %}
+    <div class="course-part" aria-labelledby="{{ part.id }}-heading">
+      <h3 id="{{ part.id }}-heading" class="course-part-title">{{ part.title }}</h3>
+      <p class="course-section-note">{{ part.description }}</p>
+      {% include course-module-list.html modules=part_modules offset=module_offset %}
+    </div>
+    {% assign module_offset = module_offset | plus: part_modules.size %}
+    {% endfor %}
+  </section>
+  <section class="course-study" aria-labelledby="course-study-heading">
+    <h2 id="course-study-heading">How the notes develop understanding</h2>
+    <ul>{% for approach in course.study_approach %}<li>{{ approach }}</li>{% endfor %}</ul>
   </section>
   <section class="course-prerequisites" aria-labelledby="course-prerequisites-heading">
     <h2 id="course-prerequisites-heading">Prerequisites</h2>
     <p>You do not need prior calculus for the full course. Be comfortable with:</p>
     <ul>{% for prerequisite in course.prerequisites %}<li>{{ prerequisite }}</li>{% endfor %}</ul>
     <p class="course-section-note">To start the available derivatives module, you will also need limits and continuity, including the standard trigonometric and exponential limits.</p>
+  </section>
+  <section class="course-alignment" aria-labelledby="course-alignment-heading">
+    <h2 id="course-alignment-heading">University objectives behind the course</h2>
+    <p class="course-section-note">{{ course.alignment_note }}</p>
+    <ul class="course-source-list">
+      {% for source in course.curriculum_sources %}
+      <li>
+        <h3><a href="{{ source.url }}">{{ source.title }} <span aria-hidden="true">↗</span></a>{% if source.followup_url %} · <a href="{{ source.followup_url }}">{{ source.followup_label }}</a>{% endif %}</h3>
+        <p>{{ source.description }}</p>
+      </li>
+      {% endfor %}
+    </ul>
   </section>
   <section class="course-references" aria-labelledby="course-references-heading">
     <h2 id="course-references-heading">References</h2>

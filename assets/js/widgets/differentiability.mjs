@@ -1,3 +1,4 @@
+import { bindInputHistory } from '../lib/panel-history.mjs';
 import { MODELS, magnifiedValue, errorBound } from '../lib/differentiability-math.mjs';
 
 const screenX = (u) => 319 + 251 * u;
@@ -91,7 +92,7 @@ document.querySelectorAll('[data-widget="differentiability"]').forEach((widget) 
   });
   zoom.addEventListener('input', update);
   slopeControl.addEventListener('input', update);
-  reset.addEventListener('click', () => {
+  bindInputHistory(widget, [select, zoom, slopeControl], update, () => {
     select.value = initial;
     zoom.value = 0;
     slopeControl.value = MODELS[initial].slope;

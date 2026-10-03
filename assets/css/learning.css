@@ -32,21 +32,24 @@
 .course-module-status { display: block; margin-bottom: 7px; color: var(--muted); font: 10px/1.6 var(--mono); }
 .is-available .course-module-status { color: var(--green); }
 .course-module-copy { min-width: 0; }
-.course-module-copy h3 { margin: 0 0 8px; font: 23px/1.35 var(--serif); }
-.course-module-copy h3 > span { color: var(--green); font: 17px var(--sans); }
+.course-part { margin-top: 30px; }
+.course-part-title { margin-bottom: 10px; font: 24px/1.4 var(--serif); }
+.course-module-copy h4 { margin: 0 0 8px; font: 23px/1.35 var(--serif); }
+.course-module-copy h4 > span { color: var(--green); font: 17px var(--sans); }
 .course-module-copy p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.course-module-copy .course-module-outcome { margin-top: 10px; color: var(--ink); }
 .course-module-open { display: block; margin-top: 13px; color: var(--green); font-size: 12px; }
-.course-prerequisites { font-size: 14px; }
-.course-prerequisites ul { padding-left: 22px; margin-bottom: 20px; }
-.course-prerequisites li { padding-left: 4px; margin-bottom: 9px; }
-.course-references ul { padding: 0; margin: 23px 0 0; list-style: none; }
-.course-references li { margin-top: 23px; }
-.course-references h3 { margin-bottom: 7px; font-size: 15px; font-weight: 600; }
-.course-references p { margin-bottom: 6px; color: var(--muted); font-size: 13px; }
+.course-outcomes, .course-study, .course-prerequisites { font-size: 14px; line-height: 1.8; }
+.course-outcomes ul, .course-study ul, .course-prerequisites ul { padding-left: 22px; margin-bottom: 20px; }
+.course-outcomes li, .course-study li, .course-prerequisites li { padding-left: 4px; margin-bottom: 9px; }
+.course-references ul, .course-source-list { padding: 0; margin: 23px 0 0; list-style: none; }
+.course-references li, .course-source-list li { margin-top: 23px; }
+.course-references h3, .course-source-list h3 { margin-bottom: 7px; font-size: 15px; font-weight: 600; }
+.course-references p, .course-source-list p { margin-bottom: 6px; color: var(--muted); font-size: 13px; line-height: 1.8; }
 .course-references .course-reference-author { font-size: 11px; }
 @media (max-width: 600px) {
   .learning-grid { grid-template-columns: 1fr; }
   .course-summary { flex-direction: column; }
   .course-module-entry { gap: 16px; padding: 23px 10px; }
-  .course-module-copy h3 { font-size: 21px; }
+  .course-module-copy h4 { font-size: 21px; }
 }

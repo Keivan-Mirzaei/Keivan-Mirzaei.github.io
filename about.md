@@ -45,7 +45,7 @@ You can also [play a puzzle]({{ '/puzzles/' | relative_url }}) or [read about my
 
 I’m a PhD candidate in Mathematical Finance at the University of Calgary. My research is in stochastic analysis and partial differential equations, and I teach mathematics. Alongside that work, I keep this diary to collect ideas, follow questions, and share things I find interesting.
 
-For my education, teaching, and academic experience, see my [CV]({{ '/cv/' | relative_url }}).
+For my education, teaching, and professional experience, see my [LinkedIn profile]({{ site.linkedin_url }}).
 
 ## Get in touch
 

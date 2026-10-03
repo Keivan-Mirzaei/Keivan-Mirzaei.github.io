@@ -1,6 +1,6 @@
-import { NODES, nodeById, surfacePoint, smoothWaypoints } from './three-utilities-math.mjs?v=20261002-5';
-import { mugMesh } from './three-utilities-mug.mjs?v=20261002-5';
-import { draw3DSurface, boundaryHighlights, BOUNDARY_STYLE } from './three-utilities-renderer.mjs?v=20261002-5';
+import { NODES, nodeById, surfacePoint, smoothWaypoints } from './three-utilities-math.mjs';
+import { mugMesh } from './three-utilities-mug.mjs';
+import { draw3DSurface, boundaryHighlights, BOUNDARY_STYLE } from './three-utilities-renderer.mjs';
 
 export function boardGeometry(width) {
   const w = Math.max(220, width);

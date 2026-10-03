@@ -7,18 +7,10 @@
   <meta name="description" content="{{ page.description | escape }}">
   <meta name="theme-color" content="#fcfcf9">
   <link rel="canonical" href="{{ page.url | absolute_url }}">
-  <link rel="icon" href="{{ '/assets/almost-obvious-icon.png' | relative_url }}" type="image/png" sizes="64x64">
-  <link rel="apple-touch-icon" href="{{ '/apple-touch-icon.png' | relative_url }}" sizes="180x180">
-  {% if page.widgets contains 'hex' %}<link rel="stylesheet" href="{{ '/assets/css/hex.css' | relative_url }}?v={{ site.time | date: '%s' }}">{% endif %}
-  <link rel="stylesheet" href="{{ '/assets/css/puzzles.css' | relative_url }}?v={{ site.time | date: '%s' }}">
-  {% for stylesheet in page.styles %}
-  {% assign stylesheet_path = '/assets/css/' | append: stylesheet | append: '.css' %}
-  <link rel="stylesheet" href="{{ stylesheet_path | relative_url }}?v={{ site.time | date: '%s' }}">
-  {% endfor %}
-  {% for widget in page.widgets %}
-    {% assign widget_script = site.data.widgets[widget] %}
-    {% if widget_script %}<script src="{{ widget_script | relative_url }}?v={{ site.time | date: '%s' }}"{% if widget_script contains '.mjs' %} type="module"{% else %} defer{% endif %}></script>{% endif %}
-  {% endfor %}
+  {% include site-icons.html %}
+  <link rel="stylesheet" href="{{ '/assets/css/puzzles.css' | relative_url }}">
+
+  {% include widget-assets.html %}
 </head>
 <body class="puzzle-page{% if page.game_layout == 'board-first' %} puzzle-board-first{% endif %}">
   <a class="skip-link" href="#main">Skip to game</a>

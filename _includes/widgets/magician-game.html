@@ -3,9 +3,10 @@
   <div class="mp-audience" data-audience>{% include widgets/magician-audience.svg %}</div>
   <p class="mp-caption">Filled dots are standing. Outlined dots have sat down.</p>
   <div class="mp-control-row">
-    <button class="secondary-button" type="button" data-flip disabled>Flip a round</button>
-    <button class="mp-secondary" type="button" data-new-audience disabled>New audience</button>
+    <button class="secondary-button panel-button" type="button" data-flip disabled>Flip a round</button>
+    <button class="mp-secondary panel-button" type="button" data-new-audience disabled>New audience</button>
   </div>
   <p class="mp-status" data-game-status aria-live="polite">Everyone is standing. Will this game reach exactly one?</p>
   <noscript><p>Enable JavaScript to play. Each round independently keeps each standing person with probability one half.</p></noscript>
+  {% include controls/panel.html help='<p>Flip a round: each standing person independently guesses the coin. A wrong guess sits down. Reach exactly one survivor. Undo retries a round.</p>' %}
 </section>

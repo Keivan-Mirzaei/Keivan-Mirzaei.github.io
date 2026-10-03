@@ -6,6 +6,7 @@ lang: en
 timezone: America/Edmonton
 author: Keivan Mirzaei
 email: keivan.mirzaei@outlook.com
+linkedin_url: https://www.linkedin.com/in/k1-mirzaei/
 
 permalink: /notes/:title/
 paginate: 5
@@ -82,4 +83,3 @@ exclude:
   - scripts
   - tests
   - vendor
-  - legacy

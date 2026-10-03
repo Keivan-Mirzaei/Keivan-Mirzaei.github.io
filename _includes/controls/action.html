@@ -1,0 +1,4 @@
+<button class="puzzle-icon-button panel-button" type="button" data-{{ include.game }}-{{ include.action }} data-puzzle-icon aria-label="{{ include.label | escape }}" data-tooltip="{{ include.label | escape }}"{% if include.hidden %} hidden{% endif %}{% unless include.enabled %} disabled{% endunless %}>
+  {% if include.icon == 'hint' %}<span class="puzzle-action-default">{% include icon.html name='hint' %}</span><span class="puzzle-action-confirm">{% include icon.html name='confirm' %}</span>{% else %}{% include icon.html name=include.icon %}{% endif %}
+  {% if include.icon == 'undo' %}<span>Undo</span>{% elsif include.icon == 'restart' %}<span>Reset</span>{% endif %}
+</button>

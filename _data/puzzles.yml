@@ -10,6 +10,12 @@
   image: /assets/images/klotski-board.svg
   image_alt: A Klotski board with sliding rectangular blocks and a marked large block to guide to the bottom exit.
   players: A sliding-block puzzle
+- title: Lights Out
+  url: /puzzles/lights-out/
+  description: One press flips a light and its neighbors. Follow the connections and turn them all off.
+  image: /assets/images/lights-out-board.svg
+  image_alt: Nine lights connected by lines in an irregular graph, with some lights on and others off.
+  players: Four difficulty levels, 1,000 graph puzzles each
 - title: Floor tiling
   url: /puzzles/tiling/
   description: A floor with a few squares missing, and just enough tiles. Find a place for every piece.

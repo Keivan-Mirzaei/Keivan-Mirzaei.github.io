@@ -1,0 +1,74 @@
+/* SVG graphing uses native sliders; no plotting library is downloaded. */
+.graph-widget { padding: 24px; margin: 28px 0; border: 1px solid var(--line); border-radius: 5px; background: #f7f8f3; }
+.graph-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.graph-heading h3 { margin: 0; font: 23px/1.4 var(--serif); }
+.graph-heading .graph-equation { margin: 0; font: 13px/1.7 var(--mono); color: var(--green); }
+.function-plot { display: block; width: 100%; height: auto; overflow: hidden; margin-top: 20px; }
+.plot-grid { fill: none; stroke: #d9dfd2; stroke-width: 1; }
+.plot-axes { fill: none; stroke: #87947e; stroke-width: 1.2; }
+.plot-labels { font: 12px var(--mono); text-anchor: middle; fill: #56644e; }
+.plot-reference { fill: none; stroke: #94a587; stroke-width: 2; stroke-dasharray: 5 5; }
+.plot-curve { fill: none; stroke: var(--green); stroke-width: 3; }
+.plot-vertex { fill: var(--green); stroke: var(--paper); stroke-width: 2; }
+.plot-legend { display: flex; flex-wrap: wrap; gap: 6px 20px; color: var(--muted); font-size: 11px; margin: 0 0 22px; }
+.graph-controls { display: grid; grid-template-columns: minmax(135px, 1fr) minmax(0, 1.4fr); gap: 12px 24px; align-items: center; }
+.graph-controls label { font-size: 13px; display: flex; flex-wrap: wrap; justify-content: space-between; column-gap: 15px; }
+.graph-controls label > span { color: var(--green); font-family: var(--mono); font-size: 11px; }
+.graph-controls input { width: 100%; min-width: 0; min-height: 30px; accent-color: var(--green); cursor: pointer; }
+.graph-actions { display: flex; gap: 20px; justify-content: space-between; align-items: center; margin-top: 22px; }
+.graph-actions .graph-feedback { color: var(--muted); font-size: 12px; margin: 0; }
+.graph-actions button { flex-shrink: 0; }
+.graph-widget .graph-values { background: transparent; border: 0; border-top: 1px solid var(--line); padding: 15px 0 0; margin: 20px 0 0; font-size: 12px; }
+.graph-values summary { color: var(--green); }
+.graph-values table { display: table; margin-top: 15px; width: 100%; max-width: 28rem; border-collapse: collapse; }
+.graph-values th, .graph-values td { padding: 6px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+.graph-values caption { text-align: left; padding-bottom: 10px; color: var(--muted); }
+
+/* Shared activity controls; the rest of each lesson is ordinary Markdown. */
+.activity-badge { font: 11px/1.7 var(--mono); color: var(--muted); }
+.graph-widget > p { font-size: 14px; }
+.graph-widget .activity-result { padding: 14px 0; margin: 8px 0; font-size: 14px; color: var(--green); }
+.activity-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+.card-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.card-columns > div { min-width: 0; text-align: center; }
+.card-columns p { font: 12px var(--mono); margin-bottom: 12px; }
+.card-pile { list-style: none; margin: 0 0 15px; padding: 0; display: grid; gap: 6px; }
+.prose .card-pile li { padding: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: 4px; font: 18px/1.5 var(--serif); }
+.card-columns button { padding: 9px 5px; width: 100%; font-size: 12px; }
+button:disabled { cursor: default; opacity: .55; }
+.plot-secant { fill: none; stroke: #a85928; stroke-width: 2.5; }
+.plot-second-point { fill: #a85928; stroke: var(--paper); stroke-width: 2; }
+.differentiability-widget .differentiability-caption { font: 12px/1.7 var(--sans); color: var(--muted); margin: 12px 0; }
+.differentiability-widget .graph-controls select { width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid var(--line); border-radius: 3px; color: var(--ink); background: var(--paper); font: 13px var(--sans); }
+.differentiability-widget .graph-controls input { min-height: 44px; }
+.differentiability-tangent { fill: none; stroke: #384c35; stroke-width: 2; stroke-dasharray: 8 6; }
+.differentiability-guide, .differentiability-envelope { fill: none; stroke: #94a587; stroke-width: 1.3; stroke-dasharray: 3 5; }
+.differentiability-other-guide { fill: none; stroke: #a85928; stroke-width: 1.3; stroke-dasharray: 3 5; }
+.differentiability-rational { fill: var(--green); }
+.differentiability-irrational { fill: #a85928; }
+.probability-table { margin: 20px 0; width: 100%; }
+.probability-table caption { text-align: left; color: var(--muted); font-size: 12px; }
+.probability-bar { height: 34px; border: 1px solid var(--green); background: repeating-linear-gradient(135deg, #e6ece1 0 5px, #bccdb5 5px 7px); overflow: hidden; border-radius: 3px; }
+.probability-bar > span { display: block; height: 100%; background: var(--green); }
+.sample-notice { padding: 15px 20px; background: var(--sidebar); border-left: 3px solid var(--green); font-size: 14px; }
+
+/* Advanced plots start as ordinary images. Their libraries load on request. */
+.advanced-stage { min-width: 0; margin: 16px 0; }
+.prose .advanced-preview { display: block; width: 100%; margin: 0; }
+.advanced-view { width: 100%; height: clamp(280px, 48vw, 400px); overflow: hidden; }
+.advanced-view > canvas { display: block; width: 100%; height: 100%; }
+.advanced-launch { align-items: center; font-size: 13px; }
+.advanced-widget .advanced-status { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+.advanced-controls { border: 0; padding: 10px 0 0; margin: 16px 0 0; border-top: 1px solid var(--line); min-width: 0; }
+.advanced-controls legend { font: 16px var(--serif); padding: 0 10px 0 0; }
+.advanced-controls > p { font-size: 13px; margin: 8px 0 12px; }
+.advanced-controls .secondary-button { padding: 8px 12px; font-size: 12px; }
+.advanced-controls .activity-buttons { gap: 8px; }
+
+
+@media (max-width: 560px) {
+  .graph-widget { padding: 16px; }
+  .graph-controls { grid-template-columns: 1fr; gap: 4px; }
+  .graph-controls input { margin: 0 0 10px; }
+  .graph-actions { flex-wrap: wrap; gap: 12px; }
+}

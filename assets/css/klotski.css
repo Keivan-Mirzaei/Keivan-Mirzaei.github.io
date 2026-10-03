@@ -50,3 +50,7 @@
   .klotski-board-heading { font-size: 11px; gap: 8px; }
   .klotski-actions { gap: 6px; }
 }
+
+/* Let counters and controls form aligned rows on narrow phones. */
+.klotski-board-heading { flex-wrap: wrap; gap: 10px; }
+.klotski-actions.panel-actions { margin-top: 0; }

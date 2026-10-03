@@ -67,9 +67,6 @@
 .three-cups-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .three-cups-controls button { min-height: 44px; }
 .three-cups-controls .secondary-button:disabled { opacity: .45; cursor: default; }
-.three-cups-reset { border: 0; border-radius: 3px; padding: 9px 15px; background: transparent; color: var(--green); font-size: 12px; }
-.three-cups-reset:not(:disabled):hover { background: var(--tint); }
-.three-cups-reset:disabled { color: var(--muted); cursor: default; }
 .three-cups-widget .three-cups-status { margin: 14px 0 0; min-height: 3.4em; color: var(--green); font-size: 13px; line-height: 1.7; }
 .three-cups-widget noscript p { margin: 16px 0 0; font-size: 13px; }
 @media (max-width: 480px) {

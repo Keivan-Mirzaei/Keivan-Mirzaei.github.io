@@ -38,6 +38,6 @@
   </div>
   <p class="activity-result" data-feedback role="status">{% if initial_model == 'absolute' %}Maximum normalized error: 1. Zooming does not reduce it. No choice of slope removes the corner.{% else %}Normalized error bound: 1. With slope 2 this bound equals ρ and tends to zero as you zoom.{% endif %}</p>
   <p class="differentiability-caption" data-explanation>The normalized error is the largest vertical discrepancy from the candidate line over −1 ≤ u ≤ 1. The lesson supplies the limit proof.</p>
-  <button class="secondary-button" type="button" data-reset disabled>Reset this view</button>
+  {% include controls/panel.html help='<p>Choose a function, zoom in, and adjust the candidate slope. Undo restores the previous view; Reset returns to the starting function.</p>' %}
   <noscript><p>The static view shows radius 1. The formulas and proofs in the lesson remain available without the controls.</p></noscript>
 </section>

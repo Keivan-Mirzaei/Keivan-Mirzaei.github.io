@@ -1,3 +1,4 @@
+import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
 /* A small seeded generator makes each numbered path reproducible for discussion. */
 (() => {
   document.querySelectorAll('[data-widget="random-walk"]').forEach((widget) => {
@@ -8,12 +9,14 @@
     const curve = widget.querySelector('[data-path]');
     const point = widget.querySelector('[data-point]');
     let seed = 42;
+    let currentStep = 256;
     let values = [];
     let extent = 2;
     let timer = null;
 
     function draw(announce = true) {
       const step = Number(slider.value);
+      currentStep = step;
       const points = values.slice(0, step + 1).map((y, index) => [44 + 536 * index / 256, 158 - 138 * y / extent]);
       curve.setAttribute('d', points.map(([x, y], index) => `${index ? 'L' : 'M'}${x.toFixed(2)} ${y.toFixed(2)}`).join(' '));
       const [x, y] = points[step];
@@ -49,8 +52,9 @@
 
     slider.disabled = play.disabled = fresh.disabled = false;
     slider.addEventListener('input', () => { stop(); draw(); });
-    fresh.addEventListener('click', () => { seed += 1; generate(); });
+    fresh.addEventListener('click', () => { history.remember(); seed += 1; generate(); });
     play.addEventListener('click', () => {
+      if (timer === null) history.remember();
       if (timer !== null) { stop(); draw(); return; }
       if (Number(slider.value) === 256) slider.value = 0;
       play.textContent = 'Pause';
@@ -62,6 +66,12 @@
       }, 60);
     });
     document.addEventListener('visibilitychange', () => { if (document.hidden) { stop(); draw(); } });
+    const history = bindPanelHistory(widget, {
+      read: () => ({ seed, step: currentStep }),
+      restore: state => { seed = state.seed; generate(); slider.value = state.step; draw(); },
+      reset: () => { seed = 42; generate(); }
+    });
+    trackControlEdits([slider], history);
     generate();
   });
 })();

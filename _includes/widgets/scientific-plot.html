@@ -6,22 +6,23 @@
     <img class="advanced-preview" data-preview src="{{ include.preview | relative_url }}" alt="{{ include.alt | escape }}" loading="lazy" width="720" height="460">
     <div class="advanced-view" data-view id="{{ plot_id }}-view" role="region" aria-label="{{ include.title | escape }} interactive graph" hidden></div>
   </div>
-  <div class="activity-buttons advanced-launch"><button class="secondary-button" type="button" data-open aria-expanded="false" aria-controls="{{ plot_id }}-view" disabled>Open interactive view</button><a href="{{ include.figure | relative_url }}">Download plot data</a></div>
+  <div class="activity-buttons advanced-launch"><button class="secondary-button panel-button" type="button" data-open aria-expanded="false" aria-controls="{{ plot_id }}-view" disabled>Open interactive view</button><a href="{{ include.figure | relative_url }}">Download plot data</a></div>
   <p class="advanced-status" data-status role="status">Static preview. Open the interactive view to {% if include.dimensions == 3 %}rotate, zoom, and inspect values{% else %}pan, zoom, and inspect values{% endif %}.</p>
   <fieldset class="advanced-controls" data-controls hidden disabled>
     <legend>Explore the graph</legend>
     <p>{% if include.dimensions == 3 %}Drag to rotate. Hover over the surface to inspect its coordinates. The buttons also work with the keyboard.{% else %}Drag to pan. Hover over a curve to inspect its coordinates. Use the buttons to zoom or reset.{% endif %}</p>
     <div class="activity-buttons">
       {% if include.dimensions == 3 %}
-      <button class="secondary-button" type="button" data-camera="left">Rotate left</button>
-      <button class="secondary-button" type="button" data-camera="right">Rotate right</button>
-      <button class="secondary-button" type="button" data-camera="up">Tilt up</button>
-      <button class="secondary-button" type="button" data-camera="down">Tilt down</button>
+      <button class="secondary-button panel-button" type="button" data-camera="left">Rotate left</button>
+      <button class="secondary-button panel-button" type="button" data-camera="right">Rotate right</button>
+      <button class="secondary-button panel-button" type="button" data-camera="up">Tilt up</button>
+      <button class="secondary-button panel-button" type="button" data-camera="down">Tilt down</button>
       {% endif %}
-      <button class="secondary-button" type="button" data-camera="in">Zoom in</button>
-      <button class="secondary-button" type="button" data-camera="out">Zoom out</button>
-      <button class="secondary-button" type="button" data-reset>Reset view</button>
+      <button class="secondary-button panel-button" type="button" data-camera="in">Zoom in</button>
+      <button class="secondary-button panel-button" type="button" data-camera="out">Zoom out</button>
+      <button class="secondary-button panel-button" type="button" data-reset>Reset view</button>
     </div>
   </fieldset>
   <noscript><p>The preview and downloadable data work without JavaScript. Enable it to open the interactive view.</p></noscript>
+  <div class="panel-actions">{% include controls/help.html text='<p>Open the interactive view, then use its controls to zoom or rotate. Reset restores the initial view. Close releases the interactive graph.</p>' %}</div>
 </section>
