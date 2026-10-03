@@ -15,7 +15,7 @@ objectives:
   - Find a tangent line and explain differentiability through a local linear approximation.
 layout: module
 module_id: derivatives
-course_id: introductory-calculus
+course_id: calculus-i
 module_step: 0
 permalink: /notes/derivatives/
 ---

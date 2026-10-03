@@ -1,4 +1,8 @@
 # Shared asset and loading registry. Used by both article and puzzle layouts.
+function-machine:
+  script: /assets/js/widgets/function-machine.mjs
+  selector: '[data-widget="function-machine"]'
+  styles: [function-machine]
 quadratic:
   script: /assets/js/widgets/quadratic.js
   selector: '[data-widget="quadratic"]'

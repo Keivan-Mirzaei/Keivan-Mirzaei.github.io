@@ -14,4 +14,6 @@ Calculus starts with two questions: **how fast is something changing, and how mu
 
 These course notes are organized around the learning objectives of introductory university calculus in the United States and Canada. The roadmap covers the full first-year single-variable sequence, with a clear boundary between Calculus I and Calculus II. The aim is to understand the ideas, calculate confidently, build useful models, and explain why a solution is valid.
 
-The **derivatives module is available now**, with five lessons. Start there if you already know limits and continuity; otherwise follow the roadmap from the beginning as modules become available. The current lessons include challenging problems and optional proof extensions. The other modules are forthcoming, and their outcomes below describe the intended complete course.
+The [**Calculus I home page**]({{ '/learning/calculus-i/' | relative_url }}) gives the first course's objectives, prerequisites, and planned lesson sequence.
+
+**Begin with the functions lesson** in Calculus I. The **derivatives module** is also available, with five lessons for readers who already know limits and continuity. The remaining lessons are being developed; the roadmap outcomes describe the intended complete course.

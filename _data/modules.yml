@@ -1,3 +1,13 @@
+functions-limits:
+  title: Functions, limits, and continuity
+  overview: /learning/calculus-i/functions-limits/
+  in_progress: true
+  lessons:
+    - step: 1
+      title: Functions, domains, and representations
+      url: /learning/calculus-i/functions-limits/functions/
+      description: Specify a function and its domain, prove its range, and interpret formulas, graphs, and tables.
+
 derivatives:
   title: Derivatives
   overview: /notes/derivatives/

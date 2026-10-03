@@ -5,8 +5,8 @@ introductory-calculus:
   description: A first-year single-variable sequence, from limits and rates of change to integration, differential equations, and infinite series.
   image: /assets/images/introductory-calculus.svg
   image_alt: Two circular scenes show a tangent and accumulated area, connected by curved arrows linking differentiation and integration.
-  lesson_count: 5
-  start_label: Start the derivatives module
+  lesson_count: 6
+  start_label: Start with functions
   scope: These notes follow a standard first-year university sequence with trigonometry, suitable for mathematics, science, and engineering. Calculus I develops change and accumulation; Calculus II develops integration, models, and approximation. The division below is a study guide, since universities place some topics in different terms.
   outcomes:
     - Interpret functions, limits, and continuity using formulas, graphs, tables, and words, and calculate limits with an appropriate method.
@@ -22,12 +22,15 @@ introductory-calculus:
     - id: calculus-i
       title: "Calculus I: change and accumulation"
       description: Build the foundations, learn differentiation and its applications, and connect derivatives to definite integrals.
+      url: /learning/calculus-i/
     - id: calculus-ii
       title: "Calculus II: integration, models, and series"
       description: Extend integration, study elementary differential equations, and use convergence and series to understand approximation.
   modules:
     - title: Functions, limits, and continuity
       part: calculus-i
+      module_id: functions-limits
+      url: /learning/calculus-i/functions-limits/
       description: Elementary functions and their graphs; one-sided, infinite, and at-infinity limits; limit laws, the squeeze theorem, continuity, and the Intermediate Value Theorem.
       outcome: Evaluate limits, locate discontinuities and asymptotes, and justify an existence claim using continuity.
     - title: "Derivatives: from rates to local linearity"
@@ -38,18 +41,22 @@ introductory-calculus:
       module_id: derivatives
     - title: What derivatives tell us about functions
       part: calculus-i
-      description: Extreme Value, Rolle's, and Mean Value Theorems; monotonicity and concavity; curve sketching; linear approximation and differentials; an introduction to Taylor polynomials, Newton's method, and L'Hôpital's rule.
+      module_id: derivative-behavior
+      description: Extreme Value, Rolle's, and Mean Value Theorems; monotonicity and concavity; curve sketching; linear approximation and differentials; L'Hôpital's rule. Possible extensions include Newton's method and introductory Taylor polynomials.
       outcome: Analyze a graph and construct a local approximation while checking the hypotheses of the method used.
     - title: Applications of derivatives
       part: calculus-i
+      module_id: derivative-applications
       description: Position, velocity, and acceleration; related rates; local and absolute extrema; constrained optimization with one independent variable.
       outcome: Translate a contextual problem into a derivative calculation and interpret its solution with units and domain restrictions.
     - title: Integrals and accumulation
       part: calculus-i
+      module_id: integration-foundations
       description: Antiderivatives and initial conditions; Riemann sums; definite integral properties; signed area and net change; accumulation functions and both parts of the Fundamental Theorem of Calculus.
       outcome: Move between a rate and its accumulated change, explaining why differentiation and integration are connected.
     - title: Basic integration and its applications
       part: calculus-i
+      module_id: basic-integration
       description: Elementary antiderivatives and substitution, including changed bounds; total change and total distance; area between curves, average value, and volumes by cross-sections, disks, washers, and shells.
       outcome: Evaluate basic integrals and set up a definite integral from a geometric or rate-based description.
     - title: Techniques of integration
@@ -110,15 +117,111 @@ introductory-calculus:
       followup_url: https://apps.ualberta.ca/catalogue/course/math/146
       followup_label: MATH 146
       description: Illustrates variation in placement, with Taylor polynomials in the first course and integration, differential equations, and partial differentiation in the second.
-  references:
-    - title: Calculus, Volume 1
-      author: OpenStax
-      url: https://openstax.org/details/books/calculus-volume-1
-      description: A free companion text for limits, differentiation, and integration, with examples and exercises.
-    - title: Active Calculus — Single Variable
-      author: Matt Boelkins
-      url: https://activecalculus.org/acs2e/
-      description: A free text built around questions and activities for developing a conceptual understanding of calculus.
-    - title: "Problems in Real Analysis: Advanced Calculus on the Real Axis"
-      author: Teodora-Liliana Rădulescu, Vicențiu D. Rădulescu, and Titu Andreescu · Springer, 2009
-      description: Chapter 5 supplies optional proof extensions for the derivatives module. The core course follows the introductory university objectives above.
+
+calculus-i:
+  title: Calculus I
+  url: /learning/calculus-i/
+  parent_id: introductory-calculus
+  level: First-semester university calculus
+  description: Learn to reason about limits, measure change with derivatives, and understand accumulation through definite integrals.
+  module_source: introductory-calculus
+  module_part: calculus-i
+  lesson_count: 6
+  start_label: Start with functions
+  scope: The course develops calculus of real-valued functions of one real variable, including algebraic, trigonometric, exponential, logarithmic, and inverse trigonometric functions. Its core runs from limits and continuity through differentiation, the Fundamental Theorem of Calculus, substitution, and basic integral applications.
+  outcomes_intro: 'By the end of Calculus I, you should be able to:'
+  outcomes:
+    - '**Read and describe functions.** Identify domains, compositions, and inverses, and connect formulas with graphs, tables, and contextual meanings.'
+    - '**Reason about limits and continuity.** Evaluate finite, one-sided, infinite, and at-infinity limits; identify discontinuities and asymptotes; and use continuity to justify the existence of a solution.'
+    - '**Explain and compute derivatives.** Use the limit definition and differentiation rules, including the chain rule and implicit differentiation, and interpret first and higher derivatives.'
+    - '**Draw conclusions from derivatives.** Analyze monotonicity, extrema, and concavity; apply central theorems with their hypotheses; and construct and assess a linear approximation.'
+    - '**Model changing quantities.** Formulate and solve motion, related-rates, and optimization problems, respecting units, constraints, and the domain of the model.'
+    - '**Explain accumulation.** Interpret Riemann sums and definite integrals, distinguish signed accumulation from geometric area, and explain both parts of the Fundamental Theorem of Calculus.'
+    - '**Integrate and apply.** Find elementary antiderivatives, use substitution, and set up definite integrals for net change, distance, area, average value, and volume.'
+    - '**Justify a solution.** State assumptions, use consistent notation, explain the mathematical steps, and check an answer against its context or an independent calculation.'
+  parts:
+    - id: calculus-i
+      title: A connected path through Calculus I
+      description: Each chapter builds tools that the next chapter needs. Open a chapter's planned lesson outline to see how its central ideas develop.
+  contents_note: Six chapters organize the core course. Begin with the functions lesson; the derivatives chapter also has existing lessons. The remaining lessons are being developed, and the outlines below show the planned course.
+  lesson_outline:
+    functions-limits:
+      - title: Functions, domains, and representations
+        purpose: Establish the language needed to state every later definition and model.
+      - title: Approaching a value and one-sided limits
+        purpose: Distinguish nearby behavior from the function's value at a point.
+      - title: The precise meaning of a limit
+        purpose: Make informal claims precise and explain what numerical evidence can and cannot establish.
+      - title: Limit laws and useful techniques
+        purpose: Justify algebraic simplification, squeeze arguments, and standard trigonometric limits before using them in derivative calculations.
+      - title: Infinite limits, limits at infinity, and asymptotes
+        purpose: Separate unbounded behavior near a point from long-term behavior as the input grows.
+      - title: Continuity and the Intermediate Value Theorem
+        purpose: Classify discontinuities and turn continuity into a justified existence argument.
+    derivatives:
+      - title: Average rates, instantaneous rates, and tangent slopes
+        purpose: Motivate the derivative through quantities whose meaning and units can be checked.
+      - title: The derivative definition and differentiability
+        purpose: Compute from first principles and identify why corners and some joins fail to have derivatives.
+      - title: Differentiation rules and higher derivatives
+        purpose: Develop efficient calculations from the definition and interpret repeated differentiation.
+      - title: Implicit, inverse, and logarithmic differentiation
+        purpose: Handle relationships and function forms that are awkward to differentiate directly.
+      - title: Differentiability and local linear approximation
+        purpose: Connect the derivative to a local model; revisit practical estimates in the next chapter.
+    derivative-behavior:
+      - title: Extreme values, Rolle's Theorem, and the Mean Value Theorem
+        purpose: Explain what hypotheses allow us to infer from derivatives and where those conclusions can fail.
+      - title: Monotonicity, concavity, and curve sketching
+        purpose: Combine first and second derivative information into a justified description of a graph.
+      - title: Linear approximation and differentials
+        purpose: Use a tangent model for numerical estimates and explain the limits of its accuracy.
+      - title: Indeterminate forms and L'Hôpital's rule
+        purpose: Use derivative information to evaluate eligible limits while checking the rule's conditions.
+    derivative-applications:
+      - title: Motion and the meaning of derivatives
+        purpose: Interpret position, velocity, acceleration, and the distinction between velocity and speed.
+      - title: Related rates
+        purpose: Differentiate a relationship between changing quantities before substituting a particular instant.
+      - title: Optimization
+        purpose: Build an objective function, identify the feasible domain, and justify local or absolute extrema.
+    integration-foundations:
+      - title: Antiderivatives and initial conditions
+        purpose: Recover a quantity from its rate and account for the constant of integration.
+      - title: Riemann sums and the definite integral
+        purpose: Construct accumulation from small contributions and understand its limiting definition.
+      - title: Integral properties, signed area, and net change
+        purpose: Separate cancellation from total area and interpret accumulation consistently.
+      - title: The Fundamental Theorem of Calculus
+        purpose: Explain and prove the connection between continuous rates, accumulation functions, and antiderivatives.
+    basic-integration:
+      - title: Elementary integrals and substitution
+        purpose: Reverse familiar derivative rules and handle changes of variable and integration bounds correctly.
+      - title: Net change, total distance, and average value
+        purpose: Select the appropriate integral when a rate changes sign or a quantity is averaged over an interval.
+      - title: Area between curves
+        purpose: Choose a variable of integration and split a region when its boundary order changes.
+      - title: Volumes by slices and revolution
+        purpose: Derive volume integrals from cross-sections and choose disks, washers, or shells to match the geometry.
+  study_approach:
+    - '**Understand the claim.** Read a definition or theorem together with its assumptions. Explain what it says in your own words and how it connects to an earlier idea.'
+    - '**Work with purpose.** Examples illustrate a specific method or distinction. Activities ask a mathematical question, and their explanations remain usable without the interaction.'
+    - '**Exercises review learning.** Use them to retrieve definitions, interpret representations, and practise techniques introduced in the lesson.'
+    - '**Problems challenge understanding.** Expect unfamiliar combinations, proof, counterexamples, or modeling choices. The most challenging problems are identified and their statements remain visible.'
+    - '**Explain before checking.** Attempt a complete solution before opening a hint or solution. Use chapter checkpoints and the final cumulative review to identify what needs another pass.'
+  prerequisites:
+    - '**Algebra:** equations, inequalities, factoring, fractions, exponents, and logarithms.'
+    - '**Functions:** notation, domains and ranges, graphs, transformations, composition, and inverses.'
+    - '**Trigonometry:** radians, the unit circle, sine, cosine, tangent, and basic identities.'
+  prerequisite_note: To use the existing derivatives lessons now, first be comfortable with limits and continuity, including the standard limits those lessons cite.
+  alignment_note: The core follows the first-semester single-variable coverage represented by the sources below. Some first-semester courses also introduce Newton's method or Taylor polynomials alongside approximation. Integration by parts, advanced integration methods, improper integrals, infinite series, and parametric or polar calculus belong to the later course in this sequence.
+  curriculum_sources:
+    - title: University of Utah — Calculus I, Fall 2025
+      url: https://utah.simplesyllabus.com/api2/doc-pdf/zzetooyo6/Fall-2025-MATH-1210-070-.pdf
+      description: Explicit outcomes for limits, differentiation, graph analysis, derivative applications, the Fundamental Theorem, substitution, area, and volumes.
+    - title: University of Wisconsin–Madison — MATH 221
+      url: https://www.math.wisc.edu/undergraduate/courses-enrollment/calculus/
+      description: First-semester calculus with trigonometric, exponential, and logarithmic functions, differentiation, and the beginning of integral calculus and its applications.
+    - title: University of Alberta — MATH 144
+      url: https://apps.ualberta.ca/catalogue/course/math/144
+      description: Single-variable differentiation and integration with physical-science applications; its inclusion of Taylor polynomials illustrates variation in first-course coverage.

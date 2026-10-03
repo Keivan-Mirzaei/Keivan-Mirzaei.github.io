@@ -121,6 +121,8 @@ Course cards on `/learning/` come from `_data/courses.yml`. Each course has an i
 
 The Introductory Calculus course follows the design in [Introductory calculus course plan](introductory-calculus-plan.md). The course data stores sequence-wide outcomes, ordered `parts`, each module's `part` and measurable `outcome`, the study approach, and university sources. Use that plan to align lesson explanations, exercises, and checkpoints with the intended Calculus I–II level.
 
+The [Calculus I development procedure](calculus-i-authoring.md) records Keivan's requirements, mathematical checks, and choices awaiting a decision. Its home page is `learning/calculus-i.md`. The child course uses `module_source` and `module_part` to reuse the first six modules from the sequence roadmap; `lesson_outline` adds each planned lesson's title and purpose. Child courses link from their parent overview and do not add duplicate learning-index cards.
+
 Add a module's `url` and `module_id` to the course roadmap when it is ready; entries without a URL appear as forthcoming and have no link. Update the course's `lesson_count` as lessons are published. Set `course_id` on the module's front matter to group it under the course card. Modules without a course continue to appear separately in the learning index.
 
 ## Learning modules: explain, predict, try, reflect

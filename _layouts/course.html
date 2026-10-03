@@ -2,16 +2,25 @@
 layout: default
 ---
 {% assign course = site.data.courses[page.course_id] %}
-{% assign available_modules = course.modules | where_exp: 'module', 'module.url != nil' %}
+{% assign course_modules = course.modules %}
+{% if course.module_source %}
+{% assign course_modules = site.data.courses[course.module_source].modules | where: 'part', course.module_part %}
+{% endif %}
+{% assign available_modules = course_modules | where_exp: 'module', 'module.url != nil' %}
 {% assign first_module = available_modules | first %}
 <article class="page-wrap course-overview">
+  {% if course.parent_id %}
+  {% assign parent_course = site.data.courses[course.parent_id] %}
+  <a class="back-link" href="{{ parent_course.url | relative_url }}">← {{ parent_course.title }}</a>
+  {% else %}
   <a class="back-link" href="{{ '/learning/' | relative_url }}">← Learning</a>
+  {% endif %}
   <header class="page-heading course-heading">
     <p class="eyebrow">{{ course.level }} <span aria-hidden="true">/</span> Self-paced course</p>
     <h1>{{ page.title }}</h1>
     <p class="page-description">{{ page.description }}</p>
     <div class="course-summary">
-      <span>{{ course.modules.size }} modules on the roadmap</span>
+      <span>{{ course_modules.size }} {% if course.parent_id %}chapters{% else %}modules{% endif %} on the roadmap</span>
       <span>{{ available_modules.size }} available now · {{ course.lesson_count }} lessons</span>
     </div>
     <nav class="course-jump-links" aria-label="On this page">
@@ -21,7 +30,7 @@ layout: default
       <a href="#course-study-heading">Study approach</a>
       <a href="#course-prerequisites-heading">Prerequisites</a>
       <a href="#course-alignment-heading">University sources</a>
-      <a href="#course-references-heading">References</a>
+      {% if course.references %}<a href="#course-references-heading">References</a>{% endif %}
     </nav>
   </header>
   <section class="course-description" aria-labelledby="course-description-heading">
@@ -32,32 +41,32 @@ layout: default
   </section>
   <section class="course-outcomes" aria-labelledby="course-outcomes-heading">
     <h2 id="course-outcomes-heading">Learning objectives</h2>
-    <p>By the end of the complete sequence, you should be able to:</p>
-    <ul>{% for outcome in course.outcomes %}<li>{{ outcome }}</li>{% endfor %}</ul>
+    <p>{{ course.outcomes_intro | default: 'By the end of the complete sequence, you should be able to:' }}</p>
+    <ul>{% for outcome in course.outcomes %}<li>{{ outcome | markdownify }}</li>{% endfor %}</ul>
   </section>
   <section class="course-contents" aria-labelledby="course-contents-heading">
     <h2 id="course-contents-heading">Table of contents</h2>
-    <p class="course-section-note">Follow the modules in order. Each module states what you should be able to do; only modules with available lessons can be opened.</p>
+    <p class="course-section-note">{{ course.contents_note | default: 'Follow the modules in order. Each module states what you should be able to do; only modules with available lessons can be opened.' }}</p>
     {% assign module_offset = 0 %}
     {% for part in course.parts %}
-    {% assign part_modules = course.modules | where: 'part', part.id %}
+    {% assign part_modules = course_modules | where: 'part', part.id %}
     <div class="course-part" aria-labelledby="{{ part.id }}-heading">
-      <h3 id="{{ part.id }}-heading" class="course-part-title">{{ part.title }}</h3>
+      <h3 id="{{ part.id }}-heading" class="course-part-title">{% if part.url %}<a href="{{ part.url | relative_url }}">{{ part.title }} <span aria-hidden="true">↗</span></a>{% else %}{{ part.title }}{% endif %}</h3>
       <p class="course-section-note">{{ part.description }}</p>
-      {% include course-module-list.html modules=part_modules offset=module_offset %}
+      {% include course-module-list.html modules=part_modules offset=module_offset lesson_outline=course.lesson_outline %}
     </div>
     {% assign module_offset = module_offset | plus: part_modules.size %}
     {% endfor %}
   </section>
   <section class="course-study" aria-labelledby="course-study-heading">
     <h2 id="course-study-heading">How the notes develop understanding</h2>
-    <ul>{% for approach in course.study_approach %}<li>{{ approach }}</li>{% endfor %}</ul>
+    <ul>{% for approach in course.study_approach %}<li>{{ approach | markdownify }}</li>{% endfor %}</ul>
   </section>
   <section class="course-prerequisites" aria-labelledby="course-prerequisites-heading">
     <h2 id="course-prerequisites-heading">Prerequisites</h2>
     <p>You do not need prior calculus for the full course. Be comfortable with:</p>
-    <ul>{% for prerequisite in course.prerequisites %}<li>{{ prerequisite }}</li>{% endfor %}</ul>
-    <p class="course-section-note">To start the available derivatives module, you will also need limits and continuity, including the standard trigonometric and exponential limits.</p>
+    <ul>{% for prerequisite in course.prerequisites %}<li>{{ prerequisite | markdownify }}</li>{% endfor %}</ul>
+    <p class="course-section-note">{{ course.prerequisite_note | default: 'To start the available derivatives module, you will also need limits and continuity, including the standard trigonometric and exponential limits.' }}</p>
   </section>
   <section class="course-alignment" aria-labelledby="course-alignment-heading">
     <h2 id="course-alignment-heading">University objectives behind the course</h2>
@@ -71,6 +80,7 @@ layout: default
       {% endfor %}
     </ul>
   </section>
+  {% if course.references %}
   <section class="course-references" aria-labelledby="course-references-heading">
     <h2 id="course-references-heading">References</h2>
     <p class="course-section-note">Companion reading and sources for further exploration.</p>
@@ -84,4 +94,5 @@ layout: default
       {% endfor %}
     </ul>
   </section>
+  {% endif %}
 </article>

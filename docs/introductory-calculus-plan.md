@@ -41,7 +41,7 @@ Across all modules, ask students to connect formulas, graphs, tables, and words;
 
 ## Level, lesson pattern, and assessment
 
-Core material combines conceptual understanding, computational fluency, applications, and clear reasoning. Include statements and hypotheses of central theorems and accessible derivations. Formal epsilon–delta arguments, dense-set counterexamples, and advanced differentiability proofs belong to clearly marked enrichment; they are not prerequisites for the next core module.
+Core material combines conceptual understanding, computational fluency, applications, and clear reasoning. Include precise definitions, statements and hypotheses of central theorems, and justified arguments. The role of epsilon–delta proofs in the core is now a choice to settle with Keivan; it is not automatically assigned to enrichment. Dense-set counterexamples and advanced differentiability proofs can remain clearly marked extensions, with their extra prerequisites stated.
 
 Use a consistent lesson progression: guiding question, concept and representations, worked examples, routine practice, contextual or method-selection problems, and a short checkpoint. Give hints and complete solutions after students have a chance to work. Interactive activities should serve an objective and have a static explanation.
 
@@ -49,6 +49,6 @@ Practice should progress in difficulty. Do not make four challenging proof probl
 
 ## Current material and next writing pass
 
-Only the derivatives module currently has lessons. Its definitions, elementary rules, implicit/inverse/logarithmic techniques, and ordinary tangent examples support Module 2. Its parametric section can be revisited in Module 13; the later oscillatory and rational/irrational arguments are enrichment. Preserve existing lesson addresses.
+The functions chapter now begins with a lesson on domains, ranges, and representations. The derivatives module has five existing lessons: its definitions, elementary rules, implicit/inverse/logarithmic techniques, and ordinary tangent examples support Module 2. Its parametric section can be revisited in Module 13; the later oscillatory and rational/irrational arguments are enrichment. Preserve existing lesson addresses.
 
-The present work establishes the course architecture and labels the core and extensions. In the next pass, write Module 1, then revise the derivatives lessons to supply graduated practice, ordinary tangent and higher-derivative examples, and objective-aligned checkpoints. Continue through the roadmap in order. A listed module outcome is a target for the completed notes, not a claim that forthcoming lessons already teach it.
+The course architecture and the detailed [Calculus I development procedure](calculus-i-authoring.md) govern the next pass. Begin with the Calculus I home page, settle the first lesson's conventions and teaching choices with Keivan, and develop Module 1. Then revise the derivatives lessons to supply review exercises, challenging problems, ordinary tangent and higher-derivative examples, and objective-aligned checkpoints. Continue through the roadmap in order. A listed module outcome is a target for the completed notes, not a claim that forthcoming lessons already teach it.

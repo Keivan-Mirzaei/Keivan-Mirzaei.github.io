@@ -10,6 +10,7 @@ layout: default
   <div class="learning-grid">
     {% for entry in site.data.courses %}
     {% assign course = entry[1] %}
+    {% unless course.parent_id %}
     {% assign available_modules = course.modules | where_exp: 'module', 'module.url != nil' %}
     <a class="learning-card" href="{{ course.url | relative_url }}">
       <div class="learning-card-art"><img src="{{ course.image | relative_url }}" alt="{{ course.image_alt | escape }}" width="600" height="350"></div>
@@ -21,6 +22,7 @@ layout: default
         <span class="learning-card-link">Explore the course {% include icon.html name='arrow' %}</span>
       </div>
     </a>
+    {% endunless %}
     {% endfor %}
   </div>
   {% assign standalone_modules = site.modules | where: 'course_id', nil %}

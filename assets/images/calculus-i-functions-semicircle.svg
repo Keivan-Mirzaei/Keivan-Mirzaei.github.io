@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" role="img" aria-labelledby="title desc">
+  <title id="title">An upper semicircle as the graph of a function</title>
+  <desc id="desc">The upper semicircle of radius two has included endpoints at negative two, zero and two, zero, with highest point zero, two. Horizontal inputs run from negative two to two and outputs from zero to two.</desc>
+  <rect width="600" height="300" rx="8" fill="#f4f6f0"/>
+  <g stroke="#d5ddd0" stroke-width="1" stroke-dasharray="4 5">
+    <path d="M120 55V235M480 55V235M120 55H480"/>
+  </g>
+  <g stroke="#707e6b" stroke-width="1.5" fill="none">
+    <path d="M60 235H565M300 275V25"/>
+    <path d="m560 230 5 5-5 5M295 30l5-5 5 5"/>
+    <path d="M120 231v8M480 231v8M296 55h8"/>
+  </g>
+  <path d="M120 235A180 180 0 0 1 480 235" fill="none" stroke="#476e4b" stroke-width="3.5"/>
+  <g fill="#476e4b">
+    <circle cx="120" cy="235" r="4"/>
+    <circle cx="480" cy="235" r="4"/>
+    <circle cx="300" cy="55" r="4"/>
+  </g>
+  <g fill="#282e29" font-family="Georgia, serif" font-size="16">
+    <text x="120" y="261" text-anchor="middle">−2</text>
+    <text x="480" y="261" text-anchor="middle">2</text>
+    <text x="286" y="257" text-anchor="end">0</text>
+    <text x="284" y="61" text-anchor="end">2</text>
+    <text x="577" y="240" font-style="italic">x</text>
+    <text x="312" y="27" font-style="italic">y</text>
+  </g>
+</svg>

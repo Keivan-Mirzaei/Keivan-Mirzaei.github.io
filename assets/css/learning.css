@@ -39,9 +39,16 @@
 .course-module-copy p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
 .course-module-copy .course-module-outcome { margin-top: 10px; color: var(--ink); }
 .course-module-open { display: block; margin-top: 13px; color: var(--green); font-size: 12px; }
+.course-lesson-outline { margin: 0 16px 24px 66px; font-size: 13px; line-height: 1.8; }
+.course-lesson-outline summary { cursor: pointer; color: var(--green); }
+.course-lesson-outline summary:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
+.course-lesson-outline ol { margin: 16px 0 0; padding-left: 22px; }
+.course-lesson-outline li { margin: 0 0 14px; padding-left: 4px; }
+.course-lesson-outline p { margin: 4px 0 0; color: var(--muted); }
 .course-outcomes, .course-study, .course-prerequisites { font-size: 14px; line-height: 1.8; }
 .course-outcomes ul, .course-study ul, .course-prerequisites ul { padding-left: 22px; margin-bottom: 20px; }
 .course-outcomes li, .course-study li, .course-prerequisites li { padding-left: 4px; margin-bottom: 9px; }
+.course-outcomes li > p, .course-study li > p, .course-prerequisites li > p { margin: 0; }
 .course-references ul, .course-source-list { padding: 0; margin: 23px 0 0; list-style: none; }
 .course-references li, .course-source-list li { margin-top: 23px; }
 .course-references h3, .course-source-list h3 { margin-bottom: 7px; font-size: 15px; font-weight: 600; }
@@ -52,4 +59,5 @@
   .course-summary { flex-direction: column; }
   .course-module-entry { gap: 16px; padding: 23px 10px; }
   .course-module-copy h4 { font-size: 21px; }
+  .course-lesson-outline { margin-left: 52px; margin-right: 10px; }
 }
