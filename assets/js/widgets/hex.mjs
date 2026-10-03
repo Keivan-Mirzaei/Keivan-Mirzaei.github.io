@@ -4,59 +4,42 @@ import { searchBudget } from '../lib/hex-search-settings.mjs';
 import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
 import { restoreHex } from '../lib/hex-storage.mjs';
 import { setActionLabel } from '../lib/puzzle-controls.mjs';
+import { hexPoint as point, hexLayout as layout, hexCorner, hexGoal } from '../lib/hex-view.mjs';
 
 const name = color => color === RED ? 'Red' : 'Blue';
-const goal = color => color === RED ? 'top to bottom' : 'left to right';
 const gameGoal = color => `the two ${color === RED ? 'red' : 'blue'} sides`;
-// Turn the diamond's long diagonal upright, keeping all cells regular hexagons.
-// The proof retains its cardinal sides and corners used in the explanation.
-const point = ([x, y], diamond = false) => diamond
-  ? [Math.sqrt(3) * (x - y) / 4, (3 * x + y) / 4]
-  : [x * Math.sqrt(3) / 2, y / 2];
-
-function layout(geometry, diamond) {
-  const vertices = diamond ? geometry.cells.flatMap(cell => cell.vertices) : [...geometry.points.values()];
-  const all = vertices.map(p => point(p, diamond));
-  const padX = diamond ? .9 : 1.15, padY = diamond ? .9 : .95;
-  const minX = Math.min(...all.map(p => p[0])) - padX, minY = Math.min(...all.map(p => p[1])) - padY;
-  const width = Math.max(...all.map(p => p[0])) - minX + padX;
-  const height = Math.max(...all.map(p => p[1])) - minY + padY;
-  return { minX, minY, width, height };
-}
 
 function drawBoard(holder, cells, size, { playable = false, editing = false, path = [], last = -1, coast = null, step = 0, restoreFocus = true } = {}) {
   const focused = holder.contains(document.activeElement) ? document.activeElement.dataset.hexCell : undefined;
-  const diamond = playable && !coast, project = p => point(p, diamond);
-  const pair = p => project(p).map(v => v.toFixed(4)).join(',');
-  const geometry = coast?.geometry || hexGeometry(size), box = layout(geometry, diamond);
+  const pair = p => point(p).map(v => v.toFixed(4)).join(',');
+  const geometry = coast?.geometry || hexGeometry(size), box = layout(geometry, Boolean(coast));
   holder.style.aspectRatio = `${box.width} / ${box.height}`;
   holder.style.setProperty('--hex-size', size);
   holder.style.setProperty('--hex-cell-shape', 'polygon(50% 2%, 98% 26%, 98% 74%, 50% 98%, 2% 74%, 2% 26%)');
   const borders = geometry.edges.filter(e => e.faces[1] < 0 && e.faces[0] >= 0).map(e =>
     `<path class="hex-border hex-${e.faces[1] === -1 || e.faces[1] === -2 ? 'red' : 'blue'}" d="M${pair(geometry.points.get(e.from))}L${pair(geometry.points.get(e.to))}"/>`).join('');
   const backdrop = geometry.cells.map(cell => `<polygon class="hex-outline" points="${cell.vertices.map(pair).join(' ')}"/>`).join('');
-  const chain = !playable && path.length ? `<polyline class="hex-chain" points="${path.map(i => pair(geometry.cells[i].center)).join(' ')}"/>` : '';
   const lastCell = playable && cells[last] ? geometry.cells[last] : null;
   const lastOutline = lastCell ? `<polygon class="hex-last-outline" points="${lastCell.vertices.map(([x, y]) => pair([lastCell.center[0] + (x - lastCell.center[0]) * .94, lastCell.center[1] + (y - lastCell.center[1]) * .94])).join(' ')}"/>` : '';
   const trace = coast ? `<g class="hex-coast-stubs">${geometry.ports.map(p => `<path d="M${pair(geometry.points.get(p.vertex))}L${pair(geometry.points.get(p.corner))}"/>`).join('')}</g>
     <polyline class="hex-coast" points="${coast.vertices.slice(0, step + 1).map(v => pair(geometry.points.get(v))).join(' ')}"/>
-    <circle class="hex-walker" cx="${project(geometry.points.get(coast.vertices[step]))[0]}" cy="${project(geometry.points.get(coast.vertices[step]))[1]}" r=".14"/>` : '';
+    <circle class="hex-walker" cx="${point(geometry.points.get(coast.vertices[step]))[0]}" cy="${point(geometry.points.get(coast.vertices[step]))[1]}" r=".14"/>` : '';
   const labels = coast ? geometry.ports.map(p => {
-    const [x, y] = project(geometry.points.get(p.vertex));
-    return `<span aria-hidden="true" class="hex-port-label${p.name.startsWith('N') ? ' hex-port-north' : ''}" style="left:${(x - box.minX) / box.width * 100}%;top:${(y - box.minY) / box.height * 100}%">${p.name === 'NW' ? 'Start' : p.name}</span>`;
+    const [x, y] = point(geometry.points.get(p.vertex)), corner = hexCorner(p.name);
+    return `<span aria-hidden="true" class="hex-port-label hex-port-${corner}" style="left:${(x - box.minX) / box.width * 100}%;top:${(y - box.minY) / box.height * 100}%">${p.name === 'NW' ? 'Start' : corner[0].toUpperCase() + corner.slice(1)}</span>`;
   }).join('') : '';
   const svg = `<svg class="hex-diagram" viewBox="${box.minX} ${box.minY} ${box.width} ${box.height}" aria-hidden="true">${backdrop}${borders}</svg>`;
   const buttons = geometry.cells.map((cell, i) => {
-    const [x, y] = project(cell.center), color = cells[i], tag = playable || editing ? 'button' : 'span';
+    const [x, y] = point(cell.center), color = cells[i], tag = playable || editing ? 'button' : 'span';
     const halfWidth = Math.sqrt(3) / 2, halfHeight = 1;
     const row = Math.floor(i / size) + 1, col = i % size + 1;
     const label = `Row ${row}, column ${col}: ${color ? name(color) : 'empty'}.${editing ? ` Change to ${name(3 - color)}.` : color ? '' : ' Place your stone here.'}`;
-    return `<${tag} class="hex-cell${color ? ` hex-${color === RED ? 'red' : 'blue'}` : ''}${i === last ? ' is-last' : ''}${path.includes(i) ? ' is-winner' : ''}" ${tag === 'button' ? `type="button" data-hex-cell="${i}" aria-label="${label}"${!editing && (!playable || color) ? ' disabled' : ''}` : 'aria-hidden="true"'} style="left:${(x - halfWidth - box.minX) / box.width * 100}%;top:${(y - halfHeight - box.minY) / box.height * 100}%;width:${2 * halfWidth / box.width * 100}%;height:${2 * halfHeight / box.height * 100}%"><span aria-hidden="true">${!playable && color ? color === RED ? 'R' : 'B' : ''}</span></${tag}>`;
+    return `<${tag} class="hex-cell${color ? ` hex-${color === RED ? 'red' : 'blue'}` : ''}${i === last ? ' is-last' : ''}${path.includes(i) ? ' is-winner' : ''}" ${tag === 'button' ? `type="button" data-hex-cell="${i}" aria-label="${label}"${!editing && (!playable || color) ? ' disabled' : ''}` : 'aria-hidden="true"'} style="left:${(x - halfWidth - box.minX) / box.width * 100}%;top:${(y - halfHeight - box.minY) / box.height * 100}%;width:${2 * halfWidth / box.width * 100}%;height:${2 * halfHeight / box.height * 100}%"><span aria-hidden="true"></span></${tag}>`;
   }).join('');
-  const overlay = `<svg class="hex-overlay" viewBox="${box.minX} ${box.minY} ${box.width} ${box.height}" aria-hidden="true">${chain}${trace}${lastOutline}</svg>`;
+  const overlay = `<svg class="hex-overlay" viewBox="${box.minX} ${box.minY} ${box.width} ${box.height}" aria-hidden="true">${trace}${lastOutline}</svg>`;
   holder.innerHTML = svg + buttons + overlay + labels;
   holder.setAttribute('role', 'group');
-  holder.setAttribute('aria-label', `${size} by ${size} ${diamond ? 'upright diamond Hex board. Red joins upper-right and lower-left; Blue joins upper-left and lower-right.' : 'Hex board. Red joins top to bottom; Blue joins left to right.'}${coast ? ` Coastline: ${step} of ${coast.tour.length} edges traced.` : ''}`);
+  holder.setAttribute('aria-label', `${size} by ${size} upright diamond Hex board. Red joins upper-right and lower-left; Blue joins upper-left and lower-right.${coast ? ` Coastline: ${step} of ${coast.tour.length} edges traced.` : ''}`);
   if (restoreFocus && focused !== undefined) holder.querySelector(`[data-hex-cell="${focused}"]`)?.focus({ preventScroll: true });
 }
 
@@ -255,8 +238,8 @@ if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-proof]
     get('count').textContent = `${step} / ${coast.tour.length} edges`;
     get('step').disabled = done; get('finish').disabled = done; get('reset').disabled = step === 0;
     get('status').textContent = done
-      ? `The coast ends at ${coast.end}. ${name(coast.winner)} cells alongside it connect ${goal(coast.winner)}. The dashed line highlights their winning chain.`
-      : step === 0 ? 'Start at the top-left corner, with the red top shore on one side and the blue left shore on the other.'
+      ? `The coast ends at the ${hexCorner(coast.end)} corner. ${name(coast.winner)} cells alongside it connect ${hexGoal(coast.winner)}. Their coloured backgrounds highlight the winning chain.`
+      : step === 0 ? 'Start at the top corner, with the red upper-right shore on one side and the blue upper-left shore on the other.'
       : 'Keep walking between Red and Blue. At this vertex, exactly one onward edge separates the colours.';
   }
   const history = bindPanelHistory(widget, {
