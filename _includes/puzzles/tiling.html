@@ -1,17 +1,32 @@
-<section class="tiling-game" data-tiling-game aria-label="Tiling game">
-  <div class="tiling-settings">
-    <div class="tiling-challenge-heading"><label for="puzzle-tiling-challenge">Difficulty</label><output for="puzzle-tiling-challenge" data-tiling-challenge-label>Easy</output></div>
-    <input id="puzzle-tiling-challenge" type="range" min="1" max="4" step="1" value="1" data-tiling-challenge disabled>
-  </div>
-  <div class="tiling-play">
+<section class="tiling-game puzzle-workspace" data-tiling-game data-puzzle-workspace aria-label="Tiling game">
+  <aside class="puzzle-sidebar" aria-label="Game details">
+    <div class="puzzle-panels">
+      {% capture game_settings %}
+        <div class="tiling-settings">
+          <div class="tiling-challenge-heading"><label for="puzzle-tiling-challenge">Difficulty</label><output for="puzzle-tiling-challenge" data-tiling-challenge-label>Easy</output></div>
+          <input id="puzzle-tiling-challenge" type="range" min="1" max="4" step="1" value="1" data-tiling-challenge disabled>
+        </div>
+        <p>Each difficulty has 1,000 numbered puzzles.</p>
+      {% endcapture %}
+      {% include puzzles/panel.html game='tiling' kind='settings' title='Settings' content=game_settings remember=true %}
+      {% capture game_help %}<p>Fill every floor square. Tiles keep the orientation shown; striped squares are missing.</p><p>Drag a tile onto the floor, or select it and tap where the leftmost square in its top row should go. The count below each shape shows how many copies remain.</p><p>To return a placed tile, drag it off the floor, double tap it, or select it and use the return icon.</p><p>A hint outlines a placement. Tap the check mark to place it.</p><p>Shuffle chooses an unsolved puzzle. Tap the puzzle number to revisit any puzzle, including one you have solved. Reset clears the current puzzle.</p>{% endcapture %}
+      {% include puzzles/panel.html game='tiling' kind='help' title='Help' content=game_help %}
+    </div>
+    <div class="tiling-pieces puzzle-side-content">
+      <div class="tiling-tray-heading"><h2>Tile tray</h2><span data-tiling-tray-count>4 to place</span></div>
+      <div class="tiling-tray" data-tiling-tray></div>
+      <noscript><p class="tiling-help">This game needs JavaScript. Enable it to place tiles and use the game controls.</p></noscript>
+    </div>
+  </aside>
+  <div class="tiling-play puzzle-play">
     <div class="tiling-info">
-      <details class="tiling-picker" data-tiling-picker>
+      <details class="tiling-picker" data-tiling-picker data-puzzle-picker>
         <summary data-tiling-name title="Choose a puzzle">Puzzle 1 / 1000</summary>
         <form class="tiling-picker-content" data-tiling-jump>
           <label for="tiling-puzzle-number">Puzzle number</label>
           <div class="tiling-number-entry">
             <input id="tiling-puzzle-number" type="number" min="1" max="1000" step="1" value="1" inputmode="numeric" data-tiling-number required disabled>
-            <button class="puzzle-icon-button" type="submit" aria-label="Open puzzle" data-tooltip="Open puzzle" data-tiling-open disabled>{% include icon.html name='arrow' %}</button>
+            <button class="puzzle-icon-button panel-button" type="submit" aria-label="Open puzzle" data-tooltip="Open puzzle" data-tiling-open disabled>{% include icon.html name='arrow' %}</button>
           </div>
           <input type="range" min="1" max="1000" step="1" value="1" aria-label="Puzzle number" data-tiling-number-slider disabled>
           <p data-tiling-completed>0 / 1000 solved</p>
@@ -27,22 +42,9 @@
       {% include controls/action.html game='tiling' action='remove' icon='return' label='Return selected tile' %}
       {% include controls/action.html game='tiling' action='reset' icon='restart' label='Start again' %}
       {% include controls/action.html game='tiling' action='refresh' icon='shuffle' label='New arrangement' %}
-      {% capture game_help %}<p>Fill every floor square. Tiles keep the orientation shown; striped squares are missing.</p>
-          <p>Drag a tile onto the floor, or select it and tap where the leftmost square in its top row should go. The count below each shape shows how many copies remain.</p>
-          <p>Faded tiles marked “All placed” have no copies left in the tray. Select one to move or return a placed copy.</p>
-          <p>To return a placed tile, drag it off the floor, double tap it, or select it and use the return icon.</p>
-          <p>A hint outlines a placement. Tap the check mark to place it.</p>
-          <p>Each difficulty has 1,000 numbered puzzles. Shuffle chooses an unsolved puzzle. Tap the puzzle number to revisit any puzzle, including one you have solved.</p>
-          <p>Start again clears the current puzzle.</p>{% endcapture %}
-      {% include controls/help.html text=game_help remember=true %}
     </div>
     <div class="tiling-board" data-tiling-board>
       <img src="{{ '/assets/images/tiling-board.svg' | relative_url }}" width="440" height="360" alt="A square floor with three missing squares, and colourful tiles ready to fit into it.">
     </div>
-  </div>
-  <div class="tiling-pieces">
-    <div class="tiling-tray-heading"><h2>Tile tray</h2><span data-tiling-tray-count>4 to place</span></div>
-    <div class="tiling-tray" data-tiling-tray></div>
-    <noscript><p class="tiling-help">This game needs JavaScript. Enable it to place tiles and use the game controls.</p></noscript>
   </div>
 </section>

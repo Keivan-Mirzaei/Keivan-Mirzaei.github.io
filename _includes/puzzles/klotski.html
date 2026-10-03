@@ -1,20 +1,31 @@
-<section class="klotski-game" data-klotski-game aria-label="Klotski game">
-  <div class="klotski-board-heading">
-    <span data-klotski-count>0 moves</span>
+<section class="klotski-game puzzle-workspace" data-klotski-game data-puzzle-workspace aria-label="Klotski game">
+  <aside class="puzzle-sidebar" aria-label="Game details">
+    <div class="puzzle-panels">
+      {% capture game_settings %}<p>Keep your board and moves between visits.</p>{% endcapture %}
+      {% include puzzles/panel.html game='klotski' kind='settings' title='Settings' content=game_settings remember=true %}
+      {% capture game_help %}<p>Drag blocks into empty space. Guide the marked square to the exit at the bottom.</p><p>You can also select a block and use the arrow keys to slide it.</p><p>Undo and Redo retrace your moves. Reset returns the blocks to the starting layout.</p>{% endcapture %}
+      {% include puzzles/panel.html game='klotski' kind='help' title='Help' content=game_help %}
+    </div>
+    <div class="puzzle-details">
+      <h2>Find the exit</h2>
+      <p>Guide the marked square to the opening at the bottom.</p>
+      <dl class="puzzle-facts"><div><dt>Board</dt><dd>4 × 5</dd></div><div><dt>Moves</dt><dd data-klotski-count>0 moves</dd></div></dl>
+      <p class="puzzle-detail-tip">Select a block, then drag or use the arrow keys.</p>
+    </div>
+  </aside>
+  <div class="puzzle-play">
     <div class="klotski-actions puzzle-actions panel-actions" role="group" aria-label="Game controls">
       {% include controls/action.html game='klotski' action='undo' icon='undo' label='Undo move' %}
       {% include controls/action.html game='klotski' action='redo' icon='redo' label='Redo move' %}
       {% include controls/action.html game='klotski' action='restart' icon='restart' label='Start again' %}
-      {% capture game_help %}<p>Drag blocks into empty space. Guide the marked square to the exit at the bottom.</p>{% endcapture %}
-      {% include controls/help.html text=game_help remember=true %}
     </div>
-  </div>
-  <p class="klotski-status" data-klotski-status role="status">Enable JavaScript to play Klotski.</p>
-  <div class="klotski-board-wrap">
-    <div class="klotski-board" data-klotski-board>
-      <img src="{{ '/assets/images/klotski-board.svg' | relative_url }}" width="400" height="530" alt="The classic Klotski board: a marked square surrounded by nine smaller blocks, with two empty spaces and an exit at the bottom centre.">
+    <p class="klotski-status" data-klotski-status role="status">Enable JavaScript to play Klotski.</p>
+    <div class="klotski-board-wrap">
+      <div class="klotski-board" data-klotski-board>
+        <img src="{{ '/assets/images/klotski-board.svg' | relative_url }}" width="400" height="530" alt="The classic Klotski board: a marked square surrounded by nine smaller blocks, with two empty spaces and an exit at the bottom centre.">
+      </div>
+      <div class="klotski-exit" aria-hidden="true">Exit <span>↓</span></div>
     </div>
-    <div class="klotski-exit" aria-hidden="true">Exit <span>↓</span></div>
+    <noscript><p class="klotski-caption">This game needs JavaScript. Enable it to slide the blocks and use the game controls.</p></noscript>
   </div>
-  <noscript><p class="klotski-caption">This game needs JavaScript. Enable it to slide the blocks and use the game controls.</p></noscript>
 </section>

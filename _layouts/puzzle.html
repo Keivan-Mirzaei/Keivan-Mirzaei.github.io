@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="{{ '/assets/css/puzzles.css' | relative_url }}">
 
   {% include widget-assets.html %}
+  <link rel="stylesheet" href="{{ '/assets/css/puzzle-workspace.css' | relative_url }}">
+  <script type="module" src="{{ '/assets/js/puzzle-layout.mjs' | relative_url }}"></script>
 </head>
 <body class="puzzle-page{% if page.game_layout == 'board-first' %} puzzle-board-first{% endif %}">
   <a class="skip-link" href="#main">Skip to game</a>

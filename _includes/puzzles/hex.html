@@ -1,3 +1,4 @@
+{% if include.embedded %}
 <section class="{% if include.embedded %}graph-widget {% endif %}hex-widget hex-play hex-board-first" data-hex-game aria-label="Hex game">
   <header class="hex-game-heading">
     {% if include.embedded %}<h3 class="hex-game-title" id="hex-game-title">Find your way across</h3>{% else %}<h1 class="hex-game-title">Hex</h1>{% endif %}
@@ -43,3 +44,6 @@
     <noscript><p class="hex-caption">This game needs JavaScript. Enable it to place stones and use the game controls.</p></noscript>
   </div>
 </section>
+{% else %}
+{% include puzzles/hex-standalone.html %}
+{% endif %}

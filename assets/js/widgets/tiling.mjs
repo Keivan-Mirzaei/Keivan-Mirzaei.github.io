@@ -383,9 +383,6 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     const value = Number(get('number').value);
     if (Number.isInteger(value) && value >= 1 && value <= book.total) get('number-slider').value = String(value);
   });
-  const help = root.querySelector('.puzzle-help');
-  get('picker').addEventListener('toggle', () => { if (get('picker').open && help) help.open = false; });
-  help?.addEventListener('toggle', () => { if (help.open) get('picker').open = false; });
   for (const name of ['number', 'number-slider', 'open']) get(name).disabled = false;
   get('challenge').addEventListener('input', showChallenge);
   get('challenge').addEventListener('change', changeDifficulty);

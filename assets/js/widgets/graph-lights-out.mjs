@@ -1,6 +1,7 @@
 import { LIGHTS_OUT_LEVELS } from '../lib/lights-out-book-graphs.mjs';
 import { createLightsOutBook, createLightsOutGame } from '../lib/lights-out-book.mjs';
 import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
+import { setActionLabel } from '../lib/puzzle-controls.mjs';
 import { countBits, pressEffect, vertices } from '../lib/lights-out-math.mjs';
 
 export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('lights-out', root), random = Math.random, catalogue } = {}) {
@@ -52,7 +53,6 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
     get('difficulty-label').textContent = level.name;
     get('difficulty').setAttribute('aria-valuetext', level.name);
     get('level-detail').textContent = `${level.sizes[0]}–${level.sizes.at(-1)} lights · ${level.presses.join('–')} presses at best`;
-    [...root.querySelectorAll('.glo-level-labels span')].forEach((label, i) => label.classList.toggle('is-active', i === value));
   }
 
   function render(message = '') {
@@ -61,11 +61,11 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
     get('numbers').checked = numbers;
     get('board-name').textContent = `${graph.name} · ${graph.size} lights`;
     get('moves').textContent = `${game.moves} ${game.moves === 1 ? 'press' : 'presses'}`;
-    get('target').textContent = `Best: ${puzzle.minimum}`;
-    get('name').innerHTML = `Puzzle ${book.number} <span class="glo-puzzle-total">/ ${book.total.toLocaleString('en')}</span>${book.currentCompleted ? '<span class="glo-solved-mark" aria-hidden="true">✓</span>' : ''}<span class="glo-caret" aria-hidden="true">⌄</span>`;
+    get('target').textContent = `${puzzle.minimum} presses`;
+    get('name').textContent = `Puzzle ${book.number} / ${book.total}${book.currentCompleted ? ' ✓' : ''}`;
     get('name').setAttribute('aria-label', `Puzzle ${book.number} of ${book.total}${book.currentCompleted ? ', solved' : ''}. Choose a puzzle.`);
-    get('completed').textContent = `${book.completedCount.toLocaleString('en')} / ${book.total.toLocaleString('en')} ${LIGHTS_OUT_LEVELS[book.difficulty].name} puzzles solved`;
-    get('book-progress').textContent = `${book.completedCount.toLocaleString('en')} / ${book.total.toLocaleString('en')} solved at this level`;
+    get('completed').textContent = `${book.completedCount} / ${book.total} ${LIGHTS_OUT_LEVELS[book.difficulty].name} puzzles solved`;
+    get('book-progress').textContent = `${book.completedCount} / ${book.total} solved`;
     for (const name of ['number', 'number-slider']) { get(name).value = String(book.number); get(name).max = String(book.total); }
     get('number-slider').setAttribute('aria-valuetext', `Puzzle ${book.number} of ${book.total}`);
     get('previous').disabled = book.number === 1;
@@ -75,8 +75,7 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
     get('restart').disabled = !game.moves;
     get('hint').disabled = game.solved;
     get('hint').classList.toggle('is-confirming', hint !== null);
-    get('hint-label').textContent = hint === null ? 'Hint' : 'Use hint';
-    get('hint').setAttribute('aria-label', hint === null ? 'Hint' : `Use hint: press light ${hint + 1}`);
+    setActionLabel(get('hint'), hint === null ? 'Hint' : `Use hint: press light ${hint + 1}`);
     get('new').disabled = !book.canAdvance; get('shuffle').disabled = !book.canAdvance;
     buttons.forEach((button, i) => {
       const on = !!(game.lights & (1 << i));
@@ -121,7 +120,7 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
   get('hint').addEventListener('click', () => {
     if (game.solved) return;
     if (hint !== null) { press(hint); return; }
-    hint = game.hint(); render(`Try light ${hint + 1}. Press it, or choose Use hint.`);
+    hint = game.hint(); render(`Try light ${hint + 1}. Press it, or tap the check mark.`);
   });
   get('difficulty').addEventListener('input', () => showDifficulty(Number(get('difficulty').value) - 1));
   get('difficulty').addEventListener('change', () => {
@@ -131,14 +130,6 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
     if (book.changeDifficulty(value)) { showDifficulty(); loadPuzzle(); }
   });
   get('numbers').addEventListener('change', () => { numbers = get('numbers').checked; render(); });
-  for (const name of ['picker', 'help']) get(name).addEventListener('toggle', () => { if (get(name).open) get(name === 'picker' ? 'help' : 'picker').open = false; });
-  root.addEventListener('keydown', event => {
-    if (event.key !== 'Escape') return;
-    for (const name of ['picker', 'help']) if (get(name).open) { get(name).open = false; get(name).querySelector('summary').focus(); }
-  });
-  document.addEventListener('click', event => {
-    for (const name of ['picker', 'help']) if (!get(name).contains(event.target)) get(name).open = false;
-  });
   for (const name of ['difficulty', 'number', 'number-slider', 'open', 'numbers']) get(name).disabled = false;
   get('difficulty').value = String(book.difficulty + 1); showDifficulty(); drawGraph(); render();
   return { book, press, read: () => ({ number: book.number, difficulty: book.difficulty, key: puzzle.key, lights: game.lights, start: puzzle.start, minimum: puzzle.minimum, moves: game.moves, hint }) };

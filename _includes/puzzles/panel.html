@@ -1,0 +1,8 @@
+<details class="puzzle-panel" data-puzzle-panel="{{ include.kind }}" data-{{ include.game }}-{{ include.kind }}>
+  <summary class="panel-button puzzle-panel-toggle" aria-label="{{ include.title }}">{% include icon.html name=include.kind %}<span>{{ include.title }}</span></summary>
+  <div class="puzzle-panel-body">
+    {{ include.content }}
+    {% if include.remember %}{% include puzzles/remember.html %}{% endif %}
+    {% if include.kind == 'settings' %}<button class="panel-button puzzle-panel-done" type="button" data-puzzle-panel-close>Done</button>{% endif %}
+  </div>
+</details>
