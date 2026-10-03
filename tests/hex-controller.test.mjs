@@ -49,7 +49,7 @@ function game({ order = 'local', size = 3, legacy = false, storage } = {}) {
   const root = new Element();
   const fixture = {
     addEventListener: (name, handler) => root.addEventListener(name, handler),
-    querySelector: selector => elements[selector.match(/^\[data-hex-(.+)\]$/)?.[1]],
+    querySelector: selector => elements[selector.match(/^\[data-hex-(.+)\]$/)?.[1]] || null,
     querySelectorAll: selector => selector === '[data-hex-order]' ? orders : [elements.size, elements.new, ...orders],
   };
   initializeHexGame(fixture, storage);
@@ -137,6 +137,75 @@ test('undo cancels pending computer work and stale replies cannot affect a later
   assert.deepEqual(fixture.colors().slice(0, 3), [0, 0, 1]);
   newComputer.reply(4);
   assert.equal(fixture.elements.count.textContent, '2 stones');
+});
+
+test('a failed worker falls back to a legal reply while yielding between search slices', async t => {
+  const timers = [];
+  let elapsed = 0;
+  t.mock.method(globalThis, 'setTimeout', callback => { timers.push(callback); return timers.length; });
+  t.mock.method(performance, 'now', () => elapsed += 5);
+  const fixture = game({ order: '1', size: 5 });
+  fixture.click(0);
+  const computer = Computer.instances[0];
+  computer.onerror({ preventDefault() {} });
+  assert.equal(computer.terminated, true);
+  assert.equal(timers.length, 1);
+  assert.equal(fixture.elements.count.textContent, '1 stone');
+
+  // The first timer starts search; subsequent timers allow rendering and input.
+  timers.shift()();
+  await Promise.resolve();
+  assert.equal(fixture.elements.count.textContent, '1 stone');
+  assert.equal(timers.length, 1);
+  let slices = 0;
+  while (timers.length && slices++ < 500) {
+    timers.shift()();
+    await Promise.resolve();
+  }
+  assert.equal(timers.length, 0);
+  assert.ok(slices > 1);
+  assert.equal(fixture.colors()[0], 1);
+  assert.equal(fixture.colors().filter(color => color === 2).length, 1);
+  assert.match(fixture.elements.status.textContent, /^Your turn · Red/);
+});
+
+test('undo cancels cooperative search and a stale worker error cannot restart it', async t => {
+  const timers = [];
+  let elapsed = 0;
+  t.mock.method(globalThis, 'setTimeout', callback => { timers.push(callback); return timers.length; });
+  t.mock.method(performance, 'now', () => elapsed += 5);
+  const fixture = game({ order: '1', size: 5 });
+  fixture.click(0);
+  const computer = Computer.instances[0];
+  computer.onerror({ preventDefault() {} });
+  timers.shift()();
+  await Promise.resolve();
+  assert.equal(timers.length, 1);
+  fixture.undo();
+  timers.shift()();
+  await Promise.resolve();
+  assert.equal(timers.length, 0);
+  assert.equal(fixture.elements.count.textContent, '0 stones');
+  computer.onerror({ preventDefault() {} });
+  assert.equal(timers.length, 0);
+  fixture.click(2);
+  Computer.instances[1].reply(4);
+  assert.equal(fixture.colors()[2], 1);
+  assert.equal(fixture.colors()[4], 2);
+});
+
+test('reset cancels the fallback before its deferred initialization', async t => {
+  const timers = [];
+  t.mock.method(globalThis, 'setTimeout', callback => { timers.push(callback); return timers.length; });
+  const fixture = game({ order: '1', size: 5 });
+  fixture.click(0);
+  Computer.instances[0].onerror({ preventDefault() {} });
+  fixture.changeOrder('local');
+  timers.shift()();
+  await Promise.resolve();
+  assert.equal(timers.length, 0);
+  assert.equal(fixture.elements.count.textContent, '0 stones');
+  assert.match(fixture.elements.status.textContent, /^Red’s turn/);
 });
 
 test('playing second gives the computer a Red opening that undo cannot remove', () => {
@@ -269,10 +338,10 @@ test('local redo restores a win and a new move or new game clears redo', () => {
   assert.equal(f.elements.count.textContent, '0 stones');
 });
 
-test('arrow navigation skips occupied cells and stays within a board row', () => {
+test('arrow navigation follows diamond horizontal lines and skips occupied cells', () => {
   const f = game();
-  f.click(1);
-  const button = f.elements.board.buttons[0]; button.focus();
+  f.click(4);
+  const button = f.elements.board.buttons[6]; button.focus();
   f.elements.board.emit('keydown', { target: button, key: 'ArrowRight', preventDefault() {} });
   assert.equal(document.activeElement.dataset.hexCell, '2');
   f.elements.board.emit('keydown', { target: document.activeElement, key: 'ArrowRight', preventDefault() {} });

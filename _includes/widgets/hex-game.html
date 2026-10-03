@@ -5,11 +5,11 @@
     <label for="hex-size">Board <select id="hex-size" data-hex-size disabled><option value="5">5 × 5</option><option value="7">7 × 7</option></select></label>
     <label for="hex-order">Turn order <select id="hex-order" data-hex-order disabled><option value="1">Play first</option><option value="2">Play second</option></select></label>
   </div>
-  <p class="hex-caption" data-hex-instruction>Red moves first and joins top to bottom. Blue joins left to right. Choose an empty cell.</p>
+  <p class="hex-caption" data-hex-instruction>Red moves first and joins the two red sides. Blue joins the two blue sides. Choose an empty cell.</p>
   <div class="hex-board" data-hex-board>
-    <img src="{{ '/assets/images/hex-board.svg' | relative_url }}" width="600" height="410" alt="A five by five Hex board. Red connects the top and bottom edges; Blue connects the left and right edges. Each cell has up to six neighbors sharing a side.">
+    <img src="{{ '/assets/images/hex-board.svg' | relative_url }}" width="410" height="600" alt="A five by five upright diamond Hex board. Red connects the upper-right and lower-left sides; Blue connects the upper-left and lower-right sides. Each cell has up to six neighbors sharing a side.">
   </div>
-  <div class="hex-legend"><span><i class="hex-key hex-red" aria-hidden="true">R</i>Red · top ↔ bottom</span><span><i class="hex-key hex-blue" aria-hidden="true">B</i>Blue · left ↔ right</span></div>
+  <div class="hex-legend"><span><i class="hex-key hex-red" aria-hidden="true"></i>Red · upper-right ↔ lower-left</span><span><i class="hex-key hex-blue" aria-hidden="true"></i>Blue · upper-left ↔ lower-right</span></div>
   <p class="hex-status" data-hex-status role="status">Enable JavaScript to play against the computer.</p>
   <div class="hex-actions"><button class="secondary-button" type="button" data-hex-new disabled>New game</button><button class="hex-secondary" type="button" data-hex-undo disabled>Undo your turn</button></div>
   <p class="hex-caption">Practice games use no swap rule. Changing the board or turn order starts a new game.</p>

@@ -1,4 +1,4 @@
-/* Hex keeps its two goals distinct through both colour and letter labels. */
+/* Hex shares the notebook palette; the playable board uses simple coloured stones. */
 .hex-widget { --hex-red: #a74740; --hex-blue: #306a97; --hex-red-tint: #f0d9d1; --hex-blue-tint: #d6e5ef; }
 .hex-settings { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin: 18px 0 12px; }
 .hex-widget .hex-opponent { margin: 0; font: 13px/1.6 var(--sans); }
@@ -6,13 +6,14 @@
 .hex-settings select { max-width: 100%; min-height: 44px; padding: 8px 26px 8px 10px; border: 1px solid var(--line); border-radius: 3px; color: var(--ink); background: var(--paper); font: 13px var(--sans); }
 .hex-widget .hex-caption { margin: 12px 0; font: 13px/1.7 var(--sans); color: var(--muted); }
 .hex-board { position: relative; width: 100%; max-width: 600px; margin: 20px auto 14px; isolation: isolate; }
+[data-hex-game] .hex-board { max-width: 420px; }
 .hex-board > svg, .hex-board > img { display: block; width: 100%; height: 100%; margin: 0; }
 .hex-board > .hex-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
 .hex-outline { fill: var(--paper); stroke: var(--line); stroke-width: .035; }
 .hex-red { --hex-cell-fill: var(--hex-red-tint); --hex-cell-ink: var(--hex-red); }
 .hex-blue { --hex-cell-fill: var(--hex-blue-tint); --hex-cell-ink: var(--hex-blue); }
 .hex-border { fill: none; stroke: var(--hex-cell-ink); stroke-width: .14; stroke-linecap: round; stroke-linejoin: round; }
-.hex-board .hex-cell { position: absolute; display: grid; place-items: center; padding: 0; border: 0; border-radius: 0; min-height: 0; clip-path: polygon(50% 2%, 98% 26%, 98% 74%, 50% 98%, 2% 74%, 2% 26%); background: var(--hex-cell-fill, var(--paper)); color: var(--hex-cell-ink, var(--ink)); font: 13px var(--mono); z-index: 1; }
+.hex-board .hex-cell { position: absolute; display: grid; place-items: center; padding: 0; border: 0; border-radius: 0; min-height: 0; clip-path: var(--hex-cell-shape, polygon(50% 2%, 98% 26%, 98% 74%, 50% 98%, 2% 74%, 2% 26%)); background: var(--hex-cell-fill, var(--paper)); color: var(--hex-cell-ink, var(--ink)); font: 13px var(--mono); z-index: 1; }
 .hex-cell span { display: grid; place-items: center; width: 65%; aspect-ratio: 1; border-radius: 50%; }
 .hex-cell:not(:disabled):hover { background: var(--tint); }
 .hex-cell:focus-visible { outline: none; background: var(--tint); }
@@ -20,6 +21,14 @@
 .hex-cell.is-last span { border: 1px solid currentColor; }
 .hex-cell.is-winner { background: var(--hex-cell-fill); }
 .hex-board .hex-cell:disabled { opacity: 1; }
+[data-hex-game] .hex-cell.hex-red, [data-hex-game] .hex-cell.hex-blue { background: var(--paper); }
+[data-hex-game] .hex-cell span { width: 76%; }
+[data-hex-game] .hex-cell.hex-red span { background: var(--hex-red); }
+[data-hex-game] .hex-cell.hex-blue span { background: var(--hex-blue); }
+[data-hex-game] .hex-cell.is-winner { background: var(--hex-cell-fill); }
+[data-hex-game] .hex-cell.is-last span { border: 0; }
+[data-hex-game] .hex-cell:focus-visible span { outline: 2px solid var(--green); outline-offset: 0; }
+.hex-last-outline { fill: none; stroke: var(--ink); stroke-width: .065; stroke-linejoin: round; }
 .hex-chain { fill: none; stroke: var(--ink); stroke-width: .08; stroke-dasharray: .16 .13; stroke-linecap: round; }
 .hex-coast-stubs { fill: none; stroke: var(--muted); stroke-width: .05; }
 .hex-coast { fill: none; stroke: var(--ink); stroke-width: .1; stroke-linecap: round; stroke-linejoin: round; }

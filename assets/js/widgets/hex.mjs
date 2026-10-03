@@ -1,48 +1,61 @@
-import { RED, BLUE, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs';
+import { RED, BLUE, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs?v=20261002-5';
+import { searchBudget } from '../lib/hex-search-settings.mjs?v=20261002-5';
 import { createPuzzleStorage } from '../lib/puzzle-storage.mjs?v=20261002-1';
 import { restoreHex } from '../lib/hex-storage.mjs?v=20261002-1';
 import { setActionLabel } from '../lib/puzzle-controls.mjs?v=20261002-4';
 
 const name = color => color === RED ? 'Red' : 'Blue';
 const goal = color => color === RED ? 'top to bottom' : 'left to right';
-const point = ([x, y]) => [x * Math.sqrt(3) / 2, y / 2];
-const pair = p => point(p).map(v => v.toFixed(4)).join(',');
+const gameGoal = color => `the two ${color === RED ? 'red' : 'blue'} sides`;
+// Turn the diamond's long diagonal upright, keeping all cells regular hexagons.
+// The proof retains its cardinal sides and corners used in the explanation.
+const point = ([x, y], diamond = false) => diamond
+  ? [Math.sqrt(3) * (x - y) / 4, (3 * x + y) / 4]
+  : [x * Math.sqrt(3) / 2, y / 2];
 
-function layout(geometry) {
-  const all = [...geometry.points.values()].map(point);
-  const minX = Math.min(...all.map(p => p[0])) - 1.15, minY = Math.min(...all.map(p => p[1])) - .95;
-  const width = Math.max(...all.map(p => p[0])) - minX + 1.15;
-  const height = Math.max(...all.map(p => p[1])) - minY + .95;
+function layout(geometry, diamond) {
+  const vertices = diamond ? geometry.cells.flatMap(cell => cell.vertices) : [...geometry.points.values()];
+  const all = vertices.map(p => point(p, diamond));
+  const padX = diamond ? .9 : 1.15, padY = diamond ? .9 : .95;
+  const minX = Math.min(...all.map(p => p[0])) - padX, minY = Math.min(...all.map(p => p[1])) - padY;
+  const width = Math.max(...all.map(p => p[0])) - minX + padX;
+  const height = Math.max(...all.map(p => p[1])) - minY + padY;
   return { minX, minY, width, height };
 }
 
 function drawBoard(holder, cells, size, { playable = false, editing = false, path = [], last = -1, coast = null, step = 0, restoreFocus = true } = {}) {
   const focused = holder.contains(document.activeElement) ? document.activeElement.dataset.hexCell : undefined;
-  const geometry = coast?.geometry || hexGeometry(size), box = layout(geometry);
+  const diamond = playable && !coast, project = p => point(p, diamond);
+  const pair = p => project(p).map(v => v.toFixed(4)).join(',');
+  const geometry = coast?.geometry || hexGeometry(size), box = layout(geometry, diamond);
   holder.style.aspectRatio = `${box.width} / ${box.height}`;
   holder.style.setProperty('--hex-size', size);
+  holder.style.setProperty('--hex-cell-shape', 'polygon(50% 2%, 98% 26%, 98% 74%, 50% 98%, 2% 74%, 2% 26%)');
   const borders = geometry.edges.filter(e => e.faces[1] < 0 && e.faces[0] >= 0).map(e =>
     `<path class="hex-border hex-${e.faces[1] === -1 || e.faces[1] === -2 ? 'red' : 'blue'}" d="M${pair(geometry.points.get(e.from))}L${pair(geometry.points.get(e.to))}"/>`).join('');
   const backdrop = geometry.cells.map(cell => `<polygon class="hex-outline" points="${cell.vertices.map(pair).join(' ')}"/>`).join('');
-  const chain = path.length ? `<polyline class="hex-chain" points="${path.map(i => pair(geometry.cells[i].center)).join(' ')}"/>` : '';
+  const chain = !playable && path.length ? `<polyline class="hex-chain" points="${path.map(i => pair(geometry.cells[i].center)).join(' ')}"/>` : '';
+  const lastCell = playable && cells[last] ? geometry.cells[last] : null;
+  const lastOutline = lastCell ? `<polygon class="hex-last-outline" points="${lastCell.vertices.map(([x, y]) => pair([lastCell.center[0] + (x - lastCell.center[0]) * .94, lastCell.center[1] + (y - lastCell.center[1]) * .94])).join(' ')}"/>` : '';
   const trace = coast ? `<g class="hex-coast-stubs">${geometry.ports.map(p => `<path d="M${pair(geometry.points.get(p.vertex))}L${pair(geometry.points.get(p.corner))}"/>`).join('')}</g>
     <polyline class="hex-coast" points="${coast.vertices.slice(0, step + 1).map(v => pair(geometry.points.get(v))).join(' ')}"/>
-    <circle class="hex-walker" cx="${point(geometry.points.get(coast.vertices[step]))[0]}" cy="${point(geometry.points.get(coast.vertices[step]))[1]}" r=".14"/>` : '';
+    <circle class="hex-walker" cx="${project(geometry.points.get(coast.vertices[step]))[0]}" cy="${project(geometry.points.get(coast.vertices[step]))[1]}" r=".14"/>` : '';
   const labels = coast ? geometry.ports.map(p => {
-    const [x, y] = point(geometry.points.get(p.vertex));
+    const [x, y] = project(geometry.points.get(p.vertex));
     return `<span aria-hidden="true" class="hex-port-label${p.name.startsWith('N') ? ' hex-port-north' : ''}" style="left:${(x - box.minX) / box.width * 100}%;top:${(y - box.minY) / box.height * 100}%">${p.name === 'NW' ? 'Start' : p.name}</span>`;
   }).join('') : '';
   const svg = `<svg class="hex-diagram" viewBox="${box.minX} ${box.minY} ${box.width} ${box.height}" aria-hidden="true">${backdrop}${borders}</svg>`;
   const buttons = geometry.cells.map((cell, i) => {
-    const [x, y] = point(cell.center), color = cells[i], tag = playable || editing ? 'button' : 'span';
+    const [x, y] = project(cell.center), color = cells[i], tag = playable || editing ? 'button' : 'span';
+    const halfWidth = Math.sqrt(3) / 2, halfHeight = 1;
     const row = Math.floor(i / size) + 1, col = i % size + 1;
     const label = `Row ${row}, column ${col}: ${color ? name(color) : 'empty'}.${editing ? ` Change to ${name(3 - color)}.` : color ? '' : ' Place your stone here.'}`;
-    return `<${tag} class="hex-cell${color ? ` hex-${color === RED ? 'red' : 'blue'}` : ''}${i === last ? ' is-last' : ''}${path.includes(i) ? ' is-winner' : ''}" ${tag === 'button' ? `type="button" data-hex-cell="${i}" aria-label="${label}"${!editing && (!playable || color) ? ' disabled' : ''}` : 'aria-hidden="true"'} style="left:${(x - Math.sqrt(3) / 2 - box.minX) / box.width * 100}%;top:${(y - 1 - box.minY) / box.height * 100}%;width:${Math.sqrt(3) / box.width * 100}%;height:${2 / box.height * 100}%"><span>${color ? color === RED ? 'R' : 'B' : ''}</span></${tag}>`;
+    return `<${tag} class="hex-cell${color ? ` hex-${color === RED ? 'red' : 'blue'}` : ''}${i === last ? ' is-last' : ''}${path.includes(i) ? ' is-winner' : ''}" ${tag === 'button' ? `type="button" data-hex-cell="${i}" aria-label="${label}"${!editing && (!playable || color) ? ' disabled' : ''}` : 'aria-hidden="true"'} style="left:${(x - halfWidth - box.minX) / box.width * 100}%;top:${(y - halfHeight - box.minY) / box.height * 100}%;width:${2 * halfWidth / box.width * 100}%;height:${2 * halfHeight / box.height * 100}%"><span aria-hidden="true">${!playable && color ? color === RED ? 'R' : 'B' : ''}</span></${tag}>`;
   }).join('');
-  const overlay = `<svg class="hex-overlay" viewBox="${box.minX} ${box.minY} ${box.width} ${box.height}" aria-hidden="true">${chain}${trace}</svg>`;
+  const overlay = `<svg class="hex-overlay" viewBox="${box.minX} ${box.minY} ${box.width} ${box.height}" aria-hidden="true">${chain}${trace}${lastOutline}</svg>`;
   holder.innerHTML = svg + buttons + overlay + labels;
   holder.setAttribute('role', 'group');
-  holder.setAttribute('aria-label', `${size} by ${size} Hex board. Red joins top to bottom; Blue joins left to right.${coast ? ` Coastline: ${step} of ${coast.tour.length} edges traced.` : ''}`);
+  holder.setAttribute('aria-label', `${size} by ${size} ${diamond ? 'upright diamond Hex board. Red joins upper-right and lower-left; Blue joins upper-left and lower-right.' : 'Hex board. Red joins top to bottom; Blue joins left to right.'}${coast ? ` Coastline: ${step} of ${coast.tour.length} edges traced.` : ''}`);
   if (restoreFocus && focused !== undefined) holder.querySelector(`[data-hex-cell="${focused}"]`)?.focus({ preventScroll: true });
 }
 
@@ -76,9 +89,20 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
     buttons.forEach((button, index) => { button.tabIndex = index === boardCursor ? 0 : -1; });
     board.tabIndex = busy ? 0 : -1;
     get('count').textContent = `${count} ${count === 1 ? 'stone' : 'stones'}`;
+    if (get('board-meta')) get('board-meta').textContent = `${size} × ${size}`;
+    if (get('goal')) get('goal').textContent = local ? 'Connect the two sides of your colour' : `Connect your two ${name(human).toLowerCase()} sides`;
+    for (const role of ['human', 'opponent']) {
+      const color = role === 'human' ? human : 3 - human;
+      game.querySelector(`[data-hex-player="${role}"]`)?.setAttribute('data-active', String(!win && toMove === color));
+      game.querySelector(`[data-hex-player="${role}"] [data-hex-player-color]`)?.setAttribute('data-hex-player-color', String(color));
+      const playerName = game.querySelector(`[data-hex-player-name="${role}"]`);
+      if (playerName) playerName.textContent = local ? role === 'human' ? 'Player 1' : 'Player 2' : role === 'human' ? 'You' : 'Computer';
+      const playerLabel = game.querySelector(`[data-hex-player-label="${role}"]`);
+      if (playerLabel) playerLabel.textContent = name(color);
+    }
     get('instruction').textContent = local
-      ? 'Take turns choosing an empty cell. Red connects top to bottom; Blue connects left to right.'
-      : `You play ${human === RED ? 'first' : 'second'} as ${name(human)}: connect ${goal(human)}. Choose an empty cell; stones stay put.`;
+      ? 'Take turns choosing an empty cell. Connect the two sides of your colour.'
+      : `You play ${human === RED ? 'first' : 'second'} as ${name(human)}: connect ${gameGoal(human)}. Choose an empty cell; stones stay put.`;
     get('undo').disabled = !history.length;
     if (get('redo')) get('redo').disabled = !future.length;
     setActionLabel(get('undo'), local ? 'Undo move' : 'Undo your turn');
@@ -107,11 +131,22 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
     cells[move] = 3 - human; last = move; toMove = human; render();
   }
   async function fallback(token) {
-    const search = createSearch(cells, size, 3 - human), deadline = performance.now() + 1100;
-    while (!search.solved && search.visits() < (size === 5 ? 6000 : 8000) && performance.now() < deadline) {
+    if (token !== generation) return;
+    // Paint the thinking state and let a reset cancel work before initialization.
+    await new Promise(resolve => setTimeout(resolve, 0));
+    if (token !== generation) return;
+    const budget = searchBudget(size), deadline = performance.now() + budget.timeMs;
+    const search = createSearch(cells, size, 3 - human);
+    while (!search.solved && search.visits() < budget.maxIterations && performance.now() < deadline) {
       if (token !== generation) return;
-      search.run(100); await new Promise(resolve => setTimeout(resolve, 0));
+      const sliceDeadline = Math.min(deadline, performance.now() + budget.mainThreadSliceMs);
+      do { search.run(1); }
+      while (!search.solved && search.visits() < budget.maxIterations && performance.now() < sliceDeadline);
+      if (!search.solved && search.visits() < budget.maxIterations && performance.now() < deadline) {
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
     }
+    if (token !== generation) return;
     finish(search.best(), token);
   }
   function computerTurn() {
@@ -119,11 +154,11 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
     busy = true; render();
     const token = generation;
     try {
-      worker = new Worker(new URL('../lib/hex-worker.mjs?v=20261002-2', import.meta.url), { type: 'module' });
+      worker = new Worker(new URL('../lib/hex-worker.mjs?v=20261002-5', import.meta.url), { type: 'module' });
       worker.onmessage = ({ data }) => finish(data.move, token);
       worker.onerror = event => { event.preventDefault(); if (token !== generation) return; worker?.terminate(); worker = null; fallback(token); };
       worker.postMessage({ cells, size, color: 3 - human });
-    } catch { fallback(token); }
+    } catch { worker?.terminate(); worker = null; fallback(token); }
   }
   function newGame() {
     cancel(); size = Number(get('size').value);
@@ -151,7 +186,7 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
   });
   get('board').addEventListener('keydown', event => {
     const button = event.target.closest('[data-hex-cell]');
-    const delta = { ArrowLeft: [0, -1], ArrowRight: [0, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] }[event.key];
+    const delta = { ArrowLeft: [1, -1], ArrowRight: [-1, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] }[event.key];
     if (!button || !delta || event.altKey || event.ctrlKey || event.metaKey) return;
     event.preventDefault();
     let row = Math.floor(Number(button.dataset.hexCell) / size), column = Number(button.dataset.hexCell) % size;
@@ -163,6 +198,16 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
     }
   });
   get('new').addEventListener('click', newGame);
+  function closeSettings() {
+    const settings = get('settings');
+    if (!settings) return;
+    settings.open = false;
+    settings.querySelector('summary')?.focus();
+  }
+  get('settings-close')?.addEventListener('click', closeSettings);
+  get('settings')?.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { event.preventDefault(); closeSettings(); }
+  });
   get('size').addEventListener('input', showSize);
   get('size').addEventListener('change', newGame);
   orderControls.forEach(control => control.addEventListener('change', newGame));
@@ -198,7 +243,7 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
   } else newGame();
 }
 
-if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-game]').forEach(root => initializeHexGame(root));
+if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-game]').forEach(game => initializeHexGame(game));
 
 if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-proof]').forEach(widget => {
   const get = key => widget.querySelector(`[data-hex-proof-${key}]`);
