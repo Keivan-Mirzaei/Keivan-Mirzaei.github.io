@@ -7,9 +7,12 @@ import { serializeKlotski, restoreKlotski } from '../assets/js/lib/klotski-stora
 import { restoreHex } from '../assets/js/lib/hex-storage.mjs';
 
 function environment(protocol = 'https:') {
-  let cookie = '', lastWrite = '', writes = 0;
-  const values = new Map(), document = {};
-  Object.defineProperty(document, 'cookie', { get: () => cookie, set: value => { lastWrite = value; cookie = value.split(';')[0]; } });
+  let lastWrite = '', writes = 0;
+  const cookies = new Map(), values = new Map(), document = {};
+  Object.defineProperty(document, 'cookie', {
+    get: () => [...cookies].map(([key, value]) => `${key}=${value}`).join('; '),
+    set: value => { lastWrite = value; const [key, content] = value.split(';')[0].split('='); cookies.set(key, content); },
+  });
   return { document, location: { protocol }, values, get lastWrite() { return lastWrite; }, get writes() { return writes; },
     localStorage: { getItem: key => values.get(key) || null, setItem: (key, value) => { values.set(key, value); writes++; }, removeItem: key => values.delete(key) } };
 }
@@ -21,28 +24,52 @@ function control() {
 
 test('the first-party cookie remembers the preference and boards survive a new page load', () => {
   const env = environment(), root = control(), store = createPuzzleStorage('tiling', root, env);
-  assert.equal(root.checkbox.disabled, false); assert.match(env.lastWrite, /ao_puzzles=1; Max-Age=31536000; Path=\/; SameSite=Lax; Secure/);
+  assert.equal(root.checkbox.disabled, false); assert.match(env.lastWrite, /ao_puzzles_tiling=1; Max-Age=31536000; Path=\/; SameSite=Lax; Secure/);
   store.save({ seed: 123, state: { placements: {} } }); store.save({ seed: 123, state: { placements: {} } });
   assert.equal(env.writes, 1);
   assert.deepEqual(createPuzzleStorage('tiling', control(), env).read(), { seed: 123, state: { placements: {} } });
 });
 
-test('turning Remember progress off clears all puzzles, survives reload, and turning it on saves the current game', () => {
+test('turning saving off clears only this puzzle, survives reload, and turning it on saves the current game', () => {
   const env = environment(), root = control(), store = createPuzzleStorage('hex', root, env);
   for (const id of ['hex', 'klotski', 'tiling', 'lights-out']) env.localStorage.setItem(storageKey(id), '{"moves":1}');
   store.setSnapshotProvider(() => ({ moves: 7 })); root.checkbox.change(false);
-  assert.equal(env.document.cookie, 'ao_puzzles=0'); assert.equal(env.values.size, 0);
-  store.save({ moves: 5 }); assert.equal(env.values.size, 0);
+  assert.equal(env.document.cookie, 'ao_puzzles_hex=0'); assert.equal(env.values.size, 3);
+  store.save({ moves: 5 }); assert.equal(env.values.size, 3);
+  for (const id of ['klotski', 'tiling', 'lights-out']) assert.equal(env.localStorage.getItem(storageKey(id)), '{"moves":1}');
   const reloaded = control(); assert.equal(createPuzzleStorage('hex', reloaded, env).read(), null);
   assert.equal(reloaded.checkbox.checked, false);
   root.checkbox.change(true); assert.deepEqual(store.read(), { moves: 7 });
 });
 
-test('a preference changed in another puzzle prevents further saving', () => {
+test('each puzzle starts enabled and changing another puzzle does not affect its saving', () => {
   const env = environment(), first = control(), second = control();
   const a = createPuzzleStorage('hex', first, env); createPuzzleStorage('tiling', second, env);
   a.save({ moves: 1 }); second.checkbox.change(false); a.save({ moves: 2 });
-  assert.equal(env.values.size, 0); assert.equal(first.checkbox.checked, false);
+  assert.deepEqual(a.read(), { moves: 2 }); assert.equal(first.checkbox.checked, true);
+  assert.equal(second.checkbox.checked, false);
+  assert.equal(createPuzzleStorage('tiling', control(), env).read(), null);
+  for (const id of ['klotski', 'lights-out']) {
+    const root = control(), store = createPuzzleStorage(id, root, env);
+    assert.equal(root.checkbox.checked, true); store.save({ moves: 3 }); assert.deepEqual(store.read(), { moves: 3 });
+  }
+});
+
+test('another tab of the same puzzle observes its saving preference', () => {
+  const env = environment(), first = control(), second = control();
+  const a = createPuzzleStorage('hex', first, env); createPuzzleStorage('hex', second, env);
+  a.save({ moves: 1 }); second.checkbox.change(false); a.save({ moves: 2 });
+  assert.equal(a.read(), null); assert.equal(first.checkbox.checked, false);
+  assert.equal(env.localStorage.getItem(storageKey('hex')), null);
+});
+
+test('the retired global preference does not disable new puzzle-specific defaults or delete old boards', () => {
+  const env = environment(); env.document.cookie = 'ao_puzzles=0';
+  for (const id of ['hex', 'klotski', 'tiling', 'lights-out']) {
+    env.localStorage.setItem(storageKey(id), '{"moves":3}');
+    const root = control(), store = createPuzzleStorage(id, root, env);
+    assert.equal(root.checkbox.checked, true); assert.deepEqual(store.read(), { moves: 3 });
+  }
 });
 
 test('clearing progress affects only this puzzle, preserves saving, and saves a fresh board', () => {
@@ -50,7 +77,7 @@ test('clearing progress affects only this puzzle, preserves saving, and saves a 
   store.save({ moves: 7 }); env.localStorage.setItem(storageKey('hex'), '{"moves":3}');
   store.clear();
   assert.equal(store.read(), null); assert.equal(root.checkbox.checked, true);
-  assert.equal(env.document.cookie, 'ao_puzzles=1');
+  assert.equal(env.document.cookie, 'ao_puzzles_lights-out=1');
   assert.equal(env.localStorage.getItem(storageKey('hex')), '{"moves":3}');
   store.save({ moves: 0 }); assert.deepEqual(store.read(), { moves: 0 });
   root.checkbox.change(false); store.clear(); store.save({ moves: 0 });

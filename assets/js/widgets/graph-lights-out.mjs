@@ -76,6 +76,8 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
   }
 
   function render(message = '') {
+    const resetScope = root.querySelector('[data-widget-progress-scope]');
+    if (resetScope) resetScope.textContent = LIGHTS_OUT_LEVELS[book.difficulty].name;
     root.dataset.solved = String(game.solved); root.dataset.numbers = String(numbers);
     get('numbers').checked = numbers;
     get('board-name').textContent = `${graph.name} · ${graph.size} lights`;
@@ -149,7 +151,7 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
   listen(get('difficulty'), 'change', () => action(() => play.changeDifficulty(Number(get('difficulty').value) - 1)));
   listen(get('numbers'), 'change', () => { numbers = get('numbers').checked; render(); });
   const disposeProgress = initializeProgressReset(root, () => {
-    storage.clear?.(); play.resetProgress(); loadPuzzle('Progress reset. Start with puzzle 1.');
+    play.resetProgress(); loadPuzzle(`${LIGHTS_OUT_LEVELS[play.book.difficulty].name} progress reset. Start with puzzle 1.`);
   });
   for (const name of ['difficulty', 'number', 'number-slider', 'open', 'numbers']) get(name).disabled = false;
   loadPuzzle();

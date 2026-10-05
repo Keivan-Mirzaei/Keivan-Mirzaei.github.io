@@ -37,13 +37,31 @@ test('new presses discard a navigation Redo branch and solved records survive Un
   assert.equal(play.canRedo, false); assert.equal(play.book.completedCount, 1);
 });
 
-test('Reset progress clears every difficulty and all history while keeping the current difficulty', () => {
+test('Reset progress clears only the selected difficulty and preserves other boards, completions and history across reload', () => {
   const play = createLightsOutWorkspace(null, catalogue); solve(play);
-  play.changeDifficulty(2); solve(play); play.open(2); play.press(0);
+  play.open(2); play.press(0); const easy = position(play);
+  play.changeDifficulty(2); solve(play); play.open(2); play.press(0); play.undo();
+  const before = play.exportState();
   play.resetProgress();
   assert.equal(play.book.difficulty, 2); assert.equal(play.book.number, 1); assert.equal(play.game.moves, 0);
-  assert.equal(play.canUndo, false); assert.equal(play.canRedo, false);
-  assert.ok(play.exportState().sessions.every(session => session.completed.length === 0 && session.number === 1));
+  const saved = play.exportState();
+  assert.deepEqual(saved.sessions[2].completed, []); assert.equal(saved.sessions[2].number, 1);
+  for (const index of [0, 1, 3]) assert.deepEqual(saved.sessions[index], before.sessions[index]);
+  for (const name of ['past', 'future']) assert.deepEqual(saved.actions[name], before.actions[name].filter(entry => entry.difficulty !== 2));
+  const restored = createLightsOutWorkspace(saved, catalogue);
+  assert.deepEqual(restored.exportState(), saved);
+  restored.changeDifficulty(0); assert.deepEqual(position(restored), easy); assert.equal(restored.book.completedCount, 1);
+  restored.undo(); assert.equal(restored.book.difficulty, 2); assert.equal(restored.game.moves, 0);
+  assert.equal(restored.book.completedCount, 0);
+  restored.undo(); assert.deepEqual(position(restored), easy);
+  restored.undo(); assert.equal(restored.book.difficulty, 0); assert.equal(restored.game.moves, 0);
+  restored.redo(); assert.deepEqual(position(restored), easy);
+});
+
+test('Reset progress removes both histories when only this difficulty has been played', () => {
+  const play = createLightsOutWorkspace(null, catalogue); play.press(0); play.undo();
+  play.resetProgress(); assert.equal(play.canUndo, false); assert.equal(play.canRedo, false);
+  assert.equal(play.game.moves, 0); assert.equal(play.book.number, 1);
 });
 
 test('older board histories still undo and redo, while corrupt action histories are ignored', () => {

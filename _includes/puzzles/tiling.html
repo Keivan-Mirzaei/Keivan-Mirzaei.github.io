@@ -1,50 +1,69 @@
-<section class="tiling-game puzzle-workspace" data-tiling-game data-puzzle-workspace aria-label="Tiling game">
-  <aside class="puzzle-sidebar" aria-label="Game details">
-    <div class="puzzle-panels">
-      {% capture game_settings %}
-        <div class="tiling-settings">
-          <div class="tiling-challenge-heading"><label for="puzzle-tiling-challenge">Difficulty</label><output for="puzzle-tiling-challenge" data-tiling-challenge-label>Easy</output></div>
-          <input id="puzzle-tiling-challenge" type="range" min="1" max="4" step="1" value="1" data-tiling-challenge disabled>
-        </div>
-        <p>Each difficulty has 1,000 numbered puzzles.</p>
-      {% endcapture %}
-      {% include puzzles/panel.html game='tiling' kind='settings' title='Settings' content=game_settings remember=true %}
-      {% capture game_help %}<p>Fill every floor square. Tiles keep the orientation shown; striped squares are missing.</p><p>Drag a tile onto the floor, or select it and tap where the leftmost square in its top row should go. The count below each shape shows how many copies remain.</p><p>To return a placed tile, drag it off the floor, double tap it, or select it and use the return icon.</p><p>A hint outlines a placement. Tap the check mark to place it.</p><p>Shuffle chooses an unsolved puzzle. Tap the puzzle number to revisit any puzzle, including one you have solved. Reset clears the current puzzle.</p>{% endcapture %}
-      {% include puzzles/panel.html game='tiling' kind='help' title='Help' content=game_help %}
-    </div>
-    <div class="tiling-pieces puzzle-side-content">
-      <div class="tiling-tray-heading"><h2>Tile tray</h2><span data-tiling-tray-count>4 to place</span></div>
-      <div class="tiling-tray" data-tiling-tray></div>
-      <noscript><p class="tiling-help">This game needs JavaScript. Enable it to place tiles and use the game controls.</p></noscript>
-    </div>
-  </aside>
-  <div class="tiling-play puzzle-play">
-    <div class="tiling-info">
-      <details class="tiling-picker" data-tiling-picker data-puzzle-picker>
-        <summary data-tiling-name title="Choose a puzzle">Puzzle 1 / 1000</summary>
-        <form class="tiling-picker-content" data-tiling-jump>
-          <label for="tiling-puzzle-number">Puzzle number</label>
-          <div class="tiling-number-entry">
-            <input id="tiling-puzzle-number" type="number" min="1" max="1000" step="1" value="1" inputmode="numeric" data-tiling-number required disabled>
-            <button class="puzzle-icon-button panel-button" type="submit" aria-label="Open puzzle" data-tooltip="Open puzzle" data-tiling-open disabled>{% include icon.html name='arrow' %}</button>
-          </div>
-          <input type="range" min="1" max="1000" step="1" value="1" aria-label="Puzzle number" data-tiling-number-slider disabled>
-          <p data-tiling-completed>0 / 1000 solved</p>
-        </form>
-      </details>
-      <span data-tiling-progress>0 / 13 squares</span>
-    </div>
-    <p class="tiling-status" data-tiling-status role="status">Enable JavaScript to play Tiling.</p>
-    <div class="tiling-actions puzzle-actions panel-actions" role="group" aria-label="Game controls">
-      {% include controls/action.html game='tiling' action='undo' icon='undo' label='Undo' %}
-      {% include controls/action.html game='tiling' action='redo' icon='redo' label='Redo' %}
-      {% include controls/action.html game='tiling' action='hint' icon='hint' label='Hint' %}
-      {% include controls/action.html game='tiling' action='remove' icon='return' label='Return selected tile' %}
-      {% include controls/action.html game='tiling' action='reset' icon='restart' label='Start again' %}
-      {% include controls/action.html game='tiling' action='refresh' icon='shuffle' label='New arrangement' %}
-    </div>
-    <div class="tiling-board" data-tiling-board>
-      <img src="{{ '/assets/images/tiling-board.svg' | relative_url }}" width="440" height="360" alt="A square floor with three missing squares, and colourful tiles ready to fit into it.">
+<section class="tiling-game widget-frame" data-tiling-game data-tray-layout="scroll" aria-label="Floor tiling game">
+  <div class="tiling-info">
+    <button class="panel-button tiling-puzzle-link" type="button" data-tiling-name data-widget-panel-trigger="puzzles" aria-expanded="false" disabled>Puzzle 1 / 1000</button>
+    <span data-tiling-progress>0 / 13 filled</span>
+  </div>
+  <p class="tiling-status" data-tiling-status role="status" aria-live="polite" aria-atomic="true">Enable JavaScript to place tiles.</p>
+  <div class="tiling-playfield">
+  <div class="tiling-board" data-tiling-board>
+    <img src="{{ '/assets/images/tiling-board.svg' | relative_url }}" width="440" height="360" alt="A floor with three missing squares, and coloured tiles ready to fit into it.">
+  </div>
+  <div class="tiling-pieces">
+    <div class="tiling-tray-heading"><span>Tiles</span><span data-tiling-tray-count>4 left</span></div>
+    <div class="tiling-tray" data-tiling-tray role="group" aria-label="Choose a tile"></div>
+    <div class="tiling-selection-actions">
+      <button class="panel-button" type="button" data-tiling-remove aria-label="Return selected tile" disabled hidden>{% include icon.html name='return' %}<span>Return tile</span></button>
+      <button class="panel-button" type="button" data-tiling-use-hint disabled hidden>{% include icon.html name='confirm' %}<span>Place hint</span></button>
     </div>
   </div>
+  </div>
+  <p class="widget-goal">Fill the floor. Tiles keep their orientation.</p>
+  <div class="widget-controls tiling-controls" role="group" aria-label="Game controls">
+    <div class="tiling-control-row">
+    <button class="panel-button" type="button" data-tiling-undo aria-label="Undo action" disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
+    <button class="panel-button" type="button" data-tiling-redo aria-label="Redo action" disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
+    <button class="panel-button" type="button" data-tiling-reset aria-label="Reset board" disabled>{% include icon.html name='restart' %}<span>Reset</span></button>
+    <button class="panel-button" type="button" data-tiling-refresh aria-label="Shuffle unsolved puzzles" disabled>{% include icon.html name='shuffle' %}<span>Shuffle</span></button>
+    </div>
+    <div class="tiling-control-row">
+    <button class="panel-button" type="button" data-tiling-hint data-puzzle-icon aria-label="Hint" aria-pressed="false" disabled>{% include icon.html name='hint' %}<span data-tiling-hint-label>Hint</span></button>
+    <button class="panel-button" type="button" data-widget-panel-trigger="settings" aria-expanded="false" disabled>{% include icon.html name='settings' %}<span>Settings</span></button>
+    <button class="panel-button" type="button" data-widget-panel-trigger="info" aria-expanded="false" disabled>{% include icon.html name='info' %}<span>Info</span></button>
+    </div>
+  </div>
+  <button class="panel-button tiling-next" type="button" data-tiling-next disabled hidden>{% include icon.html name='arrow' %}<span>Next puzzle</span></button>
+  <div class="widget-support-panel" data-widget-panel="settings" aria-label="Game settings" hidden>
+    <div class="widget-slider-setting">
+      <div class="widget-slider-heading"><label data-tiling-challenge-name>Difficulty</label><output data-tiling-challenge-label>Easy</output></div>
+      <input type="range" min="1" max="4" step="1" value="1" data-tiling-challenge disabled>
+      <p data-tiling-level-detail>4 × 4 floor · 4 tiles</p>
+    </div>
+    <label class="widget-switch"><span>Scroll tiles horizontally</span><input type="checkbox" role="switch" data-tiling-scroll-tiles checked disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
+    <p>Turn this off to compare the compact grid tray.</p>
+    <label class="widget-switch"><span>Save progress</span><input type="checkbox" role="switch" data-puzzle-remember checked disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
+    <p class="widget-note">Each difficulty keeps its own progress. Saving applies only to Floor tiling on this device.</p>
+    {% include controls/reset-progress.html message='Clear <strong data-widget-progress-scope>Easy</strong> boards, move history, and solved records? Start at puzzle 1. Other difficulties, settings, and puzzles are kept.' %}
+  </div>
+  <div class="widget-support-panel" data-widget-panel="info" aria-label="About Floor tiling" hidden>
+    <p>Fill every floor square using all the tiles. Striped squares are missing. Tiles keep the orientation shown.</p>
+    <p>Drag a tile onto the floor, or choose it and tap where the marked square should go. The small dot marks the tile's anchor. The tray shows how many copies remain.</p>
+    <p>The horizontal tray scrolls with a swipe or trackpad. Use left and right arrow keys to browse tiles. On a phone, drag a tile vertically to place it. Settings also offers a compact grid tray.</p>
+    <p>Choose a placed tile to move it. Return tile, a double tap, or dragging off the floor sends it back to the tray.</p>
+    <p>Hint outlines one placement. Use Place hint, or tap the outlined anchor square. Tap Hint again to hide it.</p>
+    <p>Arrow keys move between floor squares; Enter or Space selects or places a tile. Delete returns a selected tile. Escape clears a selection or closes an open panel.</p>
+    <p>Reset clears this floor. Shuffle chooses an unsolved puzzle. Both keep your settings and can be undone. Tap the puzzle number to revisit any of the 1,000 puzzles at each difficulty.</p>
+    <p data-tiling-moves>0 moves</p>
+  </div>
+  <div class="widget-support-panel" data-widget-panel="puzzles" aria-label="Choose a puzzle" hidden>
+    <form data-tiling-jump>
+      <div class="widget-slider-heading"><label data-tiling-number-name>Puzzle number</label><output data-tiling-number-label>1 / 1000</output></div>
+      <input class="tiling-number-slider" type="range" min="1" max="1000" step="1" value="1" aria-label="Puzzle number slider" data-tiling-number-slider disabled>
+      <div class="tiling-number-entry">
+        <input type="number" min="1" max="1000" step="1" value="1" inputmode="numeric" data-tiling-number required disabled>
+        <button class="panel-button" type="submit" data-tiling-open disabled>{% include icon.html name='arrow' %}<span>Open puzzle</span></button>
+      </div>
+      <p data-tiling-completed>0 / 1000 Easy puzzles solved</p>
+    </form>
+  </div>
+  <noscript><p>This game needs JavaScript. Enable it to place tiles and browse puzzles.</p></noscript>
 </section>

@@ -60,8 +60,11 @@ export function createLightsOutWorkspace(saved = null, catalogue) {
     },
     resetProgress() {
       const difficulty = book.difficulty;
-      book = createLightsOutBook({ difficulty }, catalogue); game = createLightsOutGame(book.puzzle);
-      past = []; future = []; record();
+      record(); const savedBook = book.exportState();
+      delete savedBook.sessions[difficulty];
+      book = createLightsOutBook(savedBook, catalogue); game = createLightsOutGame(book.puzzle);
+      past = past.filter(entry => entry.difficulty !== difficulty);
+      future = future.filter(entry => entry.difficulty !== difficulty); record();
     },
     exportState() { record(); return { ...book.exportState(), actions: clone({ past, future }) }; },
   };

@@ -57,10 +57,11 @@ class Holder extends Element {
 function fixture(storage, catalogue) {
   globalThis.document = { activeElement: null, body: new Element() };
   const root = new Element();
-  const fields = Object.fromEntries(['challenge', 'challenge-label', 'name', 'progress', 'instruction', 'tray-count', 'selected', 'selected-label', 'selected-shape', 'remove', 'undo', 'redo', 'hint', 'refresh', 'reset', 'status', 'picker', 'jump', 'number', 'number-slider', 'open', 'completed'].map(name => [name, new Element({ parent: root })]));
+  const fields = Object.fromEntries(['challenge', 'challenge-label', 'name', 'progress', 'instruction', 'tray-count', 'selected', 'selected-label', 'selected-shape', 'remove', 'undo', 'redo', 'hint', 'refresh', 'reset', 'status', 'picker', 'jump', 'number', 'number-slider', 'number-label', 'open', 'completed', 'level-detail', 'moves', 'hint-label', 'use-hint', 'next', 'scroll-tiles', 'outline'].map(name => [name, new Element({ parent: root })]));
   fields.challenge.value = '1'; fields.challenge.tagName = 'INPUT';
   fields.board = new Holder({ parent: root }); fields.tray = new Holder({ parent: root });
   root.querySelector = selector => fields[selector.match(/data-tiling-([^\]]+)/)?.[1]];
+  root.querySelectorAll = () => [];
   root.setPointerCapture = () => {}; root.hasPointerCapture = () => false; root.releasePointerCapture = () => {};
   const controller = initializeTilingGame(root, storage, catalogue);
   const click = (holder, selector) => {
@@ -99,19 +100,40 @@ test('invalid taps keep the selected tile and announce the rule without altering
   assert.match(f.fields.status.textContent, /cannot overlap/);
 });
 
-test('hint outlines a valid move, places only on the second click, then completes a whole floor', () => {
+test('Hint can be hidden without a placement and Return tile only appears for a placed selection', () => {
+  const f = fixture();
+  assert.equal(f.fields.remove.hidden, true);
+  f.action('hint'); assert.equal(f.fields['use-hint'].hidden, false);
+  f.action('hint'); assert.equal(f.fields['use-hint'].hidden, true);
+  assert.equal(f.controller.game.filled, 0);
+  assert.equal(f.fields.board.children.some(cell => cell.classes.has('is-preview')), false);
+  f.tile('A'); f.cell(0, 0); f.cell(0, 0);
+  assert.equal(f.fields.remove.hidden, false);
+  f.action('remove'); assert.equal(f.fields.remove.hidden, true);
+});
+
+test('Reset and Shuffle undo from their buttons to the prior placements and puzzle', () => {
+  const f = fixture(); f.tile('A'); f.cell(0, 0);
+  f.action('reset'); assert.equal(f.controller.game.filled, 0);
+  f.action('undo'); assert.deepEqual(f.controller.game.placements, { A: { x: 0, y: 0 } });
+  f.action('refresh'); assert.notEqual(f.controller.game.level.id, 1);
+  f.action('undo'); assert.equal(f.controller.game.level.id, 1);
+  assert.deepEqual(f.controller.game.placements, { A: { x: 0, y: 0 } });
+});
+
+test('hint outlines a valid move and Place hint applies it before completing a whole floor', () => {
   const f = fixture();
   f.action('hint');
-  assert.equal(f.fields.hint.textContent, 'Place hint');
+  assert.equal(f.fields['hint-label'].textContent, 'Hide hint');
   assert.equal(f.controller.game.filled, 0);
-  assert.match(f.fields.status.textContent, /outlined squares/);
-  f.action('hint');
-  assert.equal(f.fields.hint.textContent, 'Hint');
+  assert.match(f.fields.status.textContent, /outlined placement/);
+  f.action('use-hint');
+  assert.equal(f.fields['hint-label'].textContent, 'Hint');
   assert.ok(f.controller.game.filled > 0);
-  for (let count = 0; count < 3; count++) { f.action('hint'); f.action('hint'); }
+  for (let count = 0; count < 3; count++) { f.action('hint'); f.action('use-hint'); }
   assert.equal(f.controller.game.solved, true);
-  assert.equal(f.fields.progress.textContent, '13 / 13 squares');
-  assert.match(f.fields.status.textContent, /Puzzle complete/);
+  assert.equal(f.fields.progress.textContent, '13 / 13 filled');
+  assert.match(f.fields.status.textContent, /perfect fit/);
   assert.equal(f.fields.refresh.disabled, false);
   assert.equal(document.activeElement, f.fields.refresh);
   f.action('refresh');
@@ -123,7 +145,7 @@ test('hint outlines a valid move, places only on the second click, then complete
 
 test('returning a tile moves focus to its tray button and undo recovers completion', () => {
   const f = fixture();
-  for (let count = 0; count < 4; count++) { f.action('hint'); f.action('hint'); }
+  for (let count = 0; count < 4; count++) { f.action('hint'); f.action('use-hint'); }
   f.tile('A'); f.action('remove');
   assert.equal(f.controller.game.solved, false);
   assert.equal(f.fields.remove.disabled, true);
@@ -271,6 +293,32 @@ function memoryStorage() {
   return { read: () => structuredClone(value), save: next => { value = structuredClone(next); }, setSnapshotProvider() {} };
 }
 
+test('switching tray layouts preserves selection and progress, and the preference survives Reset, Shuffle and reopening', () => {
+  const storage = memoryStorage(); let f = fixture(storage);
+  assert.equal(f.root.dataset.trayLayout, 'scroll');
+  f.tile('A'); f.cell(0, 0);
+  const selected = f.controller.selected, placed = f.controller.game.placements;
+  f.fields['scroll-tiles'].checked = false; f.fields['scroll-tiles'].emit('change');
+  assert.equal(f.root.dataset.trayLayout, 'grid');
+  assert.equal(f.controller.selected, selected); assert.deepEqual(f.controller.game.placements, placed);
+  f.action('undo'); assert.equal(f.controller.game.filled, 0);
+  f.action('redo'); f.action('reset'); f.action('undo'); assert.deepEqual(f.controller.game.placements, placed);
+  f.action('refresh'); f.action('undo');
+  f = fixture(storage); assert.equal(f.root.dataset.trayLayout, 'grid');
+  assert.deepEqual(f.controller.game.placements, placed);
+});
+
+test('a horizontal touch swipe in the scrolling tray does not start a tile drag', () => {
+  const f = fixture(); let captures = 0;
+  f.root.setPointerCapture = () => captures++;
+  const tile = f.fields.tray.querySelector('[data-tiling-piece="A"]');
+  f.root.emit('pointerdown', { target: tile, button: 0, isPrimary: true, pointerType: 'touch', pointerId: 2, clientX: 0, clientY: 0 });
+  f.root.emit('pointermove', { pointerType: 'touch', pointerId: 2, clientX: 24, clientY: 2 });
+  f.root.emit('pointerup', { pointerType: 'touch', pointerId: 2 });
+  assert.equal(captures, 0); assert.equal(f.controller.game.filled, 0);
+  assert.equal(f.root.classes.has('is-dragging'), false);
+});
+
 test('refresh keeps difficulty and tile budget, changes the arrangement, and restart keeps that arrangement', () => {
   const f = fixture();
   for (let index = 0; index < 4; index++) {
@@ -286,7 +334,7 @@ test('refresh keeps difficulty and tile budget, changes the arrangement, and res
       assert.deepEqual(after.pieces.map(p => p.cells.length).sort(), before.pieces.map(p => p.cells.length).sort());
       assert.notEqual(JSON.stringify(after), previous);
       const seed = after.seed;
-      f.action('hint'); f.action('hint'); f.action('reset');
+      f.action('hint'); f.action('use-hint'); f.action('reset');
       assert.equal(f.controller.game.level.seed, seed); assert.equal(f.controller.game.filled, 0);
     }
   }
@@ -296,27 +344,27 @@ test('reopening restores the generated floor, selected difficulty, placements an
   const storage = memoryStorage(); let f = fixture(storage);
   f.fields.challenge.value = '3'; f.fields.challenge.emit('change'); f.action('refresh');
   const level = f.controller.game.level;
-  f.action('hint'); f.action('hint'); f.action('hint'); f.action('hint'); f.action('undo');
+  f.action('hint'); f.action('use-hint'); f.action('hint'); f.action('use-hint'); f.action('undo');
   const placed = f.controller.game.placements;
   f = fixture(storage);
   assert.equal(f.fields.challenge.value, '3'); assert.equal(f.fields['challenge-label'].textContent, 'Hard');
   assert.deepEqual(f.controller.game.level, level); assert.deepEqual(f.controller.game.placements, placed);
-  assert.equal(f.controller.game.canRedo, true); f.action('redo'); assert.equal(Object.keys(f.controller.game.placements).length, 2);
+  assert.equal(f.fields.redo.disabled, false); f.action('redo'); assert.equal(Object.keys(f.controller.game.placements).length, 2);
   f.action('undo'); f.action('undo'); assert.equal(f.controller.game.filled, 0);
 });
 
 test('solving then shuffling skips completion records, while a puzzle number explicitly allows replay', () => {
   const storage = memoryStorage(); let f = fixture(storage);
   const original = f.controller.game.level;
-  for (let count = 0; count < 4; count++) { f.action('hint'); f.action('hint'); }
+  for (let count = 0; count < 4; count++) { f.action('hint'); f.action('use-hint'); }
   assert.equal(f.fields.name.textContent, 'Puzzle 1 / 1000 ✓');
-  assert.equal(f.fields.completed.textContent, '1 / 1000 solved');
+  assert.equal(f.fields.completed.textContent, '1 / 1000 Easy puzzles solved');
   f.action('undo'); f.action('refresh');
   assert.notEqual(f.controller.game.level.id, 1);
   f = fixture(storage); assert.notEqual(f.controller.game.level.id, 1);
   f.open(1); assert.deepEqual(f.controller.game.level, original);
-  assert.equal(f.controller.game.filled, 0); assert.equal(f.fields.picker.open, false);
-  assert.equal(f.fields.completed.textContent, '1 / 1000 solved');
+  assert.equal(f.controller.game.filled, 0);
+  assert.equal(f.fields.completed.textContent, '1 / 1000 Easy puzzles solved');
   assert.equal(document.activeElement, f.fields.name);
 });
 
@@ -324,9 +372,9 @@ test('the final puzzle displays completion, disables shuffle and keeps numbered 
   const catalogue = CATALOGUE.map(rows => rows.slice(0, 3)), f = fixture(memoryStorage(), catalogue);
   for (let number = 1; number <= 3; number++) {
     f.open(number);
-    for (let count = 0; count < f.controller.game.level.pieces.length; count++) { f.action('hint'); f.action('hint'); }
+    for (let count = 0; count < f.controller.game.level.pieces.length; count++) { f.action('hint'); f.action('use-hint'); }
   }
-  assert.equal(f.fields.completed.textContent, '3 / 3 solved');
+  assert.equal(f.fields.completed.textContent, '3 / 3 Easy puzzles solved');
   assert.equal(f.fields.refresh.disabled, true);
   assert.match(f.fields.status.textContent, /All 3 Easy puzzles complete/);
   assert.equal(document.activeElement, f.fields.name);
@@ -344,7 +392,7 @@ test('the number slider and typed number preview a destination until Open is pre
 
 test('a fresh visit skips a solved floor, while a deliberate replay retains its progress', () => {
   const storage = memoryStorage(); let f = fixture(storage);
-  for (let count = 0; count < 4; count++) { f.action('hint'); f.action('hint'); }
+  for (let count = 0; count < 4; count++) { f.action('hint'); f.action('use-hint'); }
   f = fixture(storage); assert.notEqual(f.controller.game.level.id, 1);
   f.open(1); f.tile('A'); f.cell(0, 0);
   f = fixture(storage); assert.equal(f.controller.game.level.id, 1); assert.equal(f.controller.game.filled, 3);

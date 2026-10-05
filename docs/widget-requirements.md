@@ -48,7 +48,7 @@ Render only relevant controls. A relevant action can be temporarily disabled; an
 | Undo | Reversing an action is helpful | Restore the previous meaningful state. One slider adjustment or drag is one action; games may undo a move or a full turn. |
 | Redo | Reapplying an undone action is helpful | Restore that action; a new edit clears the redo path. |
 | Reset | Returning to the start is helpful | Define exactly what returns to its starting state. Preserve settings and make Reset undoable. |
-| Reset progress | The activity saves boards or completion records | Put it in Settings with an inline confirmation. Clear only this activity's progress and history, preserve preferences, and start fresh. |
+| Reset progress | The activity saves boards or completion records | Put it in Settings with an inline confirmation. Clear the selected difficulty's progress and history, preserve preferences and other difficulties, and start fresh. For an activity without difficulties, clear its current game. |
 | Shuffle / New example | Different examples serve the activity | Create a new configuration. Preserve settings and make Shuffle undoable. Keep its meaning distinct from Reset. |
 | Settings | Occasional options would clutter the main interface | Put them in a toggleable panel that starts closed. Explain changes that restart an activity. |
 | Info / Help | Rules or context are needed | Use a short, hideable explanation. Avoid duplicate panels with the same purpose. |
@@ -65,13 +65,14 @@ Use familiar action ordering as a starting point: **Undo, Redo, Reset, Shuffle**
 ## 4. Saving progress
 
 - Saving is optional and enabled by default for activities where saving progress makes sense.
+- Each puzzle has its own saving preference on this device. Turning saving off affects only that puzzle; other puzzles keep their saving preferences and saved progress. A new puzzle's preference starts on independently of the others.
 - Put the saving preference in Settings rather than adding it to the primary interface.
 - Save the activity state and relevant settings, not the visibility of supporting panels.
-- Turning saving off stops retaining progress for later visits. The current activity remains usable.
+- Turning saving off clears only this puzzle's retained progress and stops saving it for later visits. The current activity remains usable, with its current board and in-session Undo/Redo intact. Turning saving back on saves the current state.
 - A prototype may use the conversation's state storage; a future website version should use the site's shared storage service.
 - Reset and Shuffle preserve the saving preference and other settings.
-- Provide a **Reset progress** button in Settings when an activity saves progress. It clears only that activity's saved board(s), move history, and completion record, then starts fresh. Preserve settings and the saving preference; leave other activities' progress alone.
-- Keep Reset progress distinct from the undoable board Reset. Before clearing progress, show a short inline confirmation stating its scope, with Confirm reset and Cancel. Announce completion. Progress reset clears Undo and Redo rather than adding a history action.
+- Provide a **Reset progress** button in Settings when an activity saves progress. For an activity with difficulties, clear only the selected difficulty's saved boards, move history, and completion records, then start at its first puzzle. Preserve every other difficulty's boards, history, and completion records. For an activity without difficulties, clear only its current game and history. Preserve settings and the saving preference; leave other activities' progress alone.
+- Keep Reset progress distinct from the undoable board Reset. Before clearing progress, show a short inline confirmation naming the selected difficulty or current game, with Confirm reset and Cancel. Announce completion. Remove Undo and Redo entries for the cleared difficulty rather than adding a history action; history at other difficulties remains available. Undo/Redo must never restore the deleted progress.
 
 ## 5. Shared design and activity types
 
@@ -160,8 +161,8 @@ The first website migration is **Hex**, covering its standalone puzzle and the s
 | --- | --- | --- |
 | Hex | Reviewed, approved, and published on 4 October 2026. | [Hex](widget-designs/hex.md) |
 | Klotski | Reviewed and published on 4 October 2026. | [Klotski](widget-designs/klotski.md) |
-| Lights Out | Reviewed and approved on 4 October 2026; publication authorized with refreshed thumbnails and Reset progress controls. | [Lights Out](widget-designs/lights-out.md) |
-| Floor tiling | Follows Lights Out. | To be prepared. |
+| Lights Out | Reviewed and published on 4 October 2026 with refreshed thumbnails and Reset progress controls. | [Lights Out](widget-designs/lights-out.md) |
+| Floor tiling | Reviewed and approved for publication on 4 October 2026, with corrected tile boundaries and both tray layouts. | [Floor tiling](widget-designs/tiling.md) |
 
 ## 10. First prototype: four equal regions
 
@@ -196,7 +197,8 @@ The first prototype is ready for design review. Mathematical checks cover 72 gen
 - [ ] Reset and Shuffle preserve settings and are undoable where present.
 - [ ] History follows meaningful user actions, not every animation frame or pointer movement.
 - [ ] Saving is optional and enabled by default where applicable.
-- [ ] Reset progress states its scope, confirms before clearing, preserves preferences, and leaves other activities' progress alone.
+- [ ] Saving starts on separately for each puzzle; disabling one leaves other puzzles' preferences and progress intact.
+- [ ] Reset progress names the selected difficulty or current game, confirms before clearing, preserves preferences, and leaves other difficulties and activities' boards, histories, and completion records intact.
 - [ ] Keyboard, touch, and narrow-screen use are supported.
 - [ ] Mathematical behavior and important state transitions have been checked.
 - [ ] Any exception to this roadmap is documented and reviewed.

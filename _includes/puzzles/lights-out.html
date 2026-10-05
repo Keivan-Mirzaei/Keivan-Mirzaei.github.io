@@ -27,8 +27,8 @@
     </div>
     <label class="widget-switch"><span>Show light numbers</span><input type="checkbox" role="switch" data-glo-numbers disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
     <label class="widget-switch"><span>Save progress</span><input type="checkbox" role="switch" data-puzzle-remember checked disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
-    <p class="widget-note">Each difficulty keeps its own progress. The saving preference applies to all puzzles on this device.</p>
-    {% include controls/reset-progress.html message='Clear all Lights Out boards, move history, and solved records at all four difficulty levels? Your difficulty, display settings, and other puzzles are kept.' %}
+    <p class="widget-note">Each difficulty keeps its own progress. Saving applies only to Lights Out on this device.</p>
+    {% include controls/reset-progress.html message='Clear <strong data-widget-progress-scope>Easy</strong> boards, move history, and solved records? Start at puzzle 1. Other difficulties, settings, and puzzles are kept.' %}
   </div>
   <div class="widget-support-panel" data-widget-panel="info" aria-label="About Lights Out" hidden>
     <p>Pressing a light flips that light and every light joined directly to it. Amber lights are on; hollow lights are off. Lines that cross make no extra connections.</p>

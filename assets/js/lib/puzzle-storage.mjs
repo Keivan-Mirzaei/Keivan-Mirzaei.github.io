@@ -1,9 +1,8 @@
-const cookieName = 'ao_puzzles';
-const games = ['hex', 'klotski', 'tiling', 'lights-out'];
 export const storageKey = game => `almost-obvious:puzzle:${game}:v1`;
 
-// A small first-party cookie holds the preference; board histories stay on this device.
+// Each puzzle has its own preference; board histories stay on this device.
 export function createPuzzleStorage(game, root, environment = globalThis) {
+  const cookieName = `ao_puzzles_${game}`;
   const control = root.querySelector('[data-puzzle-remember]');
   if (!control) return { read: () => null, save() {}, clear() {}, setSnapshotProvider() {} };
   const document = environment.document;
@@ -48,9 +47,8 @@ export function createPuzzleStorage(game, root, environment = globalThis) {
   };
   control.addEventListener('change', () => {
     writePreference(control.checked); previous = null;
-    if (!enabled) {
-      for (const id of games) { try { environment.localStorage.removeItem(storageKey(id)); } catch {} }
-    } else if (provider) storage.save(provider());
+    if (!enabled) storage.clear();
+    else if (provider) storage.save(provider());
   });
   environment.addEventListener?.('focus', sync);
   environment.addEventListener?.('storage', () => { previous = null; sync(); });

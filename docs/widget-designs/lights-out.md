@@ -1,6 +1,6 @@
 # Lights Out widget design sheet
 
-**Status:** Reviewed and approved on 4 October 2026; publication authorized together with updated puzzle thumbnails and Reset progress controls.
+**Status:** Reviewed and published on 4 October 2026. The reviewed puzzle-specific saving and selected-difficulty progress reset updates are approved for publication.
 
 Follow the [widget roadmap](../widget-requirements.md) and the reviewed Hex and Klotski frame. This migration covers the graph puzzle at `/puzzles/lights-out/`; the article's separate grid and proof widgets keep their existing mathematical presentation.
 
@@ -15,9 +15,9 @@ Follow the [widget roadmap](../widget-requirements.md) and the reviewed Hex and 
 - **Completion:** Show a green graph area and status, announce the exact press count, and identify a shortest route when achieved. Disable further presses after all lights are off. Undo or board Reset clears the effect; Redo can restore it.
 - **History:** Undo and Redo handle one press, board Reset, Shuffle, number changes, difficulty changes, or Next puzzle as meaningful actions. Preserve exact boards and counters, including across reload. Keep up to 100 navigation/action snapshots, while retaining compatibility with older per-board press histories. A new action clears Redo. Solved records remain when undoing or replaying.
 - **Reset / Shuffle:** Reset restores this numbered puzzle's starting lights. Shuffle chooses another unsolved puzzle at the current difficulty. Both preserve display and saving preferences and can be undone. Completion records remain until Reset progress.
-- **Reset progress:** In Settings, confirm before clearing all Lights Out boards, Undo/Redo, and solved records across all four difficulty levels. Start at puzzle 1 of the current difficulty. Keep difficulty, light-number preference, and saving; leave other puzzles alone. Cancel preserves the current state.
-- **Saving:** Use shared puzzle storage, enabled by default. Retain progress independently for all four difficulties, plus preferences and action history. The saving switch retains its existing device-wide meaning. Panel and hint visibility are not saved.
+- **Reset progress:** In Settings, name the selected difficulty and confirm before clearing only its boards, Undo/Redo entries, and solved records. Start at puzzle 1 of that difficulty. Keep other difficulties' progress and histories, the selected difficulty, light-number preference, and saving; leave other puzzles alone. Cancel preserves the current state. Undo/Redo cannot recover the cleared progress.
+- **Saving:** Use shared puzzle storage with a separate Lights Out preference on this device, enabled by default. Retain progress independently for all four difficulties, plus preferences and action history. Turning saving off clears only Lights Out's retained progress and stops future saves; the current game remains playable. Other puzzles' preferences and progress are unaffected. Panel and hint visibility are not saved.
 - **Keyboard and touch:** Provide one tab stop in the graph, directional arrow navigation, Enter/Space presses, visible focus, and accessible light states and affected neighbours. Keep 44-pixel light targets and fit the graph inside narrow pages; wrap controls and respect reduced motion.
 - **Typesetting:** Exact counts and simple ranges use the interface font. No structured mathematical formula is needed in the puzzle interface; link to the existing mathematics article from Info.
 - **Checks:** Catalogue solvability and stable IDs; press effects and hints; win/removal of win colour; undoable Reset and Shuffle; exact number browsing; difficulty changes; old/new saves; progress-reset scope and confirmation; phone layouts; panels staying open during outside interaction.
-- **Next step:** Floor tiling follows, with individual review before publication.
+- **Next step:** Publish the reviewed saving and selected-difficulty progress reset updates alongside Floor tiling.
