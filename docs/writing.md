@@ -66,7 +66,9 @@ Omit the solution marker for a problem without a solution. Native disclosures wo
 
 ## Explorations: combine the media the idea needs
 
-Use `format: exploration`. The body can be as short or as long as you like; there are no mandatory sections. The starter suggests a question, an investigation, and observations. A magician's problem explored through simulations, diagrams, and mathematics fits here.
+Follow the [exploration authoring roadmap](exploration-roadmap.md) when writing new explorations or revising existing ones. It covers purposeful investigation of a question or its solution, references, and consistency with the website's visual style.
+
+Use `format: exploration`. Let the idea determine the length and structure; the starter's headings are suggestions. State an easily formulated problem directly, then observe, guess, and examine the significant steps toward its solution. Explore the formulation when it needs investigation. Introduce widgets briefly and leave control instructions in their Settings and Info panels.
 
 - `## A section` makes a heading. The post title already supplies the page's main heading.
 - Put code inside triple backticks followed by its language, such as `python`. Highlighting happens at build time.

@@ -1,4 +1,4 @@
-<section class="fr-game widget-frame" data-four-equal-regions aria-label="Four equal regions game">
+<section class="fr-game widget-frame{% if include.embedded %} graph-widget{% endif %}" data-four-equal-regions aria-label="Four equal regions game">
   <div class="fr-summary"><span data-fr-goal>24 points · 6 per region</span></div>
   <div class="fr-counts" role="group" aria-label="Region counts">
     {% assign region_labels = 'A,B,C,D' | split: ',' %}

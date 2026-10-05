@@ -2,7 +2,7 @@
 .fr-summary { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
 .fr-counts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 0 0 14px; }
 .fr-count { display: flex; align-items: center; gap: 7px; font-size: 13px; font-variant-numeric: tabular-nums; }
-.fr-count output { margin-left: auto; color: var(--muted); }
+.fr-count output { color: var(--muted); }
 .fr-count output.is-equal { color: var(--green); font-weight: 500; }
 .fr-swatch { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: var(--region-color); }
 .fr-stage { position: relative; width: 100%; height: clamp(260px, 60vw, 350px); overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #f7f8f3; transition: background-color .2s, border-color .2s; }
