@@ -23,9 +23,6 @@ export function initializeWidgetPanels(root, document = root.ownerDocument) {
       if (!wasOpen) { panel.hidden = false; trigger.setAttribute('aria-expanded', 'true'); opened = { trigger, panel }; }
     }, { signal: events.signal });
   });
-  document.addEventListener('pointerdown', event => {
-    if (opened && !opened.panel.contains(event.target) && !bindings.some(({ trigger }) => trigger.contains(event.target))) close();
-  }, { signal: events.signal });
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && opened) { event.preventDefault(); close(true); }
   }, { signal: events.signal });

@@ -54,3 +54,18 @@
 /* Let counters and controls form aligned rows on narrow phones. */
 .klotski-board-heading { flex-wrap: wrap; gap: 10px; }
 .klotski-actions.panel-actions { margin-top: 0; }
+
+/* The same compact, board-led arrangement as the reviewed Hex game. */
+.klotski-game.widget-frame { width: 100%; max-width: 560px; }
+.klotski-game .klotski-feedback { display: flex; align-items: baseline; gap: 12px; min-height: 44px; margin-bottom: 8px; padding: 8px 10px; border-radius: 6px; }
+.klotski-game .klotski-status { flex: 1; margin: 0; color: var(--green); font: 400 14px/1.6 var(--sans); }
+.klotski-game .klotski-move-count { flex-shrink: 0; color: var(--muted); font: 400 13px/1.6 var(--sans); font-variant-numeric: tabular-nums; }
+.klotski-game.widget-frame .klotski-board-wrap { width: 100%; max-width: clamp(200px, calc((100dvh - 320px) / 1.25), 360px); transition: background-color .2s; }
+.klotski-game[data-klotski-solved='true'] .klotski-feedback { color: var(--green); background: var(--tint); }
+.klotski-game[data-klotski-solved='true'] .klotski-move-count { color: var(--green); }
+.klotski-game[data-klotski-solved='true'] .klotski-board-wrap { border-color: #81a68a; background: #dcebdd; box-shadow: 0 0 0 3px #dcebdd, 0 13px 28px #243a2815; }
+.klotski-game[data-klotski-solved='true'] .klotski-board { background: #c9dec9; }
+.klotski-game[data-klotski-solved='true'] .klotski-exit { color: var(--green); }
+.klotski-game[data-klotski-solved='true'] .klotski-exit::before { background: #c9dec9; }
+@media (max-width: 380px) { .klotski-game .klotski-feedback { flex-wrap: wrap; gap: 4px 12px; } }
+@media (prefers-reduced-motion: reduce) { .klotski-game.widget-frame .klotski-board-wrap { transition: none; } }

@@ -70,7 +70,7 @@ hex:
 klotski:
   script: /assets/js/widgets/klotski.mjs
   selector: '[data-klotski-game]'
-  styles: [klotski]
+  styles: [klotski, widget-frame]
 tiling:
   script: /assets/js/widgets/tiling.mjs
   selector: '[data-tiling-game]'

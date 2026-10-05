@@ -27,7 +27,8 @@ These rules apply to Settings, Info, Help, tips, hints, and similar supporting c
 
 - All supporting panels start closed.
 - Use the same trigger to open and close a panel; do not add a separate Close or Done button by default.
-- Clicking outside a temporary panel closes it.
+- Keep panels open when users tap or click outside, scroll to read them, or interact with the activity. Outside interaction must not dismiss a panel.
+- Close a panel explicitly with its own trigger or Escape; Escape returns focus to the trigger.
 - Opening one supporting panel closes the other open panel.
 - Users can hide supporting content after reading or using it and reopen it when needed.
 - Closing a panel preserves the activity and the user's work.
@@ -152,6 +153,13 @@ The one-font rule applies to the interface. A mathematical font is appropriate w
 
 The first website migration is **Hex**, covering its standalone puzzle and the same game embedded in the Hex article. See [its design sheet](widget-designs/hex.md). Keivan reviewed and approved this implementation on 4 October 2026 and authorized publication. Continue with Klotski, Lights Out, and Floor tiling, one at a time; prepare and check each implementation for Keivan's review before publishing it. The earlier conversation prototypes remain useful references.
 
+| Puzzle | Migration status | Design sheet |
+| --- | --- | --- |
+| Hex | Reviewed, approved, and published on 4 October 2026. | [Hex](widget-designs/hex.md) |
+| Klotski | Reviewed; publication authorized on 4 October 2026 with the revised panel behavior. | [Klotski](widget-designs/klotski.md) |
+| Lights Out | Next after Klotski's review. | To be prepared. |
+| Floor tiling | Follows Lights Out. | To be prepared. |
+
 ## 10. First prototype: four equal regions
 
 - **Stable ID:** `four-equal-regions`.
@@ -161,7 +169,7 @@ The first website migration is **Hex**, covering its standalone puzzle and the s
 - **Necessary feedback:** Show each region's exact count and the target n. When all four counts equal n and no point is on a line, turn the field green and show an “Equal split” confirmation. Clear that effect if the partition changes. Treat points on a dividing line explicitly rather than silently assigning them to a region.
 - **Controls:** Undo, Redo, Reset, Shuffle, Settings, and Info are useful for this activity. Do not add playback or step controls.
 - **Settings:** Choose n from 1 to 12 with a slider. Use toggle switches for perpendicular lines and saving progress. Keep these occasional options outside the main interaction.
-- **Panels:** Settings and Info start closed, toggle closed, close on outside interaction, and are mutually exclusive.
+- **Panels:** Settings and Info start closed, toggle closed with their own trigger or Escape, stay open during outside interaction and scrolling, and are mutually exclusive.
 - **History:** A drag is one action. Reset restores the starting line arrangement for the current point set; Shuffle creates another point set. Both preserve settings and can be undone.
 - **Appearance:** One font, concise numeric labels, a dominant point field, aligned controls, and restrained styling. Do not number the lines or place opaque handles over the points; distinguish independently controlled lines by their solid and dashed styles.
 - **Geometry for this prototype:** Start with perpendicular lines that rotate together; allow independent rotation in Settings. In independent mode, keep the lines at least 12° apart. The preferred default remains a design-review decision. Two parallel vertical lines cannot form four regions.

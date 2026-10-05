@@ -1,5 +1,6 @@
 export const BOARD_WIDTH = 4;
 export const BOARD_HEIGHT = 5;
+export const KLOTSKI_HISTORY_LIMIT = 1000;
 export const DIRECTIONS = Object.freeze({
   up: Object.freeze([0, -1]), right: Object.freeze([1, 0]),
   down: Object.freeze([0, 1]), left: Object.freeze([-1, 0])
@@ -20,6 +21,8 @@ export const CLASSIC_LAYOUT = Object.freeze([
 ].map(Object.freeze));
 
 const copy = pieces => pieces.map(piece => ({ ...piece }));
+const snapshot = state => ({ pieces: state.pieces, moves: state.moves });
+const remember = (history, state) => [...history, snapshot(state)].slice(-KLOTSKI_HISTORY_LIMIT);
 
 export function validPieces(pieces) {
   if (!Array.isArray(pieces) || !pieces.length) return false;
@@ -49,6 +52,18 @@ export function isSolved(pieces) {
 export function createKlotski(pieces = CLASSIC_LAYOUT) {
   if (!validPieces(pieces)) throw new RangeError('The blocks must fit inside the board without overlapping.');
   return { pieces: copy(pieces), history: [], future: [], moves: 0, won: isSolved(pieces) };
+}
+
+export function isKlotskiStart(state) {
+  return state.moves === 0 && state.pieces.length === CLASSIC_LAYOUT.length && CLASSIC_LAYOUT.every(start => {
+    const piece = state.pieces.find(value => value.id === start.id);
+    return piece && ['x', 'y', 'width', 'height'].every(name => piece[name] === start[name]);
+  });
+}
+
+export function resetKlotski(state) {
+  if (isKlotskiStart(state)) return null;
+  return { ...createKlotski(), history: remember(state.history, state) };
 }
 
 function stepPieces(pieces, id, direction) {
@@ -81,7 +96,7 @@ export function slideKlotski(state, id, direction, distance = 1) {
   }
   return {
     pieces,
-    history: [...state.history, state.pieces],
+    history: remember(state.history, state),
     future: [],
     moves: state.moves + 1,
     won: isSolved(pieces)
@@ -90,12 +105,12 @@ export function slideKlotski(state, id, direction, distance = 1) {
 
 export function undoKlotski(state) {
   if (!state.history.length) return null;
-  const pieces = state.history.at(-1);
-  return { pieces, history: state.history.slice(0, -1), future: [...state.future, state.pieces], moves: state.moves - 1, won: isSolved(pieces) };
+  const previous = state.history.at(-1);
+  return { ...previous, history: state.history.slice(0, -1), future: remember(state.future, state), won: isSolved(previous.pieces) };
 }
 
 export function redoKlotski(state) {
   if (!state.future.length) return null;
-  const pieces = state.future.at(-1);
-  return { pieces, history: [...state.history, state.pieces], future: state.future.slice(0, -1), moves: state.moves + 1, won: isSolved(pieces) };
+  const next = state.future.at(-1);
+  return { ...next, history: remember(state.history, state), future: state.future.slice(0, -1), won: isSolved(next.pieces) };
 }

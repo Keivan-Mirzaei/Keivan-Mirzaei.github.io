@@ -74,6 +74,27 @@ test('Klotski compact saves preserve moves and history and reject overlaps or ba
   assert.equal(restoreKlotski({ ...saved, history: [null] }).moves, 0);
 });
 
+test('older Klotski saves retain their original move counters through Undo and Redo', () => {
+  let state = slideKlotski(createKlotski(), '8', 'right'); state = slideKlotski(state, '9', 'left'); state = undoKlotski(state);
+  const current = serializeKlotski(state);
+  const legacy = { positions: current.positions, moves: current.moves,
+    history: current.history.map(entry => entry.positions), future: current.future.map(entry => entry.positions) };
+  const restored = restoreKlotski(legacy);
+  assert.deepEqual(restored, state);
+  assert.equal(undoKlotski(restored).moves, 0);
+  assert.equal(redoKlotski(restored).moves, 2);
+  for (const invalid of [{ history: [null] }, { moves: 0 }, { version: 99 }]) {
+    assert.deepEqual(restoreKlotski({ ...legacy, ...invalid }), createKlotski());
+  }
+});
+
+test('Klotski rejects invalid counters in saved Reset history', () => {
+  const saved = serializeKlotski(slideKlotski(createKlotski(), '8', 'right'));
+  for (const moves of [-1, NaN, 1.5, Number.MAX_SAFE_INTEGER + 1]) {
+    assert.deepEqual(restoreKlotski({ ...saved, history: [{ ...saved.history[0], moves }] }), createKlotski());
+  }
+});
+
 test('Hex save validation rejects corrupt boards, invalid turns and impossible colour counts', () => {
   const saved = { size: 3, human: 1, local: true, cells: [1, 2, 0, 0, 0, 0, 0, 0, 0], last: 1, toMove: 1, history: [], future: [] };
   assert.deepEqual(restoreHex(saved), saved);

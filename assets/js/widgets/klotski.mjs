@@ -1,12 +1,16 @@
-import { BOARD_WIDTH, BOARD_HEIGHT, createKlotski, slideKlotski, undoKlotski, redoKlotski, maxSlide } from '../lib/klotski.mjs';
+import { BOARD_WIDTH, BOARD_HEIGHT, isKlotskiStart, resetKlotski, slideKlotski, undoKlotski, redoKlotski, maxSlide } from '../lib/klotski.mjs';
 import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
 import { serializeKlotski, restoreKlotski } from '../lib/klotski-storage.mjs';
+import { initializeWidgetPanels } from '../lib/widget-panels.mjs';
 
 const keyboardDirections = { ArrowUp: 'up', ArrowRight: 'right', ArrowDown: 'down', ArrowLeft: 'left' };
 
 export function initializeKlotski(game, storage = createPuzzleStorage('klotski', game)) {
   const get = name => game.querySelector(`[data-klotski-${name}]`);
   const board = get('board');
+  const events = new AbortController();
+  const listen = (element, name, handler) => element.addEventListener(name, handler, { signal: events.signal });
+  const disposePanels = initializeWidgetPanels(game);
   let state = restoreKlotski(storage.read()), selected = null, drag = null;
   storage.setSnapshotProvider(() => serializeKlotski(state));
   const blocks = new Map();
@@ -37,13 +41,14 @@ export function initializeKlotski(game, storage = createPuzzleStorage('klotski',
       button.disabled = state.won;
     }
     board.classList.toggle('is-solved', state.won);
+    game.setAttribute('data-klotski-solved', String(state.won));
     get('count').textContent = `${state.moves} ${state.moves === 1 ? 'move' : 'moves'}`;
     get('undo').disabled = !state.history.length;
     get('redo').disabled = !state.future.length;
-    get('restart').disabled = false;
+    get('restart').disabled = isKlotskiStart(state);
     get('status').textContent = state.won
       ? `You found the way out! Solved in ${state.moves} ${state.moves === 1 ? 'move' : 'moves'}.`
-      : message;
+      : message || 'Slide blocks into empty space.';
     storage.save(serializeKlotski(state));
   }
 
@@ -99,15 +104,15 @@ export function initializeKlotski(game, storage = createPuzzleStorage('klotski',
       offset, cell, x: drag.baseX + (horizontal ? offset : 0), y: drag.baseY + (horizontal ? 0 : offset) };
   }
 
-  board.addEventListener('click', event => {
+  listen(board, 'click', event => {
     const button = event.target.closest('[data-klotski-block]');
     if (button) select(button.dataset.klotskiBlock);
   });
-  board.addEventListener('focusin', event => {
+  listen(board, 'focusin', event => {
     const button = event.target.closest('[data-klotski-block]');
     if (button) select(button.dataset.klotskiBlock);
   });
-  board.addEventListener('pointerdown', event => {
+  listen(board, 'pointerdown', event => {
     const button = event.target.closest('[data-klotski-block]');
     if (!button || state.won || drag || event.isPrimary === false || event.button !== 0) return;
     const piece = state.pieces.find(item => item.id === button.dataset.klotskiBlock);
@@ -126,22 +131,22 @@ export function initializeKlotski(game, storage = createPuzzleStorage('klotski',
     button.style.transform = `translate3d(${startX}px, ${startY}px, 0)`;
     button.setPointerCapture?.(event.pointerId);
   });
-  board.addEventListener('pointermove', event => {
+  listen(board, 'pointermove', event => {
     if (!drag || event.pointerId !== drag.pointerId) return;
     event.preventDefault();
     const offset = dragOffset(event);
     if (offset) blocks.get(drag.id).style.transform = `translate3d(${offset.x}px, ${offset.y}px, 0)`;
   });
-  board.addEventListener('pointerup', event => {
+  listen(board, 'pointerup', event => {
     if (!drag || event.pointerId !== drag.pointerId) return;
     const offset = dragOffset(event);
     const distance = offset ? Math.round(Math.abs(offset.offset) / offset.cell) : 0;
     releaseDrag();
     if (!distance || !move(offset.direction, distance)) render();
   });
-  board.addEventListener('pointercancel', cancelDrag);
-  board.addEventListener('lostpointercapture', cancelDrag);
-  game.addEventListener('keydown', event => {
+  listen(board, 'pointercancel', cancelDrag);
+  listen(board, 'lostpointercapture', cancelDrag);
+  listen(game, 'keydown', event => {
     const direction = keyboardDirections[event.key];
     if (!direction || event.altKey || event.ctrlKey || event.metaKey) return;
     const block = event.target.closest('[data-klotski-block]');
@@ -167,14 +172,18 @@ export function initializeKlotski(game, storage = createPuzzleStorage('klotski',
     state = next; render();
     if (focused && get('redo').disabled) (state.won || !selected ? get('undo') : blocks.get(selected)).focus({ preventScroll: true });
   }
-  get('undo').addEventListener('click', undo);
-  get('redo').addEventListener('click', redo);
-  get('restart').addEventListener('click', () => {
+  listen(get('undo'), 'click', undo);
+  listen(get('redo'), 'click', redo);
+  listen(get('restart'), 'click', () => {
     releaseDrag(); board.classList.add('is-resetting');
-    state = createKlotski(); selected = null; render();
+    const next = resetKlotski(state);
+    if (next) { state = next; selected = null; }
+    render();
     board.getBoundingClientRect(); board.classList.remove('is-resetting');
+    if (document.activeElement === get('restart')) blocks.get('target').focus({ preventScroll: true });
   });
   render();
+  return { destroy() { cancelDrag(); disposePanels(); events.abort(); } };
 }
 
 if (typeof document !== 'undefined') {

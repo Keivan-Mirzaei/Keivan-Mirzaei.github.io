@@ -1,0 +1,33 @@
+/* Optional parts of the reviewed frame; add only what the activity needs. */
+.widget-frame { width: 100%; max-width: 560px; margin: 0 auto; color: var(--ink); font: 14px/1.6 var(--sans); }
+.widget-frame [hidden] { display: none !important; }
+.widget-frame .widget-goal { margin: 8px 0 16px; color: var(--muted); font: 400 13px/1.6 var(--sans); text-align: center; }
+.widget-frame .widget-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.widget-frame .widget-controls .panel-button { flex: 0 1 auto; padding: 9px 10px; color: var(--ink); font: 400 13px/1.4 var(--sans); }
+.widget-frame .widget-controls .panel-button[aria-expanded='true'] { border-color: var(--green); background: var(--tint); }
+.widget-frame .widget-support-panel { margin-top: 16px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--muted); font: 400 13px/1.7 var(--sans); }
+.widget-frame .widget-support-panel p { margin: 0 0 10px; }
+.widget-frame .widget-support-panel p:last-child { margin-bottom: 0; }
+.widget-frame .widget-note { margin-top: 12px !important; padding-top: 12px; border-top: 1px solid var(--line); }
+.widget-frame .widget-switch { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; margin: 0; color: var(--ink); cursor: pointer; }
+.widget-frame .widget-switch input { position: absolute; right: 0; width: 40px; height: 24px; margin: 0; opacity: 0; }
+.widget-frame .widget-switch-track { flex: 0 0 40px; width: 40px; height: 24px; padding: 3px; border-radius: 20px; background: var(--muted); pointer-events: none; }
+.widget-frame .widget-switch-track::before { content: ''; display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--paper); transition: transform .15s; }
+.widget-frame .widget-switch input:checked + .widget-switch-track { background: var(--green); }
+.widget-frame .widget-switch input:checked + .widget-switch-track::before { transform: translateX(16px); }
+.widget-frame .widget-switch:has(input:focus-visible) .widget-switch-track { outline: 2px solid var(--green); outline-offset: 3px; }
+.puzzle-page:has(.widget-frame) .puzzle-shell { width: min(660px, 100%); }
+.puzzle-page:has(.widget-frame) .puzzle-heading { margin-bottom: 20px; }
+.puzzle-page:has(.widget-frame) .puzzle-heading h1 { font: 500 30px/1.3 var(--sans); letter-spacing: 0; }
+@media (max-width: 380px) {
+  .widget-frame .widget-controls { gap: 6px; }
+  .widget-frame .widget-controls .panel-button { gap: 5px; padding-inline: 8px; }
+  .widget-frame .widget-support-panel { padding: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .widget-frame .widget-switch-track::before { transition: none; } }
+@media (forced-colors: active) {
+  .widget-frame .widget-switch-track { border: 1px solid ButtonText; background: Canvas; }
+  .widget-frame .widget-switch-track::before { background: ButtonText; }
+  .widget-frame .widget-switch input:checked + .widget-switch-track { background: Highlight; }
+  .widget-frame .widget-switch input:checked + .widget-switch-track::before { background: HighlightText; }
+}

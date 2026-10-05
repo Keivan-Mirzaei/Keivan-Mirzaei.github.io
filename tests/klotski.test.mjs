@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { BOARD_WIDTH, BOARD_HEIGHT, CLASSIC_LAYOUT, createKlotski, validPieces, isSolved, maxSlide, canSlide, slideKlotski, undoKlotski, redoKlotski } from '../assets/js/lib/klotski.mjs';
+import { BOARD_WIDTH, BOARD_HEIGHT, CLASSIC_LAYOUT, KLOTSKI_HISTORY_LIMIT, createKlotski, validPieces, isSolved, maxSlide, canSlide, slideKlotski, undoKlotski, redoKlotski, resetKlotski, isKlotskiStart } from '../assets/js/lib/klotski.mjs';
+import { serializeKlotski, restoreKlotski } from '../assets/js/lib/klotski-storage.mjs';
 
 const target = (x = 1, y = 0) => ({ id: 'target', label: 'Exit block', x, y, width: 2, height: 2 });
 const square = (id, x, y) => ({ id, label: `Block ${id}`, x, y, width: 1, height: 1 });
@@ -64,7 +65,7 @@ test('undo restores every block and move count after a longer slide', () => {
   const next = slideKlotski(state, 'moving', 'right', 3);
   const restored = undoKlotski(next);
   assert.deepEqual({ ...restored, future: [] }, state);
-  assert.deepEqual(restored.future, [next.pieces]);
+  assert.deepEqual(restored.future, [{ pieces: next.pieces, moves: next.moves }]);
   assert.equal(undoKlotski(restored), null);
 });
 
@@ -149,4 +150,42 @@ test('redo restores long moves and only a successful new move clears its history
   assert.deepEqual(alternate.future, []);
   assert.equal(redoKlotski(alternate), null);
   assert.equal(redoKlotski(createKlotski()), null);
+});
+
+test('Reset is a history action whose counter can return to zero without negative Undo counts', () => {
+  const initial = createKlotski();
+  assert.equal(isKlotskiStart(initial), true);
+  assert.equal(resetKlotski(initial), null);
+  const moved = slideKlotski(initial, '8', 'right', 2);
+  const reset = resetKlotski(moved);
+  assert.equal(reset.moves, 0); assert.deepEqual(reset.pieces, initial.pieces);
+  assert.equal(reset.history.length, 2);
+  const restored = undoKlotski(reset);
+  assert.equal(restored.moves, 1); assert.deepEqual(restored.pieces, moved.pieces);
+  assert.deepEqual(redoKlotski(restored), reset);
+  const start = undoKlotski(restored);
+  assert.equal(start.moves, 0); assert.deepEqual(start.pieces, initial.pieces);
+  assert.equal(undoKlotski(start), null);
+});
+
+test('solved colour state follows Reset, Undo, and Redo after saving', () => {
+  let won = createKlotski();
+  for (const [id, direction] of classicSolution) won = slideKlotski(won, id, direction);
+  const reset = restoreKlotski(serializeKlotski(resetKlotski(won)));
+  assert.equal(reset.won, false); assert.equal(reset.moves, 0);
+  const restored = undoKlotski(reset);
+  assert.equal(restored.won, true); assert.equal(restored.moves, classicSolution.length);
+  assert.equal(redoKlotski(restored).won, false);
+});
+
+test('history remains bounded through repeated moves and resets', () => {
+  let state = createKlotski();
+  for (let i = 0; i <= KLOTSKI_HISTORY_LIMIT; i++) {
+    state = resetKlotski(slideKlotski(state, '8', 'right'));
+  }
+  assert.equal(state.history.length, KLOTSKI_HISTORY_LIMIT);
+  state = restoreKlotski(serializeKlotski(state));
+  let undone = 0;
+  while (state.history.length) { state = undoKlotski(state); assert.ok(state.moves >= 0); undone++; }
+  assert.equal(undone, KLOTSKI_HISTORY_LIMIT);
 });

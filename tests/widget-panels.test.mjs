@@ -35,11 +35,16 @@ test('panels start closed, toggle with the same trigger, and only one stays open
   assert.ok(f.panels.every(panel => panel.hidden));
 });
 
-test('outside interaction closes a panel, internal interaction preserves it, and Escape restores focus', () => {
+test('tapping or scrolling outside leaves the panel open; Escape closes it and restores focus', () => {
   const f = fixture();
   f.triggers[0].emit('click');
   f.document.emit('pointerdown', { target: f.panels[0] });
   assert.equal(f.panels[0].hidden, false);
+  f.document.emit('pointerdown', { target: new Element(), pointerType: 'touch' });
+  f.document.emit('click', { target: new Element() });
+  f.document.emit('scroll', { target: new Element() });
+  assert.equal(f.panels[0].hidden, false);
+  assert.equal(f.triggers[0].attributes.get('aria-expanded'), 'true');
   let prevented = false;
   f.document.emit('keydown', { key: 'Escape', preventDefault() { prevented = true; } });
   assert.equal(f.panels[0].hidden, true);
@@ -47,6 +52,8 @@ test('outside interaction closes a panel, internal interaction preserves it, and
   assert.equal(prevented, true);
   f.triggers[1].emit('click');
   f.document.emit('pointerdown', { target: new Element() });
+  assert.equal(f.panels[1].hidden, false);
+  f.triggers[1].emit('click');
   assert.equal(f.panels[1].hidden, true);
 });
 
