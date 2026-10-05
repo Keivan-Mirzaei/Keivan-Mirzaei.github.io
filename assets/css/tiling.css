@@ -30,7 +30,7 @@
 .tiling-selection-actions { display: flex; justify-content: center; gap: 8px; }
 .tiling-selection-actions:has(.panel-button:not([hidden])) { margin-top: 10px; }
 .tiling-selection-actions .panel-button { font: 13px/1.4 var(--sans); }
-.tiling-next { display: flex; margin: 12px auto 0; }
+.tiling-game .tiling-next { display: flex; width: fit-content; margin: 12px auto 0; }
 .tiling-game.is-solved .tiling-board { border-color: #729c7a; background: #dcebdd; box-shadow: 0 0 0 3px #dcebdd; }
 .tiling-game.is-solved .tiling-status { color: var(--green); background: var(--tint); }
 .tiling-number-entry { display: flex; gap: 10px; margin: 8px 0; }
