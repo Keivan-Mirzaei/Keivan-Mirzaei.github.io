@@ -38,7 +38,8 @@ class Page(HTMLParser):
                 self.links.append(attrs[key])
                 if attrs[key].count("?v=") > 1:
                     errors.append(f"{self.path}: asset has duplicate version queries: {attrs[key]}")
-        if tag == "img" and not attrs.get("alt", "").strip():
+        decorative_image = attrs.get("aria-hidden") == "true" and attrs.get("alt") == ""
+        if tag == "img" and not attrs.get("alt", "").strip() and not decorative_image:
             errors.append(f"{self.path}: image missing alternative text")
         if tag == "iframe" and not attrs.get("title", "").strip():
             errors.append(f"{self.path}: embedded content missing a title")

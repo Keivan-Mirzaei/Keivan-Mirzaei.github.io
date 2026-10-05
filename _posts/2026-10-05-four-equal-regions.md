@@ -3,6 +3,8 @@ title: "Four equal regions: two bisections and a turn"
 description: "Two easy bisections leave one imbalance. A quarter-turn suggests how to remove it—but we must account for the jumps in a point count."
 date: 2026-10-05
 format: exploration
+image: /assets/images/exploration-thumbnails/four-equal-regions.svg
+image_alt: Two perpendicular cuts divide twelve points into four coloured groups of three.
 tags: [geometry, counting, puzzles]
 math: true
 widgets: [four-equal-regions]

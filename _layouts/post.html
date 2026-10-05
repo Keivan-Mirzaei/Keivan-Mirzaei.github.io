@@ -6,7 +6,14 @@ layout: default
   <a class="back-link" href="{{ post_format.url | default: '/notes/' | relative_url }}">← {{ post_format.title | default: 'All posts' }}</a>
   <header class="page-heading">
     <p class="eyebrow">{{ post_format.label | default: 'Post' }}{% if page.level and page.level != '' %} <span aria-hidden="true">/</span> {{ page.level }}{% endif %}{% if page.sample %} / Sample post{% endif %}</p>
+    {% if page.format == 'exploration' and page.image %}
+    <div class="exploration-title-row">
+      <h1>{{ page.title }}</h1>
+      {% include exploration-logo.html post=page loading='eager' %}
+    </div>
+    {% else %}
     <h1>{{ page.title }}</h1>
+    {% endif %}
     {% unless page.format == 'problem' %}<p class="page-description">{{ page.description }}</p>{% endunless %}
     <div class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}">{% if page.archived %}From the {{ page.date | date: '%Y' }} archive{% else %}{{ page.date | date: '%B %-d, %Y' }}{% endif %}</time><span aria-hidden="true">·</span><span>{% assign minutes = content | strip_html | number_of_words | divided_by: 200 | plus: 1 %}{{ minutes }} min read</span></div>
     {% if page.tags.size > 0 %}<ul class="tags" aria-label="Topics">{% for tag in page.tags %}<li><a href="{{ '/search/' | relative_url }}?q={{ tag | url_encode }}">{{ tag }}</a></li>{% endfor %}</ul>{% endif %}

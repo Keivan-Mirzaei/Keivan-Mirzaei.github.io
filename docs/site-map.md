@@ -164,6 +164,7 @@ The GitHub Actions workflow runs these steps before publishing pushes to `main`.
 | `check_site.py` | Check built page structure, links, lazy activity scripts, search, feed, and sitemap |
 | `optimize_build.py` | Version generated browser assets and their dependencies by content |
 | `hex_previews.mjs`, `cevian_previews.mjs`, `magician_previews.mjs` | Regenerate the diagrams used by those activities |
+| `exploration_thumbnails.mjs` | Regenerate exploration SVG logos using shared geometry, mathematics, and saved formula outlines; see the [logo roadmap](logo-roadmap.md) |
 | `advanced_previews.py`, `graph_data.py` | Prepare optional static previews and scientific plot data |
 | `tiling_catalogue.mjs` | Generate the deterministic tiling puzzle catalogue |
 

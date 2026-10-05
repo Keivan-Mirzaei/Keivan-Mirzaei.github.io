@@ -2,6 +2,8 @@
 title: "The magician’s problem"
 description: "A coin, an audience, and a probability that seems to settle—until you magnify a ripple that never disappears."
 format: exploration
+image: /assets/images/exploration-thumbnails/magicians-problem.svg
+image_alt: A magnifying glass reveals a repeating ripple in an apparently settling probability curve.
 tags: ["probability", "oscillations", "limits"]
 math: false
 widgets: [magicians-problem]

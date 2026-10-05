@@ -68,6 +68,8 @@ Omit the solution marker for a problem without a solution. Native disclosures wo
 
 Follow the [exploration authoring roadmap](exploration-roadmap.md) when writing new explorations or revising existing ones. It covers purposeful investigation of a question or its solution, references, and consistency with the website's visual style.
 
+Follow the [exploration logo roadmap](logo-roadmap.md) for each article's SVG mark. Use a diagram, formula, or simple combination; logos appear in lists and beside article titles. Companion puzzle artwork receives a related variation, and meaningful results may appear in the logo.
+
 Use `format: exploration`. Let the idea determine the length and structure; the starter's headings are suggestions. State an easily formulated problem directly, then observe, guess, and examine the significant steps toward its solution. Explore the formulation when it needs investigation. Introduce widgets briefly and leave control instructions in their Settings and Info panels.
 
 - `## A section` makes a heading. The post title already supplies the page's main heading.

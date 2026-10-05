@@ -3,6 +3,8 @@ title: "How big can a cevian triangle be?"
 description: "Three lines meet. Three side points make a triangle. Move the meeting point—and discover why a quarter is the most you can get."
 date: 2026-10-01 23:44:45 +0000
 format: exploration
+image: /assets/images/exploration-thumbnails/cevian-triangles.svg
+image_alt: An outer triangle with three cevians and a shaded green medial triangle.
 tags: [geometry, inequalities, simplexes]
 math: true
 widgets: [cevian-triangles]

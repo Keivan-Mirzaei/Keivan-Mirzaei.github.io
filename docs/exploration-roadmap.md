@@ -37,6 +37,8 @@ End by interpreting what was established and what remains uncertain. Include a f
 
 Follow the [widget design roadmap](widget-requirements.md): shared frames, controls, panels, typesetting, and numeric formatting. Static figures share its typography, colours, line treatment, notation, and spacing. Reuse components and styles across explorations, lessons, and standalone puzzles.
 
+Use the [exploration logo roadmap](logo-roadmap.md) for each exploration's identifying SVG mark. A diagram, formula, or simple combination follows the same visual standard; the Magician's problem logo is the approved reference.
+
 Identify the question each visual helps answer. Use interaction when changing, comparing, or tracing adds insight; otherwise a static figure may suffice. A brief invitation to explore the widget, change settings, and consult Info is usually sufficient. Leave instructions for operating its controls in the widget itself. Add a mathematical prompt only when it advances the investigation, and connect useful observations to the argument. Keep essential results visible.
 
 Use appropriate scales and the shared precision rule, retaining extra digits when they reveal the phenomenon, as in the magician's probability ripple. Distinguish calculated values, simulated frequencies, and approximations. Provide a useful static view or textual explanation when interaction is unavailable.

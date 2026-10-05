@@ -1,6 +1,8 @@
 ---
 title: Conditional Probabilities and Expectations
 format: exploration
+image: /assets/images/exploration-thumbnails/conditional-probabilities-and-expectations.svg
+image_alt: The mathematical expression P of A given B represents conditional probability.
 category: math
 math: true
 ---

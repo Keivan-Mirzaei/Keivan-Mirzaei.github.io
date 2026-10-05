@@ -3,6 +3,8 @@ title: "Lights Out: every light can be flipped"
 description: "Play on a grid or a graph, reveal a solution, and discover why every pattern can be complemented—and why successful routes agree on parity."
 date: 2026-10-01 19:33:06 -0600
 format: exploration
+image: /assets/images/exploration-thumbnails/lights-out.svg
+image_alt: Pressing the two endpoints changes four connected amber lights into four unlit lights.
 tags: [combinatorics, graph theory, parity, puzzles]
 math: true
 widgets: [lights-out]

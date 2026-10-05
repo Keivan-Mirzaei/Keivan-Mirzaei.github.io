@@ -3,6 +3,8 @@ title: "Three utilities: from the plane to a mug"
 description: "Connect three houses to gas, water, and electricity. The plane refuses—but a mug, a donut, and a square with joined edges reveal a way through."
 date: 2026-10-01 22:17:46 -0600
 format: exploration
+image: /assets/images/exploration-thumbnails/three-utilities.svg
+image_alt: Nine pipes connect three houses to three utilities on a square with matching opposite sides representing a torus.
 tags: [topology, graph theory, puzzles]
 math: true
 widgets: [three-utilities]
