@@ -1,6 +1,8 @@
 <article class="note-row">
-  {% if include.post.format == 'exploration' and include.post.image %}
-  <a class="note-logo" href="{{ include.post.url | relative_url }}" aria-hidden="true" tabindex="-1">{% include exploration-logo.html post=include.post decorative=true %}</a>
+  {% capture note_logo %}{% include content-logo.html item=include.post decorative=true %}{% endcapture %}
+  {% assign note_logo = note_logo | strip %}
+  {% if note_logo != '' %}
+  <a class="note-logo" href="{{ include.post.url | relative_url }}" aria-hidden="true" tabindex="-1">{{ note_logo }}</a>
   {% endif %}
   <div class="note-row-content">
     {% assign post_format = site.data.formats | where: 'key', include.post.format | first %}

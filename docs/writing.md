@@ -18,7 +18,7 @@ Problems and explorations live in `_posts/YYYY-MM-DD-short-title.md`. Learning m
 Create a Markdown file directly in GitHub's editor, or use the optional helper:
 
 ```sh
-python3 scripts/new_post.py "An interesting problem" --type problem --math
+python3 scripts/new_post.py "An interesting problem" --type problem --math --difficulty 2
 python3 scripts/new_post.py "A challenge to think about" --type problem --without-solution
 python3 scripts/new_post.py "Exploring the magician's problem" --type exploration --math --draft
 python3 scripts/new_post.py "Understanding a quadratic" --type module --draft
@@ -33,11 +33,14 @@ The homepage, format lists, learning index, paginated post archive, search index
 
 Follow the [problem authoring roadmap](problem-roadmap.md) when writing new problems or revising existing ones. It records the agreed writing principles and disclosure-row design for hints, solutions, and optional material.
 
+Choose `difficulty: 1`, `2`, `3`, or `4` using the [content logo roadmap](logo-roadmap.md#problems-circle-and-woven-loops). The template selects one of four reusable green marks, starting with a circle and becoming more woven. The website leaves the code unlabelled. Do not add an individual image to a problem. The helper accepts `--difficulty`; otherwise it leaves the value `null` for you to choose before publication.
+
 ```markdown
 ---
 title: An interesting problem
 description: One sentence to introduce the question.
 format: problem
+difficulty: 2
 tags: [probability]
 math: true
 ---
@@ -68,7 +71,7 @@ Omit the solution marker for a problem without a solution. Native disclosures wo
 
 Follow the [exploration authoring roadmap](exploration-roadmap.md) when writing new explorations or revising existing ones. It covers purposeful investigation of a question or its solution, references, and consistency with the website's visual style.
 
-Follow the [exploration logo roadmap](logo-roadmap.md) for each article's SVG mark. Use a diagram, formula, or simple combination; logos appear in lists and beside article titles. Companion puzzle artwork receives a related variation, and meaningful results may appear in the logo.
+Follow the [content logo roadmap](logo-roadmap.md#explorations-identify-the-mathematical-idea) for each article's SVG mark. Use a diagram, formula, or simple combination; logos appear in lists and beside article titles. Companion puzzle artwork receives a related variation, and meaningful results may appear in the logo. The same roadmap covers the reusable problem marks and puzzle catalogue artwork.
 
 Use `format: exploration`. Let the idea determine the length and structure; the starter's headings are suggestions. State an easily formulated problem directly, then observe, guess, and examine the significant steps toward its solution. Explore the formulation when it needs investigation. Introduce widgets briefly and leave control instructions in their Settings and Info panels.
 

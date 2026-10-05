@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="410" viewBox="0 0 440 410" role="img" aria-labelledby="problem-circle-title problem-circle-description">
+  <title id="problem-circle-title">Woven loop</title>
+  <desc id="problem-circle-description">A green circle.</desc>
+  <rect width="440" height="410" fill="#fcfcf9"/>
+  <circle cx="220" cy="205" r="148" fill="none" stroke="#285b46" stroke-width="12"/>
+</svg>

@@ -2,6 +2,7 @@
 title: "Trigonometry without a word"
 description: "Two arctangent identities, seen through a geometric proof without words."
 format: problem
+difficulty: 2
 category: math
 tags: ["geometry", "trigonometry"]
 kind: Problem & proof

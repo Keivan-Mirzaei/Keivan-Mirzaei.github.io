@@ -21,10 +21,13 @@ def main():
     parser.add_argument("--draft", action="store_true")
     parser.add_argument("--math", action="store_true", help="Enable equation rendering")
     parser.add_argument("--without-solution", action="store_true", help="Omit the solution section of a problem")
+    parser.add_argument("--difficulty", type=int, choices=[1, 2, 3, 4], help="Select a shared problem logo; 1 is simplest and 4 most intricate")
     parser.add_argument("--slug", help="Optional URL name, using lowercase letters, digits and hyphens")
     args = parser.parse_args()
     if args.without_solution and args.type != "problem":
         parser.error("--without-solution applies only to --type problem.")
+    if args.difficulty is not None and args.type != "problem":
+        parser.error("--difficulty applies only to --type problem.")
 
     ascii_title = unicodedata.normalize("NFKD", args.title).encode("ascii", "ignore").decode()
     slug = args.slug or re.sub(r"[^a-z0-9]+", "-", ascii_title.lower()).strip("-")
@@ -52,6 +55,8 @@ def main():
         content += ['kind: Research project', 'featured: false', 'order: 100', 'links: []']
     else:
         content.append(f"format: {args.type}")
+    if args.type == "problem":
+        content.append(f"difficulty: {args.difficulty if args.difficulty is not None else 'null'}")
     if args.type == "module":
         content.append(f"date: {args.date.isoformat()}")
     if args.type in ("module", "research") and args.draft:

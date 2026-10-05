@@ -4,6 +4,8 @@
 
 This standard guides new problem posts and revisions of existing ones.
 
+Follow the [content logo roadmap](logo-roadmap.md#problems-circle-and-woven-loops) for the shared circle/woven-loop family. Each problem selects an internal `difficulty` value from 1 to 4; the site reuses the corresponding mark at the same size as exploration logos and leaves the code unlabelled.
+
 ## Core requirements
 
 - Seek a creative, direct solution. Explain the key insight and every non-obvious inference. Remove unnecessary detail while retaining the reasoning needed for a correct, complete argument; routine algebra and familiar results may remain implicit when appropriate to the problem’s level.

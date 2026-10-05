@@ -143,7 +143,7 @@ main:focus { outline: none; }
 .note-list { border-top: 1px solid var(--line); }
 .note-row { display: flex; gap: 20px; align-items: center; border-bottom: 1px solid var(--line); padding: 26px 0; }
 .note-row-content { flex: 1; min-width: 0; }
-.exploration-logo { display: block; width: 100%; height: auto; object-fit: contain; }
+.content-logo { display: block; width: 100%; height: auto; object-fit: contain; }
 .note-logo { display: block; flex: 0 0 112px; }
 .note-meta { display: flex; flex-wrap: wrap; gap: 10px; color: var(--muted); font: 10px var(--mono); margin-bottom: 9px; }
 .note-meta > span:first-child { color: var(--green); }
@@ -162,9 +162,9 @@ main:focus { outline: none; }
 .page-wrap { max-width: 900px; padding: 57px 52px 70px; margin: 0 auto; }
 .page-heading { margin-bottom: 38px; }
 .page-heading h1 { font: 48px/1.14 var(--serif); letter-spacing: -1.6px; margin-bottom: 22px; overflow-wrap: break-word; }
-.exploration-title-row { display: flex; align-items: center; gap: 24px; margin-bottom: 22px; }
-.exploration-title-row h1 { flex: 1; min-width: 0; margin-bottom: 0; }
-.exploration-title-row .exploration-logo { flex: 0 0 140px; width: 140px; }
+.article-title-row { display: flex; align-items: center; gap: 24px; margin-bottom: 22px; }
+.article-title-row h1 { flex: 1; min-width: 0; margin-bottom: 0; }
+.article-title-row .content-logo { flex: 0 0 140px; width: 140px; }
 .page-description { font-size: 16px; line-height: 1.8; color: var(--muted); max-width: 630px; }
 .back-link { display: inline-block; margin-bottom: 36px; text-decoration: none; color: var(--muted); font-size: 12px; }
 .article .page-heading { border-bottom: 1px solid var(--line); padding-bottom: 25px; }
@@ -383,9 +383,9 @@ mark { color: var(--ink); background: #e1ebbd; border-radius: 2px; }
   .note-topics { flex-wrap: wrap; }
   .note-arrow { display: none; }
   .page-heading h1 { font-size: 39px; }
-  .exploration-title-row { gap: 14px; }
-  .exploration-title-row h1 { font-size: clamp(30px, 8vw, 39px); }
-  .exploration-title-row .exploration-logo { flex-basis: 96px; width: 96px; }
+  .article-title-row { gap: 14px; }
+  .article-title-row h1 { font-size: clamp(30px, 8vw, 39px); }
+  .article-title-row .content-logo { flex-basis: 96px; width: 96px; }
   .page-description { font-size: 15px; }
   .prose { font-size: 15px; }
   .prose details:not(:where(.panel-help, .hex-game-settings)) { padding: 15px; }
@@ -396,8 +396,8 @@ mark { color: var(--ink); background: #e1ebbd; border-radius: 2px; }
   .search-field button { padding: 9px 10px; }
 }
 @media (max-width: 360px) {
-  .exploration-title-row { gap: 12px; }
-  .exploration-title-row .exploration-logo { flex-basis: 80px; width: 80px; }
+  .article-title-row { gap: 12px; }
+  .article-title-row .content-logo { flex-basis: 80px; width: 80px; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .sidebar, .site-body { transition: transform .2s ease, margin-left .2s ease; }

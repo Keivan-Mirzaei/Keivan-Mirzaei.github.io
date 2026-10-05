@@ -40,6 +40,7 @@ Keivan-Mirzaei.github.io/
 │   ├── widgets/           Activity markup and small inline SVG previews
 │   ├── icon.html          One source for interface icons
 │   ├── site-icons.html    One source for favicon and touch-icon links
+│   ├── content-logo.html  Shared problem, exploration, and puzzle logo renderer
 │   ├── widget-assets.html One source for activity styles and deferred loading
 │   ├── tilted-square.html Homepage visual proof
 │   └── *.html             Cards, navigation lists, media embeds, and shared links
@@ -62,6 +63,7 @@ Keivan-Mirzaei.github.io/
 ├── docs/
 │   ├── site-map.md        This maintenance guide
 │   ├── writing.md         Content-authoring instructions and examples
+│   ├── logo-roadmap.md    Shared logo standard and reusable problem family
 │   ├── advanced-graphs.md Optional interactive graph authoring
 │   ├── introductory-calculus-plan.md  Course planning notes
 │   └── templates/         Starter Markdown for each content format
@@ -104,6 +106,8 @@ Keivan-Mirzaei.github.io/
 | Change a particular activity | `_includes/widgets/`, `assets/js/widgets/`, its registered CSS | Every page embedding it |
 | Change Hex | `_includes/puzzles/hex.html`, `assets/js/widgets/hex.mjs`, `assets/js/lib/hex-*` | Both the article game and standalone game |
 | Add a game to the catalogue | `_data/puzzles.yml` | `/puzzles/` |
+| Select a problem's logo | Its front matter `difficulty: 1`–`4` | The shared mark in every list and article heading |
+| Change content logo artwork | Family generator and image metadata; see [logo roadmap](logo-roadmap.md) | Every occurrence of the same reusable SVG |
 | Change the logo | `assets/favicon.svg`; regenerate the `.ico` and touch exports | Sidebar, top bar, browser tabs; iOS uses its PNG export |
 
 ## How shared activities fit together
@@ -165,6 +169,8 @@ The GitHub Actions workflow runs these steps before publishing pushes to `main`.
 | `optimize_build.py` | Version generated browser assets and their dependencies by content |
 | `hex_previews.mjs`, `cevian_previews.mjs`, `magician_previews.mjs` | Regenerate the diagrams used by those activities |
 | `exploration_thumbnails.mjs` | Regenerate exploration SVG logos using shared geometry, mathematics, and saved formula outlines; see the [logo roadmap](logo-roadmap.md) |
+| `problem_logos.mjs` | Regenerate the four shared circle/woven-loop marks from `_data/problem_logos.json` |
+| `puzzle_thumbnails.mjs`, `four_regions_preview.mjs` | Regenerate the existing puzzle catalogue marks from their game geometry |
 | `advanced_previews.py`, `graph_data.py` | Prepare optional static previews and scientific plot data |
 | `tiling_catalogue.mjs` | Generate the deterministic tiling puzzle catalogue |
 

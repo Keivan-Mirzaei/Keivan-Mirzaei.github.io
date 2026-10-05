@@ -15,7 +15,7 @@ search: true
   <div class="puzzle-grid">
     {% for puzzle in site.data.puzzles %}
     <a class="puzzle-card" href="{{ puzzle.url | relative_url }}">
-      <div class="puzzle-card-art"><img src="{{ puzzle.image | relative_url }}" alt="{{ puzzle.image_alt | escape }}" width="440" height="410"></div>
+      <div class="puzzle-card-art">{% include content-logo.html item=puzzle kind='puzzle' %}</div>
       <div class="puzzle-card-copy">
         <span class="puzzle-card-meta">{{ puzzle.players }}</span>
         <h2>{{ puzzle.title }} <span aria-hidden="true">↗</span></h2>

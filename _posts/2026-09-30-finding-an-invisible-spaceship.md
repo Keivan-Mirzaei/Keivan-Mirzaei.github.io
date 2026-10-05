@@ -2,6 +2,7 @@
 title: "Finding an invisible spaceship"
 description: "Can a fixed collection of detectors distinguish every possible 2 × 2 spaceship position on a 7 × 7 board?"
 format: problem
+difficulty: 4
 tags: [combinatorics, puzzles]
 math: true
 ---

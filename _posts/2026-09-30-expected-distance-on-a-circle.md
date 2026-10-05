@@ -2,6 +2,7 @@
 title: "The average distance across a circle"
 description: "Choose two points uniformly on a unit circle. What is their expected straight-line distance?"
 format: problem
+difficulty: 2
 tags: [probability, geometry, expectation]
 math: true
 ---

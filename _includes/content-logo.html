@@ -1,0 +1,16 @@
+{%- assign logo_image = nil -%}
+{%- assign logo_alt = '' -%}
+{%- if include.item.format == 'problem' -%}
+  {%- assign difficulty_key = include.item.difficulty | append: '' -%}
+  {%- assign problem_logo = site.data.problem_logos[difficulty_key] -%}
+  {%- if problem_logo -%}
+    {%- assign logo_image = problem_logo.image -%}
+    {%- assign logo_alt = problem_logo.image_alt -%}
+  {%- endif -%}
+{%- elsif include.item.format == 'exploration' or include.kind == 'puzzle' -%}
+  {%- assign logo_image = include.item.image -%}
+  {%- assign logo_alt = include.item.image_alt -%}
+{%- endif -%}
+{%- if logo_image -%}
+<img class="content-logo" src="{{ logo_image | relative_url }}" alt="{% unless include.decorative %}{{ logo_alt | escape }}{% endunless %}"{% if include.decorative %} aria-hidden="true"{% endif %} width="440" height="410" loading="{{ include.loading | default: 'lazy' }}" decoding="async">
+{%- endif -%}

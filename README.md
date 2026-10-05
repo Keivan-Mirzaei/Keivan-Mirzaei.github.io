@@ -9,7 +9,7 @@ The browser uses plain HTML, CSS, and a little JavaScript. There is no front-end
 Add problems and explorations in `_posts`, learning modules in `_modules`, and research in `_research`, or run:
 
 ```sh
-python3 scripts/new_post.py "An interesting problem" --type problem --math
+python3 scripts/new_post.py "An interesting problem" --type problem --math --difficulty 2
 python3 scripts/new_post.py "Following an idea" --type exploration --draft
 python3 scripts/new_post.py "A lesson for students" --type module --draft
 python3 scripts/new_post.py "My research project" --type research --draft
@@ -55,6 +55,8 @@ For a project site at `username.github.io/repository`, set `url` to `https://use
 Use the [directory map and maintenance guide](docs/site-map.md) to find the source for any page, game, asset, or shared control. The [writing guide](docs/writing.md) covers new content and the [advanced graph guide](docs/advanced-graphs.md) covers optional Plotly and Three.js views.
 
 The logo, interface icons, activity registry, and panel controls each have one shared source. The Hex article and standalone game use the same panel, renderer, rules, computer search, and undo behavior.
+
+The [content logo roadmap](docs/logo-roadmap.md) covers problems, explorations, and puzzles. Problems choose one of four reusable circle/woven-loop marks through their internal `difficulty` value. Post headings, post lists, and puzzle cards share one logo renderer.
 
 Activity styles load only where required. Article controllers activate near the reader; standalone games activate immediately. Heavy graph libraries still load only after opening their interactive views. Search downloads its index on demand. Navigation prepares an internal page on a brief mouse hover or keyboard focus, with a small limit and respect for reduced-data connections.
 

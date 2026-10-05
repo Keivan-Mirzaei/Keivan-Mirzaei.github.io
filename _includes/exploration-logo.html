@@ -1,3 +1,0 @@
-{% if include.post.format == 'exploration' and include.post.image %}
-<img class="exploration-logo" src="{{ include.post.image | relative_url }}" alt="{% unless include.decorative %}{{ include.post.image_alt | escape }}{% endunless %}"{% if include.decorative %} aria-hidden="true"{% endif %} width="440" height="410" loading="{{ include.loading | default: 'lazy' }}" decoding="async">
-{% endif %}

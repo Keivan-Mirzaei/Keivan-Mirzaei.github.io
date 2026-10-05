@@ -60,12 +60,12 @@ class ContentWorkflow(unittest.TestCase):
                 self.assertEqual(result.returncode == 0, success, result.stderr)
                 return result
 
-            create("Fixture problem", "--type", "problem")
-            create("Fixture challenge", "--type", "problem", "--without-solution")
+            create("Fixture problem", "--type", "problem", "--difficulty", "1")
+            create("Fixture challenge", "--type", "problem", "--difficulty", "4", "--without-solution")
             create("Fixture exploration", "--type", "exploration")
-            create("Fixture support", "--type", "problem")
+            create("Fixture support", "--type", "problem", "--difficulty", "3")
             create("Fixture empty support", "--type", "problem")
-            create("Fixture hint only", "--type", "problem", "--without-solution")
+            create("Fixture hint only", "--type", "problem", "--difficulty", "2", "--without-solution")
             for slug, body in {
                 "fixture-support": """The visible question.
 
@@ -109,6 +109,8 @@ A cue without a solution.
             create("Unpublished post sentinel", "--type", "exploration", "--draft")
             create("Invalid slug", "--slug", "../escape", success=False)
             create("Invalid format option", "--type", "module", "--without-solution", success=False)
+            create("Invalid logo format", "--type", "exploration", "--difficulty", "2", success=False)
+            create("Invalid logo difficulty", "--type", "problem", "--difficulty", "5", success=False)
             (source / "_modules/fixture-sphere.md").write_text(r"""---
 title: Fixture sphere
 description: Check optional graph rendering.
@@ -157,6 +159,22 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertIn("Write the solution here.", problem)
             self.assertNotIn('class="problem-solution"', page("fixture-challenge"))
             self.assertNotIn('class="problem-solution"', page("fixture-exploration"))
+            # The four grades select shared marks without a public rating legend.
+            for slug, asset in {
+                "fixture-problem": "circle",
+                "fixture-hint-only": "woven-3",
+                "fixture-support": "woven-5",
+                "fixture-challenge": "woven-7",
+            }.items():
+                rendered = page(slug)
+                self.assertIn(f'/assets/images/problem-logos/{asset}.svg', rendered)
+                self.assertIn('class="article-title-row"', rendered)
+                self.assertNotIn('data-difficulty=', rendered)
+            self.assertNotIn('class="content-logo"', page("fixture-empty-support"))
+            self.assertIn('/assets/images/problem-logos/circle.svg', page("simple-but-fun"))
+            listing = (destination / "problems/index.html").read_text()
+            self.assertIn('/assets/images/problem-logos/woven-7.svg', listing)
+            self.assertIn('alt="" aria-hidden="true"', listing)
             support = page("fixture-support")
             rows = ProblemRows(support)
             self.assertEqual(rows.labels, ["Hint", "Solution", "Another solution", "Extension"])

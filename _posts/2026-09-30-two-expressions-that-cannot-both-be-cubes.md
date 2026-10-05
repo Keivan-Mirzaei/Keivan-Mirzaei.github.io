@@ -2,6 +2,7 @@
 title: "Two expressions that cannot both be cubes"
 description: "For a natural number n, prove that n + 2 and n² + n + 1 cannot both be perfect cubes."
 format: problem
+difficulty: 2
 tags: [number theory, perfect powers]
 math: true
 ---

@@ -2,6 +2,7 @@
 title: "A three-variable inequality"
 description: "Prove a symmetric inequality for arbitrary real x, y, and z."
 format: problem
+difficulty: 3
 tags: [algebra, inequalities]
 math: true
 ---

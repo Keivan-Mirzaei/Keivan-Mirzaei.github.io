@@ -1,0 +1,22 @@
+{
+  "1": {
+    "image": "/assets/images/problem-logos/circle.svg",
+    "image_alt": "A green circle.",
+    "crossings": 0
+  },
+  "2": {
+    "image": "/assets/images/problem-logos/woven-3.svg",
+    "image_alt": "A green loop woven into a three-lobed knot.",
+    "crossings": 3
+  },
+  "3": {
+    "image": "/assets/images/problem-logos/woven-5.svg",
+    "image_alt": "A green loop woven into a five-lobed knot.",
+    "crossings": 5
+  },
+  "4": {
+    "image": "/assets/images/problem-logos/woven-7.svg",
+    "image_alt": "A green loop woven into a seven-lobed knot.",
+    "crossings": 7
+  }
+}

@@ -2,6 +2,7 @@
 title: "Conservative polynomials"
 description: "What happens to a polynomial when we take its absolute value?"
 format: problem
+difficulty: 2
 category: math
 tags: ["algebra", "polynomials"]
 kind: Problem & proof

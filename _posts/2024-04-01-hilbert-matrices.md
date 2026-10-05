@@ -2,6 +2,7 @@
 title: "Hilbert matrices"
 description: "A deceptively simple matrix: can you prove it is always nonsingular?"
 format: problem
+difficulty: 3
 category: math
 tags: ["linear algebra", "analysis"]
 kind: Problem & proof

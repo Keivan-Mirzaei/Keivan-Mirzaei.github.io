@@ -2,6 +2,7 @@
 title: "Stirling’s approximation, but weaker"
 description: "Compare factorial and exponential growth by proving a limit."
 format: problem
+difficulty: 3
 category: math
 tags: ["analysis", "sequences"]
 kind: Problem & proof

@@ -2,6 +2,7 @@
 title: "Simple but fun"
 description: "A permutation of an odd-sized set produces an even product. Can you see why?"
 format: problem
+difficulty: 1
 category: math
 tags: ["number theory", "parity"]
 kind: Problem & proof
