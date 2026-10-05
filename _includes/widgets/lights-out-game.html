@@ -1,38 +1,55 @@
 <section class="graph-widget widget-frame lo-widget" data-lights-out aria-labelledby="lo-game-title">
   <div class="graph-heading"><h3 id="lo-game-title">Can you turn them all off?</h3><span class="activity-badge" data-lo-count>0 presses · even</span></div>
-
-  <p class="lo-caption" data-lo-instruction>Press a light to flip it and its neighbors. On a grid, neighbors are above, below, left, and right.</p>
+  <p class="lo-caption" data-lo-instruction>Press a light to flip it and every light joined directly to it.</p>
   <div class="lo-stage">
-    <div class="lo-board" data-lo-play>
-      <svg viewBox="0 0 360 360" role="img" aria-label="Nine lights in a square. Lights 1, 2, 3, 5, and 8 are on. Press lights 1, 3, and 5 to turn them all off.">
-        <g class="lo-static-off"><rect x="10" y="130" width="100" height="100" rx="12"/><rect x="250" y="130" width="100" height="100" rx="12"/><rect x="10" y="250" width="100" height="100" rx="12"/><rect x="250" y="250" width="100" height="100" rx="12"/></g>
-        <g class="lo-static-on"><rect x="10" y="10" width="100" height="100" rx="12"/><rect x="130" y="10" width="100" height="100" rx="12"/><rect x="250" y="10" width="100" height="100" rx="12"/><rect x="130" y="130" width="100" height="100" rx="12"/><rect x="130" y="250" width="100" height="100" rx="12"/></g>
-        <g class="lo-static-label" text-anchor="middle"><text x="60" y="68">1</text><text x="180" y="68">2</text><text x="300" y="68">3</text><text x="60" y="188">4</text><text x="180" y="188">5</text><text x="300" y="188">6</text><text x="60" y="308">7</text><text x="180" y="308">8</text><text x="300" y="308">9</text></g>
+    <div class="glo-board-wrap"><div class="glo-board" data-lo-play>
+      <svg viewBox="0 0 100 100" role="img" aria-label="Six lights in an open loop. Lights 1 through 5 are on. Press lights 1 and 4 to turn them all off.">
+        <path class="lo-static-edge" d="M50 10L84.64 30L84.64 70L50 90L15.36 70L15.36 30"/>
+        <g class="lo-static-on"><circle cx="50" cy="10" r="4"/><circle cx="84.64" cy="30" r="4"/><circle cx="84.64" cy="70" r="4"/><circle cx="50" cy="90" r="4"/><circle cx="15.36" cy="70" r="4"/></g>
+        <circle class="lo-static-off" cx="15.36" cy="30" r="4"/>
       </svg>
-    </div>
-    <div class="lo-target" data-lo-target-region hidden><span class="lo-mini-title">Target</span><div data-lo-target></div></div>
+    </div></div>
+    <div class="lo-target" data-lo-target-region hidden><span class="lo-mini-title">Target</span><div class="glo-board" data-lo-target></div></div>
   </div>
   <div class="lo-legend"><span><i class="lo-key lo-key-on" aria-hidden="true"></i>On</span><span><i class="lo-key" aria-hidden="true"></i>Off</span><span data-lo-plan-key hidden><i class="lo-key lo-key-plan" aria-hidden="true">1</i>Press order</span></div>
-  <div class="lo-control-row panel-actions">
-    <button class="secondary-button panel-button" type="button" data-lo-show data-widget-disclosure-trigger aria-expanded="false" aria-controls="lo-solution" disabled>Show solution</button>
-    <button class="lo-secondary panel-button" type="button" data-lo-new disabled>Shuffle</button>
-    <button class="lo-secondary panel-button" type="button" data-lo-undo disabled>Undo</button><button class="panel-button" type="button" data-lo-redo disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
-    <button class="lo-secondary panel-button" type="button" data-lo-restart disabled>Reset</button>
-  <details class="panel-help" data-widget-disclosure><summary class="panel-button">{% include icon.html name='settings' %}<span>Settings</span></summary><div class="panel-help-content">  <div class="lo-settings">
-    <label for="lo-board">Board <select id="lo-board" data-lo-board disabled><option value="grid-3">3 × 3 grid</option><option value="grid-4">4 × 4 grid</option><option value="grid-5">5 × 5 grid</option><option value="path-4">Path of four</option><option value="cycle-5">Five-light cycle</option><option value="triangle">Triangle</option><option value="star-5">Four-leaf star</option><option value="pair">Two joined lights</option></select></label>
-    <label for="lo-goal">Goal <select id="lo-goal" data-lo-goal disabled><option value="off">All lights off</option><option value="complement">Complement the start</option></select></label>
-  </div>  <div class="lo-experiments"><button class="lo-text-button panel-button" type="button" data-lo-edit role="switch" aria-checked="false" disabled>Edit starting lights<span class="widget-button-switch-track" aria-hidden="true"></span></button><button class="lo-text-button panel-button" type="button" data-lo-impossible disabled>Try an impossible board</button></div><p>Changing the board creates a fresh puzzle. Changing the goal restarts this board. Both changes can be undone.</p></div></details>{% include controls/help.html text='<p>Press a light to flip it and its neighbours. Undo takes back a press. Reset restores the starting lights. Show solution reveals a press sequence.</p>' %}</div>
-  <div class="lo-solution" id="lo-solution" data-lo-solution hidden>
+  <p class="lo-status" data-lo-status role="status" aria-live="polite" aria-atomic="true">The starting pattern is solvable. Try a few presses, then reveal a solution.</p>
+  <div class="widget-controls" role="group" aria-label="Exploration controls">
+    <button class="panel-button" type="button" data-lo-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
+    <button class="panel-button" type="button" data-lo-redo disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
+    <button class="panel-button" type="button" data-lo-restart disabled>{% include icon.html name='restart' %}<span>Reset</span></button>
+    <button class="panel-button" type="button" data-lo-new disabled>{% include icon.html name='shuffle' %}<span>Shuffle</span></button>
+    <button class="panel-button" type="button" data-lo-show data-widget-panel-trigger="solution" aria-expanded="false" disabled>{% include icon.html name='hint' %}<span data-lo-show-label>Show solution</span></button>
+    <button class="panel-button" type="button" data-widget-panel-trigger="settings" aria-expanded="false" disabled>{% include icon.html name='settings' %}<span>Settings</span></button>
+    <button class="panel-button" type="button" data-widget-panel-trigger="info" aria-expanded="false" disabled>{% include icon.html name='info' %}<span>Info</span></button>
+  </div>
+  <div class="widget-support-panel" data-widget-panel="settings" aria-label="Exploration settings" hidden>
+    <div class="lo-settings">
+      <label for="lo-board">Board <select id="lo-board" data-lo-board disabled>
+        <optgroup label="Puzzle networks"><option value="path-6">Open loop · 6 lights</option><option value="loop-7">Loop · 7 lights</option><option value="branches-7-0">Branches · 7 lights</option><option value="network-8-1">Network · 8 lights</option></optgroup>
+        <optgroup label="Grids"><option value="grid-3">3 × 3 grid</option><option value="grid-4">4 × 4 grid</option><option value="grid-5">5 × 5 grid</option></optgroup>
+        <optgroup label="Proof examples"><option value="path-4">Path of four</option><option value="cycle-5">Five-light cycle</option><option value="triangle">Triangle</option><option value="star-5">Four-leaf star</option><option value="pair">Two joined lights</option></optgroup>
+      </select></label>
+      <label for="lo-goal">Goal <select id="lo-goal" data-lo-goal disabled><option value="off">All lights off</option><option value="complement">Complement the start</option></select></label>
+    </div>
+    <label class="widget-switch"><span>Show light numbers</span><input type="checkbox" role="switch" data-lo-numbers disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
+    <label class="widget-switch"><span>Edit starting lights</span><input type="checkbox" role="switch" data-lo-edit disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
+    <button class="panel-button" type="button" data-lo-impossible disabled>Try an impossible board</button>
+    <p class="widget-note">Changing the board creates a fresh puzzle. Changing the goal restarts this board. Both changes can be undone.</p>
+  </div>
+  <div class="widget-support-panel" data-widget-panel="info" aria-label="About this exploration" hidden>
+    <p>Pressing a light flips that light and every light joined directly to it. Amber lights are on; hollow lights are off. Crossing lines create no extra connections. On a grid, neighbours are above, below, left, and right.</p>
+    <p>Hover or focus to preview a move. Use the arrow keys to move between lights, then Enter or Space to press. Undo takes back an action; Reset restores the starting lights.</p>
+    <p>Settings lets you compare all-off with complementing the start, or edit a starting pattern. Numbers appear while editing or following a solution. Show solution reveals a shortest press set; Another solution compares alternatives with the same parity.</p>
+    <a class="glo-math-link" href="{{ '/puzzles/lights-out/' | relative_url }}">Play the numbered puzzles {% include icon.html name='arrow' %}</a>
+  </div>
+  <div class="widget-support-panel lo-solution" data-widget-panel="solution" data-lo-solution aria-label="Solution walkthrough" hidden>
     <p class="lo-plan-label" data-lo-plan-label></p>
-    <div class="lo-control-row">
-      <button class="secondary-button panel-button" type="button" data-lo-next>Next press</button>
-      <button class="lo-secondary panel-button" type="button" data-lo-finish>Finish solution</button>
-      <button class="lo-secondary panel-button" type="button" data-lo-alternative>Another solution</button>
+    <div class="widget-controls">
+      <button class="panel-button" type="button" data-lo-next disabled>Next press</button>
+      <button class="panel-button" type="button" data-lo-finish disabled>Finish solution</button>
+      <button class="panel-button" type="button" data-lo-alternative disabled>Another solution</button>
     </div>
     <p class="lo-caption" data-lo-parity></p>
   </div>
-  <p class="lo-status" data-lo-status role="status">The starting pattern is solvable. Try a few presses, then reveal a solution.</p>
-
-  <noscript><p>The example above is solved by pressing lights <strong>1, 3, and 5</strong>, in any order. Enable JavaScript to play and explore other boards. Both proofs below remain readable without it.</p></noscript>
-
+  <noscript><p>The example above is solved by pressing lights <strong>1 and 4</strong>, in any order. Enable JavaScript to play and explore other boards. Both proofs below remain readable without it.</p></noscript>
 </section>

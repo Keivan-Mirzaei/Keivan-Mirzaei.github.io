@@ -54,7 +54,7 @@ cevian-triangles:
 lights-out:
   script: /assets/js/widgets/lights-out.mjs
   selector: '[data-lights-out], [data-lights-out-proof]'
-  styles: [activities, lights-out, widget-frame]
+  styles: [activities, graph-lights-out, lights-out, widget-frame]
 graph-lights-out:
   script: /assets/js/widgets/graph-lights-out.mjs
   selector: '[data-graph-lights-out]'

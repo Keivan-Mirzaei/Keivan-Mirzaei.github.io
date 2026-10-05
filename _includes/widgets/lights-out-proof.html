@@ -1,10 +1,21 @@
 <section class="graph-widget widget-frame lo-widget lo-proof-widget" data-lights-out-proof aria-labelledby="lo-proof-title">
   <div class="graph-heading"><h3 id="lo-proof-title">Watch the induction work</h3><span class="activity-badge" data-lo-proof-count>Start</span></div>
-  <div class="lo-settings"><label for="lo-proof-graph">Graph <select id="lo-proof-graph" data-lo-proof-graph disabled><option value="path-4">Path of four</option><option value="triangle">Triangle</option><option value="star-5">Four-leaf star</option><option value="pair">Two joined lights</option></select></label></div>
-  <div class="lo-proof-board" data-lo-proof-board><svg viewBox="0 0 480 150" role="img" aria-label="A path of four lights. Press the two endpoints to complement every light."><path class="lo-edge" d="M60 75H420"/><circle class="lo-static-on" cx="60" cy="75" r="26"/><circle class="lo-static-off" cx="180" cy="75" r="26"/><circle class="lo-static-on" cx="300" cy="75" r="26"/><circle class="lo-static-off" cx="420" cy="75" r="26"/><g class="lo-static-label" text-anchor="middle"><text x="60" y="83">1</text><text x="180" y="83">2</text><text x="300" y="83">3</text><text x="420" y="83">4</text></g></svg></div>
-  <p class="lo-caption">Green outlines mark the press set. Dashed edges mark the omitted vertex.</p>
-  <p class="lo-proof-detail" data-lo-proof-detail role="status">Start with lights 1 and 3 on. The goal is to flip every light.</p>
-  <div class="lo-control-row"><button class="lo-secondary panel-button" type="button" data-lo-proof-back disabled>Previous step</button><button class="secondary-button panel-button" type="button" data-lo-proof-next disabled>Next step</button></div>
-  <noscript><p>On this path, pressing lights 1 and 4 flips every light. The inductive construction is explained below.</p></noscript>
-  <div class="panel-actions">{% include controls/help.html text='<p>Use Next step and Previous step to follow the induction. Change Graph to compare another board.</p>' %}</div>
+  <div class="glo-board-wrap lo-proof-board"><div class="glo-board" data-lo-proof-board><svg viewBox="0 0 480 150" role="img" aria-label="A path of four lights. Press the two endpoints to complement every light."><path class="lo-static-edge" d="M60 75H420"/><circle class="lo-static-on" cx="60" cy="75" r="20"/><circle class="lo-static-off" cx="180" cy="75" r="20"/><circle class="lo-static-on" cx="300" cy="75" r="20"/><circle class="lo-static-off" cx="420" cy="75" r="20"/><g class="lo-static-label" text-anchor="middle"><text x="60" y="81">1</text><text x="180" y="81">2</text><text x="300" y="81">3</text><text x="420" y="81">4</text></g></svg></div></div>
+  <p class="lo-caption lo-proof-key">Green outlines mark the press set. Dashed edges mark the omitted vertex.</p>
+  <p class="lo-proof-detail" data-lo-proof-detail role="status" aria-live="polite" aria-atomic="true">Start with lights 1 and 3 on. The goal is to flip every light.</p>
+  <div class="widget-controls" role="group" aria-label="Proof controls">
+    <button class="panel-button" type="button" data-lo-proof-back disabled>Previous step</button>
+    <button class="panel-button" type="button" data-lo-proof-next disabled>Next step</button>
+    <button class="panel-button" type="button" data-widget-panel-trigger="settings" aria-expanded="false" disabled>{% include icon.html name='settings' %}<span>Settings</span></button>
+    <button class="panel-button" type="button" data-widget-panel-trigger="info" aria-expanded="false" disabled>{% include icon.html name='info' %}<span>Info</span></button>
+  </div>
+  <div class="widget-support-panel" data-widget-panel="settings" aria-label="Proof settings" hidden>
+    <label for="lo-proof-graph">Graph <select id="lo-proof-graph" data-lo-proof-graph disabled><option value="path-4">Path of four</option><option value="triangle">Triangle</option><option value="star-5">Four-leaf star</option><option value="pair">Two joined lights</option></select></label>
+  </div>
+  <div class="widget-support-panel" data-widget-panel="info" aria-label="About the induction walkthrough" hidden>
+    <p>Use Next step and Previous step to follow the induction. Change Graph in Settings to compare the two cases. Each trial starts from the same pattern.</p>
+    <p>Amber lights are on; hollow lights are off. Light numbers identify the vertices used in the explanation. Green outlines mark the current press set; a dashed ring and edges identify the omitted vertex.</p>
+    <p>The last diagram shows every starting light complemented. Any repeated presses have been canceled in its marked press set.</p>
+  </div>
+  <noscript><p>On this path, pressing lights 1 and 4 flips every light. The article explains the inductive construction.</p></noscript>
 </section>

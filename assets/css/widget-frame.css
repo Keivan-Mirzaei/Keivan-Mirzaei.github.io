@@ -52,7 +52,6 @@
 .graph-widget.widget-frame .graph-figure, .graph-widget.widget-frame .tu-board, .graph-widget.widget-frame .lo-stage, .graph-widget.widget-frame .hex-board { border-radius: 8px; transition: background-color .2s, box-shadow .2s; }
 .graph-widget.widget-frame[data-complete='true'] .graph-figure,
 .graph-widget.widget-frame[data-complete='true'] .tu-board,
-.graph-widget.widget-frame[data-complete='true'] .lo-stage,
 .graph-widget.widget-frame[data-complete='true'] .hex-board { background: #e3efe4; box-shadow: inset 0 0 0 2px #73987a; }
 .graph-widget.widget-frame[data-complete='true'] [role='status'] { color: var(--green); }
 .widget-frame .panel-help[open] { display: contents; }

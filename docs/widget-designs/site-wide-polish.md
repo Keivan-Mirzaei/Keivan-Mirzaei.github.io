@@ -31,7 +31,7 @@ Keivan’s scope is all website widgets, including articles, lessons, diagrams, 
 | Sphere slice | Reusable template; typeset sphere equation, shared controls, slice/view history and undoable Reset. | Same explicit renderer lifecycle and static fallback as scientific plots. No current published placement. |
 | Magician | Audience, probability microscope, and routes; see the separate design sheet. | The microscope retains extra precision because its tiny ripple is the phenomenon being explained. |
 | Cevian triangles | All six linked diagrams; shape dropdown, labeled position/rotation outputs, shared frame, Redo, mathematical radical, centroid completion colours. | The proof diagrams deliberately share the explorer’s state within this article. Shape is preserved by Reset; simplex Reset restores its initial weights and angle. |
-| Article Lights Out | Board and induction walkthrough; Board/Goal dropdowns in Settings, edit switch, Undo/Redo for presses and fresh boards, reset history, explicit solution panel, completion colour. | Numbers appear when editing or following a numbered plan; proof numbers remain necessary. Proof navigation uses Previous/Next instead of redundant Undo/Redo. |
+| Article Lights Out | Both widgets share the puzzle’s amber board renderer, graph definitions, arrow navigation, controls, and Settings/Info panels. Board/Goal choices, editable starts, reversible actions, solution alternatives, and induction remain available. | Numbers are optional during play and appear while editing or following a plan; proof numbers remain necessary. Demonstration history is separate from saved numbered-puzzle progress. |
 | Three utilities | Plane routing, mug transformation, and glued-square construction; shared frame, history/Redo, pipe-tracing dropdown, offscreen playback pause, nine-pipe completion on the glued square. | Nine crossing-free pipes on the plane are impossible, so that panel cannot claim success. |
 | Hex | Reviewed standalone and embedded game retained; coastline proof gets shared frame/Redo and one Reset for the walk. | Resetting the walkthrough keeps its current colouring; Shuffle changes colouring. |
 | Klotski | Reviewed standalone puzzle retained and checked with the shared layer. | Its own saving preference and selected-size progress reset remain unchanged. |
@@ -46,7 +46,7 @@ Review the local articles, lesson widgets, and puzzles at desktop and phone widt
 
 ## Verification
 
-- All 250 JavaScript tests, five Python checks, and the site’s build, link, search, feed, and sitemap checks pass.
+- All 260 JavaScript tests, six Python checks, and the site’s build, link, search, feed, and sitemap checks pass.
 - Dropdown history checks cover native committed selections, immediate Undo/Redo, and unchanged choices that preserve Redo.
 - Browser checks cover Cevian and simplex completion/history, lesson function choices and formulas, exact domain rejection, tiny nonzero output, article Lights Out solution/board history, utilities tracing/routing/transformation, and Hex coastline history.
 - The reusable quadratic, Bayes, card, cups, random-walk, plot, and sphere templates were exercised on a temporary local test page. That page was removed before the final build.

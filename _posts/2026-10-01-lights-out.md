@@ -12,7 +12,7 @@ widgets: [lights-out]
 
 A light has two states: on and off. Press it, and it changes state—but so do its neighbors. A move that fixes one part of the board can spoil another.
 
-Play the [standalone graph game]({{ '/puzzles/lights-out/' | relative_url }}), with different networks and a hint when you need one.
+The exploration uses the same lights and networks as the [standalone graph game]({{ '/puzzles/lights-out/' | relative_url }}), which offers 1,000 numbered puzzles at each difficulty.
 
 Start with the usual goal: **turn every light off**. You can play first, reveal a solution, or follow it one press at a time. The small numbers on a revealed solution give a press order; the larger numbers name the lights.
 

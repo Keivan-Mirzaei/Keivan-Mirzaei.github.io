@@ -2,7 +2,7 @@
 
 **Status:** Reviewed and published on 4 October 2026. The reviewed puzzle-specific saving and selected-difficulty progress reset updates are approved for publication.
 
-Follow the [widget roadmap](../widget-requirements.md) and the reviewed Hex and Klotski frame. This migration covers the graph puzzle at `/puzzles/lights-out/`; the article's separate grid and proof widgets keep their existing mathematical presentation.
+Follow the [widget roadmap](../widget-requirements.md) and the reviewed Hex and Klotski frame. The graph puzzle at `/puzzles/lights-out/` and both article widgets share the board renderer, amber/hollow lights, arrow-key navigation, and supporting-panel controls. The article keeps its grid examples, editable starts, two goals, solution alternatives, and inductive proof.
 
 - **Name and stable ID:** Lights Out; `graph-lights-out` in the widget registry, `lights-out` in shared puzzle storage.
 - **Purpose / interaction:** Press a light to flip it and its direct neighbours. Turn every light off. Amber means on; hollow means off. Crossing lines create no connections.
@@ -21,3 +21,12 @@ Follow the [widget roadmap](../widget-requirements.md) and the reviewed Hex and 
 - **Typesetting:** Exact counts and simple ranges use the interface font. No structured mathematical formula is needed in the puzzle interface; link to the existing mathematics article from Info.
 - **Checks:** Catalogue solvability and stable IDs; press effects and hints; win/removal of win colour; undoable Reset and Shuffle; exact number browsing; difficulty changes; old/new saves; progress-reset scope and confirmation; phone layouts; panels staying open during outside interaction.
 - **Next step:** Publish the reviewed saving and selected-difficulty progress reset updates alongside Floor tiling.
+
+## Exploration compatibility
+
+- The article starts with the puzzle collection's six-light Open loop and also offers Loop, Branches, and Network graphs from the same stable definitions. The original grids and small proof examples remain available.
+- Both article widgets use the puzzle's light shapes, colours, frame, typography, and Settings/Info buttons. Panels expand below the controls, stay open while playing, and close with their trigger or Escape. The solution is a mutually exclusive supporting panel.
+- Numbers are optional during play and required while editing, following a solution, or identifying proof vertices. There is one tab stop in the playable board, with the same directional navigation as the puzzle.
+- All-off and complementation use the same press effects as the puzzle. Completion locks play until Undo or Reset; completed proof diagrams mark the canceled press set and clear their completion colour on Previous step.
+- The exploration is a mathematical demonstration with its own transient history. It does not change the numbered puzzle's saved progress or preferences.
+- Verify a hidden solution after intervening presses, editing through Undo/Redo, impossible all-off followed by complementation, both proof branches, and desktop/320-pixel layouts.

@@ -32,14 +32,14 @@
 .glo-edges { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .glo-edges path { stroke: #b6bfae; stroke-width: 1.3; vector-effect: non-scaling-stroke; fill: none; stroke-linecap: round; transition: stroke 150ms ease; }
 .glo-edges path.is-preview { stroke: var(--green); stroke-width: 1.8; }
-.puzzle-page .glo-light { position: absolute; display: grid; place-items: center; width: 44px; height: 44px; margin: 0; padding: 0; transform: translate(-50%, -50%); background: transparent; border: 0; border-radius: 50%; color: var(--ink); opacity: 1; touch-action: manipulation; }
-.glo-light-core { display: grid; place-items: center; width: 34px; height: 34px; border: 1.5px solid #b6bfae; border-radius: 50%; background: var(--paper); color: var(--muted); font: 12px/1 var(--mono); transition: background 160ms ease, box-shadow 160ms ease, border-color 160ms ease; }
+.glo-board .glo-light { position: absolute; display: grid; place-items: center; width: 44px; height: 44px; margin: 0; padding: 0; transform: translate(-50%, -50%); background: transparent; border: 0; border-radius: 50%; color: var(--ink); opacity: 1; touch-action: manipulation; }
+.glo-light-core { display: grid; place-items: center; width: 34px; height: 34px; border: 1.5px solid #b6bfae; border-radius: 50%; background: var(--paper); color: var(--muted); font: 12px/1 var(--sans); transition: background 160ms ease, box-shadow 160ms ease, border-color 160ms ease; }
 .glo-light.is-on .glo-light-core { background: #e9bd63; border-color: #d8af60; color: #403116; box-shadow: 0 0 0 5px #e9bd631c; }
 .glo-light.is-preview .glo-light-core { box-shadow: 0 0 0 5px #285b4620; border-color: var(--green); }
 .glo-light.is-hint::after { position: absolute; inset: -2px; border: 1.5px dashed var(--green); border-radius: inherit; content: ''; pointer-events: none; }
 .glo-hint-label { display: none; position: absolute; top: calc(100% + 2px); padding: 0 4px; background: var(--paper); color: var(--green); font-size: 11px; }
 .glo-light.is-hint .glo-hint-label { display: block; }
-.glo-game[data-numbers='false'] .glo-light-number { visibility: hidden; }
+.glo-board[data-numbers='false'] .glo-light-number { visibility: hidden; }
 .glo-under-board { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 12px; color: var(--muted); font: 12px/1.7 var(--mono); }
 .glo-preview { min-height: 1.7em; margin: 6px 0 0; color: var(--muted); font: 12px/1.7 var(--mono); }
 .glo-completed { margin: 8px 0 0; color: var(--muted); font: 12px/1.7 var(--mono); }
@@ -75,3 +75,14 @@
   .glo-edges path { stroke: CanvasText; }
   .glo-light.is-preview .glo-light-core, .glo-light.is-hint::after { border-color: Highlight; }
 }
+
+/* Optional annotations are shared by solutions, grids, and proof diagrams. */
+.glo-light:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.glo-light.is-plan .glo-light-core { outline: 2px dashed var(--green); outline-offset: 3px; }
+.glo-light.is-next .glo-light-core { outline-style: solid; outline-width: 3px; }
+.glo-light.is-omitted .glo-light-core { outline: 2px dashed var(--muted); outline-offset: 5px; }
+.glo-edges path.is-omitted { opacity: .45; stroke-dasharray: 4 4; }
+.glo-step { position: absolute; top: -4px; right: -4px; display: grid; place-items: center; min-width: 22px; height: 22px; padding: 0 4px; border: 2px solid var(--paper); border-radius: 50%; background: var(--green); color: var(--paper); font: 11px/1 var(--sans); }
+.glo-grid .glo-light { width: calc(100% / var(--glo-side)); height: auto; aspect-ratio: 1; }
+.glo-grid .glo-light-core { width: calc(100% - 8px); height: auto; aspect-ratio: 1; border-radius: 8px; }
+.glo-grid .glo-step { top: 0; right: 0; }

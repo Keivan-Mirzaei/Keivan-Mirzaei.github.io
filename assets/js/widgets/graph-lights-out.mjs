@@ -5,6 +5,7 @@ import { initializeWidgetPanels } from '../lib/widget-panels.mjs';
 import { initializeProgressReset } from '../lib/widget-progress.mjs';
 import { setActionLabel } from '../lib/puzzle-controls.mjs';
 import { countBits, pressEffect, vertices } from '../lib/lights-out-math.mjs';
+import { lightsOutBoardMarkup, updateLightsOutBoard, lightsOutNeighbor } from '../lib/lights-out-view.mjs';
 
 let nextInstance = 0;
 export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('lights-out', root), random = Math.random, catalogue } = {}) {
@@ -27,10 +28,7 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
 
   function drawGraph() {
     boardEvents.abort(); boardEvents = new AbortController();
-    get('board').innerHTML = `<svg class="glo-edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${graph.edges.map(([a, b]) => {
-      const [ax, ay] = graph.positions[a], [bx, by] = graph.positions[b];
-      return `<path data-edge="${a},${b}" d="M${ax * 100},${ay * 100}L${bx * 100},${by * 100}"/>`;
-    }).join('')}</svg>${graph.positions.map(([x, y], i) => `<button class="glo-light" type="button" data-light="${i}" style="left:${x * 100}%;top:${y * 100}%" tabindex="${i === 0 ? 0 : -1}"><span class="glo-light-core"><span class="glo-light-number">${i + 1}</span></span><span class="glo-hint-label" aria-hidden="true">hint</span></button>`).join('')}`;
+    get('board').innerHTML = lightsOutBoardMarkup(graph);
     buttons = [...get('board').querySelectorAll('[data-light]')];
     edges = [...get('board').querySelectorAll('[data-edge]')];
     const on = (button, name, callback) => button.addEventListener(name, callback, { signal: boardEvents.signal });
@@ -44,12 +42,8 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
         const directions = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
         if (!directions[event.key] || event.altKey || event.ctrlKey || event.metaKey) return;
         event.preventDefault();
-        const [dx, dy] = directions[event.key], [x, y] = graph.positions[i];
-        const candidates = graph.positions.map(([px, py], index) => {
-          const vx = px - x, vy = py - y;
-          return { index, forward: vx * dx + vy * dy, score: Math.hypot(vx, vy) + 2 * Math.abs(vx * dy - vy * dx) };
-        }).filter(candidate => candidate.forward > .01).sort((a, b) => a.score - b.score);
-        if (candidates.length) buttons[candidates[0].index].focus();
+        const next = lightsOutNeighbor(graph, i, event.key);
+        if (next >= 0) buttons[next].focus();
       });
     });
   }
@@ -95,15 +89,11 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
     setActionLabel(get('hint'), hint === null ? 'Hint' : 'Hide hint');
     get('new').disabled = !book.canAdvance; get('new').hidden = !game.solved || !book.canAdvance;
     get('shuffle').disabled = !book.canAdvance;
+    updateLightsOutBoard(get('board'), graph, game.lights, { numbered: numbers, solved: game.solved });
     buttons.forEach((button, i) => {
-      const on = !!(game.lights & (1 << i));
-      const affected = vertices(pressEffect(graph, 1 << i), graph.size).map(vertex => vertex + 1).join(', ');
-      button.classList.toggle('is-on', on); button.classList.toggle('is-hint', i === hint);
-      button.setAttribute('aria-pressed', String(on));
-      button.setAttribute('aria-label', `Light ${i + 1}, ${on ? 'on' : 'off'}. Press to flip lights ${affected}.${i === hint ? ' Suggested by the hint.' : ''}`);
-      button.disabled = game.solved;
+      button.classList.toggle('is-hint', i === hint);
+      if (i === hint) button.setAttribute('aria-label', `${button.getAttribute('aria-label')} Suggested by the hint.`);
     });
-    get('board').setAttribute('aria-label', `${graph.name}. ${countBits(game.lights)} of ${graph.size} lights on.`);
     get('status').textContent = game.solved
       ? book.allCompleted ? `All ${book.total.toLocaleString('en')} ${LIGHTS_OUT_LEVELS[book.difficulty].name} puzzles complete! Choose a number to replay.`
         : `Solved in ${game.moves} ${game.moves === 1 ? 'press' : 'presses'}.${game.moves === puzzle.minimum ? ' A shortest route!' : ` Can you find the ${puzzle.minimum}-press route?`}`

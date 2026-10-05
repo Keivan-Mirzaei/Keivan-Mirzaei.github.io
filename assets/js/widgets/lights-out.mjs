@@ -1,38 +1,28 @@
 import { createWidgetHistory } from '../lib/widget-history.mjs';
+import { initializeWidgetPanels } from '../lib/widget-panels.mjs';
+import { BOOK_GRAPHS } from '../lib/lights-out-book-graphs.mjs';
+import { drawLightsOutBoard, lightsOutNeighbor } from '../lib/lights-out-view.mjs';
 import { BOARDS, vertices, countBits, parity, pressEffect, solvePresses, samplePuzzle, complementProof } from '../lib/lights-out-math.mjs';
 
 const parityWord = value => value % 2 ? 'odd' : 'even';
 const labels = (mask, graph) => vertices(mask, graph.size).map(i => i + 1).join(', ') || 'none';
 const pressLabel = mask => `${countBits(mask)} ${countBits(mask) === 1 ? 'press' : 'presses'}`;
 
-function drawBoard(holder, graph, lights, { interactive = false, order = [], next = -1, omitted = -1, pressed = 0, editing = false, numbered = true } = {}) {
-  const focused = holder.contains(document.activeElement) ? document.activeElement.dataset.loLight : undefined;
-  holder.classList.toggle('lo-grid', Boolean(graph.side));
-  holder.classList.toggle('lo-graph', !graph.side);
-  holder.dataset.loSide = graph.side || '';
-  holder.style.aspectRatio = !graph.side && graph.positions.every(([, y]) => Math.abs(y - .5) < .001) ? '3.5' : '';
-  holder.setAttribute('role', interactive ? 'group' : 'img');
-  holder.setAttribute('aria-label', `${graph.name}. Lights on: ${labels(lights, graph)}.${interactive ? '' : ` Lights pressed: ${labels(pressed, graph)}.`}`);
-  const edges = graph.side ? '' : `<svg class="lo-edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${graph.edges.map(([a, b]) => {
-    const [ax, ay] = graph.positions[a], [bx, by] = graph.positions[b];
-    return `<line class="lo-edge${a === omitted || b === omitted ? ' lo-removed-edge' : ''}" x1="${ax * 100}" y1="${ay * 100}" x2="${bx * 100}" y2="${by * 100}"/>`;
-  }).join('')}</svg>`;
-  const cells = graph.positions.map(([x, y], i) => {
-    const on = Boolean(lights & (1 << i));
-    const step = order.indexOf(i);
-    const planned = step >= 0;
-    const tag = interactive ? 'button' : 'span';
-    const attributes = interactive ? `type="button" data-lo-light="${i}" aria-pressed="${on}" aria-label="Light ${i + 1}, ${on ? 'on' : 'off'}. ${editing ? 'Change this starting light.' : `Press to flip lights ${labels(graph.neighbors[i] | (1 << i), graph)}.`}${planned ? ` Solution step ${step + 1}.` : ''}"` : 'aria-hidden="true"';
-    return `<${tag} ${attributes} class="lo-light${on ? ' is-on' : ''}${planned || (pressed & (1 << i)) ? ' is-plan' : ''}${i === next ? ' is-next' : ''}${i === omitted ? ' is-omitted' : ''}" style="left:${x * 100}%;top:${y * 100}%;${graph.side ? `--lo-cell:${100 / graph.side}%` : ''}">${numbered ? `<span class="lo-number">${i + 1}</span>` : ''}<i class="lo-pip" aria-hidden="true"></i>${planned ? `<span class="lo-step" aria-hidden="true">${step + 1}</span>` : ''}</${tag}>`;
-  }).join('');
-  holder.innerHTML = edges + cells;
-  if (focused !== undefined) holder.querySelector(`[data-lo-light="${focused}"]`)?.focus({ preventScroll: true });
-}
+export const EXPLORATION_BOARDS = {
+  'path-6': BOOK_GRAPHS['path-6'],
+  'loop-7': BOOK_GRAPHS['loop-7'],
+  'branches-7-0': BOOK_GRAPHS['branches-7-0'],
+  'network-8-1': BOOK_GRAPHS['network-8-1'],
+  ...BOARDS,
+};
 
-for (const game of document.querySelectorAll('[data-lights-out]')) {
+export function initializeLightsOutExploration(game, { random = Math.random } = {}) {
   const get = name => game.querySelector(`[data-lo-${name}]`);
-  let key = 'grid-3', graph = BOARDS[key];
-  let start = pressEffect(graph, (1 << 0) | (1 << 2) | (1 << 4));
+  const events = new AbortController();
+  const listen = (element, type, handler, options = {}) => element.addEventListener(type, handler, { ...options, signal: events.signal });
+  const disposePanels = initializeWidgetPanels(game);
+  let key = 'path-6', graph = EXPLORATION_BOARDS[key];
+  let start = pressEffect(graph, (1 << 0) | (1 << 3));
   let lights = start, goal = 'off', moves = [], editing = false, showing = false, plan = null;
   let baseline = solvePresses(graph, start);
   const target = () => goal === 'off' ? 0 : start ^ graph.all;
@@ -40,8 +30,9 @@ for (const game of document.querySelectorAll('[data-lights-out]')) {
   const history = createWidgetHistory(
     () => ({ key, start, lights, goal, moves, editing, plan }),
     state => {
-      ({ key, start, lights, goal, moves, editing, plan } = state); graph = BOARDS[key];
+      ({ key, start, lights, goal, moves, editing, plan } = state); graph = EXPLORATION_BOARDS[key];
       baseline = solvePresses(graph, start ^ target());
+      if (editing || !baseline.solutions.length) hideSolution();
       if (showing && !plan) makePlan(); render();
     },
     (canUndo, canRedo) => { get('undo').disabled = !canUndo; get('redo').disabled = !canRedo; }
@@ -49,8 +40,11 @@ for (const game of document.querySelectorAll('[data-lights-out]')) {
   // Capture before the existing mathematical handler; commit after it finishes.
   function record(element, type) {
     let before;
-    element.addEventListener(type, () => { before = history.capture(); }, { capture: true });
-    element.addEventListener(type, () => { history.commit(before); });
+    listen(element, type, () => { before = history.capture(); }, { capture: true });
+    listen(element, type, () => {
+      history.commit(before);
+      if (lights === target() && !editing && history.canUndo) get('undo').focus({ preventScroll: true });
+    });
   }
 
   function makePlan(index = 0) {
@@ -60,10 +54,12 @@ for (const game of document.querySelectorAll('[data-lights-out]')) {
   }
 
   function highlight(vertex = -1) {
+    if (lights === target() && !editing) vertex = -1;
     const affected = vertex < 0 ? 0 : editing ? 1 << vertex : graph.neighbors[vertex] | (1 << vertex);
-    get('play').querySelectorAll('[data-lo-light]').forEach(button => {
-      button.classList.toggle('is-affected', Boolean(affected & (1 << Number(button.dataset.loLight))));
+    get('play').querySelectorAll('[data-light]').forEach(button => {
+      button.classList.toggle('is-preview', Boolean(affected & (1 << Number(button.dataset.light))));
     });
+    get('play').querySelectorAll('[data-edge]').forEach(edge => edge.classList.toggle('is-preview', !editing && edge.dataset.edge.split(',').map(Number).includes(vertex)));
   }
 
   function render() {
@@ -75,19 +71,17 @@ for (const game of document.querySelectorAll('[data-lights-out]')) {
     get('count').textContent = `${moves.length} ${moves.length === 1 ? 'press' : 'presses'} · ${parityWord(moves.length)}`;
     get('instruction').textContent = editing ? 'Editing: clicking changes just one starting light. Turn off Edit starting lights to play.' : graph.side ? 'Press a light to flip it and its neighbors above, below, left, and right. Hover or focus to preview a move.' : 'Press a light to flip it and every light joined to it by an edge. Hover or focus to preview a move.';
     get('target-region').hidden = goal !== 'complement';
-    if (goal === 'complement') drawBoard(get('target'), graph, target());
+    if (goal === 'complement') drawLightsOutBoard(get('target'), graph, target(), { interactive: false, numbered: false });
     const remaining = showing && plan ? plan.order.slice(plan.index) : [];
-    drawBoard(get('play'), graph, lights, { interactive: true, order: remaining, next: remaining[0], editing, numbered: showing || editing });
+    drawLightsOutBoard(get('play'), graph, lights, { interactive: true, order: remaining, next: remaining[0], editing, numbered: showing || editing || get('numbers').checked, solved: solved && !editing });
     game.querySelector('#lo-game-title').textContent = goal === 'off' ? 'Can you turn them all off?' : 'Can you flip every starting light?';
-    get('show').textContent = showing ? 'Hide solution' : 'Show solution';
+    get('show-label').textContent = showing ? 'Hide solution' : 'Show solution';
     get('show').disabled = editing || !analysis.solutions.length;
-    get('edit').setAttribute('aria-checked', String(editing));
-    get('show').setAttribute('aria-expanded', String(showing));
+    get('edit').checked = editing;
     game.dataset.complete = String(solved && !editing);
     get('undo').disabled = !history.canUndo;
     get('redo').disabled = !history.canRedo;
     get('restart').disabled = editing;
-    get('solution').hidden = !showing || !plan;
     get('plan-key').hidden = !showing || !plan || !remaining.length;
     if (showing && plan) {
       const mask = plan.solutions[plan.choice];
@@ -113,7 +107,8 @@ for (const game of document.querySelectorAll('[data-lights-out]')) {
   }
 
   function reset(nextStart = start) {
-    start = nextStart; lights = start; moves = []; plan = null; showing = false; editing = false;
+    start = nextStart; lights = start; moves = []; plan = null; editing = false;
+    hideSolution();
     baseline = solvePresses(graph, start ^ target());
     render();
   }
@@ -124,54 +119,72 @@ for (const game of document.querySelectorAll('[data-lights-out]')) {
       baseline = solvePresses(graph, start ^ target());
     } else {
       lights ^= pressEffect(graph, 1 << vertex); moves.push(vertex);
-      if (!partOfPlan && showing) makePlan();
+      if (!partOfPlan) { plan = null; if (showing) makePlan(); }
     }
   }
 
-  get('play').addEventListener('click', event => {
-    const button = event.target.closest('[data-lo-light]');
-    if (!button) return;
-    press(Number(button.dataset.loLight)); render();
+  listen(get('play'), 'click', event => {
+    const button = event.target.closest('[data-light]');
+    if (!button || button.disabled) return;
+    press(Number(button.dataset.light)); render();
   });
-  for (const eventName of ['pointerover', 'focusin']) get('play').addEventListener(eventName, event => {
-    const button = event.target.closest('[data-lo-light]');
-    if (button) highlight(Number(button.dataset.loLight));
+  for (const eventName of ['pointerover', 'focusin']) listen(get('play'), eventName, event => {
+    const button = event.target.closest('[data-light]');
+    if (button) {
+      if (eventName === 'focusin') get('play').querySelectorAll('[data-light]').forEach(light => { light.tabIndex = light === button ? 0 : -1; });
+      highlight(Number(button.dataset.light));
+    }
   });
-  get('play').addEventListener('pointerleave', () => highlight());
-  get('play').addEventListener('focusout', event => { if (!get('play').contains(event.relatedTarget)) highlight(); });
-  get('play').addEventListener('keydown', event => {
-    const button = event.target.closest('[data-lo-light]');
-    const directions = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
-    if (!button || !directions[event.key]) return;
+  listen(get('play'), 'pointerleave', () => highlight());
+  listen(get('play'), 'focusout', event => { if (!get('play').contains(event.relatedTarget)) highlight(); });
+  listen(get('play'), 'keydown', event => {
+    const button = event.target.closest('[data-light]');
+    if (!button || !event.key.startsWith('Arrow') || event.altKey || event.ctrlKey || event.metaKey) return;
     event.preventDefault();
-    const current = Number(button.dataset.loLight), [x, y] = graph.positions[current], [dx, dy] = directions[event.key];
-    const options = graph.positions.map(([px, py], i) => ({ i, along: (px - x) * dx + (py - y) * dy, across: Math.abs((px - x) * dy - (py - y) * dx) })).filter(point => point.along > .01).sort((a, b) => (a.along + 4 * a.across) - (b.along + 4 * b.across));
-    if (options.length) get('play').querySelector(`[data-lo-light="${options[0].i}"]`)?.focus();
+    const next = lightsOutNeighbor(graph, Number(button.dataset.light), event.key);
+    if (next >= 0) get('play').querySelector(`[data-light="${next}"]`)?.focus();
   });
-  get('board').addEventListener('change', event => { key = event.target.value; graph = BOARDS[key]; reset(samplePuzzle(graph)); });
-  get('goal').addEventListener('change', event => { goal = event.target.value; reset(); });
-  get('new').addEventListener('click', () => reset(samplePuzzle(graph)));
-  get('restart').addEventListener('click', () => reset());
-  get('undo').addEventListener('click', () => history.undo());
-  get('redo').addEventListener('click', () => history.redo());
-  get('show').addEventListener('click', () => { showing = !showing; if (showing) makePlan(); render(); });
-  get('next').addEventListener('click', () => { if (!plan || plan.index >= plan.order.length) return; press(plan.order[plan.index++], true); render(); });
-  get('finish').addEventListener('click', () => { if (!plan) return; while (plan.index < plan.order.length) press(plan.order[plan.index++], true); render(); });
-  get('alternative').addEventListener('click', () => { if (!plan || plan.index) return; makePlan(plan.choice + 1); render(); });
-  get('edit').addEventListener('click', () => {
-    editing = !editing; showing = false; plan = null; moves = []; start = lights;
+  function syncPanels() {
+    const wasShowing = showing;
+    showing = !get('solution').hidden;
+    if (showing && !wasShowing) makePlan();
+    render();
+  }
+  function hideSolution() {
+    if (!get('solution').hidden) { get('show').disabled = false; get('show').click(); }
+    showing = false;
+  }
+  game.querySelectorAll('[data-widget-panel-trigger]').forEach(trigger => listen(trigger, 'click', syncPanels));
+  listen(game.ownerDocument, 'keydown', event => { if (event.key === 'Escape') syncPanels(); });
+  listen(get('board'), 'change', event => { key = event.target.value; graph = EXPLORATION_BOARDS[key]; reset(samplePuzzle(graph, random)); });
+  listen(get('goal'), 'change', event => { goal = event.target.value; reset(); });
+  listen(get('new'), 'click', () => reset(samplePuzzle(graph, random)));
+  listen(get('restart'), 'click', () => reset());
+  listen(get('undo'), 'click', () => history.undo());
+  listen(get('redo'), 'click', () => history.redo());
+  listen(get('next'), 'click', () => { if (!plan || plan.index >= plan.order.length) return; press(plan.order[plan.index++], true); render(); });
+  listen(get('finish'), 'click', () => { if (!plan) return; while (plan.index < plan.order.length) press(plan.order[plan.index++], true); render(); });
+  listen(get('alternative'), 'click', () => { if (!plan || plan.index) return; makePlan(plan.choice + 1); render(); });
+  listen(get('numbers'), 'change', render);
+  listen(get('edit'), 'change', () => {
+    editing = get('edit').checked; plan = null; moves = []; start = lights;
+    hideSolution();
     baseline = solvePresses(graph, start ^ target()); render();
   });
-  get('impossible').addEventListener('click', () => { key = 'pair'; graph = BOARDS[key]; goal = 'off'; reset(1); });
-  game.querySelectorAll('button, select').forEach(control => { control.disabled = false; });
+  listen(get('impossible'), 'click', () => { key = 'pair'; graph = EXPLORATION_BOARDS[key]; goal = 'off'; reset(1); });
+  game.querySelectorAll('button, select, input').forEach(control => { control.disabled = false; });
   record(get('play'), 'click');
-  for (const name of ['new','restart','next','finish','edit','impossible']) record(get(name), 'click');
-  for (const name of ['board','goal']) record(get(name), 'change');
+  for (const name of ['new','restart','next','finish','impossible']) record(get(name), 'click');
+  for (const name of ['board','goal','edit']) record(get(name), 'change');
   render();
+  return { read: () => ({ key, start, lights, goal, moves: moves.slice(), editing, showing, plan: structuredClone(plan) }), destroy() { disposePanels(); events.abort(); } };
 }
 
-for (const proofWidget of document.querySelectorAll('[data-lights-out-proof]')) {
+export function initializeLightsOutProof(proofWidget) {
   const get = name => proofWidget.querySelector(`[data-lo-proof-${name}]`);
+  const events = new AbortController();
+  const listen = (element, type, handler) => element.addEventListener(type, handler, { signal: events.signal });
+  const disposePanels = initializeWidgetPanels(proofWidget);
   let step = 0, graph = BOARDS['path-4'], slides = [];
 
   function build() {
@@ -187,7 +200,7 @@ for (const proofWidget of document.querySelectorAll('[data-lights-out-proof]')) 
       const odd = proof.oddVertices.reduce((mask, i) => mask | (1 << i), 0);
       slides.push({ lights: initial ^ odd, pressed: proof.correction,
         text: `None of the trials flipped its omitted light. The odd-degree vertices are ${labels(odd, graph)}. Pair them and combine the corresponding trials: repeated toggles cancel. Presses ${labels(proof.correction, graph)} flip exactly these odd-degree vertices.` });
-      slides.push({ lights: initial ^ graph.all, pressed: graph.all,
+      slides.push({ lights: initial ^ graph.all, pressed: proof.presses,
         text: `Now press every vertex once. A vertex of degree d is toggled d + 1 times. The earlier correction makes the total odd at every vertex, so every starting light flips. Cancel duplicate presses: the final press set is ${labels(proof.presses, graph)} (${pressLabel(proof.presses)}).` });
     }
     step = 0;
@@ -196,15 +209,22 @@ for (const proofWidget of document.querySelectorAll('[data-lights-out-proof]')) 
 
   function render() {
     const slide = slides[step];
-    drawBoard(get('board'), graph, slide.lights, slide);
+    drawLightsOutBoard(get('board'), graph, slide.lights, { ...slide, interactive: false });
+    proofWidget.dataset.complete = String(step === slides.length - 1);
     get('count').textContent = `${step + 1} / ${slides.length}`;
     get('detail').textContent = slide.text;
     get('back').disabled = step === 0;
     get('next').disabled = step === slides.length - 1;
   }
   get('graph').disabled = false;
-  get('graph').addEventListener('change', event => { graph = BOARDS[event.target.value]; build(); });
-  get('back').addEventListener('click', () => { if (step > 0) step--; render(); });
-  get('next').addEventListener('click', () => { if (step < slides.length - 1) step++; render(); });
+  listen(get('graph'), 'change', event => { graph = BOARDS[event.target.value]; build(); });
+  listen(get('back'), 'click', () => { if (step > 0) step--; render(); });
+  listen(get('next'), 'click', () => { if (step < slides.length - 1) step++; render(); });
   build();
+  return { read: () => ({ step, size: graph.size, slide: structuredClone(slides[step]), total: slides.length }), destroy() { disposePanels(); events.abort(); } };
+}
+
+if (typeof document !== 'undefined') {
+  document.querySelectorAll('[data-lights-out]').forEach(game => initializeLightsOutExploration(game));
+  document.querySelectorAll('[data-lights-out-proof]').forEach(widget => initializeLightsOutProof(widget));
 }
