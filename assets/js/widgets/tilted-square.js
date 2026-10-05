@@ -1,4 +1,3 @@
-import { bindPanelHistory } from '../lib/panel-history.mjs';
 /* Translate four congruent triangles to turn the tilted square into a² + b². */
 (() => {
   const root = document.getElementById('the-tilted-square');
@@ -6,6 +5,7 @@ import { bindPanelHistory } from '../lib/panel-history.mjs';
   const svg = root.querySelector('#ts-diagram');
   const figure = root.querySelector('.ts-figure');
   const button = root.querySelector('#ts-reveal');
+  const buttonLabel = button.querySelector('.ts-word');
   const note = root.querySelector('#ts-note');
   const pieces = Array.from({ length: 4 }, (_, index) => root.querySelector(`#ts-piece-${index}`));
   let solved = false;
@@ -21,9 +21,8 @@ import { bindPanelHistory } from '../lib/panel-history.mjs';
     return vertices.map(([x, y]) => `${x},${y}`).join(' ');
   }
 
-  function setButtonWord() {
-    button.dataset.word = solved ? 'obvious' : 'serious';
-    button.setAttribute('aria-label', solved ? 'Obvious! Show puzzle' : 'Serious? Show solution');
+  function setButtonLabel() {
+    buttonLabel.textContent = solved ? 'Problem' : 'Solution';
     button.setAttribute('aria-pressed', String(solved));
   }
 
@@ -41,7 +40,7 @@ import { bindPanelHistory } from '../lib/panel-history.mjs';
     root.dataset.phase = solved ? 'solved' : 'puzzle';
     button.hidden = false;
     button.disabled = false;
-    setButtonWord();
+    setButtonLabel();
     note.textContent = solved ? 'Same four triangles. Same outer square. Shaded area: a² + b².' : 'Four congruent right triangles. Two marked lengths.';
     svg.setAttribute('aria-label', solved ? 'The same four triangles now leave two shaded squares, of areas a squared and b squared' : 'Four congruent right triangles with legs a and b surround a tilted shaded square');
   }
@@ -93,19 +92,12 @@ import { bindPanelHistory } from '../lib/panel-history.mjs';
     showFinalState();
   }
 
-  function restoreArrangement(value) {
-    clearTimeout(motionTimer); solved = value; placePieces(); showFinalState();
-  }
-  const history = bindPanelHistory(root, {
-    read: () => solved, restore: restoreArrangement, reset: () => restoreArrangement(false)
-  });
   button.addEventListener('click', () => {
-    history.remember();
     if (!geometry) return;
     solved = !solved;
     button.disabled = true;
     root.dataset.phase = 'moving';
-    setButtonWord();
+    setButtonLabel();
     note.textContent = 'Rearranging the same four triangles…';
     placePieces();
     clearTimeout(motionTimer);

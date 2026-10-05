@@ -10,10 +10,8 @@ widgets: [tilted-square]
   <section class="hero" aria-labelledby="welcome">
     <div class="hero-copy">
       <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Mathematics &amp; other curiosities</p>
-      <h1 id="welcome">A place for<br><em>curious thinking.</em></h1>
-      <p>Explore mathematical ideas through problems, proofs, code, and experiments. Follow a question, test a pattern, and see where curiosity leads.</p>
-      <a class="primary-link" href="{{ '/notes/' | relative_url }}">Explore the notebook {% include icon.html name='arrow' %}</a>
-      <a class="quiet-link" href="{{ '/about/' | relative_url }}">About the notebook ↗</a>
+      <h1 id="welcome">Curiosity is<br><em>the new ingenuity.</em></h1>
+      <p><em>When answers are abundant, the creative edge is knowing what to ask—and wanting to discover more.</em></p>
     </div>
     {% include tilted-square.html %}
   </section>
@@ -41,9 +39,10 @@ widgets: [tilted-square]
   <section class="recent-section" aria-labelledby="recent-title">
     <div class="section-heading"><h2 id="recent-title">From the notebook</h2><a class="text-link" href="{{ '/notes/' | relative_url }}">View all posts <span aria-hidden="true">↗</span></a></div>
     <div class="note-list">
-      {% for post in site.posts limit:3 %}
-        {% include note.html post=post %}
-      {% endfor %}
+      {% assign latest_problem = site.posts | where: 'format', 'problem' | first %}
+      {% assign latest_exploration = site.posts | where: 'format', 'exploration' | first %}
+      {% if latest_problem %}{% include note.html post=latest_problem %}{% endif %}
+      {% if latest_exploration %}{% include note.html post=latest_exploration %}{% endif %}
     </div>
   </section>
   {% assign featured_research = site.research | where: 'featured', true | first %}

@@ -21,21 +21,14 @@
     </svg>
   </div>
   <div class="ts-controls">
-    <button id="ts-reveal" type="button" data-word="serious" aria-label="Serious? Show solution" aria-pressed="false" hidden>
-      <span class="ts-word" aria-hidden="true">
-        <span class="ts-letter" style="--ts-letter-delay: 220ms"><span class="ts-from">S</span><span class="ts-to">O</span></span>
-        <span class="ts-letter" style="--ts-letter-delay: 340ms"><span class="ts-from">e</span><span class="ts-to">b</span></span>
-        <span class="ts-letter" style="--ts-letter-delay: 460ms"><span class="ts-from">r</span><span class="ts-to">v</span></span>
-        <span class="ts-shared">ious</span>
-        <span class="ts-letter" style="--ts-letter-delay: 580ms"><span class="ts-from">?</span><span class="ts-to">!</span></span>
-      </span>
+    <button id="ts-reveal" type="button" aria-pressed="false" hidden>
+      <span class="ts-word">Solution</span>
     </button>
   </div>
-  {% include controls/panel.html help='<p>Show the solution to rearrange the same four triangles. Undo returns to the previous arrangement. Reset restores the tilted square.</p>' %}
   <p id="ts-note" aria-live="polite">Four congruent right triangles. Two marked lengths.</p>
   <noscript>
     <details class="ts-static-solution">
-      <summary>Obvious!</summary>
+      <summary>Solution</summary>
       <p>Slide the four triangles to leave a square of side a and another of side b. The same shaded area becomes a² + b².</p>
     </details>
   </noscript>

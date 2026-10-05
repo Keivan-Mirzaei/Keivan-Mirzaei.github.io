@@ -106,16 +106,10 @@ main:focus { outline: none; }
 .ts-controls button { min-height: 44px; padding: 9px 20px; border: 1px solid var(--green); border-radius: 4px; background: var(--paper); color: var(--green); }
 .ts-controls button:hover { background: var(--tint); }
 .ts-controls button:disabled { cursor: default; }
-.ts-word { display: flex; justify-content: center; font: 18px/1.4 var(--mono); }
-.ts-letter { display: inline-grid; width: 1ch; perspective: 140px; }
-.ts-letter > span { grid-area: 1 / 1; transform-origin: center; }
-.ts-to { opacity: 0; transform: translateY(.7em) rotateX(-80deg); }
-.ts-controls button[data-word="obvious"] .ts-from { opacity: 0; transform: translateY(-.7em) rotateX(80deg); }
-.ts-controls button[data-word="obvious"] .ts-to { opacity: 1; transform: translateY(0) rotateX(0); }
+.ts-word { display: flex; justify-content: center; min-width: 8ch; font: 18px/1.4 var(--mono); }
 #ts-note { min-height: 39px; margin: 0; color: var(--muted); font: 13px/1.5 var(--sans); }
 .ts-static-solution { margin-top: 16px; color: var(--green); font-size: 13px; }
 .ts-static-solution p { margin: 12px 0 0; }
-.ts-puzzle[data-phase="moving"] .ts-letter > span { transition: transform 600ms cubic-bezier(.45, 0, .2, 1), opacity 450ms ease; transition-delay: var(--ts-letter-delay); }
 .ts-puzzle[data-phase="moving"] .ts-piece,
 .ts-puzzle[data-phase="moving"] #ts-b-dimension { transition: transform 1.2s cubic-bezier(.45, 0, .2, 1); }
 .ts-puzzle[data-phase="moving"] .ts-question,
@@ -405,8 +399,7 @@ mark { color: var(--ink); background: #e1ebbd; border-radius: 2px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ts-puzzle[data-phase="moving"] .ts-piece,
-  .ts-puzzle[data-phase="moving"] #ts-b-dimension,
-  .ts-puzzle[data-phase="moving"] .ts-letter > span { transition: none; }
+  .ts-puzzle[data-phase="moving"] #ts-b-dimension { transition: none; }
 }
 @media print {
   .sidebar, .topbar, .site-footer, .back-link, .article-footer, .post-pagination, .skip-link { display: none !important; }
