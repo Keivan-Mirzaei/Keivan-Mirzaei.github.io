@@ -1,0 +1,14 @@
+- title: Posts
+  url: /notes/
+  icon: notebook
+  description: Problems to think about and explorations through mathematics, diagrams, code, and experiments.
+- title: Puzzles
+  url: /puzzles/
+  icon: puzzle
+  description: Games to play at your own pace. Slide a block, fit a tile, or find a path across Hex.
+  image: /assets/images/puzzle-thumbnails/maze.svg
+  image_alt: A square green maze with an entrance at the upper left and an exit at the lower right.
+- title: Learning modules
+  url: /learning/
+  icon: learning
+  description: Courses and topics explored in depth, with structured lessons, exercises, and interactive activities.

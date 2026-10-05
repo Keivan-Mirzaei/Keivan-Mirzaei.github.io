@@ -18,23 +18,15 @@ widgets: [tilted-square]
   <section class="subject-section" aria-labelledby="subjects-title">
     <div class="section-heading"><h2 id="subjects-title">Ways to explore</h2><span class="count-label">Follow a thread</span></div>
     <div class="subject-grid">
-      {% for format in site.data.formats %}
-      <a href="{{ format.url | relative_url }}" class="subject-card">
+      {% for section in site.data.home_sections %}
+      <a href="{{ section.url | relative_url }}" class="subject-card">
         <span class="subject-number">0{{ forloop.index }} /</span>
-        {% include icon.html name=format.icon %}
-        <h3>{{ format.title }} <span>↗</span></h3>
-        <p>{{ format.description }}</p>
+        {% include icon.html name=section.icon %}
+        <h3>{{ section.title }} <span aria-hidden="true">↗</span></h3>
+        <p>{{ section.description }}</p>
       </a>
       {% endfor %}
     </div>
-  </section>
-  <section class="home-puzzles" aria-labelledby="puzzles-title">
-    <div>
-      <p class="eyebrow">A little time to play</p>
-      <h2 id="puzzles-title">Puzzles, just for the fun of it.</h2>
-      <p>Pick a game and settle in. Slide a block, fit a tile, or find a path across Hex.</p>
-    </div>
-    <a class="primary-link" href="{{ '/puzzles/' | relative_url }}">Play a puzzle {% include icon.html name='arrow' %}</a>
   </section>
   <section class="recent-section" aria-labelledby="recent-title">
     <div class="section-heading"><h2 id="recent-title">Latest posts</h2><a class="text-link" href="{{ '/notes/' | relative_url }}">View all posts <span aria-hidden="true">↗</span></a></div>
@@ -44,6 +36,18 @@ widgets: [tilted-square]
       {% if latest_problem %}{% include note.html post=latest_problem %}{% endif %}
       {% if latest_exploration %}{% include note.html post=latest_exploration %}{% endif %}
     </div>
+  </section>
+  <section class="home-puzzles" aria-labelledby="puzzles-title">
+    {% assign puzzle_thumbnail = site.data.home_sections | where: 'url', '/puzzles/' | first %}
+    <a class="home-puzzles-thumbnail" href="{{ '/puzzles/' | relative_url }}" aria-label="Browse puzzles">
+      {% include content-logo.html item=puzzle_thumbnail kind='puzzle' decorative=true %}
+    </a>
+    <div class="home-puzzles-copy">
+      <p class="eyebrow">A little time to play</p>
+      <h2 id="puzzles-title">Puzzles, just for the fun of it.</h2>
+      <p>Pick a game and settle in. Slide a block, fit a tile, or find a path across Hex.</p>
+    </div>
+    <a class="primary-link" href="{{ '/puzzles/' | relative_url }}">Play a puzzle {% include icon.html name='arrow' %}</a>
   </section>
   {% assign featured_research = site.research | where: 'featured', true | first %}
   {% if featured_research %}

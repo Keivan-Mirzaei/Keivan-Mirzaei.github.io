@@ -1,6 +1,6 @@
 # Content logo roadmap
 
-**Status:** The exploration standard and woven-loop problem family were agreed with Keivan on 5 October 2026. This roadmap brings problems, explorations, and puzzles under one visual standard. The problem family starts with a circle, retains the green accent, and matches exploration logo sizes. Its difficulty code stays unlabelled on the website.
+**Status:** The exploration standard and woven-loop problem family were agreed with Keivan on 5 October 2026. This roadmap brings problems, explorations, and puzzles under one visual standard. The problem family starts with a circle, retains the green accent, and matches exploration logo sizes. At Keivan's request, the About page explains how the marks suggest relative difficulty; individual problems keep their marks unlabelled.
 
 ## Purpose of each family
 
@@ -48,7 +48,7 @@ Puzzle logos retain the catalogue's existing card placement: artwork up to 300 p
 
 These are broad editorial judgments relative to this collection and the problem's assumed background. Judge the work needed to find a solution, not just how short the finished proof is. Prerequisites and length alone do not determine the value. Reassess when a problem or its expected audience changes.
 
-**Keep the visual code implicit.** Do not add difficulty words, numbers, a legend, explanatory captions, rating stars, decoding tooltips, or difficulty attributes to the public interface. Image alternatives describe the shape without naming its grade. This table is authoring material; `docs/` is excluded from publication.
+**Keep individual problem marks unlabelled.** Do not add difficulty words, numbers, rating stars, decoding tooltips, or difficulty attributes to problem lists and headings. The About page explains the circle-to-woven-loop progression with a row of the four shared marks and notes that difficulty depends on the reader's background. Image alternatives on individual problems describe the shape without naming its grade. This table is authoring material; `docs/` is excluded from publication.
 
 ### Reuse and authoring
 
@@ -153,12 +153,12 @@ Lists render these repeated marks with an empty alternative and `aria-hidden="tr
 
 ## Roadmap and review
 
-1. **Agreed:** Preserve the exploration standard and select the circle/woven-loop family for problems. Keep the green accent, equal post-logo sizes, and implicit difficulty code.
+1. **Agreed:** Preserve the exploration standard and select the circle/woven-loop family for problems. Keep the green accent, equal post-logo sizes, and unlabelled marks on individual problems; explain their meaning on About.
 2. **Implemented locally:** Add the common include, four reusable problem assets, registry, generator, and internal choices for all nine existing problems. Keep puzzle and exploration artwork faithful to their existing approved designs.
 3. **Verified locally:** Regenerate reproducibly, parse every new SVG, inspect the crossings and smallest display sizes, build the site, check links and alternatives, and inspect representative list and title layouts on desktop and phones. Repeat relevant checks when the sources change.
 4. **Maintain:** Choose an existing problem grade when publishing a new question. Create bespoke exploration or puzzle art only when its subject requires it. Revisit the concept or assignment when the content changes.
 5. **Extend deliberately:** Discuss a new family, additional difficulty level, or change to the visual code as a design decision. Routine authoring and regeneration follow this roadmap without a new approval step.
 
-A review should establish that the logo communicates its family's intended purpose; the mathematics or game geometry is correct; the artwork remains legible and balanced at its actual sizes; metadata points to one reusable asset; the SVG loads independently; and the public problem interface contains no rating legend. Run the authoring workflow and image-description checks after shared template changes. Run game or mathematical tests only when their underlying code changes.
+A review should establish that the logo communicates its family's intended purpose; the mathematics or game geometry is correct; the artwork remains legible and balanced at its actual sizes; metadata points to one reusable asset; the SVG loads independently; and individual problem lists and headings keep their marks unlabelled. Run the authoring workflow and image-description checks after shared template changes. Run game or mathematical tests only when their underlying code changes.
 
 **Verification, 5 October 2026:** The strict build, production asset optimization, and 53-page site check passed for both the normal URL and a `/logo-review` base URL. The authoring workflow covers all four choices, unset choices, invalid options, reused assets, and decorative list alternatives; it and the image-description checks passed. All four generated assets parsed, matched the approved prototype geometry exactly, and regenerated byte-for-byte. All nine problem headings and list entries, six exploration entries, and five puzzle cards resolved correctly. The desktop and phone lists rendered at 112 and 96 px without overflow; a long article heading fitted at 320 px with an 80 px mark and closed disclosures.
