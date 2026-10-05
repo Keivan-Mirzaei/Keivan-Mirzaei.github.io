@@ -1,6 +1,6 @@
 # Floor tiling widget design sheet
 
-**Status:** Reviewed and approved for publication on 4 October 2026, including both tray layouts and puzzle-specific saving and difficulty resets.
+**Status:** Reviewed and published on 4 October 2026, including both tray layouts and puzzle-specific saving and difficulty resets. [Live puzzle](https://keivan-mirzaei.com/puzzles/tiling/).
 
 Follow the [widget roadmap](../widget-requirements.md) and the reviewed puzzle frame. This migration covers `/puzzles/tiling/`.
 
@@ -20,4 +20,4 @@ Follow the [widget roadmap](../widget-requirements.md) and the reviewed puzzle f
 - **Keyboard and phone:** Tap selection and placement are complete alternatives to dragging. The floor has one tab stop; arrows skip missing squares, Enter/Space select or place, Delete returns a selected tile. In the tray, Left/Right browses cards and scrolls the focused card into view. Horizontal touch gestures scroll the row; vertical drags place tiles. Escape clears a selection when no panel is open. Keep tray cards and controls at least 44 pixels. Scroll only the tray in row mode; the page and floor fit the viewport. Grid mode wraps cards. Seven-column Expert floors use the full available width on narrow phones, giving smaller floor cells. Respect reduced motion.
 - **Typesetting:** Exact counts and simple floor dimensions such as 4 × 4 use the interface font. No formula renderer is needed.
 - **Checks:** Solvability and unchanged catalogue IDs; legal/invalid/tap/drag placements; repeated copies; anchored dragging and cancellation; hint show/hide/use; completion and reversal; Reset/Shuffle/navigation histories; old/new saves; reset scope; keyboard focus; panels and layouts at phone widths and all four levels.
-- **Next step:** Publish the reviewed redesign with the scrolling row as the default and the compact grid available in Settings. Both layouts and the corrected tile boundaries are approved.
+- **Next step:** Continue with the requested Four equal regions puzzle, using this reviewed frame and progress behavior.

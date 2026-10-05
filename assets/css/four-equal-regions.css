@@ -1,0 +1,40 @@
+.fr-game { --fr-0: #347457; --fr-1: #b1643e; --fr-2: #4c7d99; --fr-3: #846b9c; }
+.fr-summary { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+.fr-counts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 0 0 14px; }
+.fr-count { display: flex; align-items: center; gap: 7px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.fr-count output { margin-left: auto; color: var(--muted); }
+.fr-count output.is-equal { color: var(--green); font-weight: 500; }
+.fr-swatch { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: var(--region-color); }
+.fr-stage { position: relative; width: 100%; height: clamp(260px, 60vw, 350px); overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #f7f8f3; transition: background-color .2s, border-color .2s; }
+.fr-board { display: block; width: 100%; height: 100%; }
+.fr-area { fill: var(--region-color); opacity: .045; }
+.fr-dividing-line { fill: none; stroke: var(--green); stroke-width: 1.6; }
+.fr-line-hit { fill: none; stroke: transparent; stroke-width: 28; pointer-events: stroke; cursor: grab; touch-action: none; }
+.fr-point { fill: var(--region-color); stroke: var(--paper); stroke-width: 1.7; }
+.fr-point-boundary { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
+.fr-region-label { fill: var(--muted); font: 500 13px var(--sans); text-anchor: middle; dominant-baseline: middle; paint-order: stroke; stroke: #f7f8f3; stroke-width: 6px; stroke-linejoin: round; }
+.fr-crossing { position: absolute; width: 44px; height: 44px; transform: translate(-50%, -50%); padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: grab; touch-action: none; }
+.fr-stage.is-dragging, .fr-stage.is-dragging .fr-crossing, .fr-stage.is-dragging .fr-line-hit { cursor: grabbing; }
+.fr-game.is-solved .fr-stage { background: #e1f2e5; border-color: #469562; box-shadow: inset 0 0 0 1px #469562; }
+.fr-game.is-solved .fr-area { opacity: 0; }
+.fr-game.is-solved .fr-region-label { stroke: #e1f2e5; }
+.fr-rotations { display: grid; gap: 6px; margin: 14px 0 8px; }
+.fr-rotations label::before { content: ''; display: inline-block; width: 18px; height: 0; margin: 0 7px 3px 0; border-top: 1.6px solid var(--green); }
+.fr-game:has([data-fr-independent]:not([hidden])) [data-fr-rotation-b-name]::before { border-top-style: dashed; }
+.fr-feedback { min-height: 44px; margin: 0 0 12px; padding: 7px 10px; border-radius: 6px; color: var(--muted); font-size: 13px; }
+.fr-game.is-solved .fr-feedback { background: var(--tint); color: var(--green); }
+.fr-game .fr-controls { display: grid; justify-content: center; gap: 8px; }
+.fr-control-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 380px) {
+  .fr-counts { gap: 8px; }
+  .fr-count { gap: 5px; }
+  .fr-control-row { gap: 6px; }
+  .fr-game .widget-controls .panel-button { font-size: 12px; padding-inline: 6px; gap: 4px; }
+  .fr-game .widget-controls .icon { width: 14px; height: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .fr-stage { transition: none; } }
+@media (forced-colors: active) {
+  .fr-dividing-line, .fr-point-boundary { stroke: CanvasText; }
+  .fr-point { fill: CanvasText; stroke: Canvas; }
+  .fr-game.is-solved .fr-stage { outline: 2px solid Highlight; }
+}

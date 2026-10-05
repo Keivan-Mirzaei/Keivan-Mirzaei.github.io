@@ -49,7 +49,7 @@ test('each puzzle starts enabled and changing another puzzle does not affect its
   assert.deepEqual(a.read(), { moves: 2 }); assert.equal(first.checkbox.checked, true);
   assert.equal(second.checkbox.checked, false);
   assert.equal(createPuzzleStorage('tiling', control(), env).read(), null);
-  for (const id of ['klotski', 'lights-out']) {
+  for (const id of ['klotski', 'lights-out', 'four-equal-regions']) {
     const root = control(), store = createPuzzleStorage(id, root, env);
     assert.equal(root.checkbox.checked, true); store.save({ moves: 3 }); assert.deepEqual(store.read(), { moves: 3 });
   }
@@ -65,7 +65,7 @@ test('another tab of the same puzzle observes its saving preference', () => {
 
 test('the retired global preference does not disable new puzzle-specific defaults or delete old boards', () => {
   const env = environment(); env.document.cookie = 'ao_puzzles=0';
-  for (const id of ['hex', 'klotski', 'tiling', 'lights-out']) {
+  for (const id of ['hex', 'klotski', 'tiling', 'lights-out', 'four-equal-regions']) {
     env.localStorage.setItem(storageKey(id), '{"moves":3}');
     const root = control(), store = createPuzzleStorage(id, root, env);
     assert.equal(root.checkbox.checked, true); assert.deepEqual(store.read(), { moves: 3 });

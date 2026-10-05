@@ -22,3 +22,9 @@
   image: /assets/images/puzzle-thumbnails/tiling.svg
   image_alt: A floor grid with missing squares beside a set of coloured tiles to fit together.
   players: Four difficulty levels, 1,000 puzzles each
+- title: Four equal regions
+  url: /puzzles/four-equal-regions/
+  description: Two crossing lines, four regions. Move and rotate the lines until each region contains the same number of points.
+  image: /assets/images/puzzle-thumbnails/four-equal-regions.svg
+  image_alt: Coloured points separated into four regions by a solid line and a dashed line.
+  players: A point-partition puzzle

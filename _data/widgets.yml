@@ -75,3 +75,7 @@ tiling:
   script: /assets/js/widgets/tiling.mjs
   selector: '[data-tiling-game]'
   styles: [widget-frame, tiling]
+four-equal-regions:
+  script: /assets/js/widgets/four-equal-regions.mjs
+  selector: '[data-four-equal-regions]'
+  styles: [widget-frame, four-equal-regions]

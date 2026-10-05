@@ -1,0 +1,55 @@
+<section class="fr-game widget-frame" data-four-equal-regions aria-label="Four equal regions game">
+  <div class="fr-summary"><span data-fr-goal>24 points · 6 per region</span></div>
+  <div class="fr-counts" role="group" aria-label="Region counts">
+    {% assign region_labels = 'A,B,C,D' | split: ',' %}
+    {% for label in region_labels %}
+    <div class="fr-count" style="--region-color: var(--fr-{{ forloop.index0 }})"><span class="fr-swatch" aria-hidden="true"></span><span>{{ label }}</span><output data-fr-count="{{ forloop.index0 }}" aria-label="Region {{ label }} count">—</output></div>
+    {% endfor %}
+  </div>
+  <div class="fr-stage" data-fr-stage>
+    <svg class="fr-board" data-fr-board role="img" aria-label="Points and two crossing lines"><image href="{{ '/assets/images/four-equal-regions-board.svg' | relative_url }}" width="100%" height="100%"/></svg>
+    <button class="fr-crossing" type="button" data-fr-crossing aria-label="Move both lines. Drag the crossing or use arrow keys; hold Shift for larger steps." disabled></button>
+  </div>
+  <div class="fr-rotations">
+    <div class="widget-slider-setting">
+      <div class="widget-slider-heading"><label data-fr-rotation-a-name>Rotation</label><output data-fr-angle-a>78.5°</output></div>
+      <input type="range" min="0" max="179.9" step="0.1" value="78.5" data-fr-rotation-a disabled>
+    </div>
+    <div class="widget-slider-setting" data-fr-independent hidden>
+      <div class="widget-slider-heading"><label data-fr-rotation-b-name>Dashed line</label><output data-fr-angle-b>168.5°</output></div>
+      <input type="range" min="0" max="179.9" step="0.1" value="168.5" data-fr-rotation-b disabled>
+    </div>
+  </div>
+  <p class="fr-feedback" data-fr-feedback role="status" aria-live="polite" aria-atomic="true">Drag the lines to place them; use the slider to rotate.</p>
+  <div class="widget-controls fr-controls" role="group" aria-label="Game controls">
+    <div class="fr-control-row">
+      <button class="panel-button" type="button" data-fr-undo aria-label="Undo action" disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
+      <button class="panel-button" type="button" data-fr-redo aria-label="Redo action" disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
+      <button class="panel-button" type="button" data-fr-reset aria-label="Reset lines" disabled>{% include icon.html name='restart' %}<span>Reset</span></button>
+      <button class="panel-button" type="button" data-fr-shuffle aria-label="Shuffle points" disabled>{% include icon.html name='shuffle' %}<span>Shuffle</span></button>
+    </div>
+    <div class="fr-control-row">
+      <button class="panel-button" type="button" data-widget-panel-trigger="settings" aria-expanded="false" disabled>{% include icon.html name='settings' %}<span>Settings</span></button>
+      <button class="panel-button" type="button" data-widget-panel-trigger="info" aria-expanded="false" disabled>{% include icon.html name='info' %}<span>Info</span></button>
+    </div>
+  </div>
+  <div class="widget-support-panel" data-widget-panel="settings" aria-label="Game settings" hidden>
+    <div class="widget-slider-setting">
+      <div class="widget-slider-heading"><label data-fr-n-name>Points per region · <i>n</i></label><output data-fr-n-label>6</output></div>
+      <input type="range" min="1" max="12" step="1" value="6" data-fr-n disabled>
+    </div>
+    <p>Each value of <i>n</i> keeps its own point set and progress.</p>
+    <label class="widget-switch"><span>Keep lines perpendicular</span><input type="checkbox" role="switch" data-fr-perpendicular checked disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
+    <label class="widget-switch"><span>Save progress</span><input type="checkbox" role="switch" data-puzzle-remember checked disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
+    <p class="widget-note">Saving applies only to Four equal regions on this device.</p>
+    {% include controls/reset-progress.html message='Clear the point set and history for <strong data-widget-progress-scope>n = 6</strong>? Other values of n, settings, and puzzles are kept.' %}
+  </div>
+  <div class="widget-support-panel" data-widget-panel="info" aria-label="About Four equal regions" hidden>
+    <p>Divide 4<i>n</i> points into four regions with exactly <i>n</i> points in each. A, B, C, and D match the colours in the counts above the field.</p>
+    <p>Drag a line to slide it; drag the crossing to move both. Use the rotation slider to turn the lines. The crossing also responds to arrow keys; hold Shift for larger steps.</p>
+    <p>Lines start perpendicular and rotate together. Turn off Keep lines perpendicular in Settings to rotate the solid and dashed lines separately. They stay at least 12° apart.</p>
+    <p>A point is counted by its centre. A centre on a line is unassigned until the line moves clear. All four counts must match, with no point on a line, to complete the puzzle.</p>
+    <p>Reset returns the lines to their starting arrangement for these points. Shuffle creates a new solvable point set. Both preserve settings and can be undone. The field turns green when you find an equal split.</p>
+  </div>
+  <noscript><p>This puzzle needs JavaScript. Enable it to move the lines and see the region counts.</p></noscript>
+</section>

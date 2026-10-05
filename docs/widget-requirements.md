@@ -162,22 +162,25 @@ The first website migration is **Hex**, covering its standalone puzzle and the s
 | Hex | Reviewed, approved, and published on 4 October 2026. | [Hex](widget-designs/hex.md) |
 | Klotski | Reviewed and published on 4 October 2026. | [Klotski](widget-designs/klotski.md) |
 | Lights Out | Reviewed and published on 4 October 2026 with refreshed thumbnails and Reset progress controls. | [Lights Out](widget-designs/lights-out.md) |
-| Floor tiling | Reviewed and approved for publication on 4 October 2026, with corrected tile boundaries and both tray layouts. | [Floor tiling](widget-designs/tiling.md) |
+| Floor tiling | Reviewed and published on 4 October 2026, with corrected tile boundaries and both tray layouts. | [Floor tiling](widget-designs/tiling.md) |
+| Four equal regions | Reviewed and published on 4 October 2026, with a puzzle-list thumbnail and separate progress for each n. | [Four equal regions](widget-designs/four-equal-regions.md) |
+
+The puzzle-specific saving preferences and selected-difficulty progress resets for all four existing puzzles were published on 4 October 2026. Four equal regions uses these same rules, treating each value of n as a separate progress level.
 
 ## 10. First prototype: four equal regions
 
 - **Stable ID:** `four-equal-regions`.
-- **Type:** Parameter explorer with a puzzle-like goal.
+- **Type:** Geometric partition puzzle; also usable as a parameter explorer.
 - **Purpose:** Place and rotate two crossing lines so that each of their four regions contains exactly n of the 4n points.
 - **Primary interaction:** Drag lines to place them and use rotation sliders below the point field. The crossing can move both lines together without a visible overlay. Provide keyboard alternatives.
 - **Necessary feedback:** Show each region's exact count and the target n. When all four counts equal n and no point is on a line, turn the field green and show an “Equal split” confirmation. Clear that effect if the partition changes. Treat points on a dividing line explicitly rather than silently assigning them to a region.
 - **Controls:** Undo, Redo, Reset, Shuffle, Settings, and Info are useful for this activity. Do not add playback or step controls.
-- **Settings:** Choose n from 1 to 12 with a slider. Use toggle switches for perpendicular lines and saving progress. Keep these occasional options outside the main interaction.
+- **Settings:** Choose n from 1 to 12 with a slider. Use toggle switches for perpendicular lines and saving progress. Keep these occasional options outside the main interaction. The website puzzle retains progress independently for each n, with puzzle-specific saving on by default and a scoped Reset progress control.
 - **Panels:** Settings and Info start closed, toggle closed with their own trigger or Escape, stay open during outside interaction and scrolling, and are mutually exclusive.
 - **History:** A drag is one action. Reset restores the starting line arrangement for the current point set; Shuffle creates another point set. Both preserve settings and can be undone.
 - **Appearance:** One font, concise numeric labels, a dominant point field, aligned controls, and restrained styling. Do not number the lines or place opaque handles over the points; distinguish independently controlled lines by their solid and dashed styles.
 - **Geometry for this prototype:** Start with perpendicular lines that rotate together; allow independent rotation in Settings. In independent mode, keep the lines at least 12° apart. The preferred default remains a design-review decision. Two parallel vertical lines cannot form four regions.
-- **Review scope:** Show and refine the prototype in conversation before deciding on website integration.
+- **Review scope:** The conversation prototype established the design. Keivan reviewed the standalone website puzzle and authorized publication on 4 October 2026.
 
 The first prototype is ready for design review. Mathematical checks cover 72 generated point sets across n = 1–12, exact equal partitions, boundary handling, and rotation invariance. Interaction checks cover dragging to a completed partition, slider and keyboard rotation, independent rotation, Undo/Redo, the completion colour appearing and clearing correctly, undoable Shuffle, panel dismissal, settings preservation, optional saving, and narrow-screen layouts.
 
