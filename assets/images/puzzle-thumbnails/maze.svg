@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="440" height="410" viewBox="0 0 440 410" role="img" aria-labelledby="maze-title maze-description">
   <title id="maze-title">Maze</title>
   <desc id="maze-description">A square green maze with an entrance at the upper left and an exit at the lower right.</desc>
-  <rect width="440" height="410" fill="#fcfcf9"/>
   <path fill="none" stroke="#285b46" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" d="M130 55H370V355M70 55V355H310 M70 115h60 M190 55v60 M130 115v60 M190 115v60 M190 175h60 M250 115v60 M310 115v60 M310 175h60 M130 175v60 M130 235h60 M250 175v60 M250 235h60 M130 295h60 M190 235v60 M190 295h60 M310 235v60"/>
 </svg>
