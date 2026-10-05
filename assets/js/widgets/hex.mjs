@@ -2,12 +2,14 @@ import { bindPanelHistory } from '../lib/panel-history.mjs';
 import { RED, BLUE, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs';
 import { searchBudget } from '../lib/hex-search-settings.mjs';
 import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
-import { restoreHex } from '../lib/hex-storage.mjs';
+import { restoreHex, HEX_HISTORY_LIMIT } from '../lib/hex-storage.mjs';
 import { setActionLabel } from '../lib/puzzle-controls.mjs';
 import { hexPoint as point, hexLayout as layout, hexCorner, hexGoal } from '../lib/hex-view.mjs';
+import { initializeWidgetPanels } from '../lib/widget-panels.mjs';
 
 const name = color => color === RED ? 'Red' : 'Blue';
 const gameGoal = color => `the two ${color === RED ? 'red' : 'blue'} sides`;
+let nextGameInstance = 0;
 
 function drawBoard(holder, cells, size, { playable = false, editing = false, path = [], last = -1, coast = null, step = 0, restoreFocus = true } = {}) {
   const focused = holder.contains(document.activeElement) ? document.activeElement.dataset.hexCell : undefined;
@@ -15,6 +17,7 @@ function drawBoard(holder, cells, size, { playable = false, editing = false, pat
   const geometry = coast?.geometry || hexGeometry(size), box = layout(geometry, Boolean(coast));
   holder.style.aspectRatio = `${box.width} / ${box.height}`;
   holder.style.setProperty('--hex-size', size);
+  if (playable) holder.style.setProperty('--hex-min-width', `${Math.ceil(box.width * 24 / Math.sqrt(3)) + 1}px`);
   holder.style.setProperty('--hex-cell-shape', 'polygon(50% 2%, 98% 26%, 98% 74%, 50% 98%, 2% 74%, 2% 26%)');
   const borders = geometry.edges.filter(e => e.faces[1] < 0 && e.faces[0] >= 0).map(e =>
     `<path class="hex-border hex-${e.faces[1] === -1 || e.faces[1] === -2 ? 'red' : 'blue'}" d="M${pair(geometry.points.get(e.from))}L${pair(geometry.points.get(e.to))}"/>`).join('');
@@ -46,12 +49,21 @@ function drawBoard(holder, cells, size, { playable = false, editing = false, pat
 export function initializeHexGame(game, storage = createPuzzleStorage('hex', game)) {
   const get = key => game.querySelector(`[data-hex-${key}]`);
   const orderControls = [...game.querySelectorAll('[data-hex-order]')];
-  let size = 5, human = RED, local = false, cells = Array(25).fill(0), toMove = RED;
-  let history = [], future = [], last = -1, busy = false, worker = null, generation = 0, boardFocus = -1, boardCursor = 0;
+  const resetButton = get('reset') || get('new');
+  const events = new AbortController();
+  const listen = (element, type, handler) => element?.addEventListener(type, handler, { signal: events.signal });
+  const disposePanels = initializeWidgetPanels(game, game.ownerDocument || document);
+  const sizeID = `hex-${++nextGameInstance}-size`;
+  get('size').id = sizeID;
+  get('size-name')?.setAttribute('for', sizeID);
+  get('size-label')?.setAttribute('for', sizeID);
+  let size = 5, human = RED, local = false, second = false, cells = Array(25).fill(0), toMove = RED;
+  let history = [], future = [], last = -1, busy = false, computerFailed = false, worker = null, generation = 0, boardFocus = -1, boardCursor = 0;
   const snapshot = () => ({ cells: cells.slice(), last, toMove });
-  const storedState = () => ({ size, human, local, ...snapshot(), history, future });
+  const storedState = () => ({ size, human, local, second, ...snapshot(), history, future });
   storage.setSnapshotProvider(storedState);
-  function cancel() { generation++; worker?.terminate(); worker = null; busy = false; }
+  function remember() { history.push(snapshot()); if (history.length > HEX_HISTORY_LIMIT) history.shift(); future = []; }
+  function cancel() { generation++; worker?.terminate(); worker = null; busy = false; computerFailed = false; }
   function showSize() {
     const label = get('size-label'), value = Number(get('size').value);
     if (label) label.textContent = `${value} × ${value}`;
@@ -72,7 +84,7 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
     if (boardCursor < 0 || !buttons[boardCursor] || buttons[boardCursor].disabled) boardCursor = buttons.findIndex(button => !button.disabled);
     buttons.forEach((button, index) => { button.tabIndex = index === boardCursor ? 0 : -1; });
     board.tabIndex = busy ? 0 : -1;
-    get('count').textContent = `${count} ${count === 1 ? 'stone' : 'stones'}`;
+    if (get('count')) get('count').textContent = `${count} ${count === 1 ? 'stone' : 'stones'}`;
     if (get('board-meta')) get('board-meta').textContent = `${size} × ${size}`;
     if (get('goal')) get('goal').textContent = local ? 'Connect the two sides of your colour' : `Connect your two ${name(human).toLowerCase()} sides`;
     for (const role of ['human', 'opponent']) {
@@ -89,10 +101,12 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
       : `You play ${human === RED ? 'first' : 'second'} as ${name(human)}: connect ${gameGoal(human)}. Choose an empty cell; stones stay put.`;
     get('undo').disabled = !history.length;
     if (get('redo')) get('redo').disabled = !future.length;
+    resetButton.disabled = count === 0 && !computerFailed;
+    game.setAttribute('data-hex-winner', String(win || 0));
     setActionLabel(get('undo'), local ? 'Undo move' : 'Undo your turn');
     setActionLabel(get('redo'), local ? 'Redo move' : 'Redo your turn');
     get('status').textContent = message || (win
-      ? `${local ? `${name(win)} wins!` : win === human ? 'You win!' : 'The computer wins.'}`
+      ? `${local ? `${name(win)} wins!` : win === human ? 'You win!' : 'The computer wins.'} ${name(win)} is connected.`
       : busy ? `${name(3 - human)} is thinking…`
       : local ? `${name(toMove)}’s turn.`
       : `Your turn · ${name(human)}.`);
@@ -111,7 +125,7 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
   function finish(move, token) {
     if (token !== generation) return;
     worker?.terminate(); worker = null; busy = false;
-    if (!Number.isInteger(move) || move < 0 || move >= cells.length || cells[move]) { render('The computer could not choose a move. Start a new game.'); return; }
+    if (!Number.isInteger(move) || move < 0 || move >= cells.length || cells[move]) { computerFailed = true; render('The computer could not choose a move. Reset to try again.'); return; }
     cells[move] = 3 - human; last = move; toMove = human; render();
   }
   async function fallback(token) {
@@ -146,29 +160,40 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
   }
   function newGame() {
     cancel(); size = Number(get('size').value);
-    const order = orderControls.find(control => control.type !== 'radio' || control.checked)?.value || String(RED);
+    second = get('second') ? get('second').checked : second;
+    const order = get('computer') ? !get('computer').checked ? 'local' : second ? String(BLUE) : String(RED)
+      : orderControls.find(control => control.type !== 'radio' || control.checked)?.value || String(RED);
     local = order === 'local'; human = local ? RED : Number(order);
+    if (!get('second')) second = human === BLUE;
+    if (get('second-setting')) get('second-setting').hidden = local;
     showSize();
     cells = Array(size * size).fill(0); history = []; future = []; last = -1; toMove = RED; computerTurn();
+  }
+  function resetGame() {
+    if (!cells.some(Boolean) && !computerFailed) return;
+    if (cells.some(Boolean)) remember();
+    cancel();
+    cells = Array(size * size).fill(0); last = -1; toMove = RED;
+    computerTurn();
   }
   function play(move) {
     if (busy || (!local && toMove !== human) || winner(cells, size)) return;
     if (!Number.isInteger(move) || move < 0 || move >= cells.length) return;
     if (cells[move]) { render('That cell is occupied. Choose an empty cell.'); return; }
-    history.push(snapshot()); future = [];
+    remember();
     cells[move] = toMove; last = move; toMove = 3 - toMove; computerTurn();
   }
-  get('board').addEventListener('click', event => {
+  listen(get('board'), 'click', event => {
     const button = event.target.closest('[data-hex-cell]');
     if (button) play(Number(button.dataset.hexCell));
   });
-  get('board').addEventListener('focusin', event => {
+  listen(get('board'), 'focusin', event => {
     const button = event.target.closest('[data-hex-cell]');
     if (!button) return;
     boardCursor = Number(button.dataset.hexCell);
     get('board').querySelectorAll('button').forEach(cell => { cell.tabIndex = cell === button ? 0 : -1; });
   });
-  get('board').addEventListener('keydown', event => {
+  listen(get('board'), 'keydown', event => {
     const button = event.target.closest('[data-hex-cell]');
     const delta = { ArrowLeft: [1, -1], ArrowRight: [-1, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] }[event.key];
     if (!button || !delta || event.altKey || event.ctrlKey || event.metaKey) return;
@@ -181,42 +206,38 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
       if (!next.disabled) { next.focus({ preventScroll: true }); next.scrollIntoView?.({ block: 'nearest', inline: 'nearest' }); break; }
     }
   });
-  get('new').addEventListener('click', newGame);
-  function closeSettings() {
-    const settings = get('settings');
-    if (!settings) return;
-    settings.open = false;
-    settings.querySelector('summary')?.focus();
-  }
-  get('settings-close')?.addEventListener('click', closeSettings);
-  get('settings')?.addEventListener('keydown', event => {
-    if (event.key === 'Escape') { event.preventDefault(); closeSettings(); }
-  });
-  get('size').addEventListener('input', showSize);
-  get('size').addEventListener('change', newGame);
-  orderControls.forEach(control => control.addEventListener('change', newGame));
+  listen(resetButton, 'click', resetGame);
+  listen(get('size'), 'input', showSize);
+  listen(get('size'), 'change', newGame);
+  listen(get('computer'), 'change', newGame);
+  listen(get('second'), 'change', newGame);
+  orderControls.forEach(control => listen(control, 'change', newGame));
   function undo() {
     if (!history.length) return;
     const fromUndo = document.activeElement === get('undo');
     future.push(snapshot()); cancel();
     const previous = history.pop(); cells = previous.cells; last = previous.last; toMove = previous.toMove;
-    render();
+    computerTurn();
     if (fromUndo && get('undo').disabled) [...get('board').querySelectorAll('button')].find(button => !button.disabled)?.focus({ preventScroll: true });
   }
   function redo() {
     if (!future.length) return;
     const fromRedo = document.activeElement === get('redo');
-    history.push(snapshot()); cancel();
+    history.push(snapshot()); if (history.length > HEX_HISTORY_LIMIT) history.shift(); cancel();
     const next = future.pop(); cells = next.cells; last = next.last; toMove = next.toMove;
     computerTurn();
     if (fromRedo && get('redo').disabled) (busy ? get('board') : [...get('board').querySelectorAll('button')].find(button => !button.disabled) || get('undo')).focus({ preventScroll: true });
   }
-  get('undo').addEventListener('click', undo);
-  get('redo')?.addEventListener('click', redo);
-  game.querySelectorAll('select, input, [data-hex-new]').forEach(control => { control.disabled = false; });
+  listen(get('undo'), 'click', undo);
+  listen(get('redo'), 'click', redo);
+  game.querySelectorAll('select, input').forEach(control => { control.disabled = false; });
   const saved = restoreHex(storage.read());
   if (saved) {
     ({ size, human, local, cells, last, toMove, history, future } = saved);
+    second = saved.second ?? human === BLUE;
+    if (get('computer')) get('computer').checked = !local;
+    if (get('second')) get('second').checked = second;
+    if (get('second-setting')) get('second-setting').hidden = local;
     get('size').value = String(size);
     const order = local ? 'local' : String(human);
     orderControls.forEach(control => {
@@ -225,6 +246,7 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
     });
     showSize(); computerTurn();
   } else newGame();
+  return () => { cancel(); disposePanels(); events.abort(); };
 }
 
 if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-game]').forEach(game => initializeHexGame(game));

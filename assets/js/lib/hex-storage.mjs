@@ -1,7 +1,10 @@
 // Validate stored boards before letting them resume play or a computer turn.
+export const HEX_HISTORY_LIMIT = 200;
+
 export function restoreHex(saved) {
   if (!saved || !Number.isInteger(saved.size) || saved.size < 3 || saved.size > 11
-    || ![1, 2].includes(saved.human) || typeof saved.local !== 'boolean') return null;
+    || ![1, 2].includes(saved.human) || typeof saved.local !== 'boolean'
+    || saved.second !== undefined && typeof saved.second !== 'boolean') return null;
   function valid(value) {
     if (!value || !Array.isArray(value.cells) || value.cells.length !== saved.size ** 2
       || !value.cells.every(color => color === 0 || color === 1 || color === 2)
@@ -10,7 +13,7 @@ export function restoreHex(saved) {
     return (red === blue || red === blue + 1) && value.toMove === (red === blue ? 1 : 2)
       && (red + blue === 0 ? value.last === -1 : value.last >= 0 && value.cells[value.last] === 3 - value.toMove);
   }
-  if (!valid(saved) || !['history', 'future'].every(name => Array.isArray(saved[name]) && saved[name].length <= saved.size ** 2 && saved[name].every(valid))) return null;
+  if (!valid(saved) || !['history', 'future'].every(name => Array.isArray(saved[name]) && saved[name].length <= HEX_HISTORY_LIMIT && saved[name].every(valid))) return null;
   const copy = value => ({ cells: value.cells.slice(), last: value.last, toMove: value.toMove });
-  return { size: saved.size, human: saved.human, local: saved.local, ...copy(saved), history: saved.history.map(copy), future: saved.future.map(copy) };
+  return { size: saved.size, human: saved.human, local: saved.local, ...(saved.second === undefined ? {} : { second: saved.second }), ...copy(saved), history: saved.history.map(copy), future: saved.future.map(copy) };
 }

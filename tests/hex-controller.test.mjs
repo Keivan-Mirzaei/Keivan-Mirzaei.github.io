@@ -36,25 +36,32 @@ class Computer {
   reply(move) { this.onmessage({ data: { move } }); }
 }
 
-function game({ order = 'local', size = 3, legacy = false, storage } = {}) {
+function game({ order = 'local', size = 3, legacy = false, switches = false, storage } = {}) {
   globalThis.document = { activeElement: null, body: new Element() };
   globalThis.Worker = Computer;
   Computer.instances = [];
   const elements = Object.fromEntries(['count', 'instruction', 'status', 'new', 'undo', 'redo', 'size-label'].map(key => [key, new Element()]));
   elements.size = new Element({ type: legacy ? 'select-one' : 'range', value: String(size) });
   elements.board = new Board();
+  if (switches) {
+    elements.computer = new Element({ type: 'checkbox', checked: order !== 'local' });
+    elements.second = new Element({ type: 'checkbox', checked: order === '2' });
+    elements['second-setting'] = new Element();
+    elements.reset = elements.new;
+  }
   const orders = legacy
     ? [new Element({ type: 'select-one', value: order })]
     : ['1', '2', 'local'].map(value => new Element({ type: 'radio', value, checked: value === order }));
   const root = new Element();
-  const fixture = {
+  const fixture = Object.assign(root, {
     addEventListener: (name, handler) => root.addEventListener(name, handler),
     querySelector: selector => elements[selector.match(/^\[data-hex-(.+)\]$/)?.[1]] || null,
-    querySelectorAll: selector => selector === '[data-hex-order]' ? orders : [elements.size, elements.new, ...orders],
-  };
+    querySelectorAll: selector => selector.startsWith('[data-widget-') ? [] : selector === '[data-hex-order]' ? orders : [elements.size, ...orders, ...(switches ? [elements.computer, elements.second] : [])],
+  });
   initializeHexGame(fixture, storage);
   return {
     elements,
+    root,
     orders,
     key: (key, modifiers = {}) => root.emit('keydown', {key, target: document.activeElement, preventDefault() {}, ...modifiers}),
     click: move => {
@@ -65,7 +72,11 @@ function game({ order = 'local', size = 3, legacy = false, storage } = {}) {
     redo: () => elements.redo.emit('click'),
     colors: () => elements.board.buttons.map(button => button.className.includes('hex-red') ? 1 : button.className.includes('hex-blue') ? 2 : 0),
     changeOrder: value => {
-      if (legacy) { orders[0].value = value; orders[0].emit('change'); }
+      if (switches) {
+        elements.computer.checked = value !== 'local';
+        if (value !== 'local') elements.second.checked = value === '2';
+        elements.computer.emit('change');
+      } else if (legacy) { orders[0].value = value; orders[0].emit('change'); }
       else {
         orders.forEach(control => { control.checked = control.value === value; });
         orders.find(control => control.checked).emit('change');
@@ -324,7 +335,7 @@ test('redo restarts an interrupted reply and ignores the stale worker', () => {
   assert.equal(f.elements.count.textContent, '2 stones');
 });
 
-test('local redo restores a win and a new move or new game clears redo', () => {
+test('local redo restores a win and a new move or reset clears redo', () => {
   const f = game();
   [0, 1, 3, 2, 6].forEach(f.click);
   f.undo(); f.redo();
@@ -334,7 +345,7 @@ test('local redo restores a win and a new move or new game clears redo', () => {
   assert.equal(f.elements.redo.disabled, true);
   f.undo(); f.elements.new.emit('click');
   assert.equal(f.elements.redo.disabled, true);
-  assert.equal(f.elements.undo.disabled, true);
+  assert.equal(f.elements.undo.disabled, false);
   assert.equal(f.elements.count.textContent, '0 stones');
 });
 
@@ -379,4 +390,91 @@ test('a saved second-player opening resumes with Red and cannot undo the opening
   Computer.instances[0].reply(0); assert.equal(f.elements.undo.disabled, true);
   f = game({ storage }); assert.equal(Computer.instances.length, 0);
   assert.equal(f.colors()[0], 1); assert.equal(f.orders.find(o => o.checked).value, '2');
+});
+
+test('reset preserves settings and can undo and redo a completed local game', () => {
+  const f = game({ switches: true });
+  [0, 1, 3, 2, 6].forEach(f.click);
+  const won = f.colors();
+  assert.equal(f.root.attributes.get('data-hex-winner'), '1');
+  f.elements.reset.emit('click');
+  assert.ok(f.colors().every(c => c === 0));
+  assert.equal(f.root.attributes.get('data-hex-winner'), '0');
+  assert.equal(f.elements.computer.checked, false);
+  assert.equal(f.elements.size.value, '3');
+  assert.equal(f.elements.reset.disabled, true);
+  f.undo();
+  assert.deepEqual(f.colors(), won);
+  assert.equal(f.root.attributes.get('data-hex-winner'), '1');
+  f.redo();
+  assert.equal(f.root.attributes.get('data-hex-winner'), '0');
+  assert.ok(f.colors().every(c => c === 0));
+});
+
+test('undoing a reset resumes an interrupted reply and ignores its stale worker', () => {
+  const f = game({ order: '1', switches: true });
+  f.click(0); const interrupted = Computer.instances[0];
+  f.elements.reset.emit('click');
+  assert.equal(interrupted.terminated, true);
+  f.undo();
+  assert.equal(Computer.instances.length, 2);
+  assert.equal(f.elements.board.attributes.get('aria-busy'), 'true');
+  interrupted.reply(1);
+  assert.equal(f.elements.count.textContent, '1 stone');
+  Computer.instances[1].reply(4);
+  assert.deepEqual(f.colors().slice(0, 5), [1, 0, 0, 0, 2]);
+  f.undo();
+  assert.ok(f.colors().every(c => c === 0));
+});
+
+test('resetting when playing second keeps Blue and undo restores the original opening', () => {
+  const f = game({ order: '2', switches: true });
+  Computer.instances[0].reply(4);
+  f.elements.reset.emit('click');
+  assert.equal(f.elements.second.checked, true);
+  assert.equal(Computer.instances[1].position.color, 1);
+  f.undo();
+  assert.equal(Computer.instances[1].terminated, true);
+  assert.equal(f.colors()[4], 1);
+  assert.match(f.elements.status.textContent, /Your turn · Blue/);
+  Computer.instances[1].reply(0);
+  assert.equal(f.elements.count.textContent, '1 stone');
+});
+
+test('switches choose local or computer play and preserve the hidden second-player preference', () => {
+  const storage = memoryStorage();
+  let f = game({ order: '2', switches: true, storage });
+  f.changeOrder('local');
+  assert.equal(f.elements['second-setting'].hidden, true);
+  assert.equal(f.elements.second.checked, true);
+  f.click(0); f.click(1);
+  f = game({ order: '1', switches: true, storage });
+  assert.equal(f.elements.computer.checked, false);
+  assert.equal(f.elements['second-setting'].hidden, true);
+  assert.equal(f.elements.second.checked, true);
+  f.elements.computer.checked = true; f.elements.computer.emit('change');
+  assert.equal(f.elements['second-setting'].hidden, false);
+  assert.equal(Computer.instances[0].position.color, 1);
+});
+
+test('saved histories retain repeated resets beyond a board’s move count', () => {
+  const storage = memoryStorage();
+  let f = game({ switches: true, storage });
+  for (let i = 0; i < 12; i++) { f.click(0); f.elements.reset.emit('click'); }
+  assert.ok(storage.read().history.length > 9);
+  f = game({ order: '1', switches: true, storage });
+  assert.equal(f.elements.computer.checked, false);
+  f.undo(); assert.equal(f.colors()[0], 1);
+  f.redo(); assert.ok(f.colors().every(c => c === 0));
+});
+
+test('a failed computer opening can be retried with Reset on an empty board', () => {
+  const f = game({ order: '2', switches: true });
+  Computer.instances[0].reply(-1);
+  assert.equal(f.elements.reset.disabled, false);
+  assert.match(f.elements.status.textContent, /Reset to try again/);
+  f.elements.reset.emit('click');
+  Computer.instances[1].reply(4);
+  assert.equal(f.colors()[4], 1);
+  assert.match(f.elements.status.textContent, /Your turn · Blue/);
 });

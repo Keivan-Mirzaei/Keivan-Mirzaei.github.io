@@ -50,3 +50,66 @@
   .hex-settings label { flex: 1 1 100%; justify-content: space-between; }
   .hex-board .hex-cell { font-size: 11px; }
 }
+
+/* Roadmap frame: the board leads; optional panels expand below its controls. */
+.hex-game-frame, .graph-widget.hex-game-frame { width: 100%; max-width: 560px; margin: 0 auto; padding: 0; border: 0; background: var(--paper); color: var(--ink); font: 14px/1.6 var(--sans); }
+.graph-widget.hex-game-frame { margin: 28px auto; padding: 20px; border: 1px solid var(--line); border-radius: 9px; }
+.hex-game-frame *, .hex-game-frame *::before, .hex-game-frame *::after { box-sizing: border-box; }
+.hex-game-frame [hidden] { display: none !important; }
+.hex-game-frame .hex-game-title { margin: 0 0 18px; color: var(--ink); font: 500 22px/1.4 var(--sans); letter-spacing: 0; }
+.hex-game-frame .hex-players { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 18px; }
+.hex-game-frame .hex-player { gap: 7px; padding: 0 0 4px; border-bottom: 2px solid transparent; }
+.hex-game-frame .hex-player[data-active='true'] { border-bottom-color: var(--green); }
+.hex-game-frame .hex-player-dot { flex: 0 0 12px; width: 12px; height: 12px; }
+.hex-game-frame .hex-player-name, .hex-game-frame .hex-player-color { display: inline; margin: 0; font: 400 13px/1.6 var(--sans); }
+.hex-game-frame .hex-player-color { color: var(--muted); }
+.hex-game-frame .hex-status { min-height: 40px; margin: 10px 0 0; padding: 8px 10px; border-radius: 6px; color: var(--green); font: 400 14px/1.6 var(--sans); }
+.hex-game-frame .hex-board-viewport { min-width: 0; overflow: auto; overscroll-behavior: contain; padding: 4px; border-radius: 9px; transition: background-color .2s; }
+.hex-game-frame .hex-board { width: 100%; min-width: var(--hex-min-width, 0px); max-width: 360px; margin: 6px auto; }
+.hex-game-frame .hex-cell { font-family: var(--sans); touch-action: manipulation; }
+.hex-game-frame .hex-goal-caption { margin: 8px 0 16px; color: var(--muted); font: 400 13px/1.6 var(--sans); text-align: center; }
+.hex-game-frame .hex-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.hex-game-frame .hex-controls .panel-button { flex: 0 1 auto; padding: 9px 10px; color: var(--ink); font: 400 13px/1.4 var(--sans); }
+.hex-game-frame .hex-controls .panel-button[aria-expanded='true'] { border-color: var(--green); background: var(--tint); }
+.hex-game-frame .hex-support-panel { margin-top: 16px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--muted); font: 400 13px/1.7 var(--sans); }
+.hex-game-frame .hex-support-panel p { margin: 0 0 10px; }
+.hex-game-frame .hex-support-panel p:last-child { margin-bottom: 0; }
+.hex-game-frame .hex-size-heading label { color: var(--ink); font: inherit; }
+.hex-game-frame .hex-size-heading output { color: var(--green); font: inherit; font-variant-numeric: tabular-nums; }
+.hex-game-frame .hex-size-setting { margin-bottom: 8px; }
+.hex-game-frame .hex-size-setting input { display: block; width: 100%; margin: 0; min-height: 44px; accent-color: var(--green); }
+.hex-game-frame .hex-switch { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; margin: 0; color: var(--ink); cursor: pointer; }
+.hex-game-frame .hex-switch small { display: block; color: var(--muted); font: 400 12px/1.6 var(--sans); }
+.hex-game-frame .hex-switch input { position: absolute; right: 0; width: 40px; height: 24px; margin: 0; opacity: 0; }
+.hex-game-frame .hex-switch-track { flex: 0 0 40px; width: 40px; height: 24px; padding: 3px; border-radius: 20px; background: var(--muted); pointer-events: none; }
+.hex-game-frame .hex-switch-track::before { content: ''; display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--paper); transition: transform .15s; }
+.hex-game-frame .hex-switch input:checked + .hex-switch-track { background: var(--green); }
+.hex-game-frame .hex-switch input:checked + .hex-switch-track::before { transform: translateX(16px); }
+.hex-game-frame .hex-switch:has(input:focus-visible) .hex-switch-track { outline: 2px solid var(--green); outline-offset: 3px; }
+.hex-game-frame .hex-support-panel .hex-caption { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font: inherit; }
+.hex-game-frame[data-hex-winner='1'] .hex-status { background: var(--hex-red-tint); color: var(--hex-red); }
+.hex-game-frame[data-hex-winner='2'] .hex-status { background: var(--hex-blue-tint); color: var(--hex-blue); }
+.hex-game-frame[data-hex-winner='1'] .hex-board-viewport { background: color-mix(in srgb, var(--hex-red-tint) 35%, var(--paper)); }
+.hex-game-frame[data-hex-winner='2'] .hex-board-viewport { background: color-mix(in srgb, var(--hex-blue-tint) 35%, var(--paper)); }
+.puzzle-page:has(.hex-game-frame) .puzzle-shell { width: min(660px, 100%); }
+.puzzle-page:has(.hex-game-frame) .puzzle-heading { margin-bottom: 20px; }
+.puzzle-page:has(.hex-game-frame) .puzzle-heading h1 { font: 500 30px/1.3 var(--sans); letter-spacing: 0; }
+.puzzle-page .hex-game-frame .hex-board { max-width: clamp(190px, calc((100dvh - 320px) / 1.6), 360px); }
+@media (pointer: coarse) {
+  .hex-game-frame .hex-board { min-width: calc(var(--hex-min-width, 0px) * 1.3334); }
+}
+@media (max-width: 380px) {
+  .graph-widget.hex-game-frame { padding: 12px; }
+  .hex-game-frame .hex-controls { gap: 6px; }
+  .hex-game-frame .hex-controls .panel-button { gap: 5px; padding-inline: 8px; }
+  .hex-game-frame .hex-support-panel { padding: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hex-game-frame .hex-board-viewport, .hex-game-frame .hex-switch-track::before { transition: none; }
+}
+@media (forced-colors: active) {
+  .hex-game-frame .hex-switch-track { border: 1px solid ButtonText; background: Canvas; }
+  .hex-game-frame .hex-switch-track::before { background: ButtonText; }
+  .hex-game-frame .hex-switch input:checked + .hex-switch-track { background: Highlight; }
+  .hex-game-frame .hex-switch input:checked + .hex-switch-track::before { background: HighlightText; }
+}
