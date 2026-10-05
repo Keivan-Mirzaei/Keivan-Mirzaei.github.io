@@ -1,0 +1,28 @@
+.cube-cuts-problem-figure { width: min(420px, 100%); margin: 16px auto 28px; }
+.cube-cuts-problem-figure img { display: block; width: 100%; }
+.cube-cuts-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 10px 18px; }
+.cube-cuts-heading h3 { flex: 1; }
+.cube-cuts-stage { margin-top: 18px; overflow: hidden; border-radius: 8px; background: #f5f7f1; transition: background-color .15s; }
+.cube-cuts-stage img, .cube-cuts-stage svg { display: block; width: 100%; height: auto; }
+.cube-cuts-widget[data-complete='true'] .cube-cuts-stage { background: #e3efe4; }
+.cube-cuts-widget .cube-cuts-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 24px; margin: 16px 0 6px; color: var(--muted); font-size: 12px; }
+.cube-cuts-legend > span { display: inline-flex; align-items: center; gap: 7px; }
+.cube-cuts-key { width: 11px; height: 11px; border: 1px solid #709780; border-radius: 2px; background: #b7ccb5; }
+.cube-cuts-key-centre { border-color: #ad8233; background: #e5bd61; }
+.cube-cuts-widget .cube-cuts-caption { margin: 0 0 20px; color: var(--muted); font-size: 12px; text-align: center; }
+.cube-cuts-controls { display: flex; align-items: flex-end; gap: 8px; }
+.cube-cuts-view { flex: 1; min-width: 0; color: var(--muted); font-size: 12px; }
+.cube-cuts-controls .panel-button { flex: 0 0 auto; }
+.graph-widget.widget-frame.cube-cuts-widget .cube-cuts-next { background: var(--green); border-color: var(--green); color: var(--paper); }
+.graph-widget.widget-frame.cube-cuts-widget .cube-cuts-next:not(:disabled):hover { background: #1d4535; color: var(--paper); }
+.cube-cuts-widget .cube-cuts-status { min-height: 48px; margin: 16px 0 0; color: var(--ink); font-size: 13px; }
+.cube-cuts-widget .panel-actions { margin-top: 8px; }
+.cube-cuts-widget .panel-help-content { text-align: left; }
+@media (max-width: 540px) {
+  .cube-cuts-heading { align-items: flex-start; }
+  .cube-cuts-controls { flex-wrap: wrap; }
+  .cube-cuts-view { flex-basis: 100%; }
+  .cube-cuts-controls .panel-button { flex: 1; }
+  .cube-cuts-stage { margin-top: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .cube-cuts-stage { transition: none; } }

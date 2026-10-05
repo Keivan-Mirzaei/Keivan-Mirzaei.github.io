@@ -79,3 +79,7 @@ four-equal-regions:
   script: /assets/js/widgets/four-equal-regions.mjs
   selector: '[data-four-equal-regions]'
   styles: [widget-frame, four-equal-regions]
+cube-cuts:
+  script: /assets/js/widgets/cube-cuts.mjs
+  selector: '[data-cube-cuts]'
+  styles: [widget-frame, cube-cuts]
