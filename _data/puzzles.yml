@@ -1,24 +1,24 @@
 - title: Hex
   url: /puzzles/hex/
   description: Build a path of your colour from one side to the other. Your opponent has the same idea.
-  image: /assets/images/hex-board.svg
-  image_alt: An empty Hex board with red top and bottom sides and blue left and right sides.
+  image: /assets/images/puzzle-thumbnails/hex.svg
+  image_alt: An upright diamond Hex board with red upper-right and lower-left sides and blue upper-left and lower-right sides.
   players: Against the computer or local two-player
 - title: Klotski
   url: /puzzles/klotski/
   description: Slide the blocks to make room. Guide the large marked block to the exit.
-  image: /assets/images/klotski-board.svg
+  image: /assets/images/puzzle-thumbnails/klotski.svg
   image_alt: A Klotski board with sliding rectangular blocks and a marked large block to guide to the bottom exit.
   players: A sliding-block puzzle
 - title: Lights Out
   url: /puzzles/lights-out/
   description: One press flips a light and its neighbors. Follow the connections and turn them all off.
-  image: /assets/images/lights-out-board.svg
-  image_alt: Nine lights connected by lines in an irregular graph, with some lights on and others off.
+  image: /assets/images/puzzle-thumbnails/lights-out.svg
+  image_alt: Six unnumbered lights connected in an open loop, with one amber light on.
   players: Four difficulty levels, 1,000 graph puzzles each
 - title: Floor tiling
   url: /puzzles/tiling/
   description: A floor with a few squares missing, and just enough tiles. Find a place for every piece.
-  image: /assets/images/tiling-board.svg
+  image: /assets/images/puzzle-thumbnails/tiling.svg
   image_alt: A floor grid with missing squares beside a set of coloured tiles to fit together.
   players: Four difficulty levels, 1,000 puzzles each

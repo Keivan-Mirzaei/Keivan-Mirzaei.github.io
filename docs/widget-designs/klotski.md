@@ -1,6 +1,6 @@
 # Klotski widget design sheet
 
-**Status:** Reviewed; publication authorized by Keivan on 4 October 2026 with the revised panel behavior.
+**Status:** Reviewed and published on 4 October 2026. Publication of the reviewed Reset progress addition is authorized together with Lights Out.
 
 Follow the [widget roadmap](../widget-requirements.md) and the reviewed Hex arrangement. This migration covers `/puzzles/klotski/`.
 
@@ -15,10 +15,10 @@ Follow the [widget roadmap](../widget-requirements.md) and the reviewed Hex arra
 - **Completion:** The 2 × 2 target must reach column 2, row 4 on the 4 × 5 board. Tint the tray and status green, outline the target, and announce “You found the way out!” with the exact move count. Stop further moves after completion. Undo or Reset clears the effect; Redo or undoing Reset restores it when appropriate.
 - **History:** One completed drag is one move, including a multi-square slide. Each arrow-key move is one move. Cancelled or blocked actions do not enter history. A successful new move clears Redo. Keep at most 1,000 actions.
 - **Reset:** Restore the classic starting arrangement and zero moves. Keep the saving preference, and retain Reset as one undoable action. Undo restores the preceding layout, move count, and completion state; Redo restores the reset. Reset is disabled when already at the start with zero moves. Cancel an active drag safely before history actions.
-- **Saving:** Use the existing shared puzzle-storage service. Restore the board, move count, Undo, and Redo, including Reset history. Read older position-only saves with their original counters. Explain the existing device-wide saving preference in Settings.
+- **Saving:** Use the existing shared puzzle-storage service. Restore the board, move count, Undo, and Redo, including Reset history. Read older position-only saves with their original counters. Explain the existing device-wide saving preference in Settings. Reset progress confirms before clearing this game's board and move history; retain saving and leave other puzzle progress alone.
 - **Presentation:** The board leads, the controls follow it, and support panels use the same spacing, labels, switches, and focus conventions as Hex. A reusable frame stylesheet supports subsequent puzzle migrations.
 - **Narrow screens:** Keep all blocks large enough to drag, wrap controls, and fit the board within the page. Scale the board for shorter viewports. Respect reduced motion.
 - **Formula typesetting:** This puzzle needs only exact counts and simple board dimensions such as 4 × 5 in the interface font. No formula renderer is needed.
 - **Mathematical assumptions:** Blocks translate without rotation, overlap, or leaving the board. A long drag checks intermediate positions, so it cannot jump over another block. Only the marked square is the goal.
 - **Checks:** Legal and blocked moves; drag capture and cancellation; keyboard play; a complete classic solution; completion effects and reversal; Reset/Undo/Redo counters; old and new saves; panel dismissal; desktop and narrow layouts.
-- **Next step:** Publish the approved Klotski update and revised panel behavior. Lights Out follows for individual review, then Floor tiling.
+- **Next step:** Publish the approved Reset progress addition alongside Lights Out. Floor tiling follows with individual review.

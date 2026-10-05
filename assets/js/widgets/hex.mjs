@@ -6,6 +6,7 @@ import { restoreHex, HEX_HISTORY_LIMIT } from '../lib/hex-storage.mjs';
 import { setActionLabel } from '../lib/puzzle-controls.mjs';
 import { hexPoint as point, hexLayout as layout, hexCorner, hexGoal } from '../lib/hex-view.mjs';
 import { initializeWidgetPanels } from '../lib/widget-panels.mjs';
+import { initializeProgressReset } from '../lib/widget-progress.mjs';
 
 const name = color => color === RED ? 'Red' : 'Blue';
 const gameGoal = color => `the two ${color === RED ? 'red' : 'blue'} sides`;
@@ -246,7 +247,10 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
     });
     showSize(); computerTurn();
   } else newGame();
-  return () => { cancel(); disposePanels(); events.abort(); };
+  const disposeProgress = initializeProgressReset(game, () => {
+    storage.clear?.(); get('size').value = String(size); newGame();
+  });
+  return () => { cancel(); disposePanels(); disposeProgress(); events.abort(); };
 }
 
 if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-game]').forEach(game => initializeHexGame(game));

@@ -58,7 +58,7 @@ lights-out:
 graph-lights-out:
   script: /assets/js/widgets/graph-lights-out.mjs
   selector: '[data-graph-lights-out]'
-  styles: [graph-lights-out]
+  styles: [graph-lights-out, widget-frame]
 three-utilities:
   script: /assets/js/widgets/three-utilities.mjs
   selector: '[data-three-utilities-plane], [data-three-utilities-surface], [data-three-utilities-square]'
@@ -66,7 +66,7 @@ three-utilities:
 hex:
   script: /assets/js/widgets/hex.mjs
   selector: '[data-hex-game], [data-hex-proof]'
-  styles: [activities, puzzles, hex]
+  styles: [activities, puzzles, hex, widget-frame]
 klotski:
   script: /assets/js/widgets/klotski.mjs
   selector: '[data-klotski-game]'

@@ -1,0 +1,23 @@
+# Lights Out widget design sheet
+
+**Status:** Reviewed and approved on 4 October 2026; publication authorized together with updated puzzle thumbnails and Reset progress controls.
+
+Follow the [widget roadmap](../widget-requirements.md) and the reviewed Hex and Klotski frame. This migration covers the graph puzzle at `/puzzles/lights-out/`; the article's separate grid and proof widgets keep their existing mathematical presentation.
+
+- **Name and stable ID:** Lights Out; `graph-lights-out` in the widget registry, `lights-out` in shared puzzle storage.
+- **Purpose / interaction:** Press a light to flip it and its direct neighbours. Turn every light off. Amber means on; hollow means off. Crossing lines create no connections.
+- **Title and layout:** Use the page title and shared interface font. Let the graph lead. Keep puzzle number, lights remaining, press count, and a short status visible. Move graph details and completion statistics into supporting panels.
+- **Controls:** Undo, Redo, Reset, Shuffle, Hint, Settings, Info. Show Next puzzle after completion when another unsolved puzzle is available. Tap the puzzle number to open the number chooser.
+- **Settings:** A four-step difficulty slider; Show light numbers and Save progress switches. New visits hide light numbers by default; retain previously saved preferences.
+- **Panels:** Settings, Info, and the number chooser start closed, toggle with their own button, close with Escape, and are mutually exclusive. Outside taps and scrolling keep them open. Expand below the controls without covering the graph.
+- **Puzzle chooser:** Use a 1–1,000 slider and an exact number entry, with Open puzzle to commit. The exact entry is useful for revisiting a specific number among 1,000 choices; both controls preview the same value. Keep every catalogue number stable.
+- **Hints:** Hint reveals one useful light and a short instruction. The same control changes to Hide hint to dismiss it. Press the actual marked light to use it. Clear stale hints after a move, history action, navigation, or progress reset.
+- **Completion:** Show a green graph area and status, announce the exact press count, and identify a shortest route when achieved. Disable further presses after all lights are off. Undo or board Reset clears the effect; Redo can restore it.
+- **History:** Undo and Redo handle one press, board Reset, Shuffle, number changes, difficulty changes, or Next puzzle as meaningful actions. Preserve exact boards and counters, including across reload. Keep up to 100 navigation/action snapshots, while retaining compatibility with older per-board press histories. A new action clears Redo. Solved records remain when undoing or replaying.
+- **Reset / Shuffle:** Reset restores this numbered puzzle's starting lights. Shuffle chooses another unsolved puzzle at the current difficulty. Both preserve display and saving preferences and can be undone. Completion records remain until Reset progress.
+- **Reset progress:** In Settings, confirm before clearing all Lights Out boards, Undo/Redo, and solved records across all four difficulty levels. Start at puzzle 1 of the current difficulty. Keep difficulty, light-number preference, and saving; leave other puzzles alone. Cancel preserves the current state.
+- **Saving:** Use shared puzzle storage, enabled by default. Retain progress independently for all four difficulties, plus preferences and action history. The saving switch retains its existing device-wide meaning. Panel and hint visibility are not saved.
+- **Keyboard and touch:** Provide one tab stop in the graph, directional arrow navigation, Enter/Space presses, visible focus, and accessible light states and affected neighbours. Keep 44-pixel light targets and fit the graph inside narrow pages; wrap controls and respect reduced motion.
+- **Typesetting:** Exact counts and simple ranges use the interface font. No structured mathematical formula is needed in the puzzle interface; link to the existing mathematics article from Info.
+- **Checks:** Catalogue solvability and stable IDs; press effects and hints; win/removal of win colour; undoable Reset and Shuffle; exact number browsing; difficulty changes; old/new saves; progress-reset scope and confirmation; phone layouts; panels staying open during outside interaction.
+- **Next step:** Floor tiling follows, with individual review before publication.

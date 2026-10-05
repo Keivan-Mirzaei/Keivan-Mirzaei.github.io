@@ -1,0 +1,11 @@
+<div class="widget-progress-reset">
+  <button class="panel-button" type="button" data-widget-progress-reset disabled>{% include icon.html name='restart' %}<span>Reset progress</span></button>
+  <div data-widget-progress-confirm hidden>
+    <p>{{ include.message | default: 'Clear this game and its saved move history? Your settings and other puzzles are kept.' }}</p>
+    <div class="widget-confirm-actions">
+      <button class="panel-button" type="button" data-widget-progress-apply>Confirm reset</button>
+      <button class="panel-button" type="button" data-widget-progress-cancel>Cancel</button>
+    </div>
+  </div>
+  <p class="widget-progress-message" data-widget-progress-message role="status" aria-live="polite" aria-atomic="true"></p>
+</div>

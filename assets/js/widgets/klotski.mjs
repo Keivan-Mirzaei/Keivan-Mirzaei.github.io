@@ -1,7 +1,8 @@
-import { BOARD_WIDTH, BOARD_HEIGHT, isKlotskiStart, resetKlotski, slideKlotski, undoKlotski, redoKlotski, maxSlide } from '../lib/klotski.mjs';
+import { BOARD_WIDTH, BOARD_HEIGHT, createKlotski, isKlotskiStart, resetKlotski, slideKlotski, undoKlotski, redoKlotski, maxSlide } from '../lib/klotski.mjs';
 import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
 import { serializeKlotski, restoreKlotski } from '../lib/klotski-storage.mjs';
 import { initializeWidgetPanels } from '../lib/widget-panels.mjs';
+import { initializeProgressReset } from '../lib/widget-progress.mjs';
 
 const keyboardDirections = { ArrowUp: 'up', ArrowRight: 'right', ArrowDown: 'down', ArrowLeft: 'left' };
 
@@ -182,8 +183,11 @@ export function initializeKlotski(game, storage = createPuzzleStorage('klotski',
     board.getBoundingClientRect(); board.classList.remove('is-resetting');
     if (document.activeElement === get('restart')) blocks.get('target').focus({ preventScroll: true });
   });
+  const disposeProgress = initializeProgressReset(game, () => {
+    releaseDrag(); storage.clear?.(); state = createKlotski(); selected = null; render();
+  });
   render();
-  return { destroy() { cancelDrag(); disposePanels(); events.abort(); } };
+  return { destroy() { cancelDrag(); disposePanels(); disposeProgress(); events.abort(); } };
 }
 
 if (typeof document !== 'undefined') {

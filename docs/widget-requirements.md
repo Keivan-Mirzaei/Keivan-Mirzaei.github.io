@@ -48,6 +48,7 @@ Render only relevant controls. A relevant action can be temporarily disabled; an
 | Undo | Reversing an action is helpful | Restore the previous meaningful state. One slider adjustment or drag is one action; games may undo a move or a full turn. |
 | Redo | Reapplying an undone action is helpful | Restore that action; a new edit clears the redo path. |
 | Reset | Returning to the start is helpful | Define exactly what returns to its starting state. Preserve settings and make Reset undoable. |
+| Reset progress | The activity saves boards or completion records | Put it in Settings with an inline confirmation. Clear only this activity's progress and history, preserve preferences, and start fresh. |
 | Shuffle / New example | Different examples serve the activity | Create a new configuration. Preserve settings and make Shuffle undoable. Keep its meaning distinct from Reset. |
 | Settings | Occasional options would clutter the main interface | Put them in a toggleable panel that starts closed. Explain changes that restart an activity. |
 | Info / Help | Rules or context are needed | Use a short, hideable explanation. Avoid duplicate panels with the same purpose. |
@@ -69,6 +70,8 @@ Use familiar action ordering as a starting point: **Undo, Redo, Reset, Shuffle**
 - Turning saving off stops retaining progress for later visits. The current activity remains usable.
 - A prototype may use the conversation's state storage; a future website version should use the site's shared storage service.
 - Reset and Shuffle preserve the saving preference and other settings.
+- Provide a **Reset progress** button in Settings when an activity saves progress. It clears only that activity's saved board(s), move history, and completion record, then starts fresh. Preserve settings and the saving preference; leave other activities' progress alone.
+- Keep Reset progress distinct from the undoable board Reset. Before clearing progress, show a short inline confirmation stating its scope, with Confirm reset and Cancel. Announce completion. Progress reset clears Undo and Redo rather than adding a history action.
 
 ## 5. Shared design and activity types
 
@@ -156,8 +159,8 @@ The first website migration is **Hex**, covering its standalone puzzle and the s
 | Puzzle | Migration status | Design sheet |
 | --- | --- | --- |
 | Hex | Reviewed, approved, and published on 4 October 2026. | [Hex](widget-designs/hex.md) |
-| Klotski | Reviewed; publication authorized on 4 October 2026 with the revised panel behavior. | [Klotski](widget-designs/klotski.md) |
-| Lights Out | Next after Klotski's review. | To be prepared. |
+| Klotski | Reviewed and published on 4 October 2026. | [Klotski](widget-designs/klotski.md) |
+| Lights Out | Reviewed and approved on 4 October 2026; publication authorized with refreshed thumbnails and Reset progress controls. | [Lights Out](widget-designs/lights-out.md) |
 | Floor tiling | Follows Lights Out. | To be prepared. |
 
 ## 10. First prototype: four equal regions
@@ -193,6 +196,7 @@ The first prototype is ready for design review. Mathematical checks cover 72 gen
 - [ ] Reset and Shuffle preserve settings and are undoable where present.
 - [ ] History follows meaningful user actions, not every animation frame or pointer movement.
 - [ ] Saving is optional and enabled by default where applicable.
+- [ ] Reset progress states its scope, confirms before clearing, preserves preferences, and leaves other activities' progress alone.
 - [ ] Keyboard, touch, and narrow-screen use are supported.
 - [ ] Mathematical behavior and important state transitions have been checked.
 - [ ] Any exception to this roadmap is documented and reviewed.

@@ -26,6 +26,7 @@
     <label class="hex-switch"><span>Save progress</span><input type="checkbox" role="switch" data-puzzle-remember checked disabled><span class="hex-switch-track" aria-hidden="true"></span></label>
     <p class="hex-caption">Changing board size or players starts a new game and clears Undo history. Reset keeps your settings and can be undone.</p>
     <p class="hex-caption">The saving preference applies to all puzzles on this device.</p>
+    {% include controls/reset-progress.html %}
   </div>
   <div class="hex-support-panel" data-widget-panel="info" aria-label="About Hex" hidden>
     <p data-hex-instruction>Choose an empty cell. Connect the two sides of your colour.</p>

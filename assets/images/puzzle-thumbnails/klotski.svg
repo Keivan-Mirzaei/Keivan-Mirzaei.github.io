@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="410" viewBox="0 0 440 410" role="img" aria-labelledby="title description"><title id="title">Klotski</title><desc id="description">Ivory sliding blocks surround a green goal square above the bottom exit.</desc><rect width="440" height="410" fill="#fcfcf9"/><g transform="translate(84 36) scale(.68)">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fafaf2"/><stop offset="1" stop-color="#e4e6da"/></linearGradient>
+    <linearGradient id="goal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4d7b62"/><stop offset="1" stop-color="#315d47"/></linearGradient>
+    <filter id="tile-shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="3" stdDeviation="1.5" flood-color="#48583b" flood-opacity=".16"/></filter>
+    <filter id="tray-shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#243a28" flood-opacity=".08"/></filter>
+  </defs>
+  <rect x="7" y="7" width="386" height="480" rx="29" fill="#eeeee6" stroke="#d7dbd2" filter="url(#tray-shadow)"/>
+  <rect x="24" y="24" width="352" height="440" rx="12" fill="#daddd2" stroke="#cbd0c3"/>
+  <g fill="url(#tile)" stroke="#cbd0c3" filter="url(#tile-shadow)">
+    <rect x="28" y="28" width="80" height="168" rx="14"/><rect x="292" y="28" width="80" height="168" rx="14"/>
+    <rect x="28" y="204" width="80" height="168" rx="14"/><rect x="292" y="204" width="80" height="168" rx="14"/>
+    <rect x="116" y="204" width="168" height="80" rx="14"/>
+    <rect x="116" y="292" width="80" height="80" rx="14"/><rect x="204" y="292" width="80" height="80" rx="14"/>
+    <rect x="28" y="380" width="80" height="80" rx="14"/><rect x="292" y="380" width="80" height="80" rx="14"/>
+  </g>
+  <rect x="116" y="28" width="168" height="168" rx="14" fill="url(#goal)" stroke="#315541" filter="url(#tile-shadow)"/>
+  <circle cx="200" cy="112" r="33" fill="none" stroke="#edf3dd" stroke-opacity=".2"/>
+  <path d="M200 99v26m-10-10 10 10 10-10" fill="none" stroke="#f4f6eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M112 464h176v20a5 5 0 0 1-5 5H117a5 5 0 0 1-5-5Z" fill="#daddd2"/>
+  
+</g></svg>

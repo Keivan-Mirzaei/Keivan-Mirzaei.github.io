@@ -45,6 +45,18 @@ test('a preference changed in another puzzle prevents further saving', () => {
   assert.equal(env.values.size, 0); assert.equal(first.checkbox.checked, false);
 });
 
+test('clearing progress affects only this puzzle, preserves saving, and saves a fresh board', () => {
+  const env = environment(), root = control(), store = createPuzzleStorage('lights-out', root, env);
+  store.save({ moves: 7 }); env.localStorage.setItem(storageKey('hex'), '{"moves":3}');
+  store.clear();
+  assert.equal(store.read(), null); assert.equal(root.checkbox.checked, true);
+  assert.equal(env.document.cookie, 'ao_puzzles=1');
+  assert.equal(env.localStorage.getItem(storageKey('hex')), '{"moves":3}');
+  store.save({ moves: 0 }); assert.deepEqual(store.read(), { moves: 0 });
+  root.checkbox.change(false); store.clear(); store.save({ moves: 0 });
+  assert.equal(store.read(), null); assert.equal(root.checkbox.checked, false);
+});
+
 test('missing, malformed and unavailable storage never interrupt play; local preview omits Secure', () => {
   const env = environment('http:'), store = createPuzzleStorage('hex', control(), env);
   assert.doesNotMatch(env.lastWrite, /Secure/); assert.equal(store.read(), null);

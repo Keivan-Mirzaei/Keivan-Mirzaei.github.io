@@ -5,7 +5,7 @@ export const storageKey = game => `almost-obvious:puzzle:${game}:v1`;
 // A small first-party cookie holds the preference; board histories stay on this device.
 export function createPuzzleStorage(game, root, environment = globalThis) {
   const control = root.querySelector('[data-puzzle-remember]');
-  if (!control) return { read: () => null, save() {}, setSnapshotProvider() {} };
+  if (!control) return { read: () => null, save() {}, clear() {}, setSnapshotProvider() {} };
   const document = environment.document;
   let provider = null, previous = null, enabled = true;
   function preference() {
@@ -41,6 +41,10 @@ export function createPuzzleStorage(game, root, environment = globalThis) {
       } catch {}
     },
     setSnapshotProvider(callback) { provider = callback; },
+    clear() {
+      previous = null;
+      try { environment.localStorage.removeItem(storageKey(game)); } catch {}
+    },
   };
   control.addEventListener('change', () => {
     writePreference(control.checked); previous = null;
