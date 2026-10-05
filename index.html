@@ -37,7 +37,7 @@ widgets: [tilted-square]
     <a class="primary-link" href="{{ '/puzzles/' | relative_url }}">Play a puzzle {% include icon.html name='arrow' %}</a>
   </section>
   <section class="recent-section" aria-labelledby="recent-title">
-    <div class="section-heading"><h2 id="recent-title">From the notebook</h2><a class="text-link" href="{{ '/notes/' | relative_url }}">View all posts <span aria-hidden="true">↗</span></a></div>
+    <div class="section-heading"><h2 id="recent-title">Latest posts</h2><a class="text-link" href="{{ '/notes/' | relative_url }}">View all posts <span aria-hidden="true">↗</span></a></div>
     <div class="note-list">
       {% assign latest_problem = site.posts | where: 'format', 'problem' | first %}
       {% assign latest_exploration = site.posts | where: 'format', 'exploration' | first %}
