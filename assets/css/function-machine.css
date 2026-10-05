@@ -15,3 +15,15 @@
   .fm-rule { font-size: 18px; }
   .fm-arrow { font-size: 20px; }
 }
+.function-machine.widget-frame { max-width: 660px; margin: 26px auto 18px; }
+.widget-frame .fm-input, .widget-frame .fm-result { font-family: var(--sans); font-size: 18px; }
+.widget-frame .fm-rule { font-family: math; font-size: 22px; }
+.widget-frame .fm-error { margin: 10px 0 0; color: #8d4c32; font: 13px/1.6 var(--sans); }
+@media (max-width: 480px) {
+ .widget-frame .fm-flow { grid-template-columns: minmax(0, 1fr) 16px minmax(100px, 1.4fr); gap: 6px; }
+ .widget-frame .fm-body { grid-column: 3; grid-row: 1; }
+ .widget-frame .fm-arrow:nth-of-type(2) { display: none; }
+ .widget-frame .fm-result { grid-column: 1 / -1; min-height: 48px; height: auto; }
+ .widget-frame .fm-input { font-size: 16px; }
+ .widget-frame .fm-rule { font-size: 20px; }
+}

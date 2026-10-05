@@ -1,3 +1,5 @@
+import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
+import { formatNumber } from '../lib/widget-math.mjs';
 import { prepareInteractive, observeSize } from '../lib/interactive-view.mjs';
 import { sphereSlice, moveCamera } from '../lib/graph-math.mjs';
 
@@ -75,8 +77,9 @@ for (const widget of document.querySelectorAll('[data-widget="sphere-slice"]')) 
       scene.add(new THREE.AxesHelper(1.6));
       const slider = controls.querySelector('input');
       const feedback = controls.querySelector('[data-feedback]');
+      let height = Number(slider.defaultValue);
       function updateSlice() {
-        const height = Number(slider.value);
+        height = Number(slider.value);
         const slice = sphereSlice(height);
         plane.position.z = ring.position.z = tangentPoint.position.z = height;
         ring.visible = slice.kind === 'circle';
@@ -87,20 +90,27 @@ for (const widget of document.querySelectorAll('[data-widget="sphere-slice"]')) 
           ? `At height ${height}, the plane does not intersect the sphere.`
           : slice.kind === 'point'
             ? `At height ${height}, the plane touches the sphere at one point. The cross-section has zero radius.`
-            : `At height ${height}, the cross-section is a circle of radius ${slice.radius.toFixed(3)} and area ${(Math.PI * slice.radius ** 2).toFixed(3)}.`;
+            : `At height ${height}, the cross-section is a circle of radius ${formatNumber(slice.radius)} and area ${formatNumber(Math.PI * slice.radius ** 2)}.`;
         feedback.textContent = message;
         renderer.domElement.setAttribute('aria-label', message);
         render();
       }
       slider.value = slider.defaultValue;
       slider.addEventListener('input', updateSlice, { signal: listeners.signal });
-      controls.querySelector('[data-reset]').addEventListener('click', () => {
-        slider.value = slider.defaultValue;
-        orbit.reset();
-        updateSlice();
-      }, { signal: listeners.signal });
+      const initial = { height: Number(slider.defaultValue), eye: camera.position.toArray(), target: orbit.target.toArray() };
+      const history = bindPanelHistory(controls, {
+        read: () => ({ height, eye: camera.position.toArray(), target: orbit.target.toArray() }),
+        restore: state => { slider.value = state.height; camera.position.fromArray(state.eye); orbit.target.fromArray(state.target); orbit.update(); updateSlice(); },
+        reset: () => { slider.value = initial.height; camera.position.fromArray(initial.eye); orbit.target.fromArray(initial.target); orbit.update(); updateSlice(); },
+        signal: listeners.signal
+      });
+      trackControlEdits([slider], history, listeners.signal);
+      let beforeOrbit;
+      orbit.addEventListener('start', () => { beforeOrbit = history.capture(); });
+      orbit.addEventListener('end', () => { if (beforeOrbit) history.commit(beforeOrbit); beforeOrbit = null; });
       for (const button of controls.querySelectorAll('[data-camera]')) {
         button.addEventListener('click', () => {
+          history.remember();
           const eye = moveCamera(camera.position, button.dataset.camera, 2.3, 10);
           camera.position.set(eye.x, eye.y, eye.z);
           orbit.update();

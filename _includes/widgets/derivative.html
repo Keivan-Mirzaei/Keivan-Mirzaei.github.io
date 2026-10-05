@@ -1,6 +1,6 @@
 {% assign widget_id = include.id | default: 'derivative' %}
-<section class="graph-widget" data-widget="derivative" aria-labelledby="{{ widget_id }}-heading">
-  <div class="graph-heading"><h3 id="{{ widget_id }}-heading">Zoom in on a slope</h3><p class="graph-equation">f(x) = x², at x = 1</p></div>
+<section class="graph-widget widget-frame" data-widget="derivative" aria-labelledby="{{ widget_id }}-heading">
+  <div class="graph-heading"><h3 id="{{ widget_id }}-heading">Zoom in on a slope</h3><p class="graph-equation"><math><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><msup><mi>x</mi><mn>2</mn></msup></math> · at x = 1</p></div>
   <svg class="function-plot" viewBox="0 0 600 340" role="img" aria-labelledby="{{ widget_id }}-title {{ widget_id }}-desc">
     <title id="{{ widget_id }}-title">A secant approaches the tangent to a parabola</title>
     <desc id="{{ widget_id }}-desc" data-description>The secant through (1, 1) and (2, 4) has slope 3. The tangent at (1, 1) has slope 2.</desc>

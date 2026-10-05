@@ -1,3 +1,4 @@
+import { formatNumber } from '../lib/widget-math.mjs';
 import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
 /* A small seeded generator makes each numbered path reproducible for discussion. */
 (() => {
@@ -23,7 +24,7 @@ import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
       point.setAttribute('cx', x);
       point.setAttribute('cy', y);
       widget.querySelector('[data-step]').textContent = step;
-      const description = `Path ${seed}. At step ${step}, time ${(step / 256).toFixed(3)}, position ${values[step].toFixed(4)}. The vertical axis runs from −${extent} to ${extent}.`;
+      const description = `Path ${seed}. At step ${step}, time ${formatNumber(step / 256)}, position ${formatNumber(values[step])}. The vertical axis runs from −${extent} to ${extent}.`;
       widget.querySelector('[data-description]').textContent = description;
       if (announce) feedback.textContent = description;
     }
@@ -57,6 +58,7 @@ import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
       if (timer === null) history.remember();
       if (timer !== null) { stop(); draw(); return; }
       if (Number(slider.value) === 256) slider.value = 0;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { slider.value = Math.min(256, Number(slider.value) + 16); draw(); stop(); return; }
       play.textContent = 'Pause';
       // Animation starts only on request. Avoid announcing every frame.
       timer = setInterval(() => {
@@ -69,9 +71,10 @@ import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
     const history = bindPanelHistory(widget, {
       read: () => ({ seed, step: currentStep }),
       restore: state => { seed = state.seed; generate(); slider.value = state.step; draw(); },
-      reset: () => { seed = 42; generate(); }
+      reset: () => generate()
     });
     trackControlEdits([slider], history);
+    if ('IntersectionObserver' in window) new IntersectionObserver(entries => { if (!entries[0].isIntersecting) stop(); }).observe(widget);
     generate();
   });
 })();

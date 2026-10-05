@@ -1,3 +1,4 @@
+import { formatNumber, numberMarkup, differentiabilityFormula } from '../lib/widget-math.mjs';
 import { bindInputHistory } from '../lib/panel-history.mjs';
 import { MODELS, magnifiedValue, errorBound } from '../lib/differentiability-math.mjs';
 
@@ -8,7 +9,7 @@ const path = (fn, steps = 500) => Array.from({ length: steps + 1 }, (_, i) => {
   const u = -1 + 2 * i / steps;
   return `${i ? 'L' : 'M'}${coordinate(u, fn(u))}`;
 }).join(' ');
-const fmt = (value) => Number(value.toPrecision(6)).toString();
+const fmt = formatNumber;
 
 document.querySelectorAll('[data-widget="differentiability"]').forEach((widget) => {
   const initial = widget.dataset.model;
@@ -26,8 +27,8 @@ document.querySelectorAll('[data-widget="differentiability"]').forEach((widget) 
     const slope = Number(slopeControl.value);
     const dense = model.startsWith('rational-');
     const oscillating = model === 'oscillation';
-    widget.querySelector('[data-equation]').textContent = MODELS[model].equation;
-    widget.querySelector('[data-radius]').textContent = fmt(radius);
+    widget.querySelector('[data-equation]').innerHTML = differentiabilityFormula(model);
+    widget.querySelector('[data-radius]').innerHTML = numberMarkup(radius);
     widget.querySelector('[data-slope]').textContent = fmt(slope);
     widget.querySelector('[data-tangent]').setAttribute('d', path((u) => slope * u, 1));
 

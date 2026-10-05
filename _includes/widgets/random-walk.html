@@ -1,5 +1,5 @@
 {% assign widget_id = include.id | default: 'random-walk' %}
-<section class="graph-widget" data-widget="random-walk" aria-labelledby="{{ widget_id }}-heading">
+<section class="graph-widget widget-frame" data-widget="random-walk" aria-labelledby="{{ widget_id }}-heading">
   <div class="graph-heading"><h3 id="{{ widget_id }}-heading">A walk made of coin flips</h3><span class="activity-badge">256 steps</span></div>
   <p>Each step moves up or down by 1/16. Time advances by 1/256. Replay the path or generate another.</p>
   <svg class="function-plot" viewBox="0 0 600 340" role="img" aria-labelledby="{{ widget_id }}-title {{ widget_id }}-desc">
@@ -18,5 +18,5 @@
   <p class="activity-result" data-feedback role="status">The walk starts at zero.</p>
   <div class="activity-buttons"><button class="secondary-button panel-button" type="button" data-play disabled>Play path</button><button class="secondary-button panel-button" type="button" data-new disabled>New path</button></div>
   <noscript><p>The controls need JavaScript. The static figure and Python example below show the same construction.</p></noscript>
-  {% include controls/panel.html help='<p>Use the slider to reveal part of the walk. Play animates it; New path makes another reproducible walk. Reset shows the initial path.</p>' %}
+  {% include controls/panel.html help='<p>Use the slider to reveal part of the walk. Play animates it; New path makes another reproducible walk. Reset shows the whole current path.</p>' %}
 </section>

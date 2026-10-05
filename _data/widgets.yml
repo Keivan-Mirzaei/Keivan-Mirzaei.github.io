@@ -2,59 +2,59 @@
 function-machine:
   script: /assets/js/widgets/function-machine.mjs
   selector: '[data-widget="function-machine"]'
-  styles: [function-machine]
+  styles: [function-machine, widget-frame]
 quadratic:
   script: /assets/js/widgets/quadratic.js
   selector: '[data-widget="quadratic"]'
-  styles: [activities]
+  styles: [activities, widget-frame]
 derivative:
   script: /assets/js/widgets/derivative.js
   selector: '[data-widget="derivative"]'
-  styles: [activities]
+  styles: [activities, widget-frame]
 differentiability:
   script: /assets/js/widgets/differentiability.mjs
   selector: '[data-widget="differentiability"]'
-  styles: [activities]
+  styles: [activities, widget-frame]
 bayes:
   script: /assets/js/widgets/bayes.js
   selector: '[data-widget="bayes"]'
-  styles: [activities]
+  styles: [activities, widget-frame]
 card-trick:
   script: /assets/js/widgets/card-trick.js
   selector: '[data-widget="card-trick"]'
-  styles: [activities]
+  styles: [activities, widget-frame]
 three-cups:
   script: /assets/js/widgets/three-cups.mjs
   selector: '[data-three-cups]'
-  styles: [activities, three-cups]
+  styles: [activities, three-cups, widget-frame]
 random-walk:
   script: /assets/js/widgets/random-walk.js
   selector: '[data-widget="random-walk"]'
-  styles: [activities]
+  styles: [activities, widget-frame]
 scientific-plot:
   script: /assets/js/widgets/scientific-plot.mjs
   selector: '[data-widget="scientific-plot"]'
-  styles: [activities]
+  styles: [activities, widget-frame]
 sphere-slice:
   script: /assets/js/widgets/sphere-slice.mjs
   selector: '[data-widget="sphere-slice"]'
-  styles: [activities]
+  styles: [activities, widget-frame]
 tilted-square:
   script: /assets/js/widgets/tilted-square.js
   selector: '[data-widget="tilted-square"]'
-  styles: []
+  styles: [widget-frame]
 magicians-problem:
   script: /assets/js/widgets/magicians-problem.mjs
   selector: '[data-magician-game], [data-magician-probability], [data-magician-routes]'
-  styles: [activities, magician]
+  styles: [activities, magician, widget-frame]
 cevian-triangles:
   script: /assets/js/widgets/cevian-triangles.mjs
   selector: '[data-cevian-explorer], [data-cevian-simplex]'
-  styles: [activities, cevian]
+  styles: [activities, cevian, widget-frame]
 lights-out:
   script: /assets/js/widgets/lights-out.mjs
   selector: '[data-lights-out], [data-lights-out-proof]'
-  styles: [activities, lights-out]
+  styles: [activities, lights-out, widget-frame]
 graph-lights-out:
   script: /assets/js/widgets/graph-lights-out.mjs
   selector: '[data-graph-lights-out]'
@@ -62,7 +62,7 @@ graph-lights-out:
 three-utilities:
   script: /assets/js/widgets/three-utilities.mjs
   selector: '[data-three-utilities-plane], [data-three-utilities-surface], [data-three-utilities-square]'
-  styles: [activities, three-utilities]
+  styles: [activities, three-utilities, widget-frame]
 hex:
   script: /assets/js/widgets/hex.mjs
   selector: '[data-hex-game], [data-hex-proof]'

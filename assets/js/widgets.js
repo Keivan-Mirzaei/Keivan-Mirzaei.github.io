@@ -1,3 +1,7 @@
+import { initializeWidgetUI } from './lib/widget-ui.mjs';
+
+document.querySelectorAll('.widget-frame').forEach(initializeWidgetUI);
+
 // Keep article activities idle until the reader is near them. Linked diagrams
 // share one controller and therefore activate together, exactly once per page.
 const pending = new Map();
@@ -47,15 +51,3 @@ for (const descriptor of document.querySelectorAll('[data-widget-src]')) {
     else load();
   }
 }
-
-// Native disclosures work without JavaScript; this adds familiar dismissal.
-document.addEventListener('keydown', event => {
-  if (event.key !== 'Escape') return;
-  const help = document.activeElement?.closest('.panel-help, .puzzle-help');
-  if (help?.open) { help.open = false; help.querySelector('summary').focus(); }
-});
-document.addEventListener('click', event => {
-  document.querySelectorAll('.panel-help[open], .puzzle-help[open]').forEach(help => {
-    if (!help.contains(event.target)) help.open = false;
-  });
-});

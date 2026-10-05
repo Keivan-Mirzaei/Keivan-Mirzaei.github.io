@@ -31,6 +31,8 @@ The homepage, format lists, learning index, paginated post archive, search index
 
 ## Problems: write normally, add a solution if you want
 
+Follow the [problem authoring roadmap](problem-roadmap.md) when writing new problems or revising existing ones. It records the agreed writing principles and disclosure-row design for hints, solutions, and optional material.
+
 ```markdown
 ---
 title: An interesting problem
@@ -47,18 +49,20 @@ State the problem here.
 Write the solution here using ordinary Markdown.
 ```
 
-Everything after the single `<!-- solution -->` marker becomes a native disclosure that starts closed. There is no need to write the disclosure's HTML. Omit the marker and solution entirely for a problem without a solution. The disclosure works without JavaScript. This is a reading aid, not access control: the solution is still present in the downloaded page.
+The `<!-- solution -->` marker starts a **Solution** disclosure. Its content ends at the next section marker, or at the end of the post. Write ordinary Markdown; the layout supplies the disclosure's HTML.
 
-For a separate hint, you can use a smaller disclosure before the solution marker:
+Optional markers create independent rows at the same level:
 
-```html
-<details markdown="1">
-<summary>A hint</summary>
+| Marker | Row label |
+| --- | --- |
+| `<!-- hint -->` | Hint |
+| `<!-- solution -->` | Solution |
+| `<!-- alternative -->` | Another solution |
+| `<!-- extension -->` | Extension |
 
-Write the hint here.
+Keep sections in this order and omit material that does not add a distinct insight. Text before the first marker is the visible problem statement. Each row starts closed, opens inline, and can remain open alongside the others. Empty sections are omitted. Escape closes the row containing focus and returns focus to its label.
 
-</details>
-```
+Omit the solution marker for a problem without a solution. Native disclosures work without JavaScript. This is a reading aid, not access control: their contents are still present in the downloaded page.
 
 ## Explorations: combine the media the idea needs
 
@@ -71,7 +75,7 @@ Use `format: exploration`. The body can be as short or as long as you like; ther
 
 ```liquid
 [My LinkedIn profile]({{ site.linkedin_url }})
-![Describe what the diagram shows]({{ '/Figures/1001.png' | relative_url }})
+![Describe what the diagram shows]({{ '/assets/figures/trigonometry-without-a-word.svg' | relative_url }})
 ```
 
 ### Equations

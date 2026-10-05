@@ -24,7 +24,7 @@ function fixture() {
     cup.querySelector = selector => selector === '[data-cup-orientation]' ? cup.orientation : cup.selection;
     return cup;
   });
-  const fields = Object.fromEntries(['count', 'status', 'flip', 'reset', 'undo'].map(name => [name, new Control()]));
+  const fields = Object.fromEntries(['count', 'status', 'flip', 'reset', 'undo', 'redo'].map(name => [name, new Control()]));
   const widget = {
     querySelectorAll: () => cups,
     querySelector: selector => fields[selector.match(/data-cups-([^\]]+)/)[1]],
@@ -130,4 +130,15 @@ test('multiple instances keep separate cup states and selections', () => {
   assert.deepEqual(second.state(), [false, false, false]);
   assert.deepEqual(second.selected(), [1]);
   assert.equal(second.fields.count.textContent, '0 moves · 0 of 3 up');
+});
+
+
+test('redo restores flips and reset; a new move discards the redo branch', () => {
+  const f = fixture(); f.move([0, 1]); f.fields.undo.click();
+  assert.equal(f.fields.redo.disabled, false); f.fields.redo.click();
+  assert.deepEqual(f.state(), [true, true, false]);
+  f.fields.reset.click(); f.fields.undo.click(); f.fields.redo.click();
+  assert.deepEqual(f.state(), [false, false, false]);
+  f.fields.undo.click(); f.move([0, 2]);
+  assert.equal(f.fields.redo.disabled, true);
 });

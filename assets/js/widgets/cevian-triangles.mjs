@@ -1,9 +1,10 @@
+import { formatNumber } from '../lib/widget-math.mjs';
 import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
 import { TRIANGLE_SHAPES, normalizeWeights, triangleData, positionWeights, barycentricPoint, simplexRatio } from '../lib/cevian-math.mjs';
 import { triangleDiagram, factorsDiagram, landscapeDiagram, landscapeMarker, tetrahedronDiagram } from '../lib/cevian-diagrams.mjs';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
-const percentage = value => `${(value * 100).toFixed(2)}%`;
+const percentage = value => `${formatNumber(value * 100)}%`;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 function mount(container, markup) {
@@ -56,14 +57,17 @@ if (explorer) {
     const data = triangleData(TRIANGLE_SHAPES[shape], weights);
     weights = data.weights;
     height.value = weights[0] * 100;
+    explorer.querySelector('[data-cv-height-output]').textContent = percentage(weights[0]);
+    explorer.querySelector('[data-cv-across-output]').textContent = percentage(weights[2] / (1 - weights[0]));
     across.value = weights[2] / (1 - weights[0]) * 100;
     document.querySelectorAll('[data-cv-area]').forEach(label => { label.textContent = `${percentage(data.ratio)} of ABC`; });
     data.corners.forEach((area, i) => { document.querySelector(`[data-cv-corner="${i}"]`).textContent = percentage(area); });
-    document.querySelector('[data-cv-balance]').textContent = `${data.sideRatios.map(value => value.toFixed(3)).join(' × ')} = 1 (before rounding)`;
+    document.querySelector('[data-cv-balance]').textContent = `${data.sideRatios.map(value => formatNumber(value)).join(' × ')} = 1 (before rounding)`;
     const denominator = data.sideRatios.reduce((product, value) => product * (1 + value), 1);
-    document.querySelector('[data-cv-product]').textContent = `Denominator: ${denominator.toFixed(4)} ≥ 8. Area ratio: 2 / ${denominator.toFixed(4)} = ${percentage(data.ratio)}.`;
+    document.querySelector('[data-cv-product]').textContent = `Denominator: ${formatNumber(denominator)} ≥ 8. Area ratio: 2 / ${formatNumber(denominator)} = ${percentage(data.ratio)}.`;
     status.setAttribute('aria-live', announce ? 'polite' : 'off');
     const atCenter = weights.every(value => Math.abs(value - 1 / 3) < 1e-8);
+    explorer.dataset.complete = String(atCenter);
     status.textContent = atCenter ? 'At the centroid: all three contacts are midpoints. The four triangles each occupy 25%.' : `Green area: ${percentage(data.ratio)}. The maximum is 25%, reached only at the centroid.`;
     redrawMain(); redrawCeva(); redrawCorners(); redrawFactors();
     if (landscapeShape !== shape) redrawMap();
@@ -90,9 +94,9 @@ if (explorer) {
   const history = bindPanelHistory(explorer, {
     read: () => ({ weights, shape }),
     restore: state => { cancelMotion(); ({ weights, shape } = state); shapeControl.value = shape; draw(); },
-    reset: () => { cancelMotion(); weights = [.5, .1875, .3125]; shape = 'scalene'; shapeControl.value = shape; draw(); }
+    reset: () => { cancelMotion(); weights = [.5, .1875, .3125]; draw(); }
   });
-  trackControlEdits([height, across, shapeControl], history);
+  trackControlEdits([height, across, shapeControl, main, map], history);
 
   function pointerWeights(event, holder) {
     const svg = holder.querySelector('svg');
@@ -106,7 +110,6 @@ if (explorer) {
 
   for (const holder of [main, map]) {
     holder.addEventListener('pointerdown', event => {
-      history.remember();
       if (event.button !== 0) return;
       if (holder === map && event.target.closest('[data-cv-map-maximum]')) {
         cancelMotion(); weights = [1/3,1/3,1/3]; draw(); return;
@@ -144,7 +147,7 @@ if (explorer) {
 
   main.addEventListener('keydown', event => {
     if (!event.target.hasAttribute('data-cv-point') || !['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) return;
-    event.preventDefault(); history.remember(); cancelMotion();
+    event.preventDefault(); cancelMotion();
     const step = event.shiftKey ? .05 : .01;
     const t = weights[0], q = weights[2] / (1 - t);
     setPosition(t + (event.key === 'ArrowUp' ? step : event.key === 'ArrowDown' ? -step : 0), q + (event.key === 'ArrowRight' ? step : event.key === 'ArrowLeft' ? -step : 0));
@@ -159,6 +162,7 @@ if (explorer) {
   centerButtons.forEach(button => {
     button.disabled = false;
     button.addEventListener('click', () => {
+      if (weights.every(value => Math.abs(value - 1/3) < 1e-8)) return;
       history.remember(); cancelMotion();
       if (reducedMotion.matches) { weights = [1/3, 1/3, 1/3]; draw(); return; }
       const start = weights.slice();
@@ -205,9 +209,11 @@ if (simplex) {
       simplex.querySelector(`[data-cv-weight-output="${i}"]`).value = `${(normalized[i] * 100).toFixed(1)}%`;
     });
     rotation.value = angle;
+    simplex.querySelector('[data-cv-rotation-output]').textContent = `${Math.round(angle)}°`;
     simplex.querySelector('[data-cv-volume]').textContent = `${percentage(ratio)} of the volume`;
     status.setAttribute('aria-live', announce ? 'polite' : 'off');
-    status.textContent = normalized.every(value => Math.abs(value - .25) < 1e-8) ? 'Equal weights: O is the centroid, the contacts are face centers, and the volume ratio is exactly 1/27 (3.7037%).' : `Volume ratio: ${percentage(ratio)}. The maximum is 1/27, about 3.704%, at equal weights.`;
+    simplex.dataset.complete = String(normalized.every(value => Math.abs(value - .25) < 1e-8));
+    status.textContent = simplex.dataset.complete === 'true' ? 'Equal weights: O is the centroid, the contacts are face centers, and the volume ratio is exactly 1/27 (about 3.70%).' : `Volume ratio: ${percentage(ratio)}. The maximum is 1/27, about 3.70%, at equal weights.`;
     redraw();
   }
   controls.forEach((control, i) => {
@@ -215,15 +221,14 @@ if (simplex) {
     control.addEventListener('input', () => { cancelMotion(); weights[i] = Number(control.value); draw(); });
   });
   rotation.disabled = center.disabled = false;
-  rotation.addEventListener('input', () => { angle = Number(rotation.value); redraw(); });
+  rotation.addEventListener('input', () => { angle = Number(rotation.value); draw(); });
   const history = bindPanelHistory(simplex, {
     read: () => ({ weights, angle }),
     restore: state => { cancelMotion(); ({ weights, angle } = state); draw(); },
     reset: () => { cancelMotion(); weights = [42, 27, 19, 12]; angle = 32; draw(); }
   });
-  trackControlEdits([...controls, rotation], history);
+  trackControlEdits([...controls, rotation, holder], history);
   holder.addEventListener('pointerdown', event => {
-    history.remember();
     if (event.button !== 0) return;
     drag = { x: event.clientX, angle };
     holder.setPointerCapture(event.pointerId);
@@ -231,7 +236,8 @@ if (simplex) {
   holder.addEventListener('pointermove', event => {
     if (!drag || !holder.hasPointerCapture(event.pointerId)) return;
     angle = ((drag.angle + (event.clientX - drag.x) * .6) % 360 + 360) % 360;
-    rotation.value = angle; redraw();
+    rotation.value = angle;
+    simplex.querySelector('[data-cv-rotation-output]').textContent = `${Math.round(angle)}°`; redraw();
   });
   function finish(event) {
     drag = null;
@@ -240,6 +246,7 @@ if (simplex) {
   holder.addEventListener('pointerup', finish);
   holder.addEventListener('pointercancel', finish);
   center.addEventListener('click', () => {
+    if (normalizeWeights(weights).every(value => Math.abs(value - .25) < 1e-8)) return;
     history.remember(); cancelMotion();
     if (reducedMotion.matches) { weights = [25,25,25,25]; draw(); return; }
     const start = weights.slice();

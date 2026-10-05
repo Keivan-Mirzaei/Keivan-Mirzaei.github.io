@@ -1,6 +1,7 @@
 """Exercise authoring and rendering without writing test content into the site."""
 
 import json
+from html.parser import HTMLParser
 import os
 from pathlib import Path
 import shutil
@@ -10,6 +11,36 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
+
+class ProblemRows(HTMLParser):
+    """Inspect real rendered rows, including accidental nesting or open state."""
+
+    def __init__(self, html):
+        super().__init__()
+        self.depth = 0
+        self.rows = []
+        self.labels = []
+        self.summary = False
+        self.feed(html)
+
+    def handle_starttag(self, tag, attributes):
+        attrs = dict(attributes)
+        if tag == "details":
+            self.depth += 1
+            self.rows.append((attrs.get("class"), self.depth, "open" in attrs))
+        if tag == "summary":
+            self.summary = True
+            self.labels.append("")
+
+    def handle_endtag(self, tag):
+        if tag == "details":
+            self.depth -= 1
+        if tag == "summary":
+            self.summary = False
+
+    def handle_data(self, data):
+        if self.summary:
+            self.labels[-1] += data
 
 
 class ContentWorkflow(unittest.TestCase):
@@ -32,6 +63,45 @@ class ContentWorkflow(unittest.TestCase):
             create("Fixture problem", "--type", "problem")
             create("Fixture challenge", "--type", "problem", "--without-solution")
             create("Fixture exploration", "--type", "exploration")
+            create("Fixture support", "--type", "problem")
+            create("Fixture empty support", "--type", "problem")
+            create("Fixture hint only", "--type", "problem", "--without-solution")
+            for slug, body in {
+                "fixture-support": """The visible question.
+
+<!-- hint -->
+
+**A strategic hint.**
+
+<!-- solution -->
+
+The main argument.
+
+<!-- alternative -->
+
+A different argument.
+
+<!-- extension -->
+
+A further question.
+""",
+                "fixture-empty-support": """The visible question.
+
+<!-- hint -->
+<!-- solution -->
+<!-- alternative -->
+<!-- extension -->
+""",
+                "fixture-hint-only": """The visible question.
+
+<!-- hint -->
+
+A cue without a solution.
+""",
+            }.items():
+                fixture = source / "_posts" / f"2024-04-02-{slug}.md"
+                header = fixture.read_text().split("\n\n", 1)[0]
+                fixture.write_text(header + "\n\n" + body)
             create("Fixture lesson", "--type", "module")
             create("Fixture research", "--type", "research")
             create("Unpublished research sentinel", "--type", "research", "--draft")
@@ -87,6 +157,18 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertIn("Write the solution here.", problem)
             self.assertNotIn('class="problem-solution"', page("fixture-challenge"))
             self.assertNotIn('class="problem-solution"', page("fixture-exploration"))
+            support = page("fixture-support")
+            rows = ProblemRows(support)
+            self.assertEqual(rows.labels, ["Hint", "Solution", "Another solution", "Extension"])
+            self.assertEqual([depth for _, depth, _ in rows.rows], [1, 1, 1, 1])
+            self.assertFalse(any(is_open for _, _, is_open in rows.rows))
+            self.assertIn("<strong>A strategic hint.</strong>", support)
+            self.assertNotIn("<!-- alternative -->", support)
+            self.assertIn("problem-disclosures.js", support)
+            self.assertNotIn("problem-disclosures.js", page("fixture-exploration"))
+            self.assertNotIn('class="problem-disclosures"', page("fixture-empty-support"))
+            self.assertEqual(ProblemRows(page("fixture-hint-only")).labels, ["Hint"])
+            self.assertNotIn('class="problem-solution"', page("fixture-hint-only"))
             module = page("fixture-lesson", "learning")
             self.assertIn("Before you start", module)
             self.assertIn('data-widget="quadratic"', module)

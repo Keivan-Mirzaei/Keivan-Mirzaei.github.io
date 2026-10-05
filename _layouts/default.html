@@ -13,6 +13,7 @@
   {% if page.format == 'module' %}<link rel="stylesheet" href="{{ '/assets/css/learning.css' | relative_url }}">{% endif %}
   {% feed_meta %}
   <script src="{{ '/assets/js/navigation.js' | relative_url }}" defer></script>
+  {% if page.format == 'problem' %}<script src="{{ '/assets/js/problem-disclosures.js' | relative_url }}" defer></script>{% endif %}
   {% if page.search_page %}<script src="{{ '/assets/js/search.js' | relative_url }}" defer></script>{% endif %}
   {% if page.widgets contains 'sphere-slice' %}
   <script type="importmap">{"imports":{"three":{{ site.data.graph_libraries.three | jsonify }},"three/addons/":{{ site.data.graph_libraries.three_addons | jsonify }}}}</script>

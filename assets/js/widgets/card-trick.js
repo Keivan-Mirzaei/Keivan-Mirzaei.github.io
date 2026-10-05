@@ -9,6 +9,7 @@ import { bindPanelHistory } from '../lib/panel-history.mjs';
     let round;
 
     function deal() {
+      widget.dataset.complete = String(round === 3);
       columns.replaceChildren();
       const piles = [0, 1, 2].map((column) => deck.filter((_, index) => index % 3 === column));
       piles.forEach((pile, column) => {
@@ -32,6 +33,7 @@ import { bindPanelHistory } from '../lib/panel-history.mjs';
           const others = piles.filter((_, index) => index !== column);
           deck = [...others[0], ...pile, ...others[1]];
           round += 1;
+          widget.dataset.complete = String(round === 3);
           if (round === 3) {
             columns.querySelectorAll('button').forEach((button) => { button.disabled = true; });
             feedback.textContent = `Your card is ${deck[10]}. Three collections have moved it to position 11. Try a different number!`;

@@ -1,58 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-labelledby="title desc">
-<title id="title">Eight disjoint regions give a lower bound of sixteen detectors</title>
-<desc id="desc">A seven-by-seven board divided into eight disjoint rectangles, labelled A through H. Each rectangle covers six squares and has dimensions two by three or three by two. A and B occupy rows one to three and columns one to two and three to four. C and D occupy columns five to seven and rows one to two and three to four. E and F occupy columns one to three and rows four to five and six to seven. G and H occupy rows five to seven and columns four to five and six to seven. Only the central square, row four and column four, lies outside the rectangles. Each rectangle requires at least two detectors.</desc>
-<rect width="640" height="480" rx="12" fill="#f3f4ef"/>
-<rect x="145" y="48" width="350" height="350" fill="#fcfcf9"/>
-<rect x="145" y="48" width="100" height="150" fill="#e7edf5"/>
-<rect x="245" y="48" width="100" height="150" fill="#edf1e5"/>
-<rect x="345" y="48" width="150" height="100" fill="#f1e9df"/>
-<rect x="345" y="148" width="150" height="100" fill="#e7eee9"/>
-<rect x="145" y="198" width="150" height="100" fill="#e7eee9"/>
-<rect x="145" y="298" width="150" height="100" fill="#f1e9df"/>
-<rect x="295" y="248" width="100" height="150" fill="#edf1e5"/>
-<rect x="395" y="248" width="100" height="150" fill="#e7edf5"/>
-<rect x="295" y="198" width="50" height="50" fill="#e0e1dc"/>
-<path d="M145 48V398M145 48H495" fill="none" stroke="#adb6ae" stroke-width="1"/>
-<path d="M195 48V398M145 98H495" fill="none" stroke="#adb6ae" stroke-width="1"/>
-<path d="M245 48V398M145 148H495" fill="none" stroke="#adb6ae" stroke-width="1"/>
-<path d="M295 48V398M145 198H495" fill="none" stroke="#adb6ae" stroke-width="1"/>
-<path d="M345 48V398M145 248H495" fill="none" stroke="#adb6ae" stroke-width="1"/>
-<path d="M395 48V398M145 298H495" fill="none" stroke="#adb6ae" stroke-width="1"/>
-<path d="M445 48V398M145 348H495" fill="none" stroke="#adb6ae" stroke-width="1"/>
-<path d="M495 48V398M145 398H495" fill="none" stroke="#adb6ae" stroke-width="1"/>
-<rect x="145" y="48" width="100" height="150" fill="none" stroke="#345d79" stroke-width="3"/>
-<circle cx="195" cy="123" r="15" fill="#fcfcf9" stroke="#345d79" stroke-width="1.5"/>
-<text x="195" y="129" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" fill="#345d79">A</text>
-<rect x="245" y="48" width="100" height="150" fill="none" stroke="#345d79" stroke-width="3"/>
-<circle cx="295" cy="123" r="15" fill="#fcfcf9" stroke="#345d79" stroke-width="1.5"/>
-<text x="295" y="129" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" fill="#345d79">B</text>
-<rect x="345" y="48" width="150" height="100" fill="none" stroke="#345d79" stroke-width="3"/>
-<circle cx="420" cy="98" r="15" fill="#fcfcf9" stroke="#345d79" stroke-width="1.5"/>
-<text x="420" y="104" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" fill="#345d79">C</text>
-<rect x="345" y="148" width="150" height="100" fill="none" stroke="#345d79" stroke-width="3"/>
-<circle cx="420" cy="198" r="15" fill="#fcfcf9" stroke="#345d79" stroke-width="1.5"/>
-<text x="420" y="204" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" fill="#345d79">D</text>
-<rect x="145" y="198" width="150" height="100" fill="none" stroke="#345d79" stroke-width="3"/>
-<circle cx="220" cy="248" r="15" fill="#fcfcf9" stroke="#345d79" stroke-width="1.5"/>
-<text x="220" y="254" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" fill="#345d79">E</text>
-<rect x="145" y="298" width="150" height="100" fill="none" stroke="#345d79" stroke-width="3"/>
-<circle cx="220" cy="348" r="15" fill="#fcfcf9" stroke="#345d79" stroke-width="1.5"/>
-<text x="220" y="354" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" fill="#345d79">F</text>
-<rect x="295" y="248" width="100" height="150" fill="none" stroke="#345d79" stroke-width="3"/>
-<circle cx="345" cy="323" r="15" fill="#fcfcf9" stroke="#345d79" stroke-width="1.5"/>
-<text x="345" y="329" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" fill="#345d79">G</text>
-<rect x="395" y="248" width="100" height="150" fill="none" stroke="#345d79" stroke-width="3"/>
-<circle cx="445" cy="323" r="15" fill="#fcfcf9" stroke="#345d79" stroke-width="1.5"/>
-<text x="445" y="329" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" fill="#345d79">H</text>
-<g font-family="sans-serif" font-size="16" text-anchor="middle" fill="#686e66">
-<text x="170" y="31">1</text><text x="125" y="79">1</text>
-<text x="220" y="31">2</text><text x="125" y="129">2</text>
-<text x="270" y="31">3</text><text x="125" y="179">3</text>
-<text x="320" y="31">4</text><text x="125" y="229">4</text>
-<text x="370" y="31">5</text><text x="125" y="279">5</text>
-<text x="420" y="31">6</text><text x="125" y="329">6</text>
-<text x="470" y="31">7</text><text x="125" y="379">7</text>
-</g>
-<text x="320" y="436" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#285b46">Eight disjoint regions × at least 2 detectors = at least 16</text>
-<text x="320" y="464" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#686e66">Each region is 2 × 3 or 3 × 2; the central square is left over.</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="95 10 440 400" role="img" aria-labelledby="title desc">
+  <title id="title">Eight disjoint regions give a lower bound of sixteen detectors</title>
+  <desc id="desc">Eight disjoint two-by-three or three-by-two rectangles partition all but the central square of a seven-by-seven board. Each requires at least two detectors to distinguish its two spaceship positions from an empty board.</desc>
+  <rect x="145" y="48" width="350" height="350" fill="#fcfcf9" />
+  <rect x="145" y="48" width="100" height="150" fill="#edf1e8" />
+  <rect x="245" y="48" width="100" height="150" fill="#f5f6ef" />
+  <rect x="345" y="48" width="150" height="100" fill="#f5f6ef" />
+  <rect x="345" y="148" width="150" height="100" fill="#edf1e8" />
+  <rect x="145" y="198" width="150" height="100" fill="#edf1e8" />
+  <rect x="145" y="298" width="150" height="100" fill="#f5f6ef" />
+  <rect x="295" y="248" width="100" height="150" fill="#f5f6ef" />
+  <rect x="395" y="248" width="100" height="150" fill="#edf1e8" />
+  <rect x="295" y="198" width="50" height="50" fill="#f3f4ef" />
+  <path d="M145 48V398M145 48H495" fill="none" stroke="#adb6ae" stroke-width="1" />
+  <path d="M195 48V398M145 98H495" fill="none" stroke="#adb6ae" stroke-width="1" />
+  <path d="M245 48V398M145 148H495" fill="none" stroke="#adb6ae" stroke-width="1" />
+  <path d="M295 48V398M145 198H495" fill="none" stroke="#adb6ae" stroke-width="1" />
+  <path d="M345 48V398M145 248H495" fill="none" stroke="#adb6ae" stroke-width="1" />
+  <path d="M395 48V398M145 298H495" fill="none" stroke="#adb6ae" stroke-width="1" />
+  <path d="M445 48V398M145 348H495" fill="none" stroke="#adb6ae" stroke-width="1" />
+  <path d="M495 48V398M145 398H495" fill="none" stroke="#adb6ae" stroke-width="1" />
+  <rect x="145" y="48" width="100" height="150" fill="none" stroke="#285b46" stroke-width="2" />
+  <rect x="245" y="48" width="100" height="150" fill="none" stroke="#285b46" stroke-width="2" />
+  <rect x="345" y="48" width="150" height="100" fill="none" stroke="#285b46" stroke-width="2" />
+  <rect x="345" y="148" width="150" height="100" fill="none" stroke="#285b46" stroke-width="2" />
+  <rect x="145" y="198" width="150" height="100" fill="none" stroke="#285b46" stroke-width="2" />
+  <rect x="145" y="298" width="150" height="100" fill="none" stroke="#285b46" stroke-width="2" />
+  <rect x="295" y="248" width="100" height="150" fill="none" stroke="#285b46" stroke-width="2" />
+  <rect x="395" y="248" width="100" height="150" fill="none" stroke="#285b46" stroke-width="2" />
+  <g font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" text-anchor="middle" fill="#686e66">
+    <text x="170" y="31">1</text>
+    <text x="125" y="79">1</text>
+    <text x="220" y="31">2</text>
+    <text x="125" y="129">2</text>
+    <text x="270" y="31">3</text>
+    <text x="125" y="179">3</text>
+    <text x="320" y="31">4</text>
+    <text x="125" y="229">4</text>
+    <text x="370" y="31">5</text>
+    <text x="125" y="279">5</text>
+    <text x="420" y="31">6</text>
+    <text x="125" y="329">6</text>
+    <text x="470" y="31">7</text>
+    <text x="125" y="379">7</text>
+  </g>
 </svg>

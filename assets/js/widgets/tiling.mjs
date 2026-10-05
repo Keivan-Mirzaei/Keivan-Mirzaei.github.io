@@ -62,7 +62,6 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     const value = Number(get('challenge').value);
     const name = DIFFICULTIES[value - 1].name;
     get('challenge-label').textContent = name;
-    get('challenge').setAttribute('aria-valuetext', name);
     const level = DIFFICULTIES[value - 1];
     get('level-detail').textContent = `${level.width} × ${level.height} floor · ${level.sizes.length} tiles`;
   }

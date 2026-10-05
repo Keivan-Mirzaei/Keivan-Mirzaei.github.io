@@ -1,11 +1,11 @@
-<section class="graph-widget tu-widget" data-three-utilities-square aria-labelledby="tu-square-title">
+<section class="graph-widget widget-frame tu-widget" data-three-utilities-square aria-labelledby="tu-square-title">
   <div class="graph-heading"><h3 id="tu-square-title">Two pipes use the joined edges</h3><span class="activity-badge" data-tu-count>9 / 9 pipes · no crossings</span></div>
   <p class="tu-caption">The <strong class="tu-seam-a">green dashed sides</strong> join top to bottom. The <strong class="tu-seam-b">purple dashed sides</strong> join left to right. A pipe leaving one side continues at the matching point on its partner.</p>
   <div class="tu-board" data-tu-square><img src="{{ '/assets/images/three-utilities-solution.svg' | relative_url }}" alt="All nine pipes on the glued square, with no crossings. House 1 to Water uses the paired top and bottom sides; House 3 to Gas uses the paired left and right sides." width="620" height="632"></div>
   <div class="tu-legend"><span class="tu-gas">G · Gas</span><span class="tu-water">W · Water</span><span class="tu-power">E · Electricity</span></div>
-  <div class="tu-actions"><button class="secondary-button panel-button" type="button" data-tu-next disabled>Add top ↔ bottom pipe</button><button class="lo-secondary panel-button" type="button" data-tu-reset disabled>Start with seven</button></div>
+  <div class="tu-actions"><button class="secondary-button panel-button" type="button" data-tu-next disabled>Add top ↔ bottom pipe</button><button class="lo-secondary panel-button" type="button" data-tu-reset disabled>Reset</button></div>
   <div class="tu-trace-label"><label for="tu-trace">Trace a pipe</label><select id="tu-trace" data-tu-trace disabled><option value="">All pipes</option></select></div>
   <p class="tu-status" data-tu-status role="status">All nine pipes fit. House 1 → Water uses the top and bottom; House 3 → Gas uses the left and right.</p>
   <noscript><p>The static diagram shows the completed solution. The two pairs of boundary dots join up when the square is glued.</p></noscript>
-  <div class="panel-actions"><button class="panel-button" type="button" data-panel-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button>{% include controls/help.html text='<p>Next pipe adds one connection. Reset returns to the seven starting connections so you can follow the construction again.</p>' %}</div>
+  <div class="panel-actions"><button class="panel-button" type="button" data-panel-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button><button class="panel-button" type="button" data-panel-redo disabled>{% include icon.html name='redo' %}<span>Redo</span></button>{% include controls/help.html text='<p>Next pipe adds one connection. Reset returns to the seven starting connections so you can follow the construction again.</p>' %}</div>
 </section>

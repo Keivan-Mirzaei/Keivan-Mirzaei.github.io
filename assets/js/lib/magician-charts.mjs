@@ -5,6 +5,19 @@ export function powerLabel(exponent) {
   return `2${String(exponent).split('').map(digit => superscripts[Number(digit)]).join('')}`;
 }
 
+// Preserve a small nonzero difference instead of rounding it to zero.
+export function deviationLabel(value) {
+  if (!Number.isFinite(value)) return 'Undefined';
+  if (value === 0) return '0 ppm';
+  const absolute = Math.abs(value), sign = value < 0 ? '−' : '+';
+  if (absolute < .001) {
+    const [coefficient, exponent] = absolute.toExponential(2).split('e');
+    return `≈ ${sign}${coefficient} × 10<sup>${Number(exponent).toString().replace('-', '−')}</sup> ppm`;
+  }
+  const places = absolute < .01 ? 2 - Math.floor(Math.log10(absolute)) : 2;
+  return `≈ ${sign}${absolute.toFixed(places)} ppm`;
+}
+
 export function chartFrame(width) {
   return { width, height: 256, left: 52, right: width - 12, top: 34, bottom: 206 };
 }
@@ -33,7 +46,7 @@ const ripplePoints = Array.from({ length: 721 }, (_, index) => [index / 120, dif
 const routeA = Array.from({ length: 33 }, (_, index) => [index + 8, differencePerMillion(successProbability(2 ** (index + 8)))]);
 const routeB = Array.from({ length: 33 }, (_, index) => [index + 8, differencePerMillion(successProbability(Math.floor(2 ** (index + 8) * Math.SQRT2)))]);
 
-export function overviewChart(width) {
+export function overviewChart(width, id = 'mp-overview-clip') {
   const ticks = width < 440 ? [1, 8, 15, 22] : [1, 4, 7, 10, 13, 16, 19, 22];
   const labels = value => {
     const n = 2 ** value;
@@ -41,15 +54,15 @@ export function overviewChart(width) {
     if (n >= 1e3) return `${(n / 1e3).toFixed(1)}k`;
     return String(n);
   };
-  return plot({ width, id: 'mp-overview-clip', description: 'Exact chance of ever reaching one survivor, from 2 to about 4.2 million people. It appears to flatten near 72.13 percent.', xDomain: [1, 22], yDomain: [.65, .735], xTicks: ticks.map(value => ({ value, label: labels(value) })), yTicks: [.66, .68, .70, .72].map(value => ({ value, label: `${Math.round(value * 100)}%` })), xTitle: 'Audience size (log scale)', yTitle: 'Chance of one survivor', curves: [{ points: overviewPoints }], reference: PHASE_AVERAGE });
+  return plot({ width, id, description: 'Exact chance of ever reaching one survivor, from 2 to about 4.2 million people. It appears to flatten near 72.13 percent.', xDomain: [1, 22], yDomain: [.65, .735], xTicks: ticks.map(value => ({ value, label: labels(value) })), yTicks: [.66, .68, .70, .72].map(value => ({ value, label: `${Math.round(value * 100)}%` })), xTitle: 'Audience size (log scale)', yTitle: 'Chance of one survivor', curves: [{ points: overviewPoints }], reference: PHASE_AVERAGE });
 }
 
-export function rippleChart(width, start = 14) {
+export function rippleChart(width, start = 14, id = 'mp-ripple-clip') {
   const ticks = width < 440 ? [0, 3, 6] : [0, 2, 4, 6];
-  return plot({ width, id: 'mp-ripple-clip', description: 'Magnified limiting pattern over six doublings. Its difference from the average repeats between about minus 7.13 and plus 7.13 per million.', xDomain: [0, 6], yDomain: [-8, 8], xTicks: ticks.map(value => ({ value, label: powerLabel(start + value) })), yTicks: [-8, -4, 0, 4, 8].map(value => ({ value, label: String(value) })), xTitle: 'Audience size', yTitle: 'Difference per million', curves: [{ points: ripplePoints }], reference: 0, marker: true });
+  return plot({ width, id, description: 'Magnified limiting pattern over six doublings. Its difference from the average repeats between about minus 7.13 and plus 7.13 per million.', xDomain: [0, 6], yDomain: [-8, 8], xTicks: ticks.map(value => ({ value, label: powerLabel(start + value) })), yTicks: [-8, -4, 0, 4, 8].map(value => ({ value, label: String(value) })), xTitle: 'Audience size', yTitle: 'Difference per million', curves: [{ points: ripplePoints }], reference: 0, marker: true });
 }
 
-export function routesChart(width) {
+export function routesChart(width, id = 'mp-routes-clip') {
   const ticks = width < 440 ? [8, 24, 40] : [8, 16, 24, 32, 40];
-  return plot({ width, id: 'mp-routes-clip', description: 'Two sequences of growing audiences approach different probabilities. Powers of two approach 72.1352103 percent; powers of two times the square root of two, rounded down, approach 72.1342938 percent.', xDomain: [8, 40], yDomain: [-8, 8], xTicks: ticks.map(value => ({ value, label: String(value) })), yTicks: [-8, -4, 0, 4, 8].map(value => ({ value, label: String(value) })), xTitle: 'Number of doublings', yTitle: 'Difference per million', curves: [{ points: routeA }, { points: routeB, className: 'mp-other-route' }], reference: 0 });
+  return plot({ width, id, description: 'Two sequences of growing audiences approach different probabilities. Powers of two approach 72.1352103 percent; powers of two times the square root of two, rounded down, approach 72.1342938 percent.', xDomain: [8, 40], yDomain: [-8, 8], xTicks: ticks.map(value => ({ value, label: String(value) })), yTicks: [-8, -4, 0, 4, 8].map(value => ({ value, label: String(value) })), xTitle: 'Number of doublings', yTitle: 'Difference per million', curves: [{ points: routeA }, { points: routeB, className: 'mp-other-route' }], reference: 0 });
 }

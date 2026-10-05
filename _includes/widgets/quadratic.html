@@ -1,8 +1,8 @@
 {% assign graph_id = include.id | default: 'quadratic' %}
-<section class="graph-widget" data-widget="quadratic" aria-labelledby="{{ graph_id }}-heading">
+<section class="graph-widget widget-frame" data-widget="quadratic" aria-labelledby="{{ graph_id }}-heading">
   <div class="graph-heading">
     <h3 id="{{ graph_id }}-heading">Move a parabola</h3>
-    <p class="graph-equation" data-equation>y = 1(x − 0)² + 0</p>
+    <p class="graph-equation" data-equation><math><mi>y</mi><mo>=</mo><msup><mi>x</mi><mn>2</mn></msup></math></p>
   </div>
   <svg class="function-plot" viewBox="0 0 600 340" role="img" aria-labelledby="{{ graph_id }}-title {{ graph_id }}-description">
     <title id="{{ graph_id }}-title">Graph of a quadratic function</title>

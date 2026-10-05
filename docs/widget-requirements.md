@@ -2,7 +2,7 @@
 
 **Status:** Working design standard based on Keivan's reviewed requirements.
 
-This is the reference for interactive widgets in articles, lessons, and standalone activities. Use it to design and review prototypes and to update existing website widgets. Website migration proceeds locally, one puzzle at a time, with Keivan reviewing each before publication.
+This is the reference for interactive widgets in articles, lessons, and standalone activities. Use it to design and review prototypes and to update existing website widgets. The current migration covers every website widget: article activities, lesson explorers, proof walkthroughs, reusable examples, and standalone puzzles. Prepare and verify the full update locally for Keivan’s review before publication.
 
 ## 1. Design principles
 
@@ -16,7 +16,8 @@ This is the reference for interactive widgets in articles, lessons, and standalo
 - Prefer 2–3 significant digits for approximate numeric outputs when additional precision is unnecessary. Keep counts exact and retain the internal precision needed for correct mathematics.
 - Avoid duplicated explanations, decorative badges, unnecessary statistics, empty layout slots, and controls that do not serve the activity.
 - Use brief visible text for controls where helpful, with consistent labels and icons for common actions.
-- Prefer sliders over dropdowns. Use a slider for a bounded value or ordered choice and show its current value. Any necessary exception should be explained in the design sheet.
+- Use the same frame, control names, disclosure rules, and display formatting across articles, lessons, walkthroughs, and puzzles. Keep standalone and embedded versions of an activity consistent.
+- Use sliders for numerical quantities, such as position, rotation, size, or a parameter, and show the current value. Use native dropdowns for distinct named alternatives such as triangle shapes, functions, board types, goals, and difficulty levels. Keep a clear label and the selected option visible, and let the native menu provide familiar keyboard and phone interaction. A natural ordering does not make categories suitable for a slider. Use visible choice buttons only when direct comparison or frequent switching clearly benefits the activity, and explain that exception in its design sheet.
 - Use toggle switches for on/off options instead of visible checkboxes.
 - Keep the activity unobstructed. Omit unnecessary numbering, labels, and oversized handles, particularly when they cover points, lines, or other important content.
 - When an activity has a meaningful goal, make achievement visibly clear with a restrained colour effect and a concise confirmation. Remove the success effect if the current state no longer meets the goal.
@@ -54,7 +55,8 @@ Render only relevant controls. A relevant action can be temporarily disabled; an
 | Info / Help | Rules or context are needed | Use a short, hideable explanation. Avoid duplicate panels with the same purpose. |
 | Tip / Hint | Guidance supports learning or progress | Reveal it only when useful or requested; allow it to be hidden. |
 | Input | Entering an exact value or expression is useful | Provide a clear label and concise validation. |
-| Slider | Exploring a bounded parameter or ordered choice is useful | Prefer it over a dropdown; show a concise current value and units where relevant. Do not pair it with an exact-value input unless both are needed. |
+| Slider | Exploring a bounded numerical parameter is useful | Show a concise current value and units where relevant. Keep categorical choices off sliders. Do not pair it with an exact-value input unless both are needed. |
+| Dropdown | Choosing one of several named alternatives | Use a labeled native select with the current choice visible, a generous touch target, and a width that fits phones. Keep numerical quantities on sliders and on/off settings as toggle switches. |
 | Toggle switch | An option has an on/off state | Use a clearly labelled switch rather than a visible checkbox. |
 | Feedback | A result or change supports learning or interaction | Show only necessary feedback and keep it visible while relevant. For an applicable goal, use a clear colour effect together with a brief success message. |
 | Play / Pause | An activity runs over time | Let the user start and stop it deliberately. |
@@ -78,6 +80,7 @@ Use familiar action ordering as a starting point: **Undo, Redo, Reset, Shuffle**
 
 - Use a shared frame with optional places for context, interactive content, controls, necessary feedback, and supporting panels.
 - Keep spacing, alignment, controls, icon treatment, focus behavior, and responsive behavior consistent.
+- Align the actual button and input/dropdown boxes in a row, with matching heights and bottom edges. A label above a field must not shift its control below a neighbouring button. On phones, stack controls with matching left and right edges when the row cannot fit comfortably.
 - Start with four activity types: **parameter explorers, simulations, proof walkthroughs, and games**.
 - Let each type use a layout suited to its interaction while following the common design rules.
 - Support embedded presentation for articles and lessons. Focused presentation is mainly useful for puzzles, games, and simulations.
@@ -167,6 +170,8 @@ The first website migration is **Hex**, covering its standalone puzzle and the s
 
 The puzzle-specific saving preferences and selected-difficulty progress resets for all four existing puzzles were published on 4 October 2026. Four equal regions uses these same rules, treating each value of n as a separate progress level.
 
+Keivan expanded the scope on 5 October 2026 to **all widgets across the website**. Apply the shared frame and relevant behavior to the complete registry, including reusable templates that have no current published placement. Preserve the reviewed puzzle saving and difficulty rules. Keep the entire update local until publication is requested. See the [site-wide review sheet](widget-designs/site-wide-polish.md) and the [Magician design sheet](widget-designs/magicians-problem.md). Include saving, Settings, and Reset progress only when the activity has useful work to retain; short illustrative simulations can restart on a new visit. Document any precision exception when extra digits are necessary to reveal the phenomenon.
+
 ## 10. First prototype: four equal regions
 
 - **Stable ID:** `four-equal-regions`.
@@ -188,8 +193,9 @@ The first prototype is ready for design review. Mathematical checks cover 72 gen
 
 - [ ] The purpose and primary interaction are clear.
 - [ ] Every visible element serves this activity.
-- [ ] Sliders replace dropdowns where the choice can be expressed meaningfully; on/off options use toggle switches.
+- [ ] Numerical quantities use sliders; named alternatives use native dropdowns; on/off options use toggle switches. Dropdown labels and selected options remain clear at phone widths and with keyboard navigation.
 - [ ] The main content dominates; spacing, alignment, and typography are consistent.
+- [ ] Adjacent button and field boxes share their height and bottom edge; stacked controls share their left and right edges. Labels do not disrupt control alignment.
 - [ ] Formulas use suitable typesetting with correct radicals, fractions, exponents, spacing, and accessible alternatives.
 - [ ] Decimal/scientific notation, significant digits, approximation marks, and units follow a consistent policy; small nonzero results remain meaningful.
 - [ ] Formula rendering works in the target environment and fits narrow screens without blocking startup or clipping content.
@@ -215,7 +221,7 @@ Copy this section for a future widget and remove fields that are not useful.
 - **Purpose / primary interaction:**
 - **Needed title or subtitle:**
 - **Visible controls and their order:**
-- **Slider ranges and toggle-switch options, if applicable:**
+- **Numeric slider ranges, named dropdown options, and toggle-switch options, if applicable:**
 - **Supporting panels:**
 - **Necessary feedback:**
 - **Formula typesetting and editable source expressions, if applicable:**

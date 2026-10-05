@@ -21,8 +21,8 @@
   <button class="panel-button glo-next" type="button" data-glo-new disabled hidden>{% include icon.html name='arrow' %}<span>Next puzzle</span></button>
   <div class="widget-support-panel" data-widget-panel="settings" aria-label="Game settings" hidden>
     <div class="widget-slider-setting">
-      <div class="widget-slider-heading"><label data-glo-difficulty-name>Difficulty</label><output data-glo-difficulty-label>Easy</output></div>
-      <input type="range" min="1" max="4" step="1" value="1" data-glo-difficulty disabled>
+      <div class="widget-slider-heading"><label data-glo-difficulty-name>Difficulty</label><output data-glo-difficulty-label hidden>Easy</output></div>
+      <select aria-label="Difficulty" data-glo-difficulty disabled><option value="1">Easy</option><option value="2">Medium</option><option value="3">Hard</option><option value="4">Expert</option></select>
       <p data-glo-level-detail>6–8 lights · 2–3 presses at best</p>
     </div>
     <label class="widget-switch"><span>Show light numbers</span><input type="checkbox" role="switch" data-glo-numbers disabled><span class="widget-switch-track" aria-hidden="true"></span></label>

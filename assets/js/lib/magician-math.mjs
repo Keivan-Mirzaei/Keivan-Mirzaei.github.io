@@ -36,3 +36,16 @@ export function seededRandom(seed) {
     return state / 2 ** 32;
   };
 }
+
+// Replay the same coin tosses and guesses so Undo, Redo and Reset are exact.
+export function simulateAudience(seed = 42, rounds = 0) {
+  if (!Number.isInteger(seed) || seed < 0 || seed > 0xffffffff || !Number.isInteger(rounds) || rounds < 0 || rounds > 128) throw new RangeError('Invalid audience run.');
+  const random = seededRandom(seed);
+  let alive = Array(64).fill(true), heads = null, round = 0;
+  while (round < rounds && alive.filter(Boolean).length > 1) {
+    heads = random() >= .5;
+    alive = alive.map(standing => standing && (random() >= .5) === heads);
+    round += 1;
+  }
+  return { alive, heads, round, standing: alive.filter(Boolean).length };
+}

@@ -1,5 +1,5 @@
 ---
-title: "Conservative Polynomials"
+title: "Conservative polynomials"
 description: "What happens to a polynomial when we take its absolute value?"
 format: problem
 category: math
@@ -9,24 +9,18 @@ math: true
 archived: true
 ---
 
-Suppose that $$P$$ is a polynomial that takes both positive and negative values. Prove that the function $$\lvert P\rvert$$ is not a polynomial anymore.
+Let $$P$$ be a real polynomial that takes both positive and negative values. Prove that $$\lvert P\rvert$$ is not a polynomial.
+
+<!-- hint -->
+
+If $$Q=\lvert P\rvert$$ were a polynomial, what would squaring tell you?
 
 <!-- solution -->
 
-Suppose, for a contradiction, that $$Q(x)=\lvert P(x)\rvert$$ is a polynomial.
-
-At least one of the sets
+Suppose $$Q=\lvert P\rvert$$ is a polynomial. Since $$Q^2=P^2$$ at every real number, we have the polynomial identity
 
 $$
-\{x\in\mathbb R:P(x)\geq0\}
-\qquad\text{and}\qquad
-\{x\in\mathbb R:P(x)\leq0\}
+(Q-P)(Q+P)=0.
 $$
 
-is infinite, because together they cover the real line.
-
-If the first set is infinite, the polynomial $$P-Q$$ has infinitely many roots. A nonzero polynomial has only finitely many roots, so $$P=Q=\lvert P\rvert$$ everywhere. This contradicts the fact that $$P$$ takes negative values.
-
-If the second set is infinite, apply the same argument to $$P+Q$$. It follows that $$P=-Q=-\lvert P\rvert$$ everywhere, contradicting the fact that $$P$$ takes positive values.
-
-Either way, $$\lvert P\rvert$$ cannot be a polynomial. The proof uses only the elementary fact about roots of a polynomial; no continuity argument is needed.
+A product of two nonzero polynomials is nonzero, so $$Q=P$$ or $$Q=-P$$. Because $$Q\geq0$$ everywhere, either choice forces $$P$$ to have only one sign—a contradiction.

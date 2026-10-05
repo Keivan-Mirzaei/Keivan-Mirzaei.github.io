@@ -1,12 +1,13 @@
 {% assign machine_id = include.id | default: 'function-machine' %}
-<section class="function-machine" id="{{ machine_id }}" data-widget="function-machine" aria-label="Function machine for log of one minus x squared">
+<section class="function-machine widget-frame" id="{{ machine_id }}" data-widget="function-machine" aria-label="Function machine for log of one minus x squared">
   <form class="fm-flow" novalidate>
-    <input class="fm-input" id="{{ machine_id }}-input" data-machine-input type="text" value="0" maxlength="120" autocomplete="off" spellcheck="false" aria-label="Input x" title="Enter a number, such as 0.5" disabled>
+    <input class="fm-input" id="{{ machine_id }}-input" data-machine-input type="text" value="0" maxlength="120" autocomplete="off" spellcheck="false" aria-label="Input x" title="Enter a number, such as 0.5" aria-describedby="{{ machine_id }}-error" disabled>
     <span class="fm-arrow" aria-hidden="true">→</span>
     <div class="fm-body">
-      <span class="fm-rule">log(1 − <i>x</i>²)</span>
+      <math class="fm-rule" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="log of one minus x squared"><mi>log</mi><mo>(</mo><mn>1</mn><mo>−</mo><msup><mi>x</mi><mn>2</mn></msup><mo>)</mo></math>
     </div>
     <span class="fm-arrow" aria-hidden="true">→</span>
     <output class="fm-result" data-machine-result role="status" aria-live="polite" aria-atomic="true">0</output>
   </form>
+  <p class="fm-error" id="{{ machine_id }}-error" data-machine-error role="status" hidden></p>
 </section>

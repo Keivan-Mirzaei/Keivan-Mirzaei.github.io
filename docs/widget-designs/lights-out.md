@@ -8,7 +8,7 @@ Follow the [widget roadmap](../widget-requirements.md) and the reviewed Hex and 
 - **Purpose / interaction:** Press a light to flip it and its direct neighbours. Turn every light off. Amber means on; hollow means off. Crossing lines create no connections.
 - **Title and layout:** Use the page title and shared interface font. Let the graph lead. Keep puzzle number, lights remaining, press count, and a short status visible. Move graph details and completion statistics into supporting panels.
 - **Controls:** Undo, Redo, Reset, Shuffle, Hint, Settings, Info. Show Next puzzle after completion when another unsolved puzzle is available. Tap the puzzle number to open the number chooser.
-- **Settings:** A four-step difficulty slider; Show light numbers and Save progress switches. New visits hide light numbers by default; retain previously saved preferences.
+- **Settings:** A labeled difficulty dropdown; Show light numbers and Save progress switches. New visits hide light numbers by default; retain previously saved preferences.
 - **Panels:** Settings, Info, and the number chooser start closed, toggle with their own button, close with Escape, and are mutually exclusive. Outside taps and scrolling keep them open. Expand below the controls without covering the graph.
 - **Puzzle chooser:** Use a 1–1,000 slider and an exact number entry, with Open puzzle to commit. The exact entry is useful for revisiting a specific number among 1,000 choices; both controls preview the same value. Keep every catalogue number stable.
 - **Hints:** Hint reveals one useful light and a short instruction. The same control changes to Hide hint to dismiss it. Press the actual marked light to use it. Clear stale hints after a move, history action, navigation, or progress reset.

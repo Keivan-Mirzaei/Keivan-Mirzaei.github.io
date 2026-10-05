@@ -7,8 +7,9 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 function preparePlane(widget) {
   const board=widget.querySelector('[data-tu-board]'),count=widget.querySelector('[data-tu-count]'),status=widget.querySelector('[data-tu-status]');
+  const redo=widget.querySelector('[data-tu-redo]');
   const undo=widget.querySelector('[data-tu-undo]'),cancel=widget.querySelector('[data-tu-cancel]');
-  let routes=[],history=[],selected=null,waypoints=[],drag=null,cursor=[.5,.5],showCursor=false;
+  let routes=[],history=[],future=[],selected=null,waypoints=[],drag=null,cursor=[.5,.5],showCursor=false;
   let bad=obstruction(routes);
   const instruction='Choose a house, place points for the path, then choose a utility. Choose the same endpoints again without path points to remove a pipe.';
   function render(focus=null) {
@@ -17,7 +18,7 @@ function preparePlane(widget) {
     board.innerHTML=boardSVG(routes,{width:board.clientWidth,selected,interactive:true,hits:[...bad.intersections,...bad.throughNodes],draft,cursor:showCursor?cursor:null});
     const hits=bad.intersections.length+bad.throughNodes.length;
     count.textContent=`${routes.length} / 9 pipes${hits?` · ${hits} obstruction${hits===1?'':'s'}`:''}`;
-    undo.disabled=!history.length&&!selected;cancel.disabled=!selected&&!drag;
+    undo.disabled=!history.length&&!selected;redo.disabled=!future.length;cancel.disabled=!selected&&!drag;
     if(focus)board.querySelector(focus==='paper'?'[data-tu-paper]':`[data-node="${focus}"]`)?.focus();
   }
   function resetPath(){selected=null;waypoints=[];drag=null;showCursor=false;}
@@ -27,7 +28,7 @@ function preparePlane(widget) {
     const house=first.kind==='house'?a:b,utility=first.kind==='utility'?a:b;
     const oriented=first.kind==='house'?points:[...points].reverse();
     const edge=curveRoute(house,utility,[smoothWaypoints(oriented)]);
-    history.push(routes);
+    future=[];history.push(routes);if(history.length>60)history.shift();
     const change=updateConnection(routes,edge,customPath);routes=change.routes;
     resetPath();bad=obstruction(routes);
     const label=`${nodeById(house).label} → ${nodeById(utility).label}`;
@@ -40,13 +41,13 @@ function preparePlane(widget) {
   function choose(id,keyboard=false) {
     if(selected===id){resetPath();status.textContent='Path cancelled. Choose another endpoint.';render(keyboard?id:null);return;}
     if(selected){commit(selected,id,[nodeById(selected).point,...waypoints,nodeById(id).point],waypoints.length>0);render(keyboard?id:null);return;}
-    selected=id;waypoints=[];showCursor=false;
+    future=[];selected=id;waypoints=[];showCursor=false;
     status.textContent=`${nodeById(id).label} selected. Click points for the path, then choose the other endpoint. To remove an existing pipe, choose its other endpoint without adding points.`;
     render(keyboard?id:null);
   }
   function place(point,keyboard=false) {
     if(!selected){status.textContent='Choose a house or utility first, then place points along the path.';return;}
-    waypoints.push(point);
+    future=[];waypoints.push(point);
     status.textContent=`${waypoints.length} path point${waypoints.length===1?'':'s'} chosen. Add more points or choose the destination. An existing pipe for this pair will be replaced.`;
     render(keyboard?'paper':null);
   }
@@ -95,15 +96,16 @@ function preparePlane(widget) {
     if(event.key==='Escape'){resetPath();status.textContent=instruction;render(node?node.dataset.node:'paper');}
   });
   undo.addEventListener('click',()=>{
-    if(waypoints.length){waypoints.pop();status.textContent='Last path point removed.';}
-    else if(selected){resetPath();status.textContent='Path cancelled.';}
-    else if(history.length){routes=history.pop();bad=obstruction(routes);status.textContent='Last change undone, including any removed or redrawn pipe.';}
+    if(waypoints.length){future.push({routes,selected,waypoints:[...waypoints],message:status.textContent});waypoints.pop();status.textContent='Last path point removed.';}
+    else if(selected){future.push({routes,selected,waypoints:[...waypoints],message:status.textContent});resetPath();status.textContent='Path cancelled.';}
+    else if(history.length){future.push({routes,selected:null,waypoints:[],message:status.textContent});routes=history.pop();bad=obstruction(routes);status.textContent='Last change undone, including any removed or redrawn pipe.';}
     render();
   });
+  redo.addEventListener('click',()=>{if(!future.length)return;const state=future.pop();if(JSON.stringify(routes)!==JSON.stringify(state.routes))history.push(routes);resetPath();routes=state.routes;selected=state.selected;waypoints=state.waypoints;bad=obstruction(routes);status.textContent=state.message;render();});
   cancel.addEventListener('click',()=>{resetPath();status.textContent=instruction;render();});
-  widget.querySelector('[data-tu-clear]').addEventListener('click',()=>{if(routes.length)history.push(routes);routes=[];resetPath();bad=obstruction(routes);status.textContent=instruction;render();});
+  widget.querySelector('[data-tu-clear]').addEventListener('click',()=>{if(routes.length){future=[];history.push(routes);}routes=[];resetPath();bad=obstruction(routes);status.textContent=instruction;render();});
   widget.querySelector('[data-tu-eight]').addEventListener('click',()=>{
-    history.push(routes);routes=structuredClone(PLANE_EIGHT);resetPath();bad=obstruction(routes);
+    future=[];history.push(routes);if(history.length>60)history.shift();routes=structuredClone(PLANE_EIGHT);resetPath();bad=obstruction(routes);
     status.textContent='Eight smooth pipes fit. Only House 3 → Gas is missing. Choose its endpoints and path points to try the last route.';render();
   });
   widget.querySelectorAll('button').forEach(button=>button.disabled=false);
@@ -182,13 +184,12 @@ function prepareSurface(widget) {
     restore: state => { stop(); phase = state.phase; Object.assign(rotation, state.rotation); render(); },
     reset: resetMug
   });
-  trackControlEdits([slider], panelHistory);
+  trackControlEdits([slider, canvas], panelHistory);
   widget.querySelectorAll('[data-tu-jump], [data-tu-play], [data-tu-reset-view]').forEach(button => button.addEventListener('click', () => panelHistory.remember(), { capture: true }));
-  canvas.addEventListener('pointerdown', () => panelHistory.remember(), { capture: true });
-  canvas.addEventListener('keydown', event => { if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home'].includes(event.key)) panelHistory.remember(); }, { capture: true });
-  widget.querySelectorAll('button,input').forEach(control=>control.disabled=control.hasAttribute('data-panel-undo'));
+  widget.querySelectorAll('button,input').forEach(control=>control.disabled=control.hasAttribute('data-panel-undo')||control.hasAttribute('data-panel-redo'));
   observeSize(canvas,render);render();
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+  if ('IntersectionObserver' in window) new IntersectionObserver(entries=>{if(!entries[0].isIntersecting)stop();}).observe(widget);
 }
 
 function prepareSquare(widget) {
@@ -205,6 +206,7 @@ function prepareSquare(widget) {
     if (!board.clientWidth) return;
     const routes=TORUS_ROUTES.slice(0,number);
     board.innerHTML=boardSVG(routes,{width:board.clientWidth,square:true,focus:trace.value||null});
+    widget.dataset.complete=String(number===9);
     count.textContent=`${number} / 9 pipes · no crossings`;next.disabled=number===9;
     next.textContent=number===7?'Add top ↔ bottom pipe':number===8?'Add left ↔ right pipe':'All nine connected';
     const prior=trace.value;
@@ -222,7 +224,7 @@ function prepareSquare(widget) {
     const edge=TORUS_ROUTES.find(route=>route.id===trace.value);
     status.textContent=edge?`${nodeById(edge.house).label} → ${nodeById(edge.utility).label}: ${edge.seam==='a'?'follow the matching dots on the green top and bottom sides.':edge.seam==='b'?'follow the matching dots on the purple left and right sides.':'the entire pipe stays inside the square.'}`:messages[number-7];render();
   });
-  widget.querySelectorAll('button,select').forEach(control=>control.disabled=false);
+  widget.querySelectorAll('button,select').forEach(control=>control.disabled=control.hasAttribute('data-panel-undo')||control.hasAttribute('data-panel-redo'));
   observeSize(board,render);render();
 }
 

@@ -67,7 +67,6 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
   function showDifficulty(value = book.difficulty) {
     const level = LIGHTS_OUT_LEVELS[value];
     get('difficulty-label').textContent = level.name;
-    get('difficulty').setAttribute('aria-valuetext', level.name);
     get('level-detail').textContent = `${level.sizes[0]}–${level.sizes.at(-1)} lights · ${level.presses.join('–')} presses at best`;
   }
   function previewNumber(value) {

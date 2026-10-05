@@ -1,5 +1,5 @@
 {% assign widget_id = include.id | default: 'three-cups' %}
-<section class="graph-widget three-cups-widget" data-three-cups aria-labelledby="{{ widget_id }}-heading">
+<section class="graph-widget widget-frame three-cups-widget" data-three-cups aria-labelledby="{{ widget_id }}-heading">
   <div class="graph-heading">
     <h3 id="{{ widget_id }}-heading">Three cups</h3>
     <span class="activity-badge" data-cups-count>0 moves · 0 of 3 up</span>
@@ -26,7 +26,7 @@
   </div>
   <div class="three-cups-controls panel-actions">
     <button class="secondary-button" type="button" data-cups-flip disabled>Flip selected</button>
-    <button class="panel-button" type="button" data-cups-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button><button class="panel-button" type="button" data-cups-reset disabled>{% include icon.html name='restart' %}<span>Reset</span></button>{% include controls/help.html text='<p>Select two cups, then Flip selected. Each move flips exactly two. Undo reverses the last flip; Reset turns all cups down.</p>' %}
+    <button class="panel-button" type="button" data-cups-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button><button class="panel-button" type="button" data-cups-redo disabled>{% include icon.html name='redo' %}<span>Redo</span></button><button class="panel-button" type="button" data-cups-reset disabled>{% include icon.html name='restart' %}<span>Reset</span></button>{% include controls/help.html text='<p>Select two cups, then Flip selected. Each move flips exactly two. Undo reverses the last flip; Reset turns all cups down.</p>' %}
   </div>
   <p class="three-cups-status" data-cups-status role="status" aria-atomic="true">Select two cups to begin.</p>
   <noscript><p>Enable JavaScript to select and flip the cups, or try the puzzle with three cups on a table. Each move must flip exactly two.</p></noscript>

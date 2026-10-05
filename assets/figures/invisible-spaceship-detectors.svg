@@ -1,45 +1,65 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 450" role="img" aria-labelledby="title desc">
-<title id="title">An optimal arrangement of sixteen detectors</title>
-<desc id="desc">Rows and columns are numbered one through seven. A detector occupies each intersection of rows two, three, five, and six with columns two, three, five, and six. The remaining squares are empty.</desc>
-<rect width="640" height="450" rx="12" fill="#f3f4ef"/>
-<rect x="166" y="65" width="308" height="308" fill="#fcfcf9"/>
-<rect x="210" y="109" width="88" height="88" fill="#e0e8dc"/>
-<rect x="342" y="109" width="88" height="88" fill="#e0e8dc"/>
-<rect x="210" y="241" width="88" height="88" fill="#e0e8dc"/>
-<rect x="342" y="241" width="88" height="88" fill="#e0e8dc"/>
-<path d="M166 65V373M166 65H474" fill="none" stroke="#8f9b89" stroke-width="1.5"/>
-<path d="M210 65V373M166 109H474" fill="none" stroke="#8f9b89" stroke-width="1.5"/>
-<path d="M254 65V373M166 153H474" fill="none" stroke="#8f9b89" stroke-width="1.5"/>
-<path d="M298 65V373M166 197H474" fill="none" stroke="#8f9b89" stroke-width="1.5"/>
-<path d="M342 65V373M166 241H474" fill="none" stroke="#8f9b89" stroke-width="1.5"/>
-<path d="M386 65V373M166 285H474" fill="none" stroke="#8f9b89" stroke-width="1.5"/>
-<path d="M430 65V373M166 329H474" fill="none" stroke="#8f9b89" stroke-width="1.5"/>
-<path d="M474 65V373M166 373H474" fill="none" stroke="#8f9b89" stroke-width="1.5"/>
-<circle cx="232" cy="131" r="9" fill="#285b46"/><circle cx="232" cy="131" r="3" fill="#fcfcf9"/>
-<circle cx="276" cy="131" r="9" fill="#285b46"/><circle cx="276" cy="131" r="3" fill="#fcfcf9"/>
-<circle cx="364" cy="131" r="9" fill="#285b46"/><circle cx="364" cy="131" r="3" fill="#fcfcf9"/>
-<circle cx="408" cy="131" r="9" fill="#285b46"/><circle cx="408" cy="131" r="3" fill="#fcfcf9"/>
-<circle cx="232" cy="175" r="9" fill="#285b46"/><circle cx="232" cy="175" r="3" fill="#fcfcf9"/>
-<circle cx="276" cy="175" r="9" fill="#285b46"/><circle cx="276" cy="175" r="3" fill="#fcfcf9"/>
-<circle cx="364" cy="175" r="9" fill="#285b46"/><circle cx="364" cy="175" r="3" fill="#fcfcf9"/>
-<circle cx="408" cy="175" r="9" fill="#285b46"/><circle cx="408" cy="175" r="3" fill="#fcfcf9"/>
-<circle cx="232" cy="263" r="9" fill="#285b46"/><circle cx="232" cy="263" r="3" fill="#fcfcf9"/>
-<circle cx="276" cy="263" r="9" fill="#285b46"/><circle cx="276" cy="263" r="3" fill="#fcfcf9"/>
-<circle cx="364" cy="263" r="9" fill="#285b46"/><circle cx="364" cy="263" r="3" fill="#fcfcf9"/>
-<circle cx="408" cy="263" r="9" fill="#285b46"/><circle cx="408" cy="263" r="3" fill="#fcfcf9"/>
-<circle cx="232" cy="307" r="9" fill="#285b46"/><circle cx="232" cy="307" r="3" fill="#fcfcf9"/>
-<circle cx="276" cy="307" r="9" fill="#285b46"/><circle cx="276" cy="307" r="3" fill="#fcfcf9"/>
-<circle cx="364" cy="307" r="9" fill="#285b46"/><circle cx="364" cy="307" r="3" fill="#fcfcf9"/>
-<circle cx="408" cy="307" r="9" fill="#285b46"/><circle cx="408" cy="307" r="3" fill="#fcfcf9"/>
-<g font-family="sans-serif" font-size="17" text-anchor="middle" fill="#282e29">
-<text x="188" y="49">1</text><text x="144" y="93">1</text>
-<text x="232" y="49">2</text><text x="144" y="137">2</text>
-<text x="276" y="49">3</text><text x="144" y="181">3</text>
-<text x="320" y="49">4</text><text x="144" y="225">4</text>
-<text x="364" y="49">5</text><text x="144" y="269">5</text>
-<text x="408" y="49">6</text><text x="144" y="313">6</text>
-<text x="452" y="49">7</text><text x="144" y="357">7</text>
-</g>
-<text x="320" y="408" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#285b46">16 detectors, at the marked intersections</text>
-<text x="320" y="435" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#686e66">Rows 2, 3, 5, 6 · Columns 2, 3, 5, 6</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="120 20 380 380" role="img" aria-labelledby="title desc">
+  <title id="title">An optimal arrangement of sixteen detectors</title>
+  <desc id="desc">Rows and columns are numbered one through seven. A detector occupies each intersection of rows two, three, five, and six with columns two, three, five, and six. The remaining squares are empty.</desc>
+  <rect x="166" y="65" width="308" height="308" fill="#fcfcf9" />
+  <rect x="210" y="109" width="88" height="88" fill="#e0e8dc" />
+  <rect x="342" y="109" width="88" height="88" fill="#e0e8dc" />
+  <rect x="210" y="241" width="88" height="88" fill="#e0e8dc" />
+  <rect x="342" y="241" width="88" height="88" fill="#e0e8dc" />
+  <path d="M166 65V373M166 65H474" fill="none" stroke="#8f9b89" stroke-width="1.5" />
+  <path d="M210 65V373M166 109H474" fill="none" stroke="#8f9b89" stroke-width="1.5" />
+  <path d="M254 65V373M166 153H474" fill="none" stroke="#8f9b89" stroke-width="1.5" />
+  <path d="M298 65V373M166 197H474" fill="none" stroke="#8f9b89" stroke-width="1.5" />
+  <path d="M342 65V373M166 241H474" fill="none" stroke="#8f9b89" stroke-width="1.5" />
+  <path d="M386 65V373M166 285H474" fill="none" stroke="#8f9b89" stroke-width="1.5" />
+  <path d="M430 65V373M166 329H474" fill="none" stroke="#8f9b89" stroke-width="1.5" />
+  <path d="M474 65V373M166 373H474" fill="none" stroke="#8f9b89" stroke-width="1.5" />
+  <circle cx="232" cy="131" r="9" fill="#285b46" />
+  <circle cx="232" cy="131" r="3" fill="#fcfcf9" />
+  <circle cx="276" cy="131" r="9" fill="#285b46" />
+  <circle cx="276" cy="131" r="3" fill="#fcfcf9" />
+  <circle cx="364" cy="131" r="9" fill="#285b46" />
+  <circle cx="364" cy="131" r="3" fill="#fcfcf9" />
+  <circle cx="408" cy="131" r="9" fill="#285b46" />
+  <circle cx="408" cy="131" r="3" fill="#fcfcf9" />
+  <circle cx="232" cy="175" r="9" fill="#285b46" />
+  <circle cx="232" cy="175" r="3" fill="#fcfcf9" />
+  <circle cx="276" cy="175" r="9" fill="#285b46" />
+  <circle cx="276" cy="175" r="3" fill="#fcfcf9" />
+  <circle cx="364" cy="175" r="9" fill="#285b46" />
+  <circle cx="364" cy="175" r="3" fill="#fcfcf9" />
+  <circle cx="408" cy="175" r="9" fill="#285b46" />
+  <circle cx="408" cy="175" r="3" fill="#fcfcf9" />
+  <circle cx="232" cy="263" r="9" fill="#285b46" />
+  <circle cx="232" cy="263" r="3" fill="#fcfcf9" />
+  <circle cx="276" cy="263" r="9" fill="#285b46" />
+  <circle cx="276" cy="263" r="3" fill="#fcfcf9" />
+  <circle cx="364" cy="263" r="9" fill="#285b46" />
+  <circle cx="364" cy="263" r="3" fill="#fcfcf9" />
+  <circle cx="408" cy="263" r="9" fill="#285b46" />
+  <circle cx="408" cy="263" r="3" fill="#fcfcf9" />
+  <circle cx="232" cy="307" r="9" fill="#285b46" />
+  <circle cx="232" cy="307" r="3" fill="#fcfcf9" />
+  <circle cx="276" cy="307" r="9" fill="#285b46" />
+  <circle cx="276" cy="307" r="3" fill="#fcfcf9" />
+  <circle cx="364" cy="307" r="9" fill="#285b46" />
+  <circle cx="364" cy="307" r="3" fill="#fcfcf9" />
+  <circle cx="408" cy="307" r="9" fill="#285b46" />
+  <circle cx="408" cy="307" r="3" fill="#fcfcf9" />
+  <g font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="17" text-anchor="middle" fill="#282e29">
+    <text x="188" y="49">1</text>
+    <text x="144" y="93">1</text>
+    <text x="232" y="49">2</text>
+    <text x="144" y="137">2</text>
+    <text x="276" y="49">3</text>
+    <text x="144" y="181">3</text>
+    <text x="320" y="49">4</text>
+    <text x="144" y="225">4</text>
+    <text x="364" y="49">5</text>
+    <text x="144" y="269">5</text>
+    <text x="408" y="49">6</text>
+    <text x="144" y="313">6</text>
+    <text x="452" y="49">7</text>
+    <text x="144" y="357">7</text>
+  </g>
 </svg>

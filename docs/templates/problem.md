@@ -1,5 +1,5 @@
-Write the problem here. Use Markdown, equations, images, or code as needed.
+Write the problem here. State the question directly and identify unusual prerequisites only when needed.
 
 <!-- solution -->
 
-Write the solution here. Everything after the marker starts collapsed.
+Write the solution here. Explain the key insight and every non-obvious inference; omit unnecessary detail.

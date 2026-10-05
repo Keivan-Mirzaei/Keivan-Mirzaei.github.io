@@ -1,3 +1,5 @@
+import { formatNumber } from './widget-math.mjs';
+
 // Exact arithmetic keeps a decimal close to 1 distinct from the excluded input.
 function rational(numerator, denominator) {
   if (denominator === 0n) return null;
@@ -32,7 +34,7 @@ export function parseMachineInput(text) {
 
 export function evaluateMachine(text) {
   const value = parseMachineInput(text);
-  if (!value) return { state: 'invalid', output: text.trim() ? 'Enter a number' : '—' };
+  if (!value) return { state: text.trim() ? 'invalid' : 'empty', output: text.trim() ? 'Enter a number' : '—' };
   const { numerator, denominator } = value;
   // The logarithm requires 1 - x² > 0, checked without rounding the input.
   if (numerator <= -denominator || numerator >= denominator) {
@@ -46,8 +48,5 @@ export function evaluateMachine(text) {
   const result = Math.abs(x) <= 0.5
     ? Math.log1p(-x * x)
     : Math.log(Number(argument.numerator) / Number(argument.denominator));
-  // An ellipsis continues the decimal, so retain its first three decimal
-  // places without rounding. Every nonzero value here is negative.
-  const digits = (Math.trunc(-result * 1000) / 1000).toFixed(3);
-  return { state: 'defined', output: `−${digits}…`, value: result };
+  return { state: 'defined', output: `≈ ${formatNumber(result)}`, value: result };
 }

@@ -42,8 +42,8 @@ class Page(HTMLParser):
             errors.append(f"{self.path}: image missing alternative text")
         if tag == "iframe" and not attrs.get("title", "").strip():
             errors.append(f"{self.path}: embedded content missing a title")
-        if tag == "details" and "problem-solution" in attrs.get("class", "") and "open" in attrs:
-            errors.append(f"{self.path}: problem solution must start closed")
+        if tag == "details" and any(name.startswith("problem-") for name in attrs.get("class", "").split()) and "open" in attrs:
+            errors.append(f"{self.path}: problem disclosure must start closed")
 
 
 def resolve_link(url, source):

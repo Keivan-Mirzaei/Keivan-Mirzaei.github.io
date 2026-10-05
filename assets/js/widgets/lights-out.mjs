@@ -1,10 +1,11 @@
+import { createWidgetHistory } from '../lib/widget-history.mjs';
 import { BOARDS, vertices, countBits, parity, pressEffect, solvePresses, samplePuzzle, complementProof } from '../lib/lights-out-math.mjs';
 
 const parityWord = value => value % 2 ? 'odd' : 'even';
 const labels = (mask, graph) => vertices(mask, graph.size).map(i => i + 1).join(', ') || 'none';
 const pressLabel = mask => `${countBits(mask)} ${countBits(mask) === 1 ? 'press' : 'presses'}`;
 
-function drawBoard(holder, graph, lights, { interactive = false, order = [], next = -1, omitted = -1, pressed = 0, editing = false } = {}) {
+function drawBoard(holder, graph, lights, { interactive = false, order = [], next = -1, omitted = -1, pressed = 0, editing = false, numbered = true } = {}) {
   const focused = holder.contains(document.activeElement) ? document.activeElement.dataset.loLight : undefined;
   holder.classList.toggle('lo-grid', Boolean(graph.side));
   holder.classList.toggle('lo-graph', !graph.side);
@@ -22,20 +23,35 @@ function drawBoard(holder, graph, lights, { interactive = false, order = [], nex
     const planned = step >= 0;
     const tag = interactive ? 'button' : 'span';
     const attributes = interactive ? `type="button" data-lo-light="${i}" aria-pressed="${on}" aria-label="Light ${i + 1}, ${on ? 'on' : 'off'}. ${editing ? 'Change this starting light.' : `Press to flip lights ${labels(graph.neighbors[i] | (1 << i), graph)}.`}${planned ? ` Solution step ${step + 1}.` : ''}"` : 'aria-hidden="true"';
-    return `<${tag} ${attributes} class="lo-light${on ? ' is-on' : ''}${planned || (pressed & (1 << i)) ? ' is-plan' : ''}${i === next ? ' is-next' : ''}${i === omitted ? ' is-omitted' : ''}" style="left:${x * 100}%;top:${y * 100}%;${graph.side ? `--lo-cell:${100 / graph.side}%` : ''}"><span class="lo-number">${i + 1}</span><i class="lo-pip" aria-hidden="true"></i>${planned ? `<span class="lo-step" aria-hidden="true">${step + 1}</span>` : ''}</${tag}>`;
+    return `<${tag} ${attributes} class="lo-light${on ? ' is-on' : ''}${planned || (pressed & (1 << i)) ? ' is-plan' : ''}${i === next ? ' is-next' : ''}${i === omitted ? ' is-omitted' : ''}" style="left:${x * 100}%;top:${y * 100}%;${graph.side ? `--lo-cell:${100 / graph.side}%` : ''}">${numbered ? `<span class="lo-number">${i + 1}</span>` : ''}<i class="lo-pip" aria-hidden="true"></i>${planned ? `<span class="lo-step" aria-hidden="true">${step + 1}</span>` : ''}</${tag}>`;
   }).join('');
   holder.innerHTML = edges + cells;
   if (focused !== undefined) holder.querySelector(`[data-lo-light="${focused}"]`)?.focus({ preventScroll: true });
 }
 
-const game = document.querySelector('[data-lights-out]');
-if (game) {
+for (const game of document.querySelectorAll('[data-lights-out]')) {
   const get = name => game.querySelector(`[data-lo-${name}]`);
   let key = 'grid-3', graph = BOARDS[key];
   let start = pressEffect(graph, (1 << 0) | (1 << 2) | (1 << 4));
   let lights = start, goal = 'off', moves = [], editing = false, showing = false, plan = null;
   let baseline = solvePresses(graph, start);
   const target = () => goal === 'off' ? 0 : start ^ graph.all;
+
+  const history = createWidgetHistory(
+    () => ({ key, start, lights, goal, moves, editing, plan }),
+    state => {
+      ({ key, start, lights, goal, moves, editing, plan } = state); graph = BOARDS[key];
+      baseline = solvePresses(graph, start ^ target());
+      if (showing && !plan) makePlan(); render();
+    },
+    (canUndo, canRedo) => { get('undo').disabled = !canUndo; get('redo').disabled = !canRedo; }
+  );
+  // Capture before the existing mathematical handler; commit after it finishes.
+  function record(element, type) {
+    let before;
+    element.addEventListener(type, () => { before = history.capture(); }, { capture: true });
+    element.addEventListener(type, () => { history.commit(before); });
+  }
 
   function makePlan(index = 0) {
     const analysis = solvePresses(graph, lights ^ target());
@@ -57,18 +73,20 @@ if (game) {
     get('board').value = key;
     get('goal').value = goal;
     get('count').textContent = `${moves.length} ${moves.length === 1 ? 'press' : 'presses'} · ${parityWord(moves.length)}`;
-    get('instruction').textContent = editing ? 'Editing: clicking changes just one starting light. Choose “Done editing” to play.' : graph.side ? 'Press a light to flip it and its neighbors above, below, left, and right. Hover or focus to preview a move.' : 'Press a light to flip it and every light joined to it by an edge. Hover or focus to preview a move.';
+    get('instruction').textContent = editing ? 'Editing: clicking changes just one starting light. Turn off Edit starting lights to play.' : graph.side ? 'Press a light to flip it and its neighbors above, below, left, and right. Hover or focus to preview a move.' : 'Press a light to flip it and every light joined to it by an edge. Hover or focus to preview a move.';
     get('target-region').hidden = goal !== 'complement';
     if (goal === 'complement') drawBoard(get('target'), graph, target());
     const remaining = showing && plan ? plan.order.slice(plan.index) : [];
-    drawBoard(get('play'), graph, lights, { interactive: true, order: remaining, next: remaining[0], editing });
+    drawBoard(get('play'), graph, lights, { interactive: true, order: remaining, next: remaining[0], editing, numbered: showing || editing });
     game.querySelector('#lo-game-title').textContent = goal === 'off' ? 'Can you turn them all off?' : 'Can you flip every starting light?';
     get('show').textContent = showing ? 'Hide solution' : 'Show solution';
     get('show').disabled = editing || !analysis.solutions.length;
-    get('edit').textContent = editing ? 'Done editing' : 'Edit starting lights';
-    get('edit').setAttribute('aria-pressed', String(editing));
-    get('undo').disabled = editing || moves.length === 0;
-    get('restart').disabled = editing || moves.length === 0;
+    get('edit').setAttribute('aria-checked', String(editing));
+    get('show').setAttribute('aria-expanded', String(showing));
+    game.dataset.complete = String(solved && !editing);
+    get('undo').disabled = !history.canUndo;
+    get('redo').disabled = !history.canRedo;
+    get('restart').disabled = editing;
     get('solution').hidden = !showing || !plan;
     get('plan-key').hidden = !showing || !plan || !remaining.length;
     if (showing && plan) {
@@ -134,7 +152,8 @@ if (game) {
   get('goal').addEventListener('change', event => { goal = event.target.value; reset(); });
   get('new').addEventListener('click', () => reset(samplePuzzle(graph)));
   get('restart').addEventListener('click', () => reset());
-  get('undo').addEventListener('click', () => { const vertex = moves.pop(); if (vertex !== undefined) lights ^= pressEffect(graph, 1 << vertex); if (showing) makePlan(); render(); });
+  get('undo').addEventListener('click', () => history.undo());
+  get('redo').addEventListener('click', () => history.redo());
   get('show').addEventListener('click', () => { showing = !showing; if (showing) makePlan(); render(); });
   get('next').addEventListener('click', () => { if (!plan || plan.index >= plan.order.length) return; press(plan.order[plan.index++], true); render(); });
   get('finish').addEventListener('click', () => { if (!plan) return; while (plan.index < plan.order.length) press(plan.order[plan.index++], true); render(); });
@@ -145,11 +164,13 @@ if (game) {
   });
   get('impossible').addEventListener('click', () => { key = 'pair'; graph = BOARDS[key]; goal = 'off'; reset(1); });
   game.querySelectorAll('button, select').forEach(control => { control.disabled = false; });
+  record(get('play'), 'click');
+  for (const name of ['new','restart','next','finish','edit','impossible']) record(get(name), 'click');
+  for (const name of ['board','goal']) record(get(name), 'change');
   render();
 }
 
-const proofWidget = document.querySelector('[data-lights-out-proof]');
-if (proofWidget) {
+for (const proofWidget of document.querySelectorAll('[data-lights-out-proof]')) {
   const get = name => proofWidget.querySelector(`[data-lo-proof-${name}]`);
   let step = 0, graph = BOARDS['path-4'], slides = [];
 

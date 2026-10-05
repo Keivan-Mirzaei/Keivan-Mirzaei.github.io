@@ -1,5 +1,5 @@
 ---
-title: "Hilbert Matrices"
+title: "Hilbert matrices"
 description: "A deceptively simple matrix: can you prove it is always nonsingular?"
 format: problem
 category: math
@@ -9,35 +9,35 @@ math: true
 archived: true
 ---
 
-Prove that the matrix given by
+For a positive integer $$n$$, prove that the Hilbert matrix
 
 $$
-\begin{bmatrix}
-1 & \frac 12 & \dots & \frac 1n\\
-\frac 12 & \frac 13 & \dots & \frac 1{n+1}\\
-\vdots & \vdots & \ddots & \vdots\\
-\frac 1n & \frac 1{n+1} & \dots & \frac 1{2n-1}\\
-\end{bmatrix}
+H=\left(\frac{1}{i+j-1}\right)_{i,j=1}^{n}
 $$
 
-is non-singular.
+is nonsingular.
+
+The solution uses definite integrals.
+
+<!-- hint -->
+
+Write each entry as the integral of a power of $$t$$.
 
 <!-- solution -->
 
-Observe that if we denote the matrix above with $$H = [H_{ij}]$$, then we have
+The entries are inner products of monomials:
 
 $$
-H_{ij} = \int_{0}^{1} t^{i+j-2}\,dt.
+H_{ij}=\int_0^1 t^{i-1}t^{j-1}\,dt.
 $$
 
-Now let $$\vec{x} = (x_1, x_2, \dots, x_n)^\intercal \neq \vec 0$$ be an arbitrary column vector. Some straightforward calculations give:
+For any nonzero real column vector $$v=(v_1,\ldots,v_n)^\mathsf{T}$$,
 
 $$
-\begin{align}
-\vec{x}^\intercal H \vec{x}
-&= \sum_{i, j=1}^{n}x_i x_j\int_{0}^{1} t^{i+j-2}\,dt\\
-&= \int_{0}^{1}\left(\sum_{i=1}^{n} x_it^{i-1}\right)^2\,dt > 0.
-\end{align}
+v^\mathsf{T}Hv
+=\int_0^1\left(\sum_{i=1}^{n}v_it^{i-1}\right)^2\,dt>0.
 $$
 
-Therefore, the only solution to the equation $$H\vec x = \vec 0$$ is the trivial solution and the conclusion follows.
+The polynomial inside the square is nonzero. It has only finitely many roots and is continuous, so its square is positive on some interval in $$(0,1)$$. This justifies the strict inequality.
+
+If $$Hv=0$$, then $$v^\mathsf{T}Hv=0$$, forcing $$v=0$$. Hence $$H$$ is nonsingular.

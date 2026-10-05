@@ -1,11 +1,11 @@
 {% assign widget_id = include.id | default: 'differentiability' %}
 {% assign initial_model = include.model | default: 'square' %}
-<section class="graph-widget differentiability-widget" data-widget="differentiability" data-model="{{ initial_model }}" aria-labelledby="{{ widget_id }}-heading">
+<section class="graph-widget widget-frame differentiability-widget" data-widget="differentiability" data-model="{{ initial_model }}" aria-labelledby="{{ widget_id }}-heading">
   <div class="graph-heading">
     <h3 id="{{ widget_id }}-heading">Does the graph become a line?</h3>
-    <p class="graph-equation" data-equation>{% if initial_model == 'absolute' %}f(x) = |x|, at a = 0{% else %}f(x) = x², at a = 1{% endif %}</p>
+    <p class="graph-equation" data-equation><math><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo>{% if initial_model == 'absolute' %}<mo>|</mo><mi>x</mi><mo>|</mo>{% else %}<msup><mi>x</mi><mn>2</mn></msup>{% endif %}</math> · at a = {% if initial_model == 'absolute' %}0{% else %}1{% endif %}</p>
   </div>
-  <p class="differentiability-caption">Both axes use the same magnification. Horizontal: u = (x − a)/ρ. Vertical: v = (f(x) − f(a))/ρ. A candidate tangent becomes v = Lu.</p>
+  <p class="differentiability-caption">Both axes use the same magnification. <math><mi>u</mi><mo>=</mo><mfrac><mrow><mi>x</mi><mo>−</mo><mi>a</mi></mrow><mi>ρ</mi></mfrac></math>, <math><mi>v</mi><mo>=</mo><mfrac><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>−</mo><mi>f</mi><mo>(</mo><mi>a</mi><mo>)</mo></mrow><mi>ρ</mi></mfrac></math>. A candidate tangent becomes v = Lu.</p>
   <svg class="function-plot" viewBox="0 0 620 365" role="img" aria-labelledby="{{ widget_id }}-title {{ widget_id }}-desc">
     <title id="{{ widget_id }}-title">A graph magnified around its base point</title>
     <desc id="{{ widget_id }}-desc" data-description>{% if initial_model == 'absolute' %}The absolute value graph remains a corner under magnification. With candidate slope zero, its maximum normalized error is one at every zoom radius.{% else %}At radius one, the magnified parabola is v = 2u + u². Its candidate tangent is v = 2u and its maximum normalized error is one.{% endif %}</desc>
@@ -37,7 +37,6 @@
     <input id="{{ widget_id }}-slope" data-slope-control type="range" min="-2" max="3" step="0.1" value="{% if initial_model == 'absolute' %}0{% else %}2{% endif %}" disabled>
   </div>
   <p class="activity-result" data-feedback role="status">{% if initial_model == 'absolute' %}Maximum normalized error: 1. Zooming does not reduce it. No choice of slope removes the corner.{% else %}Normalized error bound: 1. With slope 2 this bound equals ρ and tends to zero as you zoom.{% endif %}</p>
-  <p class="differentiability-caption" data-explanation>The normalized error is the largest vertical discrepancy from the candidate line over −1 ≤ u ≤ 1. The lesson supplies the limit proof.</p>
-  {% include controls/panel.html help='<p>Choose a function, zoom in, and adjust the candidate slope. Undo restores the previous view; Reset returns to the starting function.</p>' %}
+  {% include controls/panel.html help='<p>Choose a function, zoom in, and adjust the candidate slope. Undo restores the previous view; Reset returns to the starting function.</p><p class="differentiability-caption" data-explanation>The normalized error is the largest vertical discrepancy from the candidate line over −1 ≤ u ≤ 1. The lesson supplies the limit proof.</p>' %}
   <noscript><p>The static view shows radius 1. The formulas and proofs in the lesson remain available without the controls.</p></noscript>
 </section>

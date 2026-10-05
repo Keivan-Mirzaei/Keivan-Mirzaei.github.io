@@ -1,5 +1,5 @@
 {% assign plot_id = include.id | default: 'scientific-plot' %}
-<section class="graph-widget advanced-widget" data-widget="scientific-plot" data-figure="{{ include.figure | relative_url }}" data-library="{{ site.data.graph_libraries.plotly }}" data-dimensions="{{ include.dimensions | default: 2 }}" aria-labelledby="{{ plot_id }}-heading">
+<section class="graph-widget widget-frame advanced-widget" data-widget="scientific-plot" data-figure="{{ include.figure | relative_url }}" data-library="{{ site.data.graph_libraries.plotly }}" data-dimensions="{{ include.dimensions | default: 2 }}" aria-labelledby="{{ plot_id }}-heading">
   <div class="graph-heading"><h3 id="{{ plot_id }}-heading">{{ include.title | escape }}</h3><span class="activity-badge">{% if include.dimensions == 3 %}3D{% else %}2D{% endif %} exploration</span></div>
   <p>{{ include.description | escape }}</p>
   <div class="advanced-stage">
@@ -20,7 +20,9 @@
       {% endif %}
       <button class="secondary-button panel-button" type="button" data-camera="in">Zoom in</button>
       <button class="secondary-button panel-button" type="button" data-camera="out">Zoom out</button>
-      <button class="secondary-button panel-button" type="button" data-reset>Reset view</button>
+      <button class="panel-button" type="button" data-panel-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
+      <button class="panel-button" type="button" data-panel-redo disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
+      <button class="secondary-button panel-button" type="button" data-reset data-panel-reset>Reset view</button>
     </div>
   </fieldset>
   <noscript><p>The preview and downloadable data work without JavaScript. Enable it to open the interactive view.</p></noscript>

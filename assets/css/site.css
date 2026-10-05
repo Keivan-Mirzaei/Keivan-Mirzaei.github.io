@@ -182,6 +182,17 @@ main:focus { outline: none; }
 .prose summary:not(:where(.panel-help > summary, .hex-game-settings > summary)) { color: var(--green); font-size: 14px; font-weight: 600; }
 .prose details[open]:not(:where(.panel-help, .hex-game-settings)) > summary { margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
 .prose details:not(:where(.panel-help, .hex-game-settings)) > :last-child { margin-bottom: 0; }
+/* Problem support stays in quiet, independent rows beneath the statement. */
+.prose .problem-disclosures { margin: 28px 0; border-top: 1px solid var(--line); }
+.prose .problem-disclosures > details { margin: 0; padding: 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; }
+.prose .problem-disclosures > details > summary { min-height: 48px; padding: 15px 0; color: var(--green); font: 500 14px/1.35 var(--sans); }
+.prose .problem-disclosures > details[open] > summary { margin: 0; padding: 15px 0; border: 0; }
+.prose .problem-disclosures .solution-content { padding: 4px 0 22px; }
+.prose .problem-disclosures .solution-content > :last-child { margin-bottom: 0; }
+.prose .problem-figure { max-width: 520px; margin: 24px auto; }
+.prose .problem-figure-wide { max-width: 100%; }
+.prose .problem-figure img { width: 100%; margin: 0; border-radius: 0; }
+.prose .problem-figure figcaption { margin-top: 10px; color: var(--muted); font: 13px/1.5 var(--sans); text-align: center; }
 .prose table { display: block; overflow-x: auto; border-collapse: collapse; font-size: 14px; }
 .prose th, .prose td { padding: 10px; border-bottom: 1px solid var(--line); text-align: left; }
 code { font-family: var(--mono); font-size: .82em; padding: 2px 5px; background: #edf0e8; border-radius: 3px; }

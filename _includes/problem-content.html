@@ -1,0 +1,23 @@
+{% assign problem_content = include.content
+  | replace: '<!-- hint -->', '<!-- problem-section -->Hint<!-- problem-body -->'
+  | replace: '<!-- solution -->', '<!-- problem-section -->Solution<!-- problem-body -->'
+  | replace: '<!-- alternative -->', '<!-- problem-section -->Another solution<!-- problem-body -->'
+  | replace: '<!-- extension -->', '<!-- problem-section -->Extension<!-- problem-body -->' %}
+{% assign problem_parts = problem_content | split: '<!-- problem-section -->' %}
+{{ problem_parts.first }}
+{% capture problem_rows %}
+  {% for part in problem_parts offset: 1 %}
+    {% assign section = part | split: '<!-- problem-body -->' %}
+    {% assign section_body = section[1] | strip %}
+    {% if section_body != '' %}
+      <details class="problem-{{ section.first | slugify }}">
+        <summary>{{ section.first }}</summary>
+        <div class="solution-content">{{ section_body }}</div>
+      </details>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+{% assign problem_rows = problem_rows | strip %}
+{% if problem_rows != '' %}
+  <div class="problem-disclosures">{{ problem_rows }}</div>
+{% endif %}

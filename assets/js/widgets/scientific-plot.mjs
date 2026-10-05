@@ -1,3 +1,4 @@
+import { createWidgetHistory } from '../lib/widget-history.mjs';
 import { prepareInteractive, observeSize } from '../lib/interactive-view.mjs';
 import { loadPlotly } from '../lib/plotly-loader.mjs';
 import { moveCamera } from '../lib/graph-math.mjs';
@@ -33,36 +34,43 @@ for (const widget of document.querySelectorAll('[data-widget="scientific-plot"]'
     try {
       await Plotly.newPlot(view, figure.data, layout, { displayModeBar: false, scrollZoom: false, responsive: false });
       stopResize = observeSize(view, () => Plotly.Plots.resize(view));
-      view.on('plotly_relayout', (event) => { if (event['scene.camera']) camera = event['scene.camera']; });
+      const ranges = () => Object.fromEntries(['xaxis','yaxis'].map(axis => [axis, [...view.layout[axis].range]]));
+      let state = threeD ? { camera: structuredClone(camera) } : ranges();
+      const initial = structuredClone(state);
+      let applying = false, dragBefore = null;
+      const undo = controls.querySelector('[data-panel-undo]'), redo = controls.querySelector('[data-panel-redo]');
+      function apply(next) {
+        state = structuredClone(next); applying = true;
+        const changes = threeD ? { 'scene.camera': state.camera } : { 'xaxis.range': state.xaxis, 'yaxis.range': state.yaxis };
+        Plotly.relayout(view, changes).finally(() => { applying = false; });
+      }
+      undo.disabled = redo.disabled = true;
+      const history = createWidgetHistory(() => state, apply, (canUndo, canRedo) => { undo.disabled = !canUndo; redo.disabled = !canRedo; });
+      undo.addEventListener('click', () => history.undo(), { signal: listeners.signal });
+      redo.addEventListener('click', () => history.redo(), { signal: listeners.signal });
+      view.addEventListener('pointerdown', () => { dragBefore = history.capture(); }, { signal: listeners.signal });
+      view.on('plotly_relayout', event => {
+        if (applying) return;
+        const before = dragBefore || history.capture();
+        state = threeD ? { camera: structuredClone(event['scene.camera'] || state.camera) } : ranges();
+        history.commit(before); dragBefore = null;
+      });
       for (const button of controls.querySelectorAll('[data-camera]')) {
         button.addEventListener('click', () => {
-          const action = button.dataset.camera;
-          if (threeD) {
-            camera = { ...camera, eye: moveCamera(camera.eye, action) };
-            Plotly.relayout(view, { 'scene.camera': camera });
-          } else {
-            const factor = action === 'in' ? 0.8 : 1.25;
-            const update = {};
-            for (const axis of ['xaxis', 'yaxis']) {
-              const [low, high] = view.layout[axis].range;
-              const center = (low + high) / 2;
-              const half = (high - low) * factor / 2;
-              update[`${axis}.range`] = [center - half, center + half];
+          const before = history.capture(), next = structuredClone(state);
+          if (threeD) next.camera.eye = moveCamera(next.camera.eye, button.dataset.camera);
+          else {
+            const factor = button.dataset.camera === 'in' ? .8 : 1.25;
+            for (const axis of ['xaxis','yaxis']) {
+              const [low, high] = next[axis], center = (low + high) / 2, half = (high - low) * factor / 2;
+              next[axis] = [center - half, center + half];
             }
-            Plotly.relayout(view, update);
           }
+          apply(next); history.commit(before);
         }, { signal: listeners.signal });
       }
       controls.querySelector('[data-reset]').addEventListener('click', () => {
-        if (threeD) {
-          camera = structuredClone(initialCamera);
-          Plotly.relayout(view, { 'scene.camera': camera });
-        } else {
-          Plotly.relayout(view, {
-            ...(figure.layout?.xaxis?.range ? { 'xaxis.range': figure.layout.xaxis.range } : { 'xaxis.autorange': true }),
-            ...(figure.layout?.yaxis?.range ? { 'yaxis.range': figure.layout.yaxis.range } : { 'yaxis.autorange': true })
-          });
-        }
+        const before = history.capture(); apply(initial); history.commit(before);
       }, { signal: listeners.signal });
     } catch (error) {
       stopResize();

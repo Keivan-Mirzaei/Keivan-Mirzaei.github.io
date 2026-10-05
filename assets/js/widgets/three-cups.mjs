@@ -5,7 +5,8 @@ export function initializeThreeCups(widget) {
   const flip = widget.querySelector('[data-cups-flip]');
   const reset = widget.querySelector('[data-cups-reset]');
   const undo = widget.querySelector('[data-cups-undo]');
-  const history = [];
+  const history = [], future = [];
+  const redo = widget.querySelector('[data-cups-redo]');
   let facingUp = [false, false, false];
   const selected = new Set();
   let moves = 0;
@@ -23,6 +24,7 @@ export function initializeThreeCups(widget) {
     count.textContent = `${moves} ${moves === 1 ? 'move' : 'moves'} · ${facingUp.filter(Boolean).length} of 3 up`;
     flip.disabled = selected.size !== 2;
     if (undo) undo.disabled = history.length === 0;
+    if (redo) redo.disabled = future.length === 0;
     status.textContent = message;
   }
 
@@ -48,6 +50,7 @@ export function initializeThreeCups(widget) {
 
   flip.addEventListener('click', () => {
     if (selected.size !== 2) return;
+    future.length = 0;
     history.push({ facingUp: [...facingUp], moves });
     if (history.length > 60) history.shift();
     const pair = [...selected].sort();
@@ -61,6 +64,8 @@ export function initializeThreeCups(widget) {
 
   reset.disabled = false;
   reset.addEventListener('click', () => {
+    if (moves === 0) { selected.clear(); render('All three cups face down. Select two cups to begin.'); return; }
+    future.length = 0;
     history.push({ facingUp: [...facingUp], moves });
     if (history.length > 60) history.shift();
     facingUp = [false, false, false];
@@ -72,11 +77,18 @@ export function initializeThreeCups(widget) {
 
   undo?.addEventListener('click', () => {
     if (!history.length) return;
+    future.push({ facingUp: [...facingUp], moves });
     ({ facingUp, moves } = history.pop());
     selected.clear();
     render('Move undone. Select two cups for your next move.');
   });
 
+  redo?.addEventListener('click', () => {
+    if (!future.length) return;
+    history.push({ facingUp: [...facingUp], moves });
+    ({ facingUp, moves } = future.pop()); selected.clear();
+    render('Move restored. Select two cups for your next move.');
+  });
   render('Select two cups to begin.');
 }
 

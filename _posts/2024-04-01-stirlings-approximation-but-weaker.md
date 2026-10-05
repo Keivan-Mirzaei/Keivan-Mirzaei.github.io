@@ -1,5 +1,5 @@
 ---
-title: "Stirling's Approximation but Weaker"
+title: "Stirling’s approximation, but weaker"
 description: "Compare factorial and exponential growth by proving a limit."
 format: problem
 category: math
@@ -15,23 +15,22 @@ $$
 \lim_{n\to \infty} \frac{e^nn!}{n^n} = \infty.
 $$
 
+You may use the power series for the exponential function.
+
+<!-- hint -->
+
+Keep several terms just after $$n^n/n!$$ in the series for $$e^n$$.
+
 <!-- solution -->
 
-Fix $$k\in \mathbb N$$. According to the power series representation of the exponential function we should have:
+Fix a positive integer $$k$$. Keeping $$k+1$$ terms from the exponential series gives
 
 $$
-\begin{align*}
-e^n
-&= 1 + n + \frac{n^2}{2!} + \cdots + \frac{n^n}{n!} + \frac{n^{n+1}}{(n+1)!} + \cdots\\
-&\gt \frac{n^n}{n!}\left(1 + \frac {n}{n+1} + \frac {n^2}{(n+1)(n+2)}+ \cdots\right)\\
-&\gt \frac{n^n}{n!}\left(1 + \frac {n}{n+1} + \cdots + \frac {n^k}{(n+1)\cdots(n+k)}\right).\tag{1}\label{eq:1}
-\end{align*}
+\frac{e^nn!}{n^n}
+\geq 1+\sum_{j=1}^{k}\frac{n^j n!}{(n+j)!}.
+\tag{1}\label{eq:factorial-tail}
 $$
 
-Therefore, \ref{eq:1} gives
+Each ratio $$n^j n!/(n+j)!$$ is a product of $$j$$ factors $$n/(n+r)$$, each tending to $$1$$. Thus the right-hand side of $$\eqref{eq:factorial-tail}$$ tends to $$k+1$$.
 
-$$
-\liminf_{n\to \infty} \frac{e^nn!}{n^n} \geq k+1 > k
-$$
-
-and the conclusion follows from the fact that $$k$$ was an arbitrary number.
+Given any bound $$M$$, choose $$k$$ with $$k+1>M$$. Then $$\eqref{eq:factorial-tail}$$ exceeds $$M$$ for all sufficiently large $$n$$, proving the limit.

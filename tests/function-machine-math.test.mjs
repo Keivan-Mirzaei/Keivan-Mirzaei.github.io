@@ -22,8 +22,8 @@ test('decimals on either side of an endpoint retain exact domain membership', ()
 
 test('natural-logarithm values agree with direct evaluation at interior inputs', () => {
   assert.deepEqual(evaluateMachine('0'), { state: 'defined', output: '0', value: 0 });
-  assert.equal(evaluateMachine('0.5').output, '−0.287…');
-  assert.equal(evaluateMachine('0.9').output, '−1.660…');
+  assert.equal(evaluateMachine('0.5').output, '≈ −0.288');
+  assert.equal(evaluateMachine('0.9').output, '≈ −1.66');
   for (let d = 2; d <= 21; d++) {
     for (let n = -d + 1; n < d; n++) {
       const result = evaluateMachine(`${n}/${d}`);
@@ -36,11 +36,15 @@ test('natural-logarithm values agree with direct evaluation at interior inputs',
   const tiny = evaluateMachine('0.' + '0'.repeat(100) + '1');
   assert.ok(tiny.value < 0);
   assert.ok(Math.abs(tiny.value / -1e-202 - 1) < 1e-14);
-  assert.equal(tiny.output, '−0.000…');
+  assert.equal(tiny.output, '≈ −1.00 × 10⁻²⁰²');
+});
+
+test('empty input is neutral', () => {
+  assert.deepEqual(evaluateMachine('  '), { state: 'empty', output: '—' });
 });
 
 test('invalid entry remains distinct from an excluded real input', () => {
-  for (const input of ['', 'NaN', 'Infinity', '1/0', '0/0', '1/2/3', 'hello', '1..2']) {
+  for (const input of ['NaN', 'Infinity', '1/0', '0/0', '1/2/3', 'hello', '1..2']) {
     assert.equal(evaluateMachine(input).state, 'invalid');
   }
 });

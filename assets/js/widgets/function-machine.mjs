@@ -1,3 +1,4 @@
+import { numberMarkup } from '../lib/widget-math.mjs';
 import { evaluateMachine } from '../lib/function-machine-math.mjs';
 
 for (const widget of document.querySelectorAll('[data-widget="function-machine"]')) {
@@ -6,8 +7,12 @@ for (const widget of document.querySelectorAll('[data-widget="function-machine"]
   function update() {
     const result = evaluateMachine(input.value);
     widget.dataset.state = result.state;
-    input.setAttribute('aria-invalid', String(result.state === 'invalid'));
-    output.textContent = result.output;
+    input.setAttribute('aria-invalid', String(['invalid', 'undefined'].includes(result.state)));
+    if (result.state === 'defined') output.innerHTML = numberMarkup(result.value, true);
+    else output.textContent = result.output;
+    const error = widget.querySelector('[data-machine-error]');
+    error.textContent = result.state === 'undefined' ? 'The real domain is −1 < x < 1.' : result.state === 'invalid' ? 'Enter a decimal or fraction, such as 0.5 or 1/2.' : '';
+    error.hidden = !error.textContent;
   }
   input.disabled = false;
   input.addEventListener('input', update);

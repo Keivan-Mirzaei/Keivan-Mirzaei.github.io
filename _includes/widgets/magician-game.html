@@ -1,12 +1,20 @@
-<section class="graph-widget magician-widget" data-magician-game aria-labelledby="mp-game-title">
-  <div class="graph-heading"><h3 id="mp-game-title">An audience of 64</h3><span class="activity-badge" data-round>Round 0 · 64 standing</span></div>
+{% assign widget_id = include.id | default: 'mp-game' %}
+<section class="graph-widget widget-frame magician-widget" data-magician-game aria-labelledby="{{ widget_id }}-title">
+  <div class="mp-heading"><h3 id="{{ widget_id }}-title">An audience of 64</h3><span class="mp-summary" data-round>Round 0 · 64 standing</span></div>
   <div class="mp-audience" data-audience>{% include widgets/magician-audience.svg %}</div>
-  <p class="mp-caption">Filled dots are standing. Outlined dots have sat down.</p>
-  <div class="mp-control-row">
-    <button class="secondary-button panel-button" type="button" data-flip disabled>Flip a round</button>
-    <button class="mp-secondary panel-button" type="button" data-new-audience disabled>New audience</button>
+  <p class="mp-status" data-game-status role="status" aria-live="polite" aria-atomic="true">Flip a round. Can chance leave exactly one person standing?</p>
+  <div class="mp-primary-row"><button class="panel-button mp-primary" type="button" data-flip disabled>Flip a round</button></div>
+  <div class="widget-controls" role="group" aria-label="Audience controls">
+    <button class="panel-button" type="button" data-widget-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
+    <button class="panel-button" type="button" data-widget-redo disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
+    <button class="panel-button" type="button" data-widget-reset disabled>{% include icon.html name='restart' %}<span>Reset</span></button>
+    <button class="panel-button" type="button" data-new-audience disabled>{% include icon.html name='shuffle' %}<span>Shuffle</span></button>
+    <button class="panel-button" type="button" data-widget-panel-trigger="info" aria-expanded="false" disabled>{% include icon.html name='info' %}<span>Info</span></button>
   </div>
-  <p class="mp-status" data-game-status aria-live="polite">Everyone is standing. Will this game reach exactly one?</p>
-  <noscript><p>Enable JavaScript to play. Each round independently keeps each standing person with probability one half.</p></noscript>
-  {% include controls/panel.html help='<p>Flip a round: each standing person independently guesses the coin. A wrong guess sits down. Reach exactly one survivor. Undo retries a round.</p>' %}
+  <div class="widget-support-panel" data-widget-panel="info" hidden>
+    <p>Each dot is a person. Filled dots are standing; outlined dots have sat down. Each round, everyone still standing makes a fresh, independent guess at a fair coin toss. Wrong guesses sit down.</p>
+    <p>The run ends with one survivor or no survivors. One survivor turns the field green. This is one simulated performance; it does not estimate the overall probability.</p>
+    <p>Undo and Redo restore the exact rounds. Reset replays this audience from the start; Shuffle begins a different run. Both can be undone. This short simulation starts fresh when you revisit the page.</p>
+  </div>
+  <noscript><p>Enable JavaScript to play. Each standing person has a half chance of staying in each round.</p></noscript>
 </section>

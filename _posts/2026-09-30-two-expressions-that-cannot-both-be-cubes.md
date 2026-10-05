@@ -6,7 +6,7 @@ tags: [number theory, perfect powers]
 math: true
 ---
 
-Let $$n$$ be a natural number. Prove that the two numbers
+For an integer $$n\geq0$$, prove that
 
 $$
 n+2\qquad\text{and}\qquad n^2+n+1
@@ -14,47 +14,31 @@ $$
 
 cannot both be perfect cubes.
 
-The statement holds whether or not your convention includes $$0$$ among the natural numbers.
+<!-- hint -->
+
+Assume $$n+2$$ is a cube, then compare the second expression with consecutive cubes.
 
 <!-- solution -->
 
-Suppose, for a contradiction, that
+Suppose $$n+2=a^3$$ and $$n^2+n+1=b^3$$ for positive integers $$a,b$$. Then $$a\geq2$$ and
 
 $$
-n+2=a^3,\qquad n^2+n+1=b^3
+b^3=a^6-3a^3+3<a^6.
 $$
 
-for positive integers $$a,b$$. Since $$n\geq 0$$, we have $$a^3\geq 2$$, so $$a\geq 2$$.
-
-Substituting $$n=a^3-2$$ gives
+For the preceding cube,
 
 $$
-\begin{aligned}
-b^3&=(a^3-2)^2+(a^3-2)+1\\
-&=a^6-3a^3+3.
-\end{aligned}
+\begin{gathered}
+b^3-(a^2-1)^3\\
+=3a^2(a^2-a-1)+4>0,
+\end{gathered}
 $$
 
-This number lies strictly between two consecutive cubes. First,
-
-$$
-a^6-3a^3+3<a^6=(a^2)^3,
-$$
-
-because $$a\geq 2$$. For the lower bound, subtract the preceding cube:
-
-$$
-\begin{aligned}
-&(a^6-3a^3+3)-(a^2-1)^3\\
-&\qquad=3a^4-3a^3-3a^2+4\\
-&\qquad=3a^2(a^2-a-1)+4>0.
-\end{aligned}
-$$
-
-The last inequality follows from $$a\geq 2$$, which gives $$a^2-a-1\geq 1$$. Thus
+since $$a^2-a-1\geq1$$. Thus
 
 $$
 (a^2-1)^3<b^3<(a^2)^3.
 $$
 
-Taking cube roots gives $$a^2-1<b<a^2$$, impossible for an integer $$b$$. Therefore the two expressions cannot both be cubes.
+This traps a perfect cube strictly between consecutive cubes, which is impossible.

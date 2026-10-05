@@ -33,7 +33,7 @@ import { bindInputHistory } from '../lib/panel-history.mjs';
         widget.querySelector(`[data-value="${input.name}"]`).textContent = display(Number(input.value));
       }
       const equation = `y = ${display(a)}(x ${h < 0 ? '+' : '−'} ${display(Math.abs(h))})² ${k < 0 ? '−' : '+'} ${display(Math.abs(k))}`;
-      widget.querySelector('[data-equation]').textContent = equation;
+      widget.querySelector('[data-equation]').innerHTML = `<math><mi>y</mi><mo>=</mo><mn>${display(a)}</mn><msup><mrow><mo>(</mo><mi>x</mi><mo>${h < 0 ? '+' : '−'}</mo><mn>${display(Math.abs(h))}</mn><mo>)</mo></mrow><mn>2</mn></msup><mo>${k < 0 ? '−' : '+'}</mo><mn>${display(Math.abs(k))}</mn></math>`;
       const explanation = a === 0
         ? `With a = 0, the graph is the horizontal line y = ${display(k)}. It is no longer a parabola.`
         : `The vertex is (${display(h)}, ${display(k)}). The curve opens ${a > 0 ? 'upward' : 'downward'}.`;

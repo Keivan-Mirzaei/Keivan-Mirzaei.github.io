@@ -1,4 +1,4 @@
 <details class="panel-help"{% if include.game %} data-{{ include.game }}-help{% endif %}>
-  <summary class="panel-button" aria-label="Help" title="Help">{% include icon.html name='help' %}<span>Help</span></summary>
+  <summary class="panel-button" aria-label="Info" title="Info">{% include icon.html name='info' %}<span>Info</span></summary>
   <div class="panel-help-content">{{ include.text }}{% if include.remember %}{% include puzzles/remember.html %}{% endif %}</div>
 </details>

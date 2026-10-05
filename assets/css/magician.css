@@ -1,4 +1,9 @@
-/* The magician exploration keeps the numerical microscope separate from a sample game. */
+/* A compact article frame; only the microscope needs a detailed numeric readout. */
+.magician-widget.widget-frame { margin: 28px auto; padding: 20px; border-radius: 10px; background: var(--paper); }
+.mp-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+.mp-heading h3 { margin: 0; font: 500 20px/1.4 var(--sans); color: var(--ink); }
+.mp-summary, .magician-widget .mp-window { color: var(--muted); font: 400 13px/1.6 var(--sans); font-variant-numeric: tabular-nums; }
+.magician-widget .mp-window { margin: 8px 0 0; }
 .magician-widget .mp-plot { display: block; width: 100%; height: auto; margin: 18px 0 0; }
 .mp-grid { stroke: var(--line); stroke-width: 1; }
 .mp-axis { fill: none; stroke: #87947e; stroke-width: 1; }
@@ -10,21 +15,43 @@
 .mp-guide { stroke: #9da897; stroke-width: 1; stroke-dasharray: 3 4; }
 .mp-marker { fill: var(--green); stroke: var(--paper); stroke-width: 2; }
 .magician-widget .mp-caption { font: 13px/1.65 var(--sans); color: var(--muted); margin: 14px 0; }
-.mp-control-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.mp-primary-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 16px 0 12px; }
+.magician-widget .mp-primary { background: var(--green); border-color: var(--green); color: var(--paper); padding-inline: 18px; }
+.magician-widget .mp-primary:not(:disabled):hover { background: #2f5041; }
 .magician-widget button { min-height: 44px; }
 .mp-secondary { padding: 9px 14px; border: 1px solid var(--green); border-radius: 3px; background: var(--paper); color: var(--green); font-size: 12px; }
 .mp-secondary:hover { background: var(--tint); }
 .magician-widget button:disabled { opacity: .6; cursor: default; }
-.magician-widget .mp-status { min-height: 3em; font: 13px/1.6 var(--sans); color: var(--green); margin: 14px 0 0; }
-.mp-magnified { border-top: 1px solid var(--line); padding-top: 24px; margin-top: 24px; }
-.mp-scrubber { display: block; margin: 18px 0 14px; font: 13px var(--sans); }
-.mp-scrubber input { display: block; width: 100%; min-height: 36px; margin-top: 8px; accent-color: var(--green); }
-.mp-audience svg { display: block; width: 100%; margin: 20px 0 0; }
+.magician-widget .mp-status { min-height: 44px; padding: 8px 10px; border-radius: 6px; font: 13px/1.6 var(--sans); color: var(--muted); margin: 12px 0 0; }
+.mp-audience { margin-top: 16px; border: 1px solid var(--line); border-radius: 8px; background: #f3f5f0; }
+.mp-audience svg { display: block; width: 100%; margin: 0; }
+.magician-widget[data-result='success'] .mp-audience { border-color: #6d9a79; background: #e4f1e7; box-shadow: inset 0 0 0 1px #6d9a79; }
+.magician-widget[data-result='success'] .mp-status { background: #e4f1e7; color: #2c5b3c; }
+.magician-widget[data-result='empty'] .mp-status { background: #f5ede4; color: #755232; }
+.mp-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 10px 0; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.mp-values > div { min-width: 0; }
+.mp-values span { display: block; color: var(--muted); font-size: 12px; }
+.mp-values output { display: block; color: var(--green); font: 400 14px/1.7 var(--sans); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.magician-widget .mp-magnify { margin: 8px 0 12px; }
+.magician-widget .widget-slider-setting { margin-top: 14px; }
+.magician-widget .widget-slider-heading output { white-space: nowrap; }
 .mp-person { fill: var(--green); stroke: var(--green); stroke-width: 1.2; }
 .mp-person.is-out { fill: var(--paper); stroke: #9da897; opacity: .5; }
 .mp-legend { display: flex; flex-wrap: wrap; gap: 8px 20px; }
 .mp-legend > span { display: inline-flex; gap: 8px; align-items: center; }
+.mp-legend math { font-family: math; font-size: 1em; }
 .mp-key { display: inline-block; width: 22px; border-top: 2px solid var(--green); }
 .mp-key-other { border-color: var(--muted); border-top-style: dashed; }
+
+@media (max-width: 560px) { .magician-widget.widget-frame { padding: 14px; } }
+@media (max-width: 360px) {
+  .mp-values { grid-template-columns: 1fr; gap: 8px; }
+  .magician-widget .widget-slider-heading { align-items: start; }
+}
+@media (forced-colors: active) {
+  .magician-widget[data-result='success'] .mp-audience { border: 2px solid Highlight; box-shadow: none; }
+  .mp-person { fill: CanvasText; stroke: CanvasText; }
+  .mp-person.is-out { fill: Canvas; stroke: GrayText; }
+}
 
 @media (prefers-reduced-motion: no-preference) { .mp-person { transition: opacity .35s ease, fill .35s ease; } }

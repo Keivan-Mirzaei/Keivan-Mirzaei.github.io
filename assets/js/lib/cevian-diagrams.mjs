@@ -1,10 +1,11 @@
+import { formatNumber } from './widget-math.mjs';
 import { TRIANGLE_SHAPES, TETRAHEDRON, triangleData, weightedPoint, contactPoints, simplexRatio, pairBound } from './cevian-math.mjs';
 
 const number = x => Number(x.toFixed(3));
 const points = vertices => vertices.map(p => p.slice(0, 2).map(number).join(',')).join(' ');
 const line = (a, b, className = 'cv-line') => `<line class="${className}" x1="${number(a[0])}" y1="${number(a[1])}" x2="${number(b[0])}" y2="${number(b[1])}"/>`;
 const polygon = (vertices, className) => `<polygon class="${className}" points="${points(vertices)}"/>`;
-const percent = value => `${(100 * value).toFixed(2)}%`;
+const percent = value => `${formatNumber(100 * value)}%`;
 
 function frame(width) {
   const height = width < 440 ? 300 : 370;
@@ -72,7 +73,7 @@ export function factorsDiagram(width, weights = [.5, .1875, .3125]) {
   const rows = bounds.map((bound, i) => {
     const y = 24 + i * 82;
     const variable = ['a', 'b', 'c'][i];
-    return `<text class="cv-label cv-small" x="4" y="${y - 7}">${variable} = ${ratios[i].toFixed(3)}</text><text class="cv-label cv-small" x="4" y="${y + 18}">1 + ${variable}</text><rect class="cv-sum-bar" x="${left}" y="${y + 7}" width="${barWidth(bound.sum)}" height="14" rx="2"/><text class="cv-label cv-small" x="${width - 4}" y="${y + 18}" text-anchor="end">${bound.sum.toFixed(3)}</text><text class="cv-label cv-small" x="4" y="${y + 41}">2√${variable}</text><rect class="cv-root-bar" x="${left}" y="${y + 30}" width="${barWidth(bound.geometric)}" height="14" rx="2"/><text class="cv-label cv-small" x="${width - 4}" y="${y + 41}" text-anchor="end">${bound.geometric.toFixed(3)}</text>`;
+    return `<text class="cv-label cv-small" x="4" y="${y - 7}">${variable} = ${formatNumber(ratios[i])}</text><text class="cv-label cv-small" x="4" y="${y + 18}">1 + ${variable}</text><rect class="cv-sum-bar" x="${left}" y="${y + 7}" width="${barWidth(bound.sum)}" height="14" rx="2"/><text class="cv-label cv-small" x="${width - 4}" y="${y + 18}" text-anchor="end">${formatNumber(bound.sum)}</text><text class="cv-label cv-small" x="4" y="${y + 41}">Bound</text><rect class="cv-root-bar" x="${left}" y="${y + 30}" width="${barWidth(bound.geometric)}" height="14" rx="2"/><text class="cv-label cv-small" x="${width - 4}" y="${y + 41}" text-anchor="end">${formatNumber(bound.geometric)}</text>`;
   }).join('');
   return `<svg class="cv-diagram" viewBox="0 0 ${width} 250" width="${width}" height="250" role="img" aria-label="For each of a, b, and c, the bar for one plus the ratio is at least as long as the bar for twice its square root. All bars share one scale."><title>Three pairwise arithmetic–geometric mean inequalities</title>${rows}</svg>`;
 }

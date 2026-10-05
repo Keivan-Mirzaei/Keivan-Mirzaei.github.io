@@ -1,6 +1,6 @@
 {% assign slice_id = include.id | default: 'sphere-slice' %}
-<section class="graph-widget advanced-widget" data-widget="sphere-slice" aria-labelledby="{{ slice_id }}-heading">
-  <div class="graph-heading"><h3 id="{{ slice_id }}-heading">Slice a sphere</h3><p class="graph-equation">x² + y² + z² = 1</p></div>
+<section class="graph-widget widget-frame advanced-widget" data-widget="sphere-slice" aria-labelledby="{{ slice_id }}-heading">
+  <div class="graph-heading"><h3 id="{{ slice_id }}-heading">Slice a sphere</h3><p class="graph-equation"><math><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup><mo>+</mo><msup><mi>z</mi><mn>2</mn></msup><mo>=</mo><mn>1</mn></math></p></div>
   <p>Move the horizontal plane and inspect its intersection with the unit sphere.</p>
   <div class="advanced-stage">
     <img class="advanced-preview" data-preview src="{{ '/assets/figures/sphere-slice.svg' | relative_url }}" alt="A unit sphere cut by a horizontal plane at height 0.5. Their circular intersection has radius approximately 0.866." loading="lazy" width="720" height="460">
@@ -17,7 +17,9 @@
       <button class="secondary-button panel-button" type="button" data-camera="left">Rotate left</button><button class="secondary-button panel-button" type="button" data-camera="right">Rotate right</button>
       <button class="secondary-button panel-button" type="button" data-camera="up">Tilt up</button><button class="secondary-button panel-button" type="button" data-camera="down">Tilt down</button>
       <button class="secondary-button panel-button" type="button" data-camera="in">Zoom in</button><button class="secondary-button panel-button" type="button" data-camera="out">Zoom out</button>
-      <button class="secondary-button panel-button" type="button" data-reset>Reset activity</button>
+      <button class="panel-button" type="button" data-panel-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
+      <button class="panel-button" type="button" data-panel-redo disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
+      <button class="secondary-button panel-button" type="button" data-reset data-panel-reset>Reset activity</button>
     </div>
   </fieldset>
   <noscript><p>The static preview and worked examples below explain the geometry without JavaScript.</p></noscript>

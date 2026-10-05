@@ -10,7 +10,7 @@
       <time datetime="{{ include.post.date | date_to_xmlschema }}">{{ include.post.date | date: '%b %Y' }}</time>
       {% endif %}
       {% assign note_parts = include.post.content | split: '<!-- solution -->' %}
-      {% assign note_solution = note_parts[1] | strip %}
+      {% assign note_solution = note_parts[1] | split: '<!-- alternative -->' | first | split: '<!-- extension -->' | first | split: '<!-- hint -->' | first | strip %}
       {% if include.post.format == 'problem' and note_solution != '' %}<span class="solution-label">Solution included</span>{% endif %}
     </div>
     <h{{ include.level | default: 3 }} class="note-title"><a href="{{ include.post.url | relative_url }}">{{ include.post.title }}</a></h{{ include.level | default: 3 }}>

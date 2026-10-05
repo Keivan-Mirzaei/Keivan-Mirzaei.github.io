@@ -262,7 +262,7 @@ if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-proof]
     const done = step === coast.tour.length;
     drawBoard(get('board'), cells, 5, { editing: true, coast, step, path: done ? coast.path : [] });
     get('count').textContent = `${step} / ${coast.tour.length} edges`;
-    get('step').disabled = done; get('finish').disabled = done; get('reset').disabled = step === 0;
+    get('step').disabled = done; get('finish').disabled = done; widget.dataset.complete = String(done);
     get('status').textContent = done
       ? `The coast ends at the ${hexCorner(coast.end)} corner. ${name(coast.winner)} cells alongside it connect ${hexGoal(coast.winner)}. Their coloured backgrounds highlight the winning chain.`
       : step === 0 ? 'Start at the top corner, with the red upper-right shore on one side and the blue upper-left shore on the other.'
@@ -271,7 +271,7 @@ if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-proof]
   const history = bindPanelHistory(widget, {
     read: () => ({ cells, step }),
     restore: state => { ({ cells, step } = state); coast = coastline(cells, 5); render(); },
-    reset: () => { cells = PROOF_EXAMPLE.slice(); coast = coastline(cells, 5); step = 0; render(); }
+    reset: () => { step = 0; render(); }
   });
   get('board').addEventListener('click', event => {
     const button = event.target.closest('[data-hex-cell]');
@@ -281,8 +281,7 @@ if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-proof]
   });
   get('step').addEventListener('click', () => { history.remember(); step = Math.min(step + 1, coast.tour.length); render(); });
   get('finish').addEventListener('click', () => { history.remember(); step = coast.tour.length; render(); });
-  get('reset').addEventListener('click', () => { history.remember(); step = 0; render(); });
   get('new').addEventListener('click', () => { history.remember(); cells = cells.map(() => Math.random() < .5 ? RED : BLUE); coast = coastline(cells, 5); step = 0; render(); });
-  widget.querySelectorAll('button').forEach(button => { button.disabled = button.hasAttribute('data-panel-undo'); });
+  widget.querySelectorAll('button').forEach(button => { button.disabled = button.hasAttribute('data-panel-undo') || button.hasAttribute('data-panel-redo'); });
   render();
 });

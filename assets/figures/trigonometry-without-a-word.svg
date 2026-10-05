@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 420" role="img" aria-labelledby="title desc">
+  <title id="title">Two arctangent identities on a unit grid</title>
+  <desc id="desc">The upper-left triangle has vertices (0,0), (2,1), and (3,-1). Its equal legs meet at a right angle, so the two angles beside the horizontal ray sum to 45 degrees. In the larger triangle, A=(0,0), B=(0,-3), C=(6,3), and D=(1,-2). The segment AD is perpendicular to AC, whose three marked parts each equal AD. At D, the angles between DB, a horizontal ray to the left, DA, and DC have tangents 1, 2, and 3 and form a straight angle.</desc>
+  <defs>
+    <pattern id="grid" x="30" y="30" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M60 0H0V60" fill="none" stroke="#e0e4dc" stroke-width="1" />
+    </pattern>
+  </defs>
+  <rect width="540" height="420" fill="url(#grid)" />
+  <g fill="#e5ece2" fill-opacity="0.65" stroke="#285b46" stroke-width="2.5" stroke-linejoin="round">
+    <path d="M30 90L150 30L210 150Z" />
+    <path d="M150 210L150 390L510 30Z" />
+  </g>
+  <g fill="none" stroke="#686e66" stroke-width="1.8" stroke-linejoin="round">
+    <path d="M30 90H180" />
+    <path d="M150 210L210 330H150" />
+    <path d="M137.48 36.26L143.74 48.78L156.26 42.52" />
+    <path d="M162.52 203.74L168.78 216.26L156.26 222.52" />
+  </g>
+  <g fill="none" stroke="#285b46" stroke-width="2" stroke-linecap="round">
+    <path d="M57.73 76.13A31 31 0 0 1 59.41 99.80" />
+    <path d="M187.37 352.63A32 32 0 0 1 232.63 307.37" />
+    <path d="M87.32 54.63L92.68 65.37M174.63 92.68L185.37 87.32" />
+    <path d="M174.63 272.68L185.37 267.32" />
+    <path d="M207.32 174.63L212.68 185.37M327.32 114.63L332.68 125.37M447.32 54.63L452.68 65.37" />
+  </g>
+  <g fill="#285b46">
+    <circle cx="270" cy="150" r="3" />
+    <circle cx="390" cy="90" r="3" />
+  </g>
+</svg>

@@ -1,5 +1,5 @@
 ---
-title: "Simple but Fun"
+title: "Simple but fun"
 description: "A permutation of an odd-sized set produces an even product. Can you see why?"
 format: problem
 category: math
@@ -9,20 +9,24 @@ math: true
 archived: true
 ---
 
-Suppose $$n$$ is an odd number and $$a_1, a_2, \dots, a_n$$ is a permutation of $$1, 2, \dots, n$$. Prove that the product
+Let $$n$$ be a positive odd integer and $$a_1,\ldots,a_n$$ a permutation of $$1,\ldots,n$$. Prove that
 
 $$
-(a_1-1)\cdot(a_2-2)\dots (a_n-n)
+\prod_{i=1}^{n}(a_i-i)
 $$
 
-is always an even number.
+is even.
+
+<!-- hint -->
+
+Could all $$n$$ differences be odd?
 
 <!-- solution -->
 
-One only needs to observe that
+Permuting the numbers preserves their sum, so
 
 $$
-(a_1-1) + (a_2-2) + \dots + (a_n-n) = 0.
+\sum_{i=1}^{n}(a_i-i)=0.
 $$
 
-As the sum of an odd number of integers results in zero, at least one of them should be even.
+If every difference were odd, their sum would be odd because $$n$$ is odd. Thus at least one factor is even, and so is the product.
