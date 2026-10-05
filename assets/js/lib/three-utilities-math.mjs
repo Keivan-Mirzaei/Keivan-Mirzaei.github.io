@@ -1,3 +1,5 @@
+import { mugPoint } from './three-utilities-mug.mjs';
+
 export const NODES = [
   { id: 'h1', label: 'House 1', short: '1', kind: 'house', point: [.24, .25] },
   { id: 'h2', label: 'House 2', short: '2', kind: 'house', point: [.50, .25] },
@@ -149,6 +151,7 @@ export function obstruction(routes) {
 // After the mug becomes a torus, it opens into a tube and then a flat square.
 // The cuts separate u=0 from u=1, then v=0 from v=1. No twisting occurs.
 export function surfacePoint(u, v, phase) {
+  if (phase < 1) return mugPoint(u, v, phase);
   const R = 1.25, r = .48;
   const p = Math.max(1, Math.min(3, phase));
   if (p <= 2) {

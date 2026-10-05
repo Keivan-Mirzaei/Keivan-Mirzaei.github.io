@@ -64,7 +64,7 @@ In ordinary words: **top matches bottom at the same horizontal position; left ma
 
 ## Solve it on the square
 
-Start with seven pipes. Then add the last two, one at a time.
+Seven pipes stay inside the square. The remaining two use the paired edges.
 
 {% include widgets/three-utilities-square.html %}
 
@@ -72,7 +72,7 @@ The **House 1 → Water** pipe leaves through the top and continues from the mat
 
 All nine pipes now connect their required endpoints. None crosses another pipe in the square, and the two seam continuations occur at distinct points. Gluing the edges therefore gives a valid drawing on the donut. Reshaping the donut back into a mug carries the drawing with it and preserves the absence of crossings.
 
-Use **Trace a pipe** to follow one connection at a time. The square shows every route at once, including the two that use the joined edges.
+The figure shows every route at once, including the two that use the joined edges.
 
 **The answer changes because the surface changes.** On the plane there is no way to fit the ninth pipe. On the mug, its handle gives the routes room to go around the obstruction.
 

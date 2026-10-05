@@ -4,6 +4,7 @@
 .tu-widget .tu-status { color: var(--green); min-height: 3.4em; }
 .tu-board { width: 100%; max-width: 620px; margin: 16px auto 8px; }
 .tu-board svg, .tu-board img { display: block; width: 100%; height: auto; margin: 0; font-family: var(--sans); overflow: visible; }
+.prose .tu-square-figure { max-width: 620px; }
 .tu-plane-board { touch-action: none; user-select: none; }
 .tu-node[role="button"] { cursor: crosshair; outline: none; }
 .tu-node.is-selected .tu-hit, .tu-node:focus-visible .tu-hit { fill: var(--tint); stroke: var(--green); stroke-width: 2; stroke-dasharray: 4 3; }
@@ -22,8 +23,8 @@
 .tu-phase-buttons button[aria-pressed="true"] { border-color: var(--green); background: var(--tint); }
 .tu-slider-label { display: block; margin: 16px 0; font: 12px/1.8 var(--sans); }
 .tu-slider-label input { display: block; width: 100%; min-height: 44px; accent-color: var(--green); }
-.tu-trace-label { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 18px; font: 12px var(--sans); }
-.tu-trace-label select { max-width: 100%; padding: 8px 10px; min-height: 44px; border: 1px solid var(--line); background: var(--paper); border-radius: 3px; color: var(--ink); font: 13px var(--sans); }
+.tu-grid-control { display: flex; align-items: center; gap: 9px; min-height: 44px; margin-bottom: 8px; color: var(--muted); font: 12px var(--sans); }
+.tu-grid-control input { width: 16px; height: 16px; accent-color: var(--green); }
 .tu-widget .tu-footnote { color: var(--muted); font: 12px/1.7 var(--sans); margin: 0; }
 @media (max-width: 500px) {
   .tu-legend { gap: 8px 12px; font-size: 11px; }

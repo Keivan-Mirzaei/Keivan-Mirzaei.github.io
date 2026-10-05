@@ -1,5 +1,5 @@
 import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
-import { NODES, nodeById, TORUS_ROUTES, PLANE_EIGHT, distance, obstruction, curveRoute, smoothWaypoints, simplifyPath, updateConnection } from '../lib/three-utilities-math.mjs';
+import { NODES, nodeById, PLANE_EIGHT, distance, obstruction, curveRoute, smoothWaypoints, simplifyPath, updateConnection } from '../lib/three-utilities-math.mjs';
 import { boardSVG, boardGeometry, drawTransformation } from '../lib/three-utilities-diagrams.mjs';
 import { observeSize } from '../lib/interactive-view.mjs';
 
@@ -113,8 +113,8 @@ function preparePlane(widget) {
 }
 
 const PHASES = [
-  ['A mug', 'Drag to rotate the 3D mug and look inside. Its bowl has a bottom; the handle supplies the one through-hole.'],
-  ['A donut', 'Round the body and shrink its indentation. The handle opening becomes the donut’s hole; the surface stays connected.'],
+  ['A mug', 'Drag to look into the bowl. Its bottom, inner wall, rim, outside and handle form one surface. The handle supplies the one through-hole.'],
+  ['A donut', 'The mug’s surface is now a donut. The bowl has lifted and the handle has thickened; the same hole stays open. No cuts or joins so far.'],
   ['An open tube', 'Cut along the purple dashed loop and straighten the ring. The two purple ends will be joined again.'],
   ['A square', 'Slit the tube along the green dashed loop and flatten it. Matching dashed sides belong together: green top and bottom, purple left and right.'],
 ];
@@ -122,19 +122,24 @@ const PHASES = [
 function prepareSurface(widget) {
   const canvas=widget.querySelector('canvas'), slider=widget.querySelector('[data-tu-phase]'), title=widget.querySelector('[data-tu-stage]');
   const caption=widget.querySelector('[data-tu-caption]'), play=widget.querySelector('[data-tu-play]');
+  const grid=widget.querySelector('[data-tu-grid]');
   widget.querySelector('[data-tu-surface-preview]').hidden=true;canvas.hidden=false;
-  let phase=0, frame=null, orbit=null;
+  widget.querySelector('[data-tu-grid-note]').hidden=false;
+  let phase=0, frame=null, orbit=null, showGrid=false;
   const rotation={yaw:0,pitch:0};
   function render() {
     const index = Math.min(3, Math.floor(phase+.001));
     const inTransition=Math.abs(phase-Math.round(phase))>.02;
-    const stage=inTransition?['Mug → donut','Donut → tube','Tube → square'][index]:PHASES[Math.round(phase)][0];
-    const explanation=inTransition?PHASES[index+1][1]:PHASES[Math.round(phase)][1];
+    const stage=inTransition?(phase<.36?'Lifting the bowl':['Mug → donut','Cut → tube','Slit → square'][index]):PHASES[Math.round(phase)][0];
+    const explanation=inTransition&&phase<1
+      ?(phase<.36?'Lift the bowl’s bottom and ease its inner wall outward. The same surface points move, and the handle hole stays open.'
+        :'Round the body and thicken the handle into a ring. The same hole stays open; nothing is cut or joined.')
+      :inTransition?PHASES[index+1][1]:PHASES[Math.round(phase)][1];
     if(title.textContent!==stage)title.textContent=stage;
     if(caption.textContent!==explanation)caption.textContent=explanation;
     slider.value=phase;
     widget.querySelectorAll('[data-tu-jump]').forEach(button=>button.setAttribute('aria-pressed',Math.abs(Number(button.dataset.tuJump)-phase)<.02));
-    drawTransformation(canvas,phase,rotation);
+    drawTransformation(canvas,phase,rotation,showGrid);
     const description=`${stage}. ${explanation} Drag to rotate, or use arrow keys. Home resets to the mug.`;
     if(canvas.getAttribute('aria-label')!==description)canvas.setAttribute('aria-label',description);
   }
@@ -142,21 +147,26 @@ function prepareSurface(widget) {
   function animate(target,hold=0) {
     stop();
     if (reducedMotion.matches) {phase=target;render();return;}
-    const start=phase, begin=performance.now()+hold, duration=Math.abs(target-start)*2400;
+    const start=phase, begin=performance.now()+hold;
     const direction=Math.sign(target-start),stages=[start];
     if(direction)for(let boundary=direction>0?Math.floor(start)+1:Math.ceil(start)-1;direction>0?boundary<target:boundary>target;boundary+=direction)stages.push(boundary);
     stages.push(target);
+    const segments=stages.slice(1).map((end,i)=>({start:stages[i],end,
+      duration:Math.abs(end-stages[i])*(Math.min(end,stages[i])<1?6200:3600),
+      hold:i<stages.length-2?850:0}));
+    const duration=segments.reduce((total,segment)=>total+segment.duration+segment.hold,0);
     play.textContent='Pause';
     const tick=now=>{
-      const t=Math.max(0,Math.min(1,(now-begin)/Math.max(1,duration)));
-      let elapsed=Math.abs(target-start)*t;
-      for(let i=1;i<stages.length;i++){
-        const length=Math.abs(stages[i]-stages[i-1]);
-        if(elapsed<=length||i===stages.length-1){const progress=length?Math.min(1,elapsed/length):1;phase=stages[i-1]+(stages[i]-stages[i-1])*progress*progress*(3-2*progress);break;}
-        elapsed-=length;
+      let elapsed=Math.max(0,now-begin);
+      for(const segment of segments){
+        if(elapsed<=segment.duration+segment.hold){
+          const progress=segment.duration?Math.min(1,elapsed/segment.duration):1;
+          phase=segment.start+(segment.end-segment.start)*progress*progress*(3-2*progress);break;
+        }
+        elapsed-=segment.duration+segment.hold;phase=segment.end;
       }
       render();
-      if (t<1) frame=requestAnimationFrame(tick); else stop();
+      if (now-begin<duration) frame=requestAnimationFrame(tick); else stop();
     };
     frame=requestAnimationFrame(tick);
   }
@@ -180,11 +190,12 @@ function prepareSurface(widget) {
     if(event.key==='Home'){event.preventDefault();resetMug();}
   });
   const panelHistory = bindPanelHistory(widget, {
-    read: () => ({ phase, rotation }),
-    restore: state => { stop(); phase = state.phase; Object.assign(rotation, state.rotation); render(); },
+    read: () => ({ phase, rotation, showGrid }),
+    restore: state => { stop(); phase = state.phase; Object.assign(rotation, state.rotation); showGrid=grid.checked=state.showGrid??false; render(); },
     reset: resetMug
   });
   trackControlEdits([slider, canvas], panelHistory);
+  grid.addEventListener('change',()=>panelHistory.change(()=>{showGrid=grid.checked;render();}));
   widget.querySelectorAll('[data-tu-jump], [data-tu-play], [data-tu-reset-view]').forEach(button => button.addEventListener('click', () => panelHistory.remember(), { capture: true }));
   widget.querySelectorAll('button,input').forEach(control=>control.disabled=control.hasAttribute('data-panel-undo')||control.hasAttribute('data-panel-redo'));
   observeSize(canvas,render);render();
@@ -192,42 +203,5 @@ function prepareSurface(widget) {
   if ('IntersectionObserver' in window) new IntersectionObserver(entries=>{if(!entries[0].isIntersecting)stop();}).observe(widget);
 }
 
-function prepareSquare(widget) {
-  const board=widget.querySelector('[data-tu-square]'), next=widget.querySelector('[data-tu-next]'), count=widget.querySelector('[data-tu-count]');
-  const status=widget.querySelector('[data-tu-status]'), trace=widget.querySelector('[data-tu-trace]');
-  let number=7;
-  const messages=[
-    'Seven pipes fit inside the square. House 1 → Water and House 3 → Gas still need routes. Add the next pipe.',
-    'House 1 → Water leaves through the green top side and returns at the matching point on the green bottom side. These two dots are one point on the glued surface.',
-    'House 3 → Gas leaves through the purple right side and returns at the matching point on the purple left side. All nine pipes now fit, with no crossings.',
-  ];
-  status.textContent=messages[0];
-  function render() {
-    if (!board.clientWidth) return;
-    const routes=TORUS_ROUTES.slice(0,number);
-    board.innerHTML=boardSVG(routes,{width:board.clientWidth,square:true,focus:trace.value||null});
-    widget.dataset.complete=String(number===9);
-    count.textContent=`${number} / 9 pipes · no crossings`;next.disabled=number===9;
-    next.textContent=number===7?'Add top ↔ bottom pipe':number===8?'Add left ↔ right pipe':'All nine connected';
-    const prior=trace.value;
-    trace.innerHTML='<option value="">All pipes</option>'+routes.map(edge=>`<option value="${edge.id}">${nodeById(edge.house).label} → ${nodeById(edge.utility).label}${edge.seam?` (${edge.seam==='a'?'top/bottom':'left/right'})`:''}</option>`).join('');
-    trace.value=routes.some(edge=>edge.id===prior)?prior:'';
-  }
-  const panelHistory = bindPanelHistory(widget, {
-    read: () => ({ number, trace: trace.value, message: status.textContent }),
-    restore: state => { number = state.number; trace.value = state.trace; status.textContent = state.message; render(); }
-  });
-  widget.querySelectorAll('[data-tu-next], [data-tu-reset]').forEach(button => button.addEventListener('click', () => panelHistory.remember(), { capture: true }));
-  next.addEventListener('click',()=>{number=Math.min(9,number+1);trace.value='';status.textContent=messages[number-7];render();});
-  widget.querySelector('[data-tu-reset]').addEventListener('click',()=>{number=7;trace.value='';status.textContent=messages[0];render();});
-  trace.addEventListener('change',()=>{
-    const edge=TORUS_ROUTES.find(route=>route.id===trace.value);
-    status.textContent=edge?`${nodeById(edge.house).label} → ${nodeById(edge.utility).label}: ${edge.seam==='a'?'follow the matching dots on the green top and bottom sides.':edge.seam==='b'?'follow the matching dots on the purple left and right sides.':'the entire pipe stays inside the square.'}`:messages[number-7];render();
-  });
-  widget.querySelectorAll('button,select').forEach(control=>control.disabled=control.hasAttribute('data-panel-undo')||control.hasAttribute('data-panel-redo'));
-  observeSize(board,render);render();
-}
-
 document.querySelectorAll('[data-three-utilities-plane]').forEach(preparePlane);
 document.querySelectorAll('[data-three-utilities-surface]').forEach(prepareSurface);
-document.querySelectorAll('[data-three-utilities-square]').forEach(prepareSquare);

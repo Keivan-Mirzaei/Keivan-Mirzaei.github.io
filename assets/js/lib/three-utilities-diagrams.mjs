@@ -1,5 +1,5 @@
 import { NODES, nodeById, surfacePoint, smoothWaypoints } from './three-utilities-math.mjs';
-import { mugMesh } from './three-utilities-mug.mjs';
+import { mugMesh, mugRounding } from './three-utilities-mug.mjs';
 import { draw3DSurface, boundaryHighlights, BOUNDARY_STYLE } from './three-utilities-renderer.mjs';
 
 export function boardGeometry(width) {
@@ -50,8 +50,7 @@ export function boardSVG(routes, { width = 620, square = false, selected = null,
 
 const mix = (a, b, t) => a + (b - a) * t;
 function projection(phase, rotation) {
-  const flatten = Math.max(0, phase - 2), round = Math.min(1,phase);
-  const ease = round * round * (3 - 2 * round);
+  const flatten = Math.max(0, phase - 2), ease = mugRounding(phase);
   const yaw = .22 * (1 - flatten) + rotation.yaw;
   const pitch = (phase < 1 ? -.50 + 1.40 * ease : .90 * (1 - flatten)) + rotation.pitch;
   return p => {
@@ -62,18 +61,18 @@ function projection(phase, rotation) {
 }
 
 let cachedMug=null;
-function drawSurface(ctx, width, height, phase, rotation) {
-  const project = projection(phase, rotation), cols = 84, rows = 56, faces = [], lines = [], all = [];
+function drawSurface(ctx, width, height, phase, rotation, showGrid) {
+  const project = projection(phase, rotation), cols = 144, rows = 96, faces = [], lines = [], all = [];
   const addFace=(points,inward=false)=>{
     all.push(...points);
     const a = points[1].map((x,k) => x-points[0][k]), b = points.at(-1).map((x,k) => x-points[0][k]);
     const normal = [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
     const length = Math.hypot(...normal) || 1;
     const light = .32 + .68 * Math.max(0, (normal[0]*-.35 + normal[1]*-.55 + normal[2]*.76)*(inward?-1:1)/length);
-    faces.push({ points, depth: points.reduce((sum,p)=>sum+p[2],0)/points.length, fill: `rgb(${Math.round(115+70*light)},${Math.round(139+63*light)},${Math.round(102+63*light)})` });
+    faces.push({ points, depth: points.reduce((sum,p)=>sum+p[2],0)/points.length, fill: `rgb(${Math.round(120*light)},${Math.round(185*light)},${Math.round(149*light)})` });
   };
   if(phase<1){
-    if(cachedMug?.phase!==phase)cachedMug={phase,mesh:mugMesh(phase,44)};
+    if(cachedMug?.phase!==phase)cachedMug={phase,mesh:mugMesh(phase,144)};
     const projected=cachedMug.mesh.vertices.map(project);
     for(const triangle of cachedMug.mesh.triangles)addFace(triangle.map(i=>projected[i]));
   }else{
@@ -82,9 +81,16 @@ function drawSurface(ctx, width, height, phase, rotation) {
     }
   }
   // Stable framing lets the object open without shrinking the tube out of view.
-  const extentX = Math.max(...all.map(p=>Math.abs(p[0]))), extentY = Math.max(...all.map(p=>Math.abs(p[1])));
+  let extentX=0,extentY=0;
+  for(const p of all){extentX=Math.max(extentX,Math.abs(p[0]));extentY=Math.max(extentY,Math.abs(p[1]));}
+  if(phase<=1){extentX=Math.max(extentX,1.8);extentY=Math.max(extentY,1.45);}
   const scale = Math.min((width-44)/(extentX*2), (height-48)/(extentY*2));
   const screen = p => [width/2+p[0]*scale, height/2+p[1]*scale];
+  // The fallback carries the same material grid as the WebGL texture.
+  if(showGrid)for(const [count,horizontal] of [[12,false],[8,true]])for(let k=0;k<count;k++){
+    const points=Array.from({length:193},(_,i)=>project(surfacePoint(...(horizontal?[i/192,k/count]:[k/count,i/192]),phase)));
+    for(let i=1;i<points.length;i++)lines.push({points:[points[i-1],points[i]],color:'#dbf2de',lineWidth:1,opacity:.4});
+  }
   if(phase>=1){
     for(const highlight of boundaryHighlights(phase,project,screen))for(const part of highlight.parts){
       for(let i=1;i<part.length;i++)lines.push({points:[part[i-1],part[i]],color:highlight.color,lineWidth:highlight.width});
@@ -121,7 +127,7 @@ function drawSurface(ctx, width, height, phase, rotation) {
   for(const line of lines){
     const [a,b]=line.points, sa=screen(a),sb=screen(b);
     const count=Math.max(1,Math.ceil(Math.hypot(sa[0]-sb[0],sa[1]-sb[1])/cell));
-    ctx.strokeStyle=line.color;ctx.lineWidth=line.lineWidth;ctx.lineCap='butt';
+    ctx.strokeStyle=line.color;ctx.lineWidth=line.lineWidth;ctx.lineCap='butt';ctx.globalAlpha=line.opacity??1;
     for(let i=0;i<count;i++){
       const mid=a.map((x,k)=>mix(x,b[k],(i+.5)/count));
       if(!visible(mid))continue;
@@ -131,12 +137,12 @@ function drawSurface(ctx, width, height, phase, rotation) {
   ctx.restore();
 }
 
-export function drawTransformation(canvas, phase, rotation = {yaw:0,pitch:0}) {
+export function drawTransformation(canvas, phase, rotation = {yaw:0,pitch:0}, showGrid = false) {
   const width = canvas.clientWidth, height = canvas.clientHeight;
   if (!width || !height) return;
-  if(draw3DSurface(canvas,phase,projection(phase,rotation)))return;
+  if(draw3DSurface(canvas,phase,projection(phase,rotation),showGrid))return;
   const ratio = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
   const ctx = canvas.getContext('2d'); ctx.scale(ratio, ratio); ctx.clearRect(0,0,width,height);
-  drawSurface(ctx,width,height,phase,rotation);
+  drawSurface(ctx,width,height,phase,rotation,showGrid);
 }
