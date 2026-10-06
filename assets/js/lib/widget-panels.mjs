@@ -24,7 +24,7 @@ export function initializeWidgetPanels(root, document = root.ownerDocument) {
     }, { signal: events.signal });
   });
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && opened) { event.preventDefault(); close(true); }
+    if (event.key === 'Escape' && !event.defaultPrevented && opened) { event.preventDefault(); close(true); }
   }, { signal: events.signal });
   return () => { close(); events.abort(); };
 }

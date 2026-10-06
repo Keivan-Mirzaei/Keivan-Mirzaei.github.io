@@ -1,6 +1,8 @@
 import { initializeWidgetUI } from './lib/widget-ui.mjs';
+import { initializeDropdowns } from './lib/dropdown.mjs';
 
 document.querySelectorAll('.widget-frame').forEach(initializeWidgetUI);
+initializeDropdowns(document);
 
 // Keep article activities idle until the reader is near them. Linked diagrams
 // share one controller and therefore activate together, exactly once per page.

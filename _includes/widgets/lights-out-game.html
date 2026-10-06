@@ -24,12 +24,12 @@
   </div>
   <div class="widget-support-panel" data-widget-panel="settings" aria-label="Exploration settings" hidden>
     <div class="lo-settings">
-      <label for="lo-board">Board <select id="lo-board" data-lo-board disabled>
+      <div><label for="lo-board">Board</label><select id="lo-board" data-lo-board disabled>
         <optgroup label="Puzzle networks"><option value="path-6">Open loop · 6 lights</option><option value="loop-7">Loop · 7 lights</option><option value="branches-7-0">Branches · 7 lights</option><option value="network-8-1">Network · 8 lights</option></optgroup>
         <optgroup label="Grids"><option value="grid-3">3 × 3 grid</option><option value="grid-4">4 × 4 grid</option><option value="grid-5">5 × 5 grid</option></optgroup>
         <optgroup label="Proof examples"><option value="path-4">Path of four</option><option value="cycle-5">Five-light cycle</option><option value="triangle">Triangle</option><option value="star-5">Four-leaf star</option><option value="pair">Two joined lights</option></optgroup>
-      </select></label>
-      <label for="lo-goal">Goal <select id="lo-goal" data-lo-goal disabled><option value="off">All lights off</option><option value="complement">Complement the start</option></select></label>
+      </select></div>
+      <div><label for="lo-goal">Goal</label><select id="lo-goal" data-lo-goal disabled><option value="off">All lights off</option><option value="complement">Complement the start</option></select></div>
     </div>
     <label class="widget-switch"><span>Show light numbers</span><input type="checkbox" role="switch" data-lo-numbers disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
     <label class="widget-switch"><span>Edit starting lights</span><input type="checkbox" role="switch" data-lo-edit disabled><span class="widget-switch-track" aria-hidden="true"></span></label>

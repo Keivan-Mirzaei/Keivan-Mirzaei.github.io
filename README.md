@@ -56,6 +56,8 @@ Use the [directory map and maintenance guide](docs/site-map.md) to find the sour
 
 The logo, interface icons, activity registry, and panel controls each have one shared source. The Hex article and standalone game use the same panel, renderer, rules, computer search, and undo behavior.
 
+For widget changes, follow the [widget requirements](docs/widget-requirements.md) and [element standards](docs/element-standards.md). Keep shared control standards together in the latter as more elements are reviewed.
+
 The [content logo roadmap](docs/logo-roadmap.md) covers problems, explorations, and puzzles. Problems choose one of four reusable circle/woven-loop marks through their internal `difficulty` value. Post headings, post lists, and puzzle cards share one logo renderer.
 
 Activity styles load only where required. Article controllers activate near the reader; standalone games activate immediately. Heavy graph libraries still load only after opening their interactive views. Search downloads its index on demand. Navigation prepares an internal page on a brief mouse hover or keyboard focus, with a small limit and respect for reduced-data connections.

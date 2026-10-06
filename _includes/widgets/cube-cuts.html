@@ -10,12 +10,12 @@
   <p class="cube-cuts-legend" data-cube-legend><span><i class="cube-cuts-key cube-cuts-key-centre" aria-hidden="true"></i>Middle cube</span><span><i class="cube-cuts-key cube-cuts-key-neighbour" aria-hidden="true"></i>Six neighbours</span></p>
   <p class="cube-cuts-caption" data-cube-caption>Exploded view · gaps added for clarity.</p>
   <div class="cube-cuts-controls" data-cube-controls hidden>
-    <label class="cube-cuts-view" for="{{ cube_id }}-view">View
+    <div class="cube-cuts-view"><label for="{{ cube_id }}-view">View</label>
       <select id="{{ cube_id }}-view" data-cube-view>
         <option value="centre">Middle cube and neighbours</option>
         <option value="whole">Whole cube</option>
       </select>
-    </label>
+    </div>
     <button class="panel-button" type="button" data-cube-previous disabled>Previous</button>
     <button class="panel-button cube-cuts-next" type="button" data-cube-next>Next cut <span aria-hidden="true">→</span></button>
   </div>

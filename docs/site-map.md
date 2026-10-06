@@ -103,6 +103,7 @@ Keivan-Mirzaei.github.io/
 | Change the sidebar | `_data/navigation.yml` | Every ordinary page |
 | Change colours or reading-page alignment | `assets/css/site.css` | All ordinary pages |
 | Change button sizing or Help behavior | `assets/css/controls.css`, `_includes/controls/`, `assets/js/widgets.js` | Shared activity and game controls |
+| Change dropdown appearance or behavior | `assets/css/dropdown.css`, `assets/js/lib/dropdown.mjs`, `_includes/widget-assets.html` | One component for named choices; follow `docs/element-standards.md` |
 | Change a particular activity | `_includes/widgets/`, `assets/js/widgets/`, its registered CSS | Every page embedding it |
 | Change Hex | `_includes/puzzles/hex.html`, `assets/js/widgets/hex.mjs`, `assets/js/lib/hex-*` | Both the article game and standalone game |
 | Add a game to the catalogue | `_data/puzzles.yml` | `/puzzles/` |

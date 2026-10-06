@@ -58,7 +58,7 @@
 .widget-frame .panel-help-content { position: static; order: 99; flex: 1 0 100%; width: 100%; max-height: none; margin-top: 8px; padding: 16px; box-shadow: none; font: 400 13px/1.7 var(--sans); }
 .widget-frame .graph-values { padding: 0; border: 0; background: transparent; }
 .widget-frame .graph-values > summary { width: fit-content; min-height: 44px; padding: 9px 12px; cursor: pointer; color: var(--ink); font: 13px/1.6 var(--sans); }
-/* Native dropdowns keep named alternatives compact and familiar on phones. */
+/* Native fallback before the shared dropdown enhancement is ready. */
 .widget-frame select { display: block; width: 100%; max-width: 100%; min-width: 0; min-height: 44px; margin: 6px 0 0; padding: 9px 30px 9px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); font: 13px/1.5 var(--sans); }
 .widget-frame select:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
 .widget-frame select:disabled { opacity: .5; }

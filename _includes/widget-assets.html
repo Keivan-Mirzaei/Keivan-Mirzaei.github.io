@@ -1,5 +1,9 @@
 {% if page.widgets.size > 0 %}
 <link rel="stylesheet" href="{{ '/assets/css/controls.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/dropdown.css' | relative_url }}">
+<template data-dropdown-trigger><button type="button" class="site-dropdown-trigger" role="combobox" aria-expanded="false" aria-haspopup="listbox"><span data-dropdown-value></span>{% include icon.html name='chevron-down' %}</button></template>
+<template data-dropdown-option><div class="site-dropdown-option" role="option" aria-selected="false"><span data-dropdown-option-label></span>{% include icon.html name='confirm' %}</div></template>
+<script type="application/json" data-dropdown-marks>{ {% for entry in site.data.problem_logos %}"{{ entry[0] }}": {{ entry[1].image | relative_url | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %} }</script>
 {% assign loaded_styles = '' | split: ',' %}
 {% if page.layout == 'puzzle' or page.section == 'puzzles' %}{% assign loaded_styles = 'puzzles' | split: ',' %}{% endif %}
 {% assign widget_names = page.widgets | uniq %}

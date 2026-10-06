@@ -17,7 +17,7 @@ This is the reference for interactive widgets in articles, lessons, and standalo
 - Avoid duplicated explanations, decorative badges, unnecessary statistics, empty layout slots, and controls that do not serve the activity.
 - Use brief visible text for controls where helpful, with consistent labels and icons for common actions.
 - Use the same frame, control names, disclosure rules, and display formatting across articles, lessons, walkthroughs, and puzzles. Keep standalone and embedded versions of an activity consistent.
-- Use sliders for numerical quantities, such as position, rotation, size, or a parameter, and show the current value. Use native dropdowns for distinct named alternatives such as triangle shapes, functions, board types, goals, and difficulty levels. Keep a clear label and the selected option visible, and let the native menu provide familiar keyboard and phone interaction. A natural ordering does not make categories suitable for a slider. Use visible choice buttons only when direct comparison or frequent switching clearly benefits the activity, and explain that exception in its design sheet.
+- Use sliders for numerical quantities, such as position, rotation, size, or a parameter, and show the current value. Use dropdowns for distinct named alternatives such as triangle shapes, functions, board types, goals, and difficulty levels, following the [element standards](element-standards.md#dropdowns). A natural ordering does not make categories suitable for a slider. Use visible choice buttons only when direct comparison or frequent switching clearly benefits the activity, and explain that exception in its design sheet.
 - Use toggle switches for on/off options instead of visible checkboxes.
 - Keep the activity unobstructed. Omit unnecessary numbering, labels, and oversized handles, particularly when they cover points, lines, or other important content.
 - When an activity has a meaningful goal, make achievement visibly clear with a restrained colour effect and a concise confirmation. Remove the success effect if the current state no longer meets the goal.
@@ -56,7 +56,7 @@ Render only relevant controls. A relevant action can be temporarily disabled; an
 | Tip / Hint | Guidance supports learning or progress | Reveal it only when useful or requested; allow it to be hidden. |
 | Input | Entering an exact value or expression is useful | Provide a clear label and concise validation. |
 | Slider | Exploring a bounded numerical parameter is useful | Show a concise current value and units where relevant. Keep categorical choices off sliders. Do not pair it with an exact-value input unless both are needed. |
-| Dropdown | Choosing one of several named alternatives | Use a labeled native select with the current choice visible, a generous touch target, and a width that fits phones. Keep numerical quantities on sliders and on/off settings as toggle switches. |
+| Dropdown | Choosing one of several named alternatives | Follow the dropdown entry in the element standards. Keep numerical quantities on sliders and on/off settings as toggle switches. |
 | Toggle switch | An option has an on/off state | Use a clearly labelled switch rather than a visible checkbox. |
 | Feedback | A result or change supports learning or interaction | Show only necessary feedback and keep it visible while relevant. For an applicable goal, use a clear colour effect together with a brief success message. |
 | Play / Pause | An activity runs over time | Let the user start and stop it deliberately. |
@@ -95,6 +95,7 @@ Use familiar action ordering as a starting point: **Undo, Redo, Reset, Shuffle**
 - Separate mathematical rules from interface handling where useful.
 - Provide a starter template and a short authoring guide based on reviewed prototypes.
 - Share loading, resizing, supporting-panel behavior, storage, and common history services when appropriate. Keep game-specific turn rules in the game.
+- Reuse shared controls and keep their design rules in the [element standards](element-standards.md).
 - Give each instance independent state. Connect related diagrams explicitly when they are intended to share state.
 - Define a consistent way to initialize and clean up event listeners, animations, workers, and heavy renderers.
 - Load only what is needed. Delay expensive views until needed and avoid ongoing work when the activity is inactive.
@@ -193,7 +194,8 @@ The first prototype is ready for design review. Mathematical checks cover 72 gen
 
 - [ ] The purpose and primary interaction are clear.
 - [ ] Every visible element serves this activity.
-- [ ] Numerical quantities use sliders; named alternatives use native dropdowns; on/off options use toggle switches. Dropdown labels and selected options remain clear at phone widths and with keyboard navigation.
+- [ ] Numerical quantities use sliders; named alternatives use dropdowns; on/off options use toggle switches. Controls follow the element standards and remain clear at phone widths and with keyboard navigation.
+- [ ] Dropdown values stay synchronized with history and saved state.
 - [ ] The main content dominates; spacing, alignment, and typography are consistent.
 - [ ] Adjacent button and field boxes share their height and bottom edge; stacked controls share their left and right edges. Labels do not disrupt control alignment.
 - [ ] Formulas use suitable typesetting with correct radicals, fractions, exponents, spacing, and accessible alternatives.
@@ -222,6 +224,7 @@ Copy this section for a future widget and remove fields that are not useful.
 - **Needed title or subtitle:**
 - **Visible controls and their order:**
 - **Numeric slider ranges, named dropdown options, and toggle-switch options, if applicable:**
+- **Dropdown variant or documented exception, if applicable:** Text by default; Difficulty for reusable circle/woven marks.
 - **Supporting panels:**
 - **Necessary feedback:**
 - **Formula typesetting and editable source expressions, if applicable:**

@@ -34,8 +34,8 @@
   <button class="panel-button tiling-next" type="button" data-tiling-next disabled hidden>{% include icon.html name='arrow' %}<span>Next puzzle</span></button>
   <div class="widget-support-panel" data-widget-panel="settings" aria-label="Game settings" hidden>
     <div class="widget-slider-setting">
-      <div class="widget-slider-heading"><label data-tiling-challenge-name>Difficulty</label><output data-tiling-challenge-label hidden>Easy</output></div>
-      <select aria-label="Difficulty" data-tiling-challenge disabled><option value="1">Easy</option><option value="2">Medium</option><option value="3">Hard</option><option value="4">Expert</option></select>
+      <div class="widget-slider-heading"><label for="tiling-difficulty" data-tiling-challenge-name>Difficulty</label><output data-tiling-challenge-label hidden>Easy</output></div>
+      <select id="tiling-difficulty" aria-label="Difficulty" data-tiling-challenge data-dropdown="difficulty" disabled><option value="1">Easy</option><option value="2">Medium</option><option value="3">Hard</option><option value="4">Expert</option></select>
       <p data-tiling-level-detail>4 × 4 floor · 4 tiles</p>
     </div>
     <label class="widget-switch"><span>Scroll tiles horizontally</span><input type="checkbox" role="switch" data-tiling-scroll-tiles checked disabled><span class="widget-switch-track" aria-hidden="true"></span></label>

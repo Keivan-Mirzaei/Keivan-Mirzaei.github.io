@@ -15,6 +15,10 @@ Keivan’s scope is all website widgets, including articles, lessons, diagrams, 
 - Approximate outputs usually use three significant digits. Small nonzero results use scientific notation with a true superscript. Exact counts and domain decisions remain exact.
 - Completion uses a restrained green field plus readable feedback and clears when Undo or another change leaves the goal.
 
+## Dropdown design follow-up
+
+All eight dropdown controls now use the shared component from the [element standards](../element-standards.md#dropdowns), with text choices by default and reusable woven marks for the two difficulty menus. Grouped board choices, long labels, keyboard navigation, Undo/Redo, saved difficulty, and 320px layouts were checked locally. The native select remains the fallback and source of values. Keivan authorized publication of this follow-up on 5 October 2026; the verification below describes the earlier site-wide update.
+
 ## Coverage and activity decisions
 
 | Family | Placement and changes | Relevant exceptions |
