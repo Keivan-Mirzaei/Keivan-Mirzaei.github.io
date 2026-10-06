@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="330" viewBox="0 0 440 330" role="img" aria-labelledby="matrix-block-title matrix-block-description">
+  <title id="matrix-block-title">An invertible block in the lower-left corner</title>
+  <desc id="matrix-block-description">The first row and last column surround an invertible block B containing rows 2 through n and columns 1 through n minus 1. Deleting the first row and last column leaves exactly B.</desc>
+  <style>
+    .entry { fill: #282e29; font: italic 24px Georgia, serif; text-anchor: middle; }
+    .sub { font-size: 15px; }
+    .dots { fill: #686e66; font: 25px Georgia, serif; text-anchor: middle; }
+    .label { fill: #686e66; font: 15px system-ui, sans-serif; text-anchor: middle; }
+  </style>
+  <rect x="68" y="60" width="200" height="51" rx="5" fill="#f0f1ec"/>
+  <rect x="280" y="60" width="64" height="233" rx="5" fill="#f0f1ec"/>
+  <rect x="68" y="123" width="200" height="170" rx="5" fill="#e5eee6"/>
+  <path d="M64 48H52V305H64 M348 48H360V305H348" fill="none" stroke="#282e29" stroke-width="2.3"/>
+  <text class="entry" x="102" y="91">a<tspan class="sub" baseline-shift="sub">11</tspan></text>
+  <text class="dots" x="164" y="90">⋯</text>
+  <text class="entry" x="228" y="91">a<tspan class="sub" baseline-shift="sub">1,n−1</tspan></text>
+  <text class="entry" x="312" y="91">a<tspan class="sub" baseline-shift="sub">1n</tspan></text>
+  <text class="entry" x="312" y="158">a<tspan class="sub" baseline-shift="sub">2n</tspan></text>
+  <text class="dots" x="312" y="219">⋮</text>
+  <text class="entry" x="312" y="278">a<tspan class="sub" baseline-shift="sub">nn</tspan></text>
+  <text x="168" y="215" fill="#285b46" font-family="Georgia, serif" font-size="52" font-style="italic" text-anchor="middle">B</text>
+  <text class="label" x="168" y="245">(n−1) × (n−1)</text>
+</svg>

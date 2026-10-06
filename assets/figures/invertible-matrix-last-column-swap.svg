@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="330" viewBox="0 0 440 330" role="img" aria-labelledby="matrix-column-swap-title matrix-column-swap-description">
+  <title id="matrix-column-swap-title">Swap the top two entries in the last column</title>
+  <desc id="matrix-column-swap-description">A double-headed curved arrow exchanges a subscript 1 n and a subscript 2 n in the last column. The shaded invertible block B stays fixed. The second row is shown explicitly: its first n minus 1 entries stay fixed, and only its last entry changes from a subscript 2 n to a subscript 1 n.</desc>
+  <defs>
+    <marker id="matrix-column-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1L7 4L1 7" fill="none" stroke="#285b46" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <style>
+    .entry { fill: #282e29; font: italic 24px Georgia, serif; text-anchor: middle; }
+    .sub { font-size: 15px; }
+    .dots { fill: #686e66; font: 25px Georgia, serif; text-anchor: middle; }
+    .label { fill: #686e66; font: 15px system-ui, sans-serif; text-anchor: middle; }
+  </style>
+  <rect x="68" y="60" width="200" height="51" rx="5" fill="#f0f1ec"/>
+  <rect x="280" y="60" width="64" height="233" rx="5" fill="#f0f1ec"/>
+  <rect x="68" y="123" width="200" height="170" rx="5" fill="#e5eee6"/>
+  <rect x="280" y="60" width="64" height="51" rx="5" fill="#e5eee6" stroke="#285b46" stroke-width="1.7"/>
+  <rect x="280" y="123" width="64" height="51" rx="5" fill="#e5eee6" stroke="#285b46" stroke-width="1.7"/>
+  <path d="M64 48H52V305H64 M348 48H360V305H348" fill="none" stroke="#282e29" stroke-width="2.3"/>
+  <path d="M371 84C423 84 423 148 371 148" fill="none" stroke="#285b46" stroke-width="2" marker-start="url(#matrix-column-arrow)" marker-end="url(#matrix-column-arrow)"/>
+  <text class="entry" x="102" y="91">a<tspan class="sub" baseline-shift="sub">11</tspan></text>
+  <text class="dots" x="164" y="90">⋯</text>
+  <text class="entry" x="228" y="91">a<tspan class="sub" baseline-shift="sub">1,n−1</tspan></text>
+  <text class="entry" x="312" y="91">a<tspan class="sub" baseline-shift="sub">1n</tspan></text>
+  <text class="entry" x="102" y="155">a<tspan class="sub" baseline-shift="sub">21</tspan></text>
+  <text class="dots" x="164" y="154">⋯</text>
+  <text class="entry" x="228" y="155">a<tspan class="sub" baseline-shift="sub">2,n−1</tspan></text>
+  <text class="entry" x="312" y="155">a<tspan class="sub" baseline-shift="sub">2n</tspan></text>
+  <text class="dots" x="312" y="219">⋮</text>
+  <text class="entry" x="312" y="278">a<tspan class="sub" baseline-shift="sub">nn</tspan></text>
+  <text x="168" y="233" fill="#285b46" font-family="Georgia, serif" font-size="46" font-style="italic" text-anchor="middle">B</text>
+  <text class="label" x="168" y="263">unchanged</text>
+</svg>
