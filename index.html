@@ -37,17 +37,28 @@ widgets: [tilted-square]
       {% if latest_exploration %}{% include note.html post=latest_exploration %}{% endif %}
     </div>
   </section>
-  <section class="home-puzzles" aria-labelledby="puzzles-title">
+  <section class="home-feature home-puzzles" aria-labelledby="puzzles-title">
     {% assign puzzle_thumbnail = site.data.home_sections | where: 'url', '/puzzles/' | first %}
-    <a class="home-puzzles-thumbnail" href="{{ '/puzzles/' | relative_url }}" aria-label="Browse puzzles">
+    <a class="home-feature-thumbnail" href="{{ '/puzzles/' | relative_url }}" aria-label="Browse puzzles">
       {% include content-logo.html item=puzzle_thumbnail kind='puzzle' decorative=true %}
     </a>
-    <div class="home-puzzles-copy">
+    <div class="home-feature-copy">
       <p class="eyebrow">A little time to play</p>
       <h2 id="puzzles-title">Puzzles, just for the fun of it.</h2>
       <p>Pick a game and settle in. Slide a block, fit a tile, or find a path across Hex.</p>
     </div>
     <a class="primary-link" href="{{ '/puzzles/' | relative_url }}">Play a puzzle {% include icon.html name='arrow' %}</a>
+  </section>
+  <section class="home-feature home-gadgets" aria-labelledby="gadgets-title">
+    <a class="home-feature-thumbnail" href="{{ '/gadgets/' | relative_url }}" aria-label="Browse gadgets">
+      <img class="content-logo" src="{{ '/assets/images/gadgets.svg' | relative_url }}" alt="" aria-hidden="true" width="112" height="112" loading="lazy" decoding="async">
+    </a>
+    <div class="home-feature-copy">
+      <p class="eyebrow">Everyday productivity</p>
+      <h2 id="gadgets-title">Gadgets for work and study.</h2>
+      <p>Timers, ambient sound, and practical tools for everyday tasks.</p>
+    </div>
+    <a class="primary-link" href="{{ '/gadgets/' | relative_url }}">Explore gadgets {% include icon.html name='arrow' %}</a>
   </section>
   {% assign featured_research = site.research | where: 'featured', true | first %}
   {% if featured_research %}
