@@ -1,0 +1,30 @@
+---
+layout: default
+title: Pomodoro
+section: gadgets
+gadget: pomodoro
+permalink: /gadgets/pomodoro/
+search: true
+description: One period of focus. One proper break. A little space to work.
+---
+<div class="page-wrap gadgets-wrap" data-gadget-workspace="pomodoro">
+  <header class="page-heading"><a class="gadget-back" href="{{ '/gadgets/' | relative_url }}">← Gadgets</a><h1>Pomodoro</h1><p class="page-description">{{ page.description }}</p></header>
+  <div class="gadget-workbench widget-frame">
+  <section class="gadget-display gadget-focus-display" aria-label="Pomodoro timer"><div class="gadget-display-top"><span data-workspace-phase>Ready to focus</span><span data-workspace-round></span></div><div class="gadget-countdown" data-workspace-time>25:00</div>{% include gadgets/timer-actions.html %}</section>
+  {% include gadgets/panels.html %}
+  <div class="widget-support-panel" data-widget-panel="settings" aria-label="Pomodoro settings" hidden>
+  <form id="gadget-pomodoro-settings" class="gadget-setup" data-gadget-form novalidate>
+    <div class="gadget-fields"><label class="gadget-field">Focus <span class="gadget-number"><input type="number" name="focusMinutes" data-preference="focusMinutes" min="1" max="180" step="1" value="25" required><span>min</span></span></label><label class="gadget-field">Break <span class="gadget-number"><input type="number" name="breakMinutes" data-preference="breakMinutes" min="1" max="60" step="1" value="5" required><span>min</span></span></label></div>
+    <p class="gadget-form-hint">Applies to your next session.</p>
+    {% include gadgets/options.html %}
+  </form>
+  </div>
+  <div class="widget-support-panel" data-widget-panel="info" aria-label="About Pomodoro" hidden>
+    <p>Start a focus period, then take a break. Each phase waits for you to start the next. Change the lengths in Settings.</p>
+    <p>Your timer stays in the top bar while you read. Pause or resume whenever you need to; Restart begins a new focus session.</p>
+    <p>Keep screen awake works while the timer runs, when your browser permits it. A hidden page may pause the chime; remaining time catches up when you return.</p>
+    <p><a href="{{ '/gadgets/sound/' | relative_url }}">Choose a background sound →</a> Sound keeps playing independently, including during a break.</p>
+  </div>
+  </div>
+  <noscript><p>Enable JavaScript to use Pomodoro.</p></noscript>
+</div>

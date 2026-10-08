@@ -1,0 +1,10 @@
+<div class="gadget-actions">
+  <button class="gadget-primary" type="submit" form="gadget-{{ page.gadget }}-settings" data-start disabled>{% if page.gadget == 'exam' %}Start exam{% else %}Start focus{% endif %}</button>
+  <button class="gadget-primary" type="button" data-workspace-timer-toggle disabled hidden>Pause</button>
+  <button class="gadget-primary" type="button" data-workspace-next hidden>Start break</button>
+  <button class="panel-button" type="button" data-workspace-restart disabled hidden>{% include icon.html name='restart' %}<span>Restart</span></button>
+  <button class="panel-button" type="button" data-workspace-stop disabled hidden>Stop</button>
+  {% if page.gadget == 'exam' %}<button class="panel-button" type="button" data-present disabled>{% include icon.html name='expand' %}<span>Present</span></button><button class="panel-button" type="button" data-presentation-exit hidden>Exit presentation</button>{% endif %}
+</div>
+<p class="gadget-session-status{% if page.gadget == 'exam' %} sr-only{% endif %}" data-workspace-status role="status"></p>
+{% include gadgets/confirmation.html %}

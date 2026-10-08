@@ -1,3 +1,4 @@
+import { createPageEnvironment } from '../lib/page-environment.mjs';
 import { placementCells, occupiedCells, checkPlacement, key } from '../lib/tiling.mjs';
 
 import { DIFFICULTIES } from '../lib/tiling-arrangements.mjs';
@@ -447,4 +448,9 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
   };
 }
 
-if (typeof document !== 'undefined') document.querySelectorAll('[data-tiling-game]').forEach(root => initializeTilingGame(root));
+export function mount(root) {
+  const environment = createPageEnvironment(root);
+  const cleanups = [];
+  for (const widget of root.querySelectorAll('[data-tiling-game]')) { const controller = initializeTilingGame(widget, createPuzzleStorage('tiling', widget, environment.window)); cleanups.push(() => controller.destroy()); }
+  return () => { cleanups.forEach(cleanup => cleanup()); environment.dispose(); };
+}

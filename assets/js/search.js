@@ -1,5 +1,8 @@
 /* Full-text search over a generated JSON file. No service or search library. */
-(() => {
+import { createPageEnvironment } from './lib/page-environment.mjs';
+export function mount(root) {
+  const environment = createPageEnvironment(root);
+  const { document, window, setTimeout, clearTimeout } = environment;
   const app = document.querySelector('#search-app');
   if (!app) return;
   const input = document.querySelector('#search-input');
@@ -80,7 +83,8 @@
       const url = new URL(window.location.href);
       if (query) url.searchParams.set('q', query);
       else url.searchParams.delete('q');
-      window.history.replaceState(null, '', url);
+      window.history.replaceState(window.history.state, '', url);
+      window.dispatchEvent(new Event('site:urlchange'));
     }
     results.replaceChildren();
     more.hidden = true;
@@ -124,6 +128,8 @@
   });
   input.value = (new URLSearchParams(window.location.search).get('q') || '').slice(0, 200);
   if (input.value) search(false);
+  environment.add(() => { clearTimeout(timer); ++request; });
   // Continue the keyboard shortcut on arrival from another page.
   if (window.location.hash === '#search-input') input.focus();
-})();
+  return environment.dispose;
+}

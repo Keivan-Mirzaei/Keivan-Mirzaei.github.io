@@ -1,5 +1,11 @@
 import { formatNumber } from '../lib/widget-math.mjs';
 import { bindInputHistory } from '../lib/panel-history.mjs';
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+
 /* For f(x) = x² at x = 1, the nonzero-step secant slope simplifies to 2 + h. */
 (() => {
   document.querySelectorAll('[data-widget="derivative"]').forEach((widget) => {
@@ -29,3 +35,6 @@ import { bindInputHistory } from '../lib/panel-history.mjs';
     update();
   });
 })();
+
+  return environment.dispose;
+}

@@ -1,20 +1,28 @@
 import { createWidgetHistory } from '../lib/widget-history.mjs';
-import { prepareInteractive, observeSize } from '../lib/interactive-view.mjs';
+import { prepareInteractive as prepareInteractiveView, observeSize as observeSizeView } from '../lib/interactive-view.mjs';
 import { loadPlotly } from '../lib/plotly-loader.mjs';
 import { moveCamera } from '../lib/graph-math.mjs';
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+  const observeSize = (...args) => environment.add(observeSizeView(...args));
+  const prepareInteractive = (...args) => environment.add(prepareInteractiveView(...args));
 
 // The smaller gl3d bundle includes ordinary scatter/line plots as well as 3D.
 const supported = new Set(['scatter', 'scatter3d', 'surface', 'mesh3d', 'cone', 'streamtube', 'volume', 'isosurface']);
 
 for (const widget of document.querySelectorAll('[data-widget="scientific-plot"]')) {
-  prepareInteractive(widget, async ({ view, controls }) => {
+  prepareInteractive(widget, async ({ view, controls, signal }) => {
     const [Plotly, figure] = await Promise.all([
       loadPlotly(widget.dataset.library),
-      fetch(widget.dataset.figure).then((response) => {
+      fetch(widget.dataset.figure, { signal }).then((response) => {
         if (!response.ok) throw new Error('Plot data unavailable');
         return response.json();
       })
     ]);
+    if (signal.aborted) return () => {};
     if (!Array.isArray(figure.data) || !figure.data.length || figure.data.some((trace) => !supported.has(trace.type || 'scatter'))) {
       throw new Error('This plot requires an unsupported trace type');
     }
@@ -80,4 +88,7 @@ for (const widget of document.querySelectorAll('[data-widget="scientific-plot"]'
     }
     return () => { stopResize(); listeners.abort(); Plotly.purge(view); };
   });
+}
+
+  return environment.dispose;
 }

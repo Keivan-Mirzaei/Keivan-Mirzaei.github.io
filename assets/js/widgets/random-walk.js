@@ -1,5 +1,11 @@
 import { formatNumber } from '../lib/widget-math.mjs';
 import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+
 /* A small seeded generator makes each numbered path reproducible for discussion. */
 (() => {
   document.querySelectorAll('[data-widget="random-walk"]').forEach((widget) => {
@@ -78,3 +84,6 @@ import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
     generate();
   });
 })();
+
+  return environment.dispose;
+}

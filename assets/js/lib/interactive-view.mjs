@@ -8,6 +8,8 @@ export function prepareInteractive(widget, createView) {
   const previewMessage = status.textContent;
   let dispose = null;
   let opening = false;
+  let closed = false;
+  const events = new AbortController();
 
   function showPreview() {
     dispose?.();
@@ -37,22 +39,28 @@ export function prepareInteractive(widget, createView) {
     preview.hidden = true;
     view.hidden = false;
     try {
-      dispose = await createView({ view, controls });
+      const cleanup = await createView({ view, controls, signal: events.signal });
+      if (closed) { cleanup?.(); return; }
+      dispose = cleanup;
       controls.hidden = controls.disabled = false;
       button.setAttribute('aria-expanded', 'true');
       button.textContent = 'Close interactive view';
       status.textContent = 'Interactive view ready. Controls and an explanation are below the graph.';
     } catch (error) {
+      if (closed) return;
       showPreview();
       button.textContent = 'Try opening again';
       status.textContent = 'The interactive view could not open. Check your connection and try again. For 3D, your browser also needs graphics support. The static preview is still available.';
       console.warn('Interactive graph could not open:', error);
     } finally {
       opening = false;
-      button.removeAttribute('aria-disabled');
-      widget.removeAttribute('aria-busy');
+      if (!closed) {
+        button.removeAttribute('aria-disabled');
+        widget.removeAttribute('aria-busy');
+      }
     }
-  });
+  }, { signal: events.signal });
+  return () => { closed = true; events.abort(); dispose?.(); dispose = null; };
 }
 
 // ResizeObserver also catches sidebar toggles, not just window resizes.

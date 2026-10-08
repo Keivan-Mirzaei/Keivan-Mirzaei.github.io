@@ -1,3 +1,4 @@
+import { createPageEnvironment } from '../lib/page-environment.mjs';
 import { BOARD_WIDTH, BOARD_HEIGHT, createKlotski, isKlotskiStart, resetKlotski, slideKlotski, undoKlotski, redoKlotski, maxSlide } from '../lib/klotski.mjs';
 import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
 import { serializeKlotski, restoreKlotski } from '../lib/klotski-storage.mjs';
@@ -190,6 +191,9 @@ export function initializeKlotski(game, storage = createPuzzleStorage('klotski',
   return { destroy() { cancelDrag(); disposePanels(); disposeProgress(); events.abort(); } };
 }
 
-if (typeof document !== 'undefined') {
-  document.querySelectorAll('[data-klotski-game]').forEach(root => initializeKlotski(root));
+export function mount(root) {
+  const environment = createPageEnvironment(root);
+  const cleanups = [];
+  for (const widget of root.querySelectorAll('[data-klotski-game]')) { const controller = initializeKlotski(widget, createPuzzleStorage('klotski', widget, environment.window)); cleanups.push(() => controller.destroy()); }
+  return () => { cleanups.forEach(cleanup => cleanup()); environment.dispose(); };
 }

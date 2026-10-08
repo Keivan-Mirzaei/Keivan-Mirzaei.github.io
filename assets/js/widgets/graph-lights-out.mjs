@@ -1,3 +1,4 @@
+import { createPageEnvironment } from '../lib/page-environment.mjs';
 import { LIGHTS_OUT_LEVELS } from '../lib/lights-out-book-graphs.mjs';
 import { createLightsOutWorkspace } from '../lib/lights-out-workspace.mjs';
 import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
@@ -150,4 +151,9 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
   };
 }
 
-if (typeof document !== 'undefined') document.querySelectorAll('[data-graph-lights-out]').forEach(root => initializeGraphLightsOut(root));
+export function mount(root) {
+  const environment = createPageEnvironment(root);
+  const cleanups = [];
+  for (const widget of root.querySelectorAll('[data-graph-lights-out]')) { const controller = initializeGraphLightsOut(widget, { storage: createPuzzleStorage('lights-out', widget, environment.window) }); cleanups.push(() => controller.destroy()); }
+  return () => { cleanups.forEach(cleanup => cleanup()); environment.dispose(); };
+}

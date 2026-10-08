@@ -1,6 +1,7 @@
+export function mount(root) {
 // Native details handle independent opening, closing, and accessibility.
 // Escape closes the article row containing focus and returns to its summary.
-document.querySelectorAll('.problem-disclosures').forEach(group => {
+root.querySelectorAll('.problem-disclosures').forEach(group => {
   group.addEventListener('keydown', event => {
     if (event.key !== 'Escape' || event.defaultPrevented) return;
     const row = event.target.closest('details[open]');
@@ -11,3 +12,5 @@ document.querySelectorAll('.problem-disclosures').forEach(group => {
     event.stopPropagation();
   });
 });
+
+}

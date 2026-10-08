@@ -1,4 +1,10 @@
 import { bindInputHistory } from '../lib/panel-history.mjs';
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+
 /* A reusable, dependency-free lesson widget. Each instance owns its controls. */
 (() => {
   const left = 44;
@@ -56,3 +62,6 @@ import { bindInputHistory } from '../lib/panel-history.mjs';
     update();
   }
 })();
+
+  return environment.dispose;
+}

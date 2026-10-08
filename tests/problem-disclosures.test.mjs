@@ -1,16 +1,14 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import test from 'node:test';
-import vm from 'node:vm';
 
-const source = readFileSync(new URL('../assets/js/problem-disclosures.js', import.meta.url), 'utf8');
+import { mount } from '../assets/js/problem-disclosures.js';
 
 function setup() {
   const groups = Array.from({ length: 2 }, () => ({
     handlers: {},
     addEventListener(name, listener) { this.handlers[name] = listener; },
   }));
-  vm.runInNewContext(source, { document: { querySelectorAll: () => groups } });
+  mount({ querySelectorAll: () => groups });
   const row = parentElement => ({
     parentElement,
     open: true,

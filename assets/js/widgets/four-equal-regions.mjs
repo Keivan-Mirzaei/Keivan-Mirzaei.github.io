@@ -1,3 +1,4 @@
+import { createPageEnvironment } from '../lib/page-environment.mjs';
 import { createFourRegionsWorkspace } from '../lib/four-regions-workspace.mjs';
 import { initialPose, normal, direction, dot, mod, lineDelta, clipHalfPlane, keepCrossing, boundedMotion } from '../lib/four-equal-regions.mjs';
 import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
@@ -179,4 +180,9 @@ export function initializeFourEqualRegions(root, storage = createPuzzleStorage('
     destroy() { stopEditing(); resize?.disconnect(); disposeProgress(); disposePanels(); events.abort(); } };
 }
 
-if (typeof document !== 'undefined') document.querySelectorAll('[data-four-equal-regions]').forEach(root => initializeFourEqualRegions(root));
+export function mount(root) {
+  const environment = createPageEnvironment(root);
+  const cleanups = [];
+  for (const widget of root.querySelectorAll('[data-four-equal-regions]')) { const controller = initializeFourEqualRegions(widget, createPuzzleStorage('four-equal-regions', widget, environment.window)); cleanups.push(() => controller.destroy()); }
+  return () => { cleanups.forEach(cleanup => cleanup()); environment.dispose(); };
+}

@@ -2,6 +2,11 @@
 // Keyboard pattern: https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
 const instances = new WeakMap(), documents = new WeakMap();
 let nextId = 0;
+export function disposeDropdowns(root) {
+  const shared = documents.get(root.ownerDocument || root);
+  if (!shared) return;
+  for (const control of [...shared.controls]) if (root.contains(control.select)) control.dispose();
+}
 
 export function commitDropdownSelection(select, index) {
   const option = select.options[index];

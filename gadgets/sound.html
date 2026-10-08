@@ -1,0 +1,28 @@
+---
+layout: default
+title: Ambient sound
+section: gadgets
+gadget: sound
+permalink: /gadgets/sound/
+search: true
+description: A quiet background for the page in front of you.
+---
+<div class="page-wrap gadgets-wrap" data-gadget-workspace="sound"><header class="page-heading"><a class="gadget-back" href="{{ '/gadgets/' | relative_url }}">← Gadgets</a><h1>Ambient sound</h1><p class="page-description">{{ page.description }}</p></header>
+  <div class="gadget-workbench widget-frame">
+    <section class="gadget-display gadget-sound-display" aria-label="Ambient sound player">
+      <div class="gadget-sound-choice">{% include icon.html name='sound' %}<div><h2 data-workspace-source>Brown noise</h2><p data-workspace-source-description>A low, soft rumble.</p></div></div>
+      <div class="gadget-actions"><button class="gadget-primary" type="button" data-workspace-sound-toggle disabled>Play sound</button><button class="panel-button" type="button" data-workspace-sound-stop disabled hidden>Stop</button></div>
+      <p class="gadget-session-status" data-workspace-sound-status role="status">Ready when you are.</p><p class="gadget-message" data-workspace-message role="status"></p>
+    </section>
+    {% include gadgets/panels.html %}
+    <div class="widget-support-panel" data-widget-panel="settings" aria-label="Sound settings" hidden>
+      <fieldset class="gadget-sources"><legend>Background sound</legend><label><input type="radio" name="source" value="brown" checked><span><strong>Brown noise</strong><span>A low, soft rumble.</span></span></label><label><input type="radio" name="source" value="soft"><span><strong>Soft noise</strong><span>A gentle, even hush.</span></span></label></fieldset>
+      <div class="widget-slider-setting gadget-volume"><div class="widget-slider-heading"><label for="gadget-sound-volume">Volume</label><output data-volume-value>25%</output></div><input id="gadget-sound-volume" type="range" min="0" max="100" value="25" data-workspace-volume></div>
+    </div>
+    <div class="widget-support-panel" data-widget-panel="info" aria-label="About ambient sound" hidden>
+      <p>Play a quiet background while you read or work. Choose your sound and volume in Settings.</p>
+      <p>Sound stays in the top bar as you browse and works independently of any timer. After refreshing or reopening the website, press Play to continue.</p>
+    </div>
+  </div>
+  <noscript><p>Enable JavaScript to play ambient sound.</p></noscript>
+</div>

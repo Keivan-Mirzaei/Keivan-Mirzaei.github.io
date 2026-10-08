@@ -158,8 +158,10 @@ export function initializeMagicianRoutes(widget, environment = globalThis) {
   return mountChart(widget.querySelector('[data-routes]'), width => routesChart(width, `${prefix}-routes-clip`), undefined, environment);
 }
 
-if (typeof document !== 'undefined') {
-  document.querySelectorAll('[data-magician-game]').forEach(widget => initializeMagicianGame(widget));
-  document.querySelectorAll('[data-magician-probability]').forEach(widget => initializeMagicianProbability(widget));
-  document.querySelectorAll('[data-magician-routes]').forEach(widget => initializeMagicianRoutes(widget));
+export function mount(root) {
+  const cleanups = [];
+  for (const widget of root.querySelectorAll('[data-magician-game]')) { const controller = initializeMagicianGame(widget); cleanups.push(() => controller.dispose()); }
+  for (const widget of root.querySelectorAll('[data-magician-probability]')) { const controller = initializeMagicianProbability(widget); cleanups.push(() => controller.dispose()); }
+  for (const widget of root.querySelectorAll('[data-magician-routes]')) { const controller = initializeMagicianRoutes(widget); cleanups.push(() => controller.dispose()); }
+  return () => cleanups.forEach(cleanup => cleanup());
 }

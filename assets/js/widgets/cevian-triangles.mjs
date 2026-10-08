@@ -2,12 +2,18 @@ import { formatNumber } from '../lib/widget-math.mjs';
 import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
 import { TRIANGLE_SHAPES, normalizeWeights, triangleData, positionWeights, barycentricPoint, simplexRatio } from '../lib/cevian-math.mjs';
 import { triangleDiagram, factorsDiagram, landscapeDiagram, landscapeMarker, tetrahedronDiagram } from '../lib/cevian-diagrams.mjs';
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 const percentage = value => `${formatNumber(value * 100)}%`;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-function mount(container, markup) {
+function mountDiagram(container, markup) {
   let width = 0;
   function draw(force = false) {
     const next = Math.round(container.getBoundingClientRect().width);
@@ -39,11 +45,11 @@ if (explorer) {
   const shapeControl = explorer.querySelector('[data-cv-shape]');
   const centerButtons = [...document.querySelectorAll('[data-cv-center]')];
 
-  const redrawMain = mount(main, width => triangleDiagram(width, weights, shape, 'inner', true));
-  const redrawCeva = mount(document.querySelector('[data-cv-ceva]'), width => triangleDiagram(width, weights, shape, 'ceva', false, false));
-  const redrawCorners = mount(document.querySelector('[data-cv-corners]'), width => triangleDiagram(width, weights, shape, 'corners', false, false));
-  const redrawFactors = mount(document.querySelector('[data-cv-factors]'), width => factorsDiagram(width, weights));
-  const redrawMap = mount(map, width => {
+  const redrawMain = mountDiagram(main, width => triangleDiagram(width, weights, shape, 'inner', true));
+  const redrawCeva = mountDiagram(document.querySelector('[data-cv-ceva]'), width => triangleDiagram(width, weights, shape, 'ceva', false, false));
+  const redrawCorners = mountDiagram(document.querySelector('[data-cv-corners]'), width => triangleDiagram(width, weights, shape, 'corners', false, false));
+  const redrawFactors = mountDiagram(document.querySelector('[data-cv-factors]'), width => factorsDiagram(width, weights));
+  const redrawMap = mountDiagram(map, width => {
     landscapeShape = shape;
     return landscapeDiagram(width, weights, shape);
   });
@@ -196,7 +202,7 @@ if (simplex) {
   const controls = [...simplex.querySelectorAll('[data-cv-weight]')];
   const center = simplex.querySelector('[data-cv-tetra-center]');
   const status = simplex.querySelector('[data-cv-volume-status]');
-  const redraw = mount(holder, width => tetrahedronDiagram(width, weights, angle));
+  const redraw = mountDiagram(holder, width => tetrahedronDiagram(width, weights, angle));
   function cancelMotion() {
     if (animation !== null) cancelAnimationFrame(animation);
     animation = null;
@@ -265,4 +271,7 @@ if (simplex) {
   reducedMotion.addEventListener('change', () => { cancelMotion(); draw(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden) cancelMotion(); });
   draw();
+}
+
+  return environment.dispose;
 }

@@ -1,3 +1,10 @@
+
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+
 /* Translate four congruent triangles to turn the tilted square into a² + b². */
 (() => {
   const root = document.getElementById('the-tilted-square');
@@ -109,3 +116,6 @@
   else window.addEventListener('resize', draw);
   draw();
 })();
+
+  return environment.dispose;
+}

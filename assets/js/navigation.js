@@ -1,5 +1,5 @@
 /* Navigation is an enhancement: every page and link works without this file. */
-(() => {
+export function initializeNavigation(navigate) {
   const root = document.documentElement;
   const sidebar = document.querySelector('#sidebar');
   const toggle = document.querySelector('.menu-toggle');
@@ -24,6 +24,7 @@
     toggle.setAttribute('aria-label', open ? 'Hide navigation' : 'Show navigation');
     backdrop.hidden = !(mobile.matches && mobileOpen);
     main.inert = footer.inert = search.inert = mobile.matches && mobileOpen;
+    document.querySelector('[data-gadget-dock]').inert = document.querySelector('[data-gadget-controls]').inert = mobile.matches && mobileOpen;
   }
 
   function closeMobile() {
@@ -73,10 +74,11 @@
       event.preventDefault();
       const input = document.querySelector('#search-input');
       if (input) input.focus();
-      else window.location.assign(`${search.href}#search-input`);
+      else navigate(`${search.href}#search-input`);
     }
   });
 
+  document.addEventListener('site:page', () => { mobileOpen = false; render(); });
   root.classList.add('js');
   toggle.hidden = false;
   render();
@@ -106,4 +108,4 @@
     document.addEventListener('pointerout', () => clearTimeout(prefetchTimer));
     document.addEventListener('focusout', () => clearTimeout(prefetchTimer));
   }
-})();
+}

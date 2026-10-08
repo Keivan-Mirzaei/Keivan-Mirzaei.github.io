@@ -1,4 +1,10 @@
 import { cubeDiagram, cutState, describeCut } from '../lib/cube-cuts.mjs';
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+
 
 for (const widget of document.querySelectorAll('[data-cube-cuts]')) {
   if (widget.dataset.cubeReady) continue;
@@ -33,4 +39,7 @@ for (const widget of document.querySelectorAll('[data-cube-cuts]')) {
   viewControl.addEventListener('change', render);
   widget.querySelector('[data-cube-controls]').hidden = false;
   render();
+}
+
+  return environment.dispose;
 }

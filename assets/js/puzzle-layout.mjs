@@ -1,3 +1,4 @@
+import { createPageEnvironment } from './lib/page-environment.mjs';
 // Settings, Help and puzzle pickers share dismissal and focus behaviour.
 export function initializePuzzlePanels(root, document = root.ownerDocument) {
   const panels = [...root.querySelectorAll('[data-puzzle-panel], [data-puzzle-picker]')];
@@ -24,4 +25,8 @@ export function initializePuzzlePanels(root, document = root.ownerDocument) {
     panels.filter(panel => panel.open && !panel.contains(event.target)).forEach(panel => close(panel));
   });
 }
-if (typeof document !== 'undefined') document.querySelectorAll('[data-puzzle-workspace]').forEach(root => initializePuzzlePanels(root));
+export function mount(root) {
+  const environment = createPageEnvironment(root);
+  root.querySelectorAll('[data-puzzle-workspace]').forEach(widget => initializePuzzlePanels(widget, environment.document));
+  return environment.dispose;
+}

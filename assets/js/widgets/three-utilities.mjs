@@ -1,7 +1,13 @@
 import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
 import { NODES, nodeById, PLANE_EIGHT, distance, obstruction, curveRoute, smoothWaypoints, simplifyPath, updateConnection } from '../lib/three-utilities-math.mjs';
 import { boardSVG, boardGeometry, drawTransformation } from '../lib/three-utilities-diagrams.mjs';
-import { observeSize } from '../lib/interactive-view.mjs';
+import { observeSize as observeSizeView } from '../lib/interactive-view.mjs';
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+  const observeSize = (...args) => environment.add(observeSizeView(...args));
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -205,3 +211,6 @@ function prepareSurface(widget) {
 
 document.querySelectorAll('[data-three-utilities-plane]').forEach(preparePlane);
 document.querySelectorAll('[data-three-utilities-surface]').forEach(prepareSurface);
+
+  return environment.dispose;
+}

@@ -1,6 +1,12 @@
 import { formatNumber, numberMarkup, differentiabilityFormula } from '../lib/widget-math.mjs';
 import { bindInputHistory } from '../lib/panel-history.mjs';
 import { MODELS, magnifiedValue, errorBound } from '../lib/differentiability-math.mjs';
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+
 
 const screenX = (u) => 319 + 251 * u;
 const screenY = (v) => 165 - (290 / 7) * v;
@@ -101,3 +107,6 @@ document.querySelectorAll('[data-widget="differentiability"]').forEach((widget) 
   });
   update();
 });
+
+  return environment.dispose;
+}

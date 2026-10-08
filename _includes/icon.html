@@ -1,5 +1,12 @@
 <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 {%- case include.name -%}
+{%- when 'gadgets' -%}<rect x="3" y="3" width="7" height="7" rx="1.5"/><circle cx="17.5" cy="6.5" r="3.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
+{%- when 'clock' -%}<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+{%- when 'timer' -%}<circle cx="12" cy="14" r="7"/><path d="M9 3h6m-3 0v4m0 4v3l2 2m5-9 1-1"/>
+{%- when 'sound' -%}<path d="M4 9v6h4l5 4V5L8 9zM16 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>
+{%- when 'play' -%}<path d="m8 5 11 7-11 7z"/>
+{%- when 'pause' -%}<path d="M8 5v14M16 5v14"/>
+{%- when 'expand' -%}<path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>
 {%- when 'home' -%}<path d="m3 10 9-7 9 7v10H3zM9 20v-7h6v7"/>
 {%- when 'notebook' -%}<rect x="5" y="3" width="15" height="18" rx="2"/><path d="M8 3v18M3 7h4M3 12h4M3 17h4m5-9h4m-4 4h4"/>
 {%- when 'math' -%}<path d="M18 4H6l7 8-7 8h12"/>

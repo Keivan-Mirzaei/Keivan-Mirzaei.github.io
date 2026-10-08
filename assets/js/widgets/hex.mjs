@@ -1,3 +1,4 @@
+import { createPageEnvironment } from '../lib/page-environment.mjs';
 import { bindPanelHistory } from '../lib/panel-history.mjs';
 import { RED, BLUE, PROOF_EXAMPLE, hexGeometry, winningPath, winner, createSearch, coastline } from '../lib/hex-math.mjs';
 import { searchBudget } from '../lib/hex-search-settings.mjs';
@@ -253,9 +254,7 @@ export function initializeHexGame(game, storage = createPuzzleStorage('hex', gam
   return () => { cancel(); disposePanels(); disposeProgress(); events.abort(); };
 }
 
-if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-game]').forEach(game => initializeHexGame(game));
-
-if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-proof]').forEach(widget => {
+export function initializeHexProof(widget) {
   const get = key => widget.querySelector(`[data-hex-proof-${key}]`);
   let cells = PROOF_EXAMPLE.slice(), coast = coastline(cells, 5), step = 0;
   function render() {
@@ -284,4 +283,11 @@ if (typeof document !== 'undefined') document.querySelectorAll('[data-hex-proof]
   get('new').addEventListener('click', () => { history.remember(); cells = cells.map(() => Math.random() < .5 ? RED : BLUE); coast = coastline(cells, 5); step = 0; render(); });
   widget.querySelectorAll('button').forEach(button => { button.disabled = button.hasAttribute('data-panel-undo') || button.hasAttribute('data-panel-redo'); });
   render();
-});
+}
+
+export function mount(root) {
+  const environment = createPageEnvironment(root);
+  const cleanups = [...root.querySelectorAll('[data-hex-game]')].map(widget => initializeHexGame(widget, createPuzzleStorage('hex', widget, environment.window)));
+  root.querySelectorAll('[data-hex-proof]').forEach(initializeHexProof);
+  return () => { cleanups.forEach(cleanup => cleanup()); environment.dispose(); };
+}

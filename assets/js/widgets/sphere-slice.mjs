@@ -1,14 +1,22 @@
 import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
 import { formatNumber } from '../lib/widget-math.mjs';
-import { prepareInteractive, observeSize } from '../lib/interactive-view.mjs';
+import { prepareInteractive as prepareInteractiveView, observeSize as observeSizeView } from '../lib/interactive-view.mjs';
 import { sphereSlice, moveCamera } from '../lib/graph-math.mjs';
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+  const observeSize = (...args) => environment.add(observeSizeView(...args));
+  const prepareInteractive = (...args) => environment.add(prepareInteractiveView(...args));
 
 for (const widget of document.querySelectorAll('[data-widget="sphere-slice"]')) {
-  prepareInteractive(widget, async ({ view, controls }) => {
+  prepareInteractive(widget, async ({ view, controls, signal }) => {
     // The import map pins both imports to the same release; no 3D code loads earlier.
     const [THREE, { OrbitControls }] = await Promise.all([
       import('three'), import('three/addons/controls/OrbitControls.js')
     ]);
+    if (signal.aborted) return () => {};
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#f7f8f3');
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 50);
@@ -133,4 +141,7 @@ for (const widget of document.querySelectorAll('[data-widget="sphere-slice"]')) 
     }
     return dispose;
   });
+}
+
+  return environment.dispose;
 }

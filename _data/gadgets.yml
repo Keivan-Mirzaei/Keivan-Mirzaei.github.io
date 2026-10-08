@@ -1,0 +1,18 @@
+- id: exam
+  title: Exam clock
+  description: A clear countdown, the current time, and optional rules for the room.
+  url: /gadgets/exam/
+  icon: clock
+  label: For the classroom
+- id: pomodoro
+  title: Pomodoro
+  description: Make room for focused work, then take a deliberate break.
+  url: /gadgets/pomodoro/
+  icon: timer
+  label: For a little focus
+- id: sound
+  title: Ambient sound
+  description: A quiet background for reading or working, with or without a timer.
+  url: /gadgets/sound/
+  icon: sound
+  label: For your surroundings

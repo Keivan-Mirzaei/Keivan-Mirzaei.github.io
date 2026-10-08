@@ -1,6 +1,11 @@
 // Native and button disclosures share dismissal without outside-click handling.
 const documents = new WeakSet(), disclosures = [];
 let openingOrder = 0;
+export function disposeWidgetUI(root) {
+  for (let i = disclosures.length - 1; i >= 0; i--) {
+    if (root.contains(disclosures[i].trigger)) disclosures.splice(i, 1);
+  }
+}
 function registerDisclosure(owner, record) {
   disclosures.push(record);
   if (documents.has(owner)) return;

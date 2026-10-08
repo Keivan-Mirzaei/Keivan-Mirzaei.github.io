@@ -1,4 +1,10 @@
 import { bindInputHistory } from '../lib/panel-history.mjs';
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+
 /* Expected counts keep the denominator of a conditional probability visible. */
 (() => {
   document.querySelectorAll('[data-widget="bayes"]').forEach((widget) => {
@@ -23,3 +29,6 @@ import { bindInputHistory } from '../lib/panel-history.mjs';
     update();
   });
 })();
+
+  return environment.dispose;
+}

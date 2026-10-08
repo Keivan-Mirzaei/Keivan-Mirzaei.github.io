@@ -1,0 +1,16 @@
+---
+layout: default
+title: Gadgets
+section: gadgets
+permalink: /gadgets/
+search: true
+description: Small tools for a little focus, a quiet background, or a room full of students.
+---
+<div class="page-wrap gadgets-wrap" data-gadget-workspace="index">
+  <header class="page-heading"><h1>Gadgets</h1><p class="page-description">{{ page.description }}</p></header>
+  <div class="gadget-grid">
+    {% for gadget in site.data.gadgets %}<a class="gadget-card" href="{{ gadget.url | relative_url }}"><span class="gadget-card-icon">{% include icon.html name=gadget.icon %}</span><h2>{{ gadget.title }}</h2><p>{{ gadget.description }}</p></a>{% endfor %}
+  </div>
+  <p class="gadget-footnote">Start here, then carry on reading. Your timer and sound stay within reach in the top bar.</p>
+  <noscript><p>These tools need JavaScript enabled to run. You can still browse the rest of the notebook.</p></noscript>
+</div>

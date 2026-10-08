@@ -1,4 +1,10 @@
 import { bindPanelHistory } from '../lib/panel-history.mjs';
+import { createPageEnvironment } from '../lib/page-environment.mjs';
+
+export function mount(root = globalThis.document) {
+  const environment = createPageEnvironment(root);
+  const { document, window, ResizeObserver, IntersectionObserver, MutationObserver, setTimeout, clearTimeout, setInterval, clearInterval, requestAnimationFrame, cancelAnimationFrame } = environment;
+
 /* Deal across three columns; always collect the chosen column in the middle. */
 (() => {
   document.querySelectorAll('[data-widget="card-trick"]').forEach((widget) => {
@@ -66,3 +72,6 @@ import { bindPanelHistory } from '../lib/panel-history.mjs';
     start();
   });
 })();
+
+  return environment.dispose;
+}

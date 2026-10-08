@@ -182,8 +182,9 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertFalse(any(is_open for _, _, is_open in rows.rows))
             self.assertIn("<strong>A strategic hint.</strong>", support)
             self.assertNotIn("<!-- alternative -->", support)
-            self.assertIn("problem-disclosures.js", support)
-            self.assertNotIn("problem-disclosures.js", page("fixture-exploration"))
+            self.assertIn('data-page-problem="true"', support)
+            self.assertIn("app.mjs", support)
+            self.assertIn('data-page-problem="false"', page("fixture-exploration"))
             self.assertNotIn('class="problem-disclosures"', page("fixture-empty-support"))
             self.assertEqual(ProblemRows(page("fixture-hint-only")).labels, ["Hint"])
             self.assertNotIn('class="problem-solution"', page("fixture-hint-only"))
@@ -199,7 +200,10 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertRegex(module, widget_source)
             self.assertNotRegex(problem, widget_source)
             # Optional graph modules must stay off ordinary pages.
-            self.assertNotIn('type="importmap"', problem)
+            # The tiny shared map makes 3D imports available after navigation;
+            # it declares URLs but does not load those libraries.
+            self.assertIn('type="importmap"', problem)
+            self.assertNotIn('src="https://cdn.jsdelivr.net/npm/three', problem)
             self.assertNotIn('scientific-plot.mjs', problem)
             self.assertNotIn('sphere-slice.mjs', problem)
             sphere = page("fixture-sphere", "learning")
@@ -255,7 +259,8 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertNotIn('id="calculus-ii-heading"', calculus_i)
             sidebar = learning.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
             self.assertNotIn('<details', sidebar)
-            self.assertEqual(sidebar.count('class="nav-link'), 6)
+            self.assertEqual(sidebar.count('class="nav-link'), 7)
+            self.assertIn('href="/gadgets/"', sidebar)
             posts_sidebar = problem.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
             self.assertIn('href="/notes/" aria-current="true"', posts_sidebar)
             for archive in [destination / "notes/index.html", *(destination / "notes/page").glob("*/index.html")]:

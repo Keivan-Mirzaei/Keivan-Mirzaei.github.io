@@ -1,8 +1,8 @@
 # Almost Obvious
 
-A small Jekyll site for problems, explorations, learning modules, and a research showcase. Write posts and pages in Markdown; shared templates build the navigation, article pages, paginated archive, search index, RSS feed, and sitemap.
+A small Jekyll site for problems, explorations, learning modules, a research showcase, and small study gadgets. Write posts and pages in Markdown; shared templates build the navigation, article pages, paginated archive, search index, RSS feed, and sitemap.
 
-The browser uses plain HTML, CSS, and a little JavaScript. There is no front-end framework, database, font service, or search service. MathJax loads only on pages with equations. Posts, navigation links, and solution disclosures work without JavaScript; full-text search and sidebar toggling use JavaScript.
+The browser uses plain HTML, CSS, and a little JavaScript. There is no front-end framework, database, font service, or search service. MathJax loads only on pages with equations. Posts, navigation links, and solution disclosures work without JavaScript; full-text search, sidebar toggling, and gadgets use JavaScript. Enhanced internal navigation keeps active timers and sound running between pages.
 
 ## Write
 
@@ -59,6 +59,8 @@ The logo, interface icons, activity registry, and panel controls each have one s
 For widget changes, follow the [widget requirements](docs/widget-requirements.md) and [element standards](docs/element-standards.md). Keep shared control standards together in the latter as more elements are reviewed.
 
 The [content logo roadmap](docs/logo-roadmap.md) covers problems, explorations, and puzzles. Problems choose one of four reusable circle/woven-loop marks through their internal `difficulty` value. Post headings, post lists, and puzzle cards share one logo renderer.
+
+The [gadgets roadmap](docs/gadget-roadmap.md) records the agreed behaviour and remaining growth ideas. The first release includes an exam clock with formatted rules and presentation mode, Pomodoro, independent ambient sound, and persistent header controls. See [gadget maintenance](docs/site-map.md#gadgets-and-page-navigation) before extending the section.
 
 Activity styles load only where required. Article controllers activate near the reader; standalone games activate immediately. Heavy graph libraries still load only after opening their interactive views. Search downloads its index on demand. Navigation prepares an internal page on a brief mouse hover or keyboard focus, with a small limit and respect for reduced-data connections.
 

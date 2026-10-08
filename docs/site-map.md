@@ -14,6 +14,7 @@ Keivan-Mirzaei.github.io/
 ├── learning/              Course overview pages, including introductory-calculus.md
 ├── notes/index.html       Template for the paginated post archive
 ├── puzzles/               Puzzle catalogue and small standalone game entry pages
+├── gadgets/               Gadget catalogue, exam clock, Pomodoro, and sound workspaces
 ├── _data/                 Shared lists and activity configuration
 │   ├── navigation.yml     Main sidebar links
 │   ├── formats.yml        Names and descriptions of content formats
@@ -21,12 +22,13 @@ Keivan-Mirzaei.github.io/
 │   ├── modules.yml        Module order and lesson navigation
 │   ├── puzzles.yml        Puzzle cards; add a game here to list it
 │   ├── widgets.yml        Activity scripts, activation selectors, and required styles
+│   ├── gadgets.yml        Gadget catalogue: stable IDs, titles, routes, descriptions, icons
 │   └── graph_libraries.yml  Pinned optional Plotly/Three.js library URLs
 ├── _layouts/              Whole-page templates
 │   ├── default.html       Shared site frame: sidebar, top bar, footer, assets
 │   ├── post.html          Problems and explorations
 │   ├── page.html          Ordinary Markdown pages
-│   ├── puzzle.html        Focused standalone game frame
+│   ├── puzzle.html        Focused game content inside the shared persistent frame
 │   ├── learning.html      Learning index
 │   ├── course.html        Course overview
 │   ├── module.html        Module and individual lesson pages
@@ -38,6 +40,7 @@ Keivan-Mirzaei.github.io/
 │   ├── controls/          Shared action buttons, Undo/Reset row, and compact Help
 │   ├── puzzles/           Game panels and optional progress setting
 │   ├── widgets/           Activity markup and small inline SVG previews
+│   ├── gadgets/           Persistent dock, active controls, and shared gadget setup
 │   ├── icon.html          One source for interface icons
 │   ├── site-icons.html    One source for favicon and touch-icon links
 │   ├── content-logo.html  Shared problem, exploration, and puzzle logo renderer
@@ -47,11 +50,12 @@ Keivan-Mirzaei.github.io/
 ├── assets/                Files visitors actually download
 │   ├── css/               Main styles, shared controls, and activity-specific styles
 │   ├── js/
+│   │   ├── app.mjs        Page lifecycle, lazy feature mounting, and MathJax loading
 │   │   ├── navigation.js  Sidebar, keyboard search shortcut, bounded page prefetch
 │   │   ├── search.js      Search UI; fetches the index when needed
-│   │   ├── math.js        MathJax settings
 │   │   ├── widgets.js     Activates activities near the reader; games start immediately
-│   │   ├── widgets/       One browser controller per activity or linked activity family
+│   │   ├── widgets/       Controllers exporting mount(root) and a disposal function
+│   │   ├── gadgets/       Timer model, singleton service, audio player, and views
 │   │   └── lib/           Shared maths, renderers, undo history, storage, and workers
 │   ├── images/            Game boards, course art, and cacheable activity previews
 │   ├── figures/           Static mathematical illustrations
@@ -64,6 +68,7 @@ Keivan-Mirzaei.github.io/
 │   ├── site-map.md        This maintenance guide
 │   ├── writing.md         Content-authoring instructions and examples
 │   ├── logo-roadmap.md    Shared logo standard and reusable problem family
+│   ├── gadget-roadmap.md  Agreed Gadgets behaviour, implementation record, and future growth
 │   ├── advanced-graphs.md Optional interactive graph authoring
 │   ├── introductory-calculus-plan.md  Course planning notes
 │   └── templates/         Starter Markdown for each content format
@@ -109,6 +114,7 @@ Keivan-Mirzaei.github.io/
 | Add a game to the catalogue | `_data/puzzles.yml` | `/puzzles/` |
 | Select a problem's logo | Its front matter `difficulty: 1`–`4` | The shared mark in every list and article heading |
 | Change content logo artwork | Family generator and image metadata; see [logo roadmap](logo-roadmap.md) | Every occurrence of the same reusable SVG |
+| Plan or extend the Gadgets section | [gadget-roadmap.md](gadget-roadmap.md) | Records decisions, implemented behaviour, validation, and future development phases |
 | Change the logo | `assets/favicon.svg`; regenerate the `.ico` and touch exports | Sidebar, top bar, browser tabs; iOS uses its PNG export |
 
 ## How shared activities fit together
@@ -133,7 +139,7 @@ article ──► _includes/widgets/hex-game.html ─┐
 standalone puzzle ────────────────────────┘
 ```
 
-Add an activity to the registry with `script`, `selector`, and `styles`. The selector must match its rendered panel. Register linked diagrams together when one controller updates all of them. List the activity in the page's `widgets` front matter; do not copy script tags into the article. The shared loader downloads each registered controller once. Static content and native Help disclosures remain available without JavaScript.
+Add an activity to the registry with `script`, `selector`, and `styles`. The selector must match its rendered panel. Register linked diagrams together when one controller updates all of them. List the activity in the page's `widgets` front matter; do not copy script tags into the article. The shared loader downloads each registered controller once, calls its exported `mount(root)` on each visit, and calls the returned cleanup when leaving. Static content and native Help disclosures remain available without JavaScript.
 
 Use `_includes/controls/panel.html` for a compact Undo/Reset/Help row. A controller can use `bindInputHistory` for form-based views, or `bindPanelHistory` for internal state. Undo records one slider edit rather than every animation frame, and shared history keeps at most 60 snapshots. Existing games keep their own turn-aware undo and redo rules.
 
@@ -176,3 +182,20 @@ The GitHub Actions workflow runs these steps before publishing pushes to `main`.
 | `tiling_catalogue.mjs` | Generate the deterministic tiling puzzle catalogue |
 
 To regenerate mathematical board or chart previews, run the matching script in `scripts/`: `hex_previews.mjs`, `cevian_previews.mjs`, or `magician_previews.mjs`. The Cevian generator also embeds drawing styles in its standalone landscape SVG. `tiling_catalogue.mjs` regenerates the deterministic tiling catalogue; its tests validate the generated puzzles.
+
+
+## Gadgets and page navigation
+
+The catalogue is `_data/gadgets.yml`. Entry pages live in `gadgets/`; all have real, searchable URLs and use the existing Jekyll layout. `section: gadgets` selects the workspace style; `gadget: exam`, `pomodoro`, or `sound` identifies a setup page. Add new catalogue entries only when their pages are ready.
+
+`assets/js/app.mjs` loads ordinary page features when needed. `lib/site-navigation.mjs` fetches eligible internal pages and replaces only `[data-page-content]`. The sidebar, header, active-controls panel, and gadget service stay alive. Page styles and configuration are replaced together; titles, descriptions, canonical links, breadcrumbs, history, scroll, focus, and MathJax are maintained. External, download, modified, and new-tab links keep their normal browser behaviour. Failed requests fall back to a document load. Puzzles share this shell with a focused layout and hidden sidebar/footer.
+
+Every activity controller exports `mount(root)` and returns a cleanup function. The root is the incoming content, not the whole document. New controllers should own listeners with an AbortController and release observers, animation frames, timers, workers, and renderers on disposal. Existing legacy activities use `lib/page-environment.mjs` for scoped browser APIs; it does not modify global browser functions. An optional renderer loading after a page has been left must dispose its result immediately. Register new page-level features in `app.mjs`, rather than adding auto-running script tags to layouts.
+
+`gadgets/service.mjs` owns the one active timer and independent sound session. `model.mjs` provides deadline calculations, restoration validation, phase transitions, and safe rule formatting. `audio.mjs` creates one Web Audio context on a user action, uses one looping source, and releases it on pause or stop. `ui.mjs` subscribes the permanent dock and current workspace to the same service. The service is loaded only on Gadgets pages or when saved sessions exist. No timer loop runs without a running timer; hidden pages catch up by deadline when they return. The two noise choices require no audio file transfer.
+
+State uses the versioned local-storage key `almost-obvious:gadgets:v1`. Running timers count elapsed time across reloads; paused timers remain paused. Reopened audio always waits for Play. Storage events synchronize sessions between tabs, and BroadcastChannel discovers a live sound owner. Deliberate playback in another tab pauses the old player. Settings and rules stay on this device. If storage is blocked, the current session still works and the UI reports that it could not save.
+
+Screen awake is a browser request for an active, visible timer. The service releases it on pause, completion, stopping, or hidden-page transitions, and retries on becoming visible. The interface reports actual availability, denial, and release. It cannot override operating-system policy. Presentation mode uses native fullscreen when available and a spacious in-browser view otherwise; it isolates focus and exits through its own button or Escape.
+
+To extend the runtime, add a model and workspace with explicit actions, subscribe to the existing service, and add compact controls only if the gadget has an ongoing session. Keep page setup out of the dock. Update the registry, roadmap, and meaningful transition tests, then run the verification commands above. Publishing remains a separate step.

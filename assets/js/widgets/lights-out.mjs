@@ -224,7 +224,9 @@ export function initializeLightsOutProof(proofWidget) {
   return { read: () => ({ step, size: graph.size, slide: structuredClone(slides[step]), total: slides.length }), destroy() { disposePanels(); events.abort(); } };
 }
 
-if (typeof document !== 'undefined') {
-  document.querySelectorAll('[data-lights-out]').forEach(game => initializeLightsOutExploration(game));
-  document.querySelectorAll('[data-lights-out-proof]').forEach(widget => initializeLightsOutProof(widget));
+export function mount(root) {
+  const cleanups = [];
+  for (const widget of root.querySelectorAll('[data-lights-out]')) { const controller = initializeLightsOutExploration(widget); cleanups.push(() => controller.destroy()); }
+  for (const widget of root.querySelectorAll('[data-lights-out-proof]')) { const controller = initializeLightsOutProof(widget); cleanups.push(() => controller.destroy()); }
+  return () => cleanups.forEach(cleanup => cleanup());
 }

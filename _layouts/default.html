@@ -9,22 +9,23 @@
   <link rel="canonical" href="{{ page.url | absolute_url }}">
   {% include site-icons.html %}
   <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
-  {% if page.section == 'puzzles' %}<link rel="stylesheet" href="{{ '/assets/css/puzzles.css' | relative_url }}">{% endif %}
-  {% if page.format == 'module' %}<link rel="stylesheet" href="{{ '/assets/css/learning.css' | relative_url }}">{% endif %}
+  {% if page.section == 'puzzles' %}<link data-page-style rel="stylesheet" href="{{ '/assets/css/puzzles.css' | relative_url }}">{% endif %}
+  {% if page.format == 'module' %}<link data-page-style rel="stylesheet" href="{{ '/assets/css/learning.css' | relative_url }}">{% endif %}
+  <link rel="stylesheet" href="{{ '/assets/css/gadget-dock.css' | relative_url }}">
+  {% if page.layout == 'puzzle' %}<link data-page-style rel="stylesheet" href="{{ '/assets/css/puzzle-workspace.css' | relative_url }}">{% endif %}
+  {% if page.section == 'gadgets' %}
+  {% if page.gadget %}
+  <link data-page-style rel="stylesheet" href="{{ '/assets/css/controls.css' | relative_url }}">
+  <link data-page-style rel="stylesheet" href="{{ '/assets/css/widget-frame.css' | relative_url }}">
+  {% endif %}
+  <link data-page-style rel="stylesheet" href="{{ '/assets/css/gadgets.css' | relative_url }}">
+  {% endif %}
   {% feed_meta %}
-  <script src="{{ '/assets/js/navigation.js' | relative_url }}" defer></script>
-  {% if page.format == 'problem' or page.problem_disclosures %}<script src="{{ '/assets/js/problem-disclosures.js' | relative_url }}" defer></script>{% endif %}
-  {% if page.search_page %}<script src="{{ '/assets/js/search.js' | relative_url }}" defer></script>{% endif %}
-  {% if page.widgets contains 'sphere-slice' %}
   <script type="importmap">{"imports":{"three":{{ site.data.graph_libraries.three | jsonify }},"three/addons/":{{ site.data.graph_libraries.three_addons | jsonify }}}}</script>
-  {% endif %}
   {% include widget-assets.html %}
-  {% if page.math %}
-  <script src="{{ '/assets/js/math.js' | relative_url }}" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" id="MathJax-script" defer></script>
-  {% endif %}
+  <script type="module" src="{{ '/assets/js/app.mjs' | relative_url }}"></script>
 </head>
-<body>
+<body data-site-shell data-page-gadget="{{ page.gadget }}" data-page-math="{{ page.math | default: false }}" data-page-search="{{ page.search_page | default: false }}" data-page-problem="{% if page.format == 'problem' or page.problem_disclosures %}true{% else %}false{% endif %}"{% if page.layout == 'puzzle' %} class="puzzle-page{% if page.game_layout == 'board-first' %} puzzle-board-first{% endif %}"{% endif %}>
   <a class="skip-link" href="#main">Skip to content</a>
   <aside class="sidebar" id="sidebar" aria-label="Site navigation">
     <a class="identity" href="{{ '/' | relative_url }}" aria-label="{{ site.title | escape }} home">
@@ -66,9 +67,12 @@
         </a>
         <span class="topbar-title">The notebook <span aria-hidden="true">/</span> <span>{{ page.breadcrumb | default: page.title | default: 'Home' }}</span></span>
       </div>
-      <a class="search-link" href="{{ '/search/' | relative_url }}">{% include icon.html name='search' %}<span>Search</span><kbd>/</kbd></a>
+      {% include gadgets/dock.html %}
+      <a class="search-link" aria-label="Search" href="{{ '/search/' | relative_url }}">{% include icon.html name='search' %}<span>Search</span><kbd>/</kbd></a>
     </header>
-    <main id="main" tabindex="-1">{{ content }}</main>
+    {% include gadgets/controls.html %}
+    <p class="site-navigation-status sr-only" role="status" aria-live="polite"></p>
+    <main id="main" tabindex="-1"><div data-page-content>{{ content }}</div></main>
     <footer class="site-footer"><span>© {{ site.time | date: '%Y' }} {{ site.title }}</span><span><a href="{{ '/feed.xml' | relative_url }}">RSS feed</a><span aria-hidden="true"> · </span><a href="{{ '/about/' | relative_url }}">Say hello ↗</a></span></footer>
   </div>
 </body>

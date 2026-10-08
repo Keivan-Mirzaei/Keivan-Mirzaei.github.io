@@ -92,6 +92,8 @@ export function initializeThreeCups(widget) {
   render('Select two cups to begin.');
 }
 
-if (typeof document !== 'undefined') {
-  document.querySelectorAll('[data-three-cups]').forEach(initializeThreeCups);
+export function mount(root) {
+  const cleanups = [];
+  root.querySelectorAll('[data-three-cups]').forEach(initializeThreeCups);
+  return () => cleanups.forEach(cleanup => cleanup());
 }
