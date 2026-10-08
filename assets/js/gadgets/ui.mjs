@@ -1,6 +1,9 @@
-import { remaining, formatTime, formatExamTime, examTone, timerInBar, timerLabel, rulesMarkup } from './model.mjs';
+import { remaining, formatTime, formatExamTime, examTone, timerInBar, timerLabel } from './model.mjs';
 import { initializeWidgetPanels } from '../lib/widget-panels.mjs';
 import { createCountdown } from './countdown.mjs';
+import { createRulesView } from './rules.mjs';
+import { initializeStepper } from './stepper.mjs';
+import { initializeDropdowns, disposeDropdowns } from '../lib/dropdown.mjs';
 
 export const soundLabel = source => source === 'soft' ? 'Soft noise' : 'Brown noise';
 export function awakeLabel(state) {
@@ -81,8 +84,10 @@ export function mountWorkspace(root, service) {
   const kind = workspace.dataset.gadgetWorkspace, get = name => workspace.querySelector(`[data-${name}]`), events = new AbortController();
   const disposePanels = initializeWidgetPanels(workspace);
   const countdown = kind === 'exam' ? createCountdown(get('workspace-time')) : null;
+  const rulesView = kind === 'exam' ? createRulesView(get('exam-rules'), { onError: message => text(get('exam-rules-message'), message) }) : null;
+  const steppers = [...workspace.querySelectorAll('[data-stepper]')].map(wrapper => initializeStepper(wrapper, () => service.getState().preferences[wrapper.querySelector('input').dataset.preference]));
   const listen = (element, type, callback) => element?.addEventListener(type, callback, { signal: events.signal });
-  let closed = false, clock = null, pendingConfig = null, confirmTrigger = null, leavePresentation = () => {}, displayedTime = null;
+  let closed = false, clock = null, pendingConfig = null, confirmTrigger = null, leavePresentation = () => {}, displayedTime = null, previewed = false;
   function renderTime(milliseconds, running = false) {
     if (countdown) countdown.render(formatExamTime(milliseconds), running && displayedTime !== null && Math.ceil(displayedTime / 1000) - Math.ceil(milliseconds / 1000) === 1);
     else text(get('workspace-time'), formatTime(milliseconds));
@@ -92,7 +97,13 @@ export function mountWorkspace(root, service) {
     const duration = workspace.querySelector('[data-preference="examMinutes"]');
     duration.disabled = !!timer;
     if (timer) duration.value = timer.config.examMinutes;
-    workspace.querySelectorAll('[data-duration-step]').forEach(button => { button.disabled = !!timer || (Number(button.dataset.durationStep) < 0 ? Number(duration.value) <= 1 : Number(duration.value) >= 1440); });
+    steppers.forEach(stepper => stepper.update());
+  }
+  function renderChime(config) {
+    const controls = get('chime-controls'), select = workspace.querySelector('[data-preference="chimeSound"]');
+    if (!controls || !select) return;
+    controls.hidden = !config.chime; select.disabled = !config.chime;
+    if (select.value !== config.chimeSound) select.value = config.chimeSound;
   }
   function cancelReplacement() {
     pendingConfig = null; get('replace-confirm').hidden = true;
@@ -111,21 +122,25 @@ export function mountWorkspace(root, service) {
   const initial = service.getState();
   workspace.querySelectorAll('[data-preference]').forEach(input => {
     const key = input.dataset.preference;
-    const value = initial.timer?.kind === kind && ['awake', 'chime', 'examInBar', 'examMinutes', 'examReminder', 'examWarningMinutes'].includes(key) ? initial.timer.config[key] : initial.preferences[key];
+    const value = initial.timer?.kind === kind && ['awake', 'chime', 'chimeSound', 'examInBar', 'examMinutes', 'examReminder', 'examWarningMinutes'].includes(key) ? initial.timer.config[key] : initial.preferences[key];
     if (input.type === 'checkbox') input.checked = value; else input.value = value;
     listen(input, 'input', () => {
       const key = input.dataset.preference, value = input.type === 'checkbox' ? input.checked : input.type === 'number' ? Number(input.value) : input.value;
       if (input.type !== 'number' || input.validity.valid) service.preferences({ [key]: value });
-      if (key === 'rules') { service.rules(value); if (!service.getState().timer || service.getState().timer.kind !== 'exam') get('exam-rules').innerHTML = rulesMarkup(value); }
+      if (key === 'rules') { service.rules(value); if (service.getState().timer?.kind !== 'exam') rulesView.render(value); }
       if (key === 'awake' && service.getState().timer?.kind === kind) service.awake(value);
       else if (key === 'awake') text(get('workspace-awake'), value ? 'Requested when the timer starts, if your browser permits it.' : '');
       if (key === 'chime' && service.getState().timer?.kind === kind) service.chime(value);
+      if (key === 'chimeSound' && service.getState().timer?.kind === kind) service.chimeSound(value);
+      if (key === 'chime' || key === 'chimeSound') renderChime(service.getState().timer?.kind === kind ? service.getState().timer.config : preferences());
       if (key === 'examInBar') service.examInBar(value);
       if (['examReminder', 'examWarningMinutes'].includes(key) && input.validity.valid) { const saved = service.getState().preferences; service.examReminder(saved.examReminder, saved.examWarningMinutes); }
       if (input.type === 'number' && input.validity.valid && service.getState().timer?.kind !== kind) renderTime((kind === 'exam' ? preferences().examMinutes : preferences().focusMinutes) * 60000);
       if (key === 'examMinutes') renderDuration();
     });
   });
+  initializeDropdowns(workspace);
+  listen(get('chime-preview'), 'click', () => { previewed = true; service.previewChime(workspace.querySelector('[data-preference="chimeSound"]').value); });
   const form = get('gadget-form');
   if (form) {
     get('start').disabled = false;
@@ -153,15 +168,8 @@ export function mountWorkspace(root, service) {
     listen(get('workspace-next'), 'click', () => service.next());
   }
   if (kind === 'exam') {
-    const duration = workspace.querySelector('[data-preference="examMinutes"]');
-    workspace.querySelectorAll('[data-duration-step]').forEach(button => {
-      listen(button, 'click', () => {
-        duration.value = Math.max(1, Math.min(1440, (duration.validity.valid ? Number(duration.value) : service.getState().preferences.examMinutes) + Number(button.dataset.durationStep)));
-        duration.dispatchEvent(new Event('input', { bubbles: true }));
-      });
-    });
     function wallClock() { text(get('wall-clock'), new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })); clock = setTimeout(wallClock, 1000); }
-    wallClock(); get('exam-rules').innerHTML = rulesMarkup(initial.timer?.kind === 'exam' ? initial.timer.config.rules : initial.preferences.rules);
+    wallClock();
     const display = get('exam-display');
     let outside = [];
     function exitPresentation() {
@@ -206,7 +214,7 @@ export function mountWorkspace(root, service) {
     listen(get('workspace-sound-toggle'), 'click', () => { if (service.getState().sound?.playing) service.pauseSound(); else service.playSound(selected(), Number(get('workspace-volume').value)); });
     listen(get('workspace-sound-stop'), 'click', () => service.stopSound());
   }
-  let renderedRules = null, statusKey = null;
+  let statusKey = null;
   const unsubscribe = service.subscribe(state => {
     if (closed) return;
     text(get('workspace-message'), state.message);
@@ -230,7 +238,8 @@ export function mountWorkspace(root, service) {
       if (key !== statusKey) { statusKey = key; text(get('workspace-status'), kind === 'exam' ? timer?.status === 'complete' ? 'Time is up.' : timer?.status === 'paused' ? 'Paused.' : reminder ? `${reminder}.` : '' : timer?.status === 'complete' ? `Time is up. Start your ${timer.phase === 'focus' ? 'break' : 'next focus period'} when you are ready.` : timer?.status === 'paused' ? 'Paused. Resume whenever you are ready.' : timer ? 'Running. You can carry on reading.' : state.timer ? `The ${timerLabel(state.timer).toLowerCase()} timer is active. Starting here will replace it.` : 'Ready when you are.'); }
       text(get('workspace-awake'), timer ? awakeLabel(state) : preferences().awake ? 'Requested when the timer starts, if your browser permits it.' : '');
       if (timer) for (const option of ['awake', 'chime']) workspace.querySelector(`[data-preference="${option}"]`).checked = timer.config[option];
-      if (kind === 'exam') { const rules = timer?.config.rules ?? preferences().rules; if (rules !== renderedRules) { get('exam-rules').innerHTML = rulesMarkup(rules); renderedRules = rules; } }
+      renderChime(timer?.config || preferences());
+      if (kind === 'exam') rulesView.render(timer?.config.rules ?? preferences().rules);
       if (kind === 'exam') {
         renderDuration(timer);
         workspace.querySelector('[data-preference="examInBar"]').checked = timer?.config.examInBar ?? state.preferences.examInBar;
@@ -238,6 +247,7 @@ export function mountWorkspace(root, service) {
         workspace.querySelector('[data-preference="examReminder"]').checked = config.examReminder;
         if (document.activeElement !== reminderInput) reminderInput.value = config.examWarningMinutes;
         reminderInput.disabled = !config.examReminder; get('exam-reminder-fields').hidden = !config.examReminder;
+        steppers.forEach(stepper => stepper.update());
         get('exam-display').dataset.examTone = tone;
       }
     }
@@ -260,5 +270,5 @@ export function mountWorkspace(root, service) {
     if (get('replace-confirm') && !get('replace-confirm').hidden) { cancelReplacement(); event.preventDefault(); }
     else { const details = event.target.closest('details[open]'); if (details) { details.open = false; details.querySelector('summary').focus(); event.preventDefault(); } }
   });
-  return () => { closed = true; events.abort(); disposePanels(); countdown?.dispose(); unsubscribe(); clearTimeout(clock); };
+  return () => { closed = true; events.abort(); disposePanels(); disposeDropdowns(workspace); steppers.forEach(stepper => stepper.dispose()); countdown?.dispose(); rulesView?.dispose(); if (previewed) service.stopChimePreview(); unsubscribe(); clearTimeout(clock); };
 }

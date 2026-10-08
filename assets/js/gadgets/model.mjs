@@ -1,8 +1,8 @@
 export const STORAGE_KEY = 'almost-obvious:gadgets:v1';
-export const defaults = { examMinutes: 60, focusMinutes: 25, breakMinutes: 5, rules: '', awake: false, chime: false, examInBar: false, examReminder: true, examWarningMinutes: 5, source: 'brown', volume: 25 };
+export const defaults = { examMinutes: 60, focusMinutes: 25, breakMinutes: 5, rules: '', awake: false, chime: false, chimeSound: 'soft', examInBar: false, examReminder: true, examWarningMinutes: 5, source: 'brown', volume: 25 };
 const number = (value, low, high, fallback) => typeof value === 'number' && Number.isFinite(value) && value >= low && value <= high ? value : fallback;
 export function readPreferences(value = {}) {
-  return { examMinutes: number(value.examMinutes, 1, 1440, 60), focusMinutes: number(value.focusMinutes, 1, 180, 25), breakMinutes: number(value.breakMinutes, 1, 60, 5), rules: typeof value.rules === 'string' ? value.rules.slice(0, 20000) : '', awake: value.awake === true, chime: value.chime === true, examInBar: value.examInBar === true, examReminder: typeof value.examReminder === 'boolean' ? value.examReminder : true, examWarningMinutes: number(value.examWarningMinutes, 1, 120, 5), source: value.source === 'soft' ? 'soft' : 'brown', volume: number(value.volume, 0, 100, 25) };
+  return { examMinutes: number(value.examMinutes, 1, 1440, 60), focusMinutes: number(value.focusMinutes, 1, 180, 25), breakMinutes: number(value.breakMinutes, 1, 60, 5), rules: typeof value.rules === 'string' ? value.rules.slice(0, 20000) : '', awake: value.awake === true, chime: value.chime === true, chimeSound: ['soft', 'two-tone', 'bell'].includes(value.chimeSound) ? value.chimeSound : 'soft', examInBar: value.examInBar === true, examReminder: typeof value.examReminder === 'boolean' ? value.examReminder : true, examWarningMinutes: number(value.examWarningMinutes, 1, 120, 5), source: value.source === 'soft' ? 'soft' : 'brown', volume: number(value.volume, 0, 100, 25) };
 }
 export function timerInBar(timer) { return !!timer && (timer.kind !== 'exam' || timer.config.examInBar === true); }
 export function remaining(timer, now = Date.now()) {
@@ -69,12 +69,19 @@ export function examTone(timer, milliseconds = remaining(timer)) {
   return milliseconds <= timer.config.examWarningMinutes * 60000 ? 'warning' : 'normal';
 }
 export function timerLabel(timer) { return timer?.kind === 'exam' ? 'Exam' : timer?.phase === 'break' ? 'Break' : 'Focus'; }
-// A deliberately small, safe formatting language. Pasted HTML remains text.
+// Keep TeX atomic across lines and outside Markdown emphasis. HTML remains text.
+const mathPattern = /\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|(?<![\\$])\$(?!\$)(?:\\.|[^$\\\n])+?(?<!\\)\$(?!\$)/g;
+export function hasRulesMath(source) { return !!String(source).match(mathPattern); }
 export function rulesMarkup(source) {
   const escape = text => text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const inline = text => escape(text).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  const formulas = [];
+  let text = String(source).slice(0, 20000), marker = '\uE000';
+  while (text.includes(marker)) marker += '\uE001';
+  text = text.replace(mathPattern, formula => `${marker}${formulas.push(formula.startsWith('$') && !formula.startsWith('$$') ? `\\(${formula.slice(1, -1)}\\)` : formula) - 1}${marker}`);
+  const tokens = new RegExp(`${marker}(\\d+)${marker}`, 'g');
+  const inline = text => escape(text).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(tokens, (_, index) => escape(formulas[Number(index)]));
   let list = false, html = '';
-  for (const line of String(source).slice(0, 20000).split('\n')) {
+  for (const line of text.split('\n')) {
     const bullet = /^\s*[-*]\s+(.+)$/.exec(line);
     if (bullet) { if (!list) { html += '<ul>'; list = true; } html += `<li>${inline(bullet[1])}</li>`; continue; }
     if (list) { html += '</ul>'; list = false; }

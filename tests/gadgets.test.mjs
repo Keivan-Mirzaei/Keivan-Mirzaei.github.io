@@ -88,18 +88,31 @@ test('formatted rules treat executable and pasted HTML as plain text', () => {
 });
 
 function fakeAudio() {
-  const contexts = [], sources = [];
+  const contexts = [], sources = [], oscillators = [];
   class AudioContext extends EventTarget {
     constructor() { super(); this.sampleRate = 8000; this.currentTime = 0; this.state = 'suspended'; this.destination = {}; contexts.push(this); }
     createGain() { return { gain: { value: 0, setTargetAtTime() {}, setValueAtTime() {}, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect() {}, disconnect() {} }; }
     createBuffer(_, length) { const data = new Float32Array(length); return { getChannelData: () => data }; }
     createBufferSource() { const source = { stopped: false, connect() {}, disconnect() {}, start() {}, stop() { this.stopped = true; } }; sources.push(source); return source; }
     createBiquadFilter() { return { frequency: { value: 0 }, connect() {}, disconnect() {} }; }
+    createOscillator() { const oscillator = { frequency: { value: 0 }, stopTimes: [], connect() {}, disconnect() { this.disconnected = true; }, start(time) { this.startTime = time; }, stop(time) { this.stopTimes.push(time); } }; oscillators.push(oscillator); return oscillator; }
     resume() { this.state = 'running'; this.dispatchEvent(new Event('statechange')); return Promise.resolve(); }
     suspend() { this.state = 'suspended'; this.dispatchEvent(new Event('statechange')); return Promise.resolve(); }
   }
-  return { AudioContext, contexts, sources };
+  return { AudioContext, contexts, sources, oscillators };
 }
+
+test('sound choices preview on one context without disturbing ambient playback, and cancel pending previews', async () => {
+  const environment = fakeAudio(), player = createAudioPlayer(environment);
+  await player.play('brown', 25); await player.chime('bell');
+  assert.equal(environment.contexts.length, 1); assert.equal(environment.sources.length, 1); assert.equal(environment.sources[0].stopped, false);
+  assert.deepEqual(environment.oscillators.map(note => note.frequency.value), [392, 784, 1177]);
+  await player.chime('two-tone'); assert.ok(environment.oscillators.slice(0, 3).every(note => note.disconnected));
+  assert.deepEqual(environment.oscillators.slice(-2).map(note => note.frequency.value), [523.25, 783.99]);
+  const pending = player.chime('soft'); player.silenceChime(); assert.equal(await pending, false);
+  assert.equal(environment.sources[0].stopped, false); assert.equal(player.state, 'running');
+  player.stop(); assert.equal(player.state, 'suspended');
+});
 
 test('the sound player reuses one context, releases switched sources, and cancels a paused start', async () => {
   const environment = fakeAudio(), player = createAudioPlayer(environment);
@@ -120,6 +133,21 @@ function environment(saved = null, wake = null) {
     setTimeout: callback => { const id = ++count; timers.set(id, callback); return id; }, clearTimeout: id => timers.delete(id), timers, saved: () => value });
   return browser;
 }
+
+test('selected completion sound persists without changing the deadline and rings only once at expiry', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('exam', { ...defaults, examMinutes: 1, chime: true }); const deadline = service.getState().timer.deadline;
+  service.chimeSound('two-tone');
+  assert.equal(service.getState().timer.deadline, deadline);
+  assert.equal(readState(browser.saved(), now).timer.config.chimeSound, 'two-tone');
+  await service.previewChime('bell'); now = deadline; service.refresh(); await Promise.resolve();
+  assert.equal(service.getState().timer.status, 'complete');
+  assert.deepEqual(browser.oscillators.slice(-2).map(note => note.frequency.value), [523.25, 783.99]);
+  service.stopChimePreview(); assert.ok(browser.oscillators.slice(-2).every(note => note.stopTimes.length === 1));
+  const count = browser.oscillators.length; service.refresh(); await Promise.resolve(); assert.equal(browser.oscillators.length, count);
+  service.chimeSound('unrecognized'); assert.equal(service.getState().preferences.chimeSound, 'soft');
+});
 
 test('a live reminder change is validated and restored without resetting the exam deadline', () => {
   const browser = environment(), service = createGadgetService(browser);

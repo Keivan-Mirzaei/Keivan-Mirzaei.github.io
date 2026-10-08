@@ -1,0 +1,21 @@
+<svg class="gadget-card-mark" width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+{%- case include.name -%}
+{%- when 'clock' -%}
+<circle cx="24" cy="24" r="20" fill="var(--tint)" stroke="none"/>
+<circle cx="24" cy="24" r="16" fill="var(--paper)"/>
+<path d="M24 8a16 16 0 0 1 16 16" stroke-width="3"/>
+<path d="M24 12v2m12 10h-2M24 36v-2m-12-10h2M15.5 15.5l1.4 1.4m14.2 14.2 1.4 1.4m-17 0 1.4-1.4m14.2-14.2 1.4-1.4" opacity=".55"/>
+<path d="M24 17v7l-5 4" stroke-width="2"/><circle cx="24" cy="24" r="1.6" fill="currentColor" stroke="none"/>
+{%- when 'timer' -%}
+<path d="M24 14c-10-5-20 1-20 12 0 10 8 17 20 17s20-7 20-17c0-11-10-17-20-12Z" fill="var(--tint)" stroke="none"/>
+<path d="M24 15c-8-4-16 1-16 11 0 8 6 14 16 14s16-6 16-14c0-10-8-15-16-11Z" fill="var(--paper)"/>
+<path d="M24 15c-1-5 1-9 5-11m-5 11c-5-5-9-4-12-2 4 3 8 4 12 2Zm0 0c4-5 8-5 12-3-3 3-7 5-12 3Z" fill="var(--tint)"/>
+<circle cx="24" cy="27" r="9"/><path d="M24 21v6l4 2M24 18v1m9 8h-1m-8 9v-1m-9-8h1"/><circle cx="24" cy="27" r="1.2" fill="currentColor" stroke="none"/>
+{%- when 'sound' -%}
+<circle cx="24" cy="24" r="20" fill="var(--tint)" stroke="none"/>
+<path d="M10 26v-4a14 14 0 0 1 28 0v4" stroke-width="2"/>
+<rect x="8" y="23" width="6" height="12" rx="3" fill="var(--paper)"/><rect x="34" y="23" width="6" height="12" rx="3" fill="var(--paper)"/>
+<path d="M18 26v4m4-9v14m4-11v8m4-6v4" stroke-width="2"/>
+<path d="M12 38a20 20 0 0 0 24 0" opacity=".45"/>
+{%- endcase -%}
+</svg>

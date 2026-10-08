@@ -4,7 +4,7 @@ import { createAudioPlayer } from './audio.mjs';
 export function createGadgetService(environment = globalThis) {
   const { document, navigator } = environment, owner = environment.crypto.randomUUID(), listeners = new Set(), audio = createAudioPlayer(environment);
   let state; try { state = readState(environment.localStorage.getItem(STORAGE_KEY)); } catch { state = readState(null); }
-  let clock = null, lock = null, requesting = false, wakeStatus = 'off', message = '', soundPlaying = false, remotePlaying = false;
+  let clock = null, lock = null, requesting = false, wakeStatus = 'off', message = '', soundPlaying = false, remotePlaying = false, previewing = false;
   const channel = environment.BroadcastChannel ? new environment.BroadcastChannel('almost-obvious:gadgets') : null;
   channel?.addEventListener('message', event => {
     if (event.data?.type === 'hello' && soundPlaying) channel.postMessage({ type: 'playing', owner });
@@ -48,7 +48,7 @@ export function createGadgetService(environment = globalThis) {
     state.timer = reconcile(previous);
     if (previous !== state.timer) {
       save(); updateWake();
-      if (previous?.config.chime && previous.alarmOwner === owner && !document.hidden) audio.chime();
+      if (previous?.config.chime && previous.alarmOwner === owner && !document.hidden) { previewing = false; audio.chime(previous.config.chimeSound).catch(error => { message = error.message || 'Time is up, but sound could not play.'; notify(); }); }
     }
     notify(); schedule();
   }
@@ -66,6 +66,9 @@ export function createGadgetService(environment = globalThis) {
     next() { if (state.timer?.config.chime) audio.prime(); commit(nextPhase(state.timer)); },
     awake(value) { if (state.timer) { state.timer.config.awake = value; save(); updateWake(); notify(); } },
     chime(value) { if (state.timer) { state.timer.config.chime = value; if (value && state.timer.status === 'running') { state.timer.alarmOwner = owner; audio.prime(); } else if (!value) audio.rest(); save(); notify(); } },
+    chimeSound(value) { service.preferences({ chimeSound: value }); if (state.timer) state.timer.config.chimeSound = state.preferences.chimeSound; save(); notify(); },
+    async previewChime(value = state.preferences.chimeSound) { previewing = true; try { message = ''; await audio.chime(readPreferences({ chimeSound: value }).chimeSound); } catch (error) { message = error.message || 'Sound could not play.'; } notify(); },
+    stopChimePreview() { if (previewing) { previewing = false; audio.silenceChime(); audio.rest(); } },
     examInBar(value) { service.preferences({ examInBar: value }); if (state.timer?.kind === 'exam') state.timer.config.examInBar = value === true; save(); notify(); },
     examReminder(enabled, minutes) {
       service.preferences({ examReminder: enabled, examWarningMinutes: minutes });

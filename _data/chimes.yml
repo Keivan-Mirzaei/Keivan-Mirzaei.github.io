@@ -1,0 +1,6 @@
+- id: soft
+  label: Soft chime
+- id: two-tone
+  label: Clear two-tone
+- id: bell
+  label: Low bell

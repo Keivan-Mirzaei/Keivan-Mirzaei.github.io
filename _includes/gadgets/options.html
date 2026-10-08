@@ -2,4 +2,8 @@
   <label class="widget-switch"><span>Keep screen awake</span><input type="checkbox" role="switch" name="awake" data-preference="awake"><span class="widget-switch-track" aria-hidden="true"></span></label>
   <p class="gadget-awake-status" data-workspace-awake></p>
   <label class="widget-switch"><span>Chime when time is up</span><input type="checkbox" role="switch" name="chime" data-preference="chime"><span class="widget-switch-track" aria-hidden="true"></span></label>
+  <div class="gadget-chime-controls" data-chime-controls hidden>
+    <div class="gadget-chime-field"><label for="{{ page.gadget }}-chime">Time-up sound</label><select id="{{ page.gadget }}-chime" name="chimeSound" data-preference="chimeSound">{% for sound in site.data.chimes %}<option value="{{ sound.id }}">{{ sound.label }}</option>{% endfor %}</select></div>
+    <button class="panel-button" type="button" data-chime-preview>{% include icon.html name='play' %}<span>Preview</span></button>
+  </div>
 </div>

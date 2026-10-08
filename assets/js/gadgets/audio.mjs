@@ -1,6 +1,8 @@
+import { chimeNotes } from './chimes.mjs';
 // One context, one looping source. No recording transfers or idle processing.
 export function createAudioPlayer(environment = globalThis) {
-  let context = null, source = null, gain = null, filter = null, selected = null, generation = 0, stateListener = null;
+  let context = null, source = null, gain = null, filter = null, selected = null, generation = 0, stateListener = null, alarmGeneration = 0;
+  const alarms = new Map();
   function ensure() {
     if (!context) {
       const Audio = environment.AudioContext || environment.webkitAudioContext;
@@ -41,17 +43,27 @@ export function createAudioPlayer(environment = globalThis) {
     if (audio.state !== 'running') throw new Error('Sound was interrupted. Press Play to resume.');
     return true;
   }
-  function pause() { generation++; disconnect(); context?.suspend().catch(() => {}); }
+  function silenceChime() { alarmGeneration++; for (const [oscillator, envelope] of alarms) { oscillator.onended = null; oscillator.stop(); oscillator.disconnect(); envelope.disconnect(); } alarms.clear(); }
+  function pause() { generation++; disconnect(); silenceChime(); context?.suspend().catch(() => {}); }
   function stop() { pause(); }
-  function rest() { if (!source) pause(); }
+  function rest() { if (!source && !alarms.size) pause(); }
   function prime() { try { ensure().resume().catch(() => {}); } catch {} }
-  function chime() {
-    if (!context || context.state === 'closed') return;
-    context.resume().catch(() => {});
-    const oscillator = context.createOscillator(), envelope = context.createGain(), time = context.currentTime;
-    oscillator.frequency.value = 660; envelope.gain.setValueAtTime(0, time); envelope.gain.linearRampToValueAtTime(.07, time + .02); envelope.gain.exponentialRampToValueAtTime(.001, time + .7);
-    oscillator.connect(envelope); envelope.connect(context.destination); oscillator.start(); oscillator.stop(time + .75);
-    oscillator.onended = () => { oscillator.disconnect(); envelope.disconnect(); if (!source) context.suspend().catch(() => {}); };
+  async function chime(choice = 'soft') {
+    const audio = ensure(); silenceChime(); const attempt = alarmGeneration;
+    await audio.resume();
+    if (attempt !== alarmGeneration) return false;
+    if (audio.state !== 'running') throw new Error('Sound is unavailable. Try Preview again.');
+    const now = audio.currentTime;
+    for (const note of chimeNotes(choice)) {
+      const oscillator = audio.createOscillator(), envelope = audio.createGain(), time = now + note.delay;
+      oscillator.type = 'sine'; oscillator.frequency.value = note.frequency;
+      envelope.gain.setValueAtTime(0, time); envelope.gain.linearRampToValueAtTime(note.level, time + .015); envelope.gain.exponentialRampToValueAtTime(.0001, time + note.duration);
+      oscillator.connect(envelope); envelope.connect(audio.destination);
+      alarms.set(oscillator, envelope);
+      oscillator.onended = () => { oscillator.disconnect(); envelope.disconnect(); alarms.delete(oscillator); if (!source && !alarms.size) audio.suspend().catch(() => {}); };
+      oscillator.start(time); oscillator.stop(time + note.duration + .025);
+    }
+    return true;
   }
-  return { play, pause, stop, rest, volume, prime, chime, onState(listener) { stateListener = listener; }, get state() { return context?.state; } };
+  return { play, pause, stop, rest, volume, prime, chime, silenceChime, onState(listener) { stateListener = listener; }, get state() { return context?.state; } };
 }

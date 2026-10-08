@@ -12,11 +12,11 @@ description: A clear countdown and optional rules, ready for the classroom.
   <div class="gadget-workbench widget-frame">
   <div class="gadget-duration-control">
     <label for="exam-duration">Duration</label>
-    <div class="gadget-duration-input">
-      <button type="button" data-duration-step="-5" aria-label="Decrease duration by 5 minutes" disabled><span aria-hidden="true">−</span></button>
+    <div class="gadget-stepper" data-stepper>
+      <button type="button" data-number-step="-5" aria-label="Decrease duration by 5 minutes" disabled><span aria-hidden="true">−</span></button>
       <input id="exam-duration" type="number" name="examMinutes" form="gadget-exam-settings" data-preference="examMinutes" min="1" max="1440" step="1" value="60" aria-label="Exam duration in minutes" required>
       <span aria-hidden="true">min</span>
-      <button type="button" data-duration-step="5" aria-label="Increase duration by 5 minutes" disabled><span aria-hidden="true">+</span></button>
+      <button type="button" data-number-step="5" aria-label="Increase duration by 5 minutes" disabled><span aria-hidden="true">+</span></button>
     </div>
   </div>
   <section class="gadget-display" data-exam-display aria-label="Exam display">
@@ -28,15 +28,23 @@ description: A clear countdown and optional rules, ready for the classroom.
   {% include gadgets/panels.html %}
   <div class="widget-support-panel" data-widget-panel="settings" aria-label="Exam settings" hidden>
   <form id="gadget-exam-settings" class="gadget-setup" data-gadget-form novalidate>
-    <div class="gadget-rules-editor"><label for="exam-rules">Exam rules <span>Optional</span></label><textarea id="exam-rules" name="rules" data-preference="rules" rows="5" maxlength="20000" placeholder="# Before you begin&#10;- Write your name on every sheet.&#10;- Show **all working**."></textarea><p class="gadget-form-hint"># Heading · - List · **Bold**. Rules update as you type.</p></div>
+    <div class="gadget-rules-editor"><label for="exam-rules">Exam rules <span>Optional</span></label><textarea id="exam-rules" name="rules" data-preference="rules" rows="6" maxlength="20000" spellcheck="false" placeholder="Write rules or a common question.&#10;Use # for headings, - for lists, and **bold** for emphasis.&#10;&#10;Math: $x^2 + y^2 = 1$&#10;Displayed equation: $$\frac{a}{b} = c$$"></textarea><p class="gadget-rules-error" data-exam-rules-message role="status"></p></div>
     {% include gadgets/options.html %}
     <label class="widget-switch"><span>Time reminder</span><input type="checkbox" role="switch" name="examReminder" data-preference="examReminder" checked><span class="widget-switch-track" aria-hidden="true"></span></label>
-    <div class="gadget-reminder-fields" data-exam-reminder-fields><label class="gadget-field">Remind at <span class="gadget-number"><input type="number" name="examWarningMinutes" data-preference="examWarningMinutes" min="1" max="120" step="1" value="5" aria-label="Reminder at minutes remaining" required><span>min remaining</span></span></label></div>
+    <div class="gadget-reminder-fields" data-exam-reminder-fields>
+      <div class="gadget-reminder-control"><label for="exam-reminder-minutes">Remind at</label><div class="gadget-stepper" data-stepper>
+        <button type="button" data-number-step="-1" aria-label="Decrease reminder by 1 minute" disabled><span aria-hidden="true">−</span></button>
+        <input id="exam-reminder-minutes" type="number" name="examWarningMinutes" data-preference="examWarningMinutes" min="1" max="120" step="1" value="5" aria-label="Reminder at minutes remaining" required>
+        <span aria-hidden="true">min</span>
+        <button type="button" data-number-step="1" aria-label="Increase reminder by 1 minute" disabled><span aria-hidden="true">+</span></button>
+      </div></div>
+    </div>
     <label class="widget-switch"><span>Show in top bar</span><input type="checkbox" role="switch" name="examInBar" data-preference="examInBar"><span class="widget-switch-track" aria-hidden="true"></span></label>
   </form>
   </div>
   <div class="widget-support-panel" data-widget-panel="info" aria-label="About the exam clock" hidden>
     <p>Set the duration, then start your exam. Use Settings for optional rules and the completion chime.</p>
+    <p>Rules can include headings, lists, bold text, and LaTeX equations. Use $...$ or \(...\) for inline math, and $$...$$ or \[...\] for a displayed equation.</p>
     <p>Present shows only the clock, rules, and an Exit button. Exit presentation to pause or change the timer. Restart returns to the original duration; Stop lets you set a new one.</p>
     <p>Show in top bar is off by default. Enable it if you need to monitor the exam while browsing other pages.</p>
     <p>Time reminder changes the background to warm amber when five minutes remain, and to a soft red when time is up. Change the reminder time or turn it off in Settings.</p>
