@@ -4,6 +4,8 @@ A small Jekyll site for problems, explorations, learning modules, a research sho
 
 The browser uses plain HTML, CSS, and a little JavaScript. There is no front-end framework, database, font service, or search service. MathJax loads only on pages with equations. Posts, navigation links, and solution disclosures work without JavaScript; full-text search, sidebar toggling, and gadgets use JavaScript. Enhanced internal navigation keeps active timers and sound running between pages.
 
+The compact header shows Home and the current page. Click Search, press `/`, or use `⌘K` / `Ctrl+K` to search without leaving the page. Arrow keys move through results; Enter opens a result and Escape closes search. The full search page remains available for longer result lists, and the header link opens it when modal search is unavailable.
+
 ## Write
 
 Add problems and explorations in `_posts`, learning modules in `_modules`, and research in `_research`, or run:

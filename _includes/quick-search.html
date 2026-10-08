@@ -1,0 +1,21 @@
+<dialog class="quick-search" id="quick-search" aria-label="Search" data-index="{{ '/search.json' | relative_url }}">
+  <form class="quick-search-form" role="search" action="{{ '/search/' | relative_url }}">
+    {% include icon.html name='search' %}
+    <label class="sr-only" for="quick-search-input">Search the site</label>
+    <input id="quick-search-input" name="q" type="search" placeholder="Search anything…" autocomplete="off" maxlength="200" aria-describedby="quick-search-status">
+    <button class="quick-search-close" type="button" aria-label="Close search" title="Close (Esc)">{% include icon.html name='close' %}<kbd aria-hidden="true">esc</kbd></button>
+  </form>
+  <div class="quick-search-body">
+    <p id="quick-search-status" class="quick-search-status" role="status" aria-live="polite">Find a post, puzzle, or idea.</p>
+    <nav class="quick-search-shortcuts" aria-label="Explore">
+      {% for item in site.data.navigation %}{% if item.key == 'notes' or item.key == 'puzzles' or item.key == 'module' or item.key == 'gadgets' %}
+      <a href="{{ item.url | relative_url }}">{% include icon.html name=item.icon %}<span>{{ item.title }}</span>{% include icon.html name='chevron-right' %}</a>
+      {% endif %}{% endfor %}
+    </nav>
+    <div class="quick-search-results" aria-label="Search results"></div>
+  </div>
+  <div class="quick-search-footer">
+    <span><kbd>↑</kbd><kbd>↓</kbd> to move <kbd>↵</kbd> to open</span>
+    <a class="quick-search-all" href="{{ '/search/' | relative_url }}">Full search {% include icon.html name='arrow' %}</a>
+  </div>
+</dialog>

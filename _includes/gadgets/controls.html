@@ -1,18 +1,29 @@
 <section id="gadget-controls" class="gadget-controls" data-gadget-controls aria-label="Active gadgets" hidden>
-  <div class="gadget-controls-heading"><span>Active gadgets</span><button type="button" data-gadget-action="controls-close">Close <span aria-hidden="true">×</span></button></div>
+  <div class="gadget-controls-heading"><span>Active gadgets</span><button type="button" data-gadget-action="controls-close" aria-label="Close gadget controls" title="Close (Esc)">{% include icon.html name='close' %}</button></div>
   <div class="gadget-control-row" data-control-timer hidden>
-    <a data-control-timer-link href="{{ '/gadgets/' | relative_url }}"><span data-control-label>Timer</span> <span class="gadget-time" data-control-time>00:00</span></a>
-    <span data-control-state></span>
-    <button type="button" data-gadget-action="timer-toggle" data-control-toggle>Pause</button>
-    <button type="button" data-gadget-action="timer-stop">Stop timer</button>
+    <a class="gadget-control-identity" data-control-timer-link href="{{ '/gadgets/' | relative_url }}">
+      <span class="gadget-control-mark">{% include icon.html name='timer' %}</span>
+      <span class="gadget-control-copy"><span data-control-label>Timer</span><span class="gadget-control-state" data-control-state></span></span>
+      <span class="gadget-time" data-control-time>00:00</span>
+    </a>
+    <div class="gadget-control-actions">
+      <button class="gadget-control-primary" type="button" data-gadget-action="timer-toggle" data-control-toggle>Pause</button>
+      <button type="button" data-gadget-action="timer-stop">Stop timer</button>
+    </div>
   </div>
   <div class="gadget-control-row" data-control-sound hidden>
-    <a href="{{ '/gadgets/sound/' | relative_url }}" data-control-sound-label>Ambient sound</a>
-    <button type="button" data-gadget-action="sound-toggle" data-control-sound-toggle>Pause sound</button>
-    <button type="button" data-gadget-action="sound-stop">Stop sound</button>
+    <a class="gadget-control-identity" href="{{ '/gadgets/sound/' | relative_url }}">
+      <span class="gadget-control-mark">{% include icon.html name='sound' %}</span>
+      <span class="gadget-control-copy"><span data-control-sound-label>Ambient sound</span><span class="gadget-control-state" data-control-sound-state></span></span>
+    </a>
+    <div class="gadget-control-actions">
+      <button class="gadget-control-primary" type="button" data-gadget-action="sound-toggle" data-control-sound-toggle>Pause sound</button>
+      <button type="button" data-gadget-action="sound-stop">Stop sound</button>
+    </div>
     <label class="gadget-volume">Volume <input type="range" min="0" max="100" value="25" data-gadget-volume aria-label="Ambient sound volume"></label>
   </div>
   <p class="gadget-awake-status" data-control-awake></p>
   <p class="gadget-message" data-gadget-message role="status"></p>
+  <a class="gadget-controls-all" href="{{ '/gadgets/' | relative_url }}">All gadgets {% include icon.html name='arrow' %}</a>
 </section>
 <span class="sr-only" data-gadget-announcement role="status" aria-live="polite"></span>

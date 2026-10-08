@@ -1,5 +1,5 @@
 /* Navigation is an enhancement: every page and link works without this file. */
-export function initializeNavigation(navigate) {
+export function initializeNavigation() {
   const root = document.documentElement;
   const sidebar = document.querySelector('#sidebar');
   const toggle = document.querySelector('.menu-toggle');
@@ -22,6 +22,7 @@ export function initializeNavigation(navigate) {
     sidebar.setAttribute('aria-hidden', String(!open));
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Hide navigation' : 'Show navigation');
+    toggle.title = open ? 'Hide navigation' : 'Show navigation';
     backdrop.hidden = !(mobile.matches && mobileOpen);
     main.inert = footer.inert = search.inert = mobile.matches && mobileOpen;
     document.querySelector('[data-gadget-dock]').inert = document.querySelector('[data-gadget-controls]').inert = mobile.matches && mobileOpen;
@@ -67,14 +68,6 @@ export function initializeNavigation(navigate) {
         controls[(index + (event.shiftKey ? -1 : 1) + controls.length) % controls.length].focus();
       }
       return;
-    }
-    const target = event.target;
-    const editing = target.isContentEditable || /INPUT|TEXTAREA|SELECT/.test(target.tagName);
-    if (event.key === '/' && !editing && !event.ctrlKey && !event.metaKey && !event.altKey) {
-      event.preventDefault();
-      const input = document.querySelector('#search-input');
-      if (input) input.focus();
-      else navigate(`${search.href}#search-input`);
     }
   });
 

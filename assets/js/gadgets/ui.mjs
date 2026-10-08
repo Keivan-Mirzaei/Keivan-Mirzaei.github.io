@@ -16,15 +16,15 @@ function text(element, value) { if (element && element.textContent !== value) el
 export function mountDock(service) {
   const dock = document.querySelector('[data-gadget-dock]'), controls = document.querySelector('[data-gadget-controls]');
   const get = name => document.querySelector(`[data-${name}]`), base = dock.dataset.gadgetsUrl;
+  const panelTrigger = dock.querySelector('[data-gadget-action="controls"]');
   let previousTransition = '';
   function panel(open, restore = false) {
     controls.hidden = !open;
-    document.documentElement.style.setProperty('--gadget-controls-height', `${open ? controls.getBoundingClientRect().height : 0}px`);
-    dock.querySelector('[data-gadget-action="controls"]').setAttribute('aria-expanded', String(open));
-    if (restore) dock.querySelector('[data-gadget-action="controls"]').focus({ preventScroll: true });
+    panelTrigger.setAttribute('aria-expanded', String(open));
+    panelTrigger.setAttribute('aria-label', `${open ? 'Close' : 'Open'} active gadget controls`);
+    panelTrigger.setAttribute('title', `${open ? 'Close' : 'Open'} active gadget controls`);
+    if (restore) panelTrigger.focus({ preventScroll: true });
   }
-  const size = new ResizeObserver(() => { if (!controls.hidden) document.documentElement.style.setProperty('--gadget-controls-height', `${controls.getBoundingClientRect().height}px`); });
-  size.observe(controls);
   function icon(button, paused, label) {
     button.setAttribute('aria-label', label);
     const type = paused ? 'play' : 'pause';
@@ -50,10 +50,16 @@ export function mountDock(service) {
   service.subscribe(state => {
     const showTimer = timerInBar(state.timer);
     const showSound = !!state.sound && state.preferences?.soundInBar !== false;
+    const focusWasInControls = !controls.hidden && controls.contains(document.activeElement);
+    const focusedRowRemoved = !controls.hidden && (
+      !showTimer && get('control-timer').contains(document.activeElement) ||
+      !showSound && get('control-sound').contains(document.activeElement));
     dock.hidden = !showTimer && !showSound;
     if (dock.hidden) panel(false);
     get('dock-timer').hidden = get('control-timer').hidden = !showTimer;
     get('dock-sound').hidden = get('control-sound').hidden = !showSound;
+    if (dock.hidden && focusWasInControls) document.querySelector('.search-link')?.focus({ preventScroll: true });
+    else if (focusedRowRemoved) get(showTimer ? 'control-toggle' : 'control-sound-toggle').focus({ preventScroll: true });
     if (state.timer) {
       const timer = state.timer, label = timerLabel(timer), time = formatTime(remaining(timer)), url = `${base}${timer.kind === 'exam' ? 'exam' : 'pomodoro'}/`;
       const action = timer.status === 'running' ? 'Pause' : timer.status === 'paused' ? 'Resume' : timer.kind === 'exam' ? 'Restart' : timer.phase === 'focus' ? 'Start break' : 'Start focus';
@@ -68,7 +74,9 @@ export function mountDock(service) {
       text(get('dock-sound-label'), soundLabel(state.sound.source)); text(get('control-sound-label'), soundLabel(state.sound.source));
       icon(get('dock-sound-pause'), !state.sound.playing, `${state.sound.playing ? 'Pause' : 'Play'} ${soundLabel(state.sound.source).toLowerCase()}`);
       get('dock-sound-link').dataset.paused = String(!state.sound.playing);
+      get('dock-sound-link').setAttribute('aria-label', `${soundLabel(state.sound.source)}, ${state.sound.playing ? 'playing' : 'paused'}`);
       text(get('control-sound-toggle'), state.sound.playing ? 'Pause sound' : 'Play sound');
+      text(get('control-sound-state'), state.sound.playing ? 'Playing' : 'Paused');
       if (document.activeElement !== get('gadget-volume')) get('gadget-volume').value = state.sound.volume;
     }
     text(get('control-awake'), showTimer ? awakeLabel(state) : ''); text(get('gadget-message'), state.message);

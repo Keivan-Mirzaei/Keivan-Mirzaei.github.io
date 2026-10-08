@@ -9,6 +9,7 @@
   <link rel="canonical" href="{{ page.url | absolute_url }}">
   {% include site-icons.html %}
   <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/quick-search.css' | relative_url }}">
   {% if page.section == 'puzzles' %}<link data-page-style rel="stylesheet" href="{{ '/assets/css/puzzles.css' | relative_url }}">{% endif %}
   {% if page.format == 'module' %}<link data-page-style rel="stylesheet" href="{{ '/assets/css/learning.css' | relative_url }}">{% endif %}
   <link rel="stylesheet" href="{{ '/assets/css/gadget-dock.css' | relative_url }}">
@@ -61,18 +62,23 @@
     <header class="topbar">
       <div class="topbar-location">
         <button class="menu-toggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Hide navigation" hidden>{% include icon.html name='menu' %}</button>
-        <a class="topbar-home" href="{{ '/' | relative_url }}" aria-label="{{ site.title | escape }} home" title="Home">
-          <img src="{{ '/assets/favicon.svg' | relative_url }}" alt="Rounded trefoil knot" width="32" height="32">
-        </a>
-        <span class="topbar-title">The notebook <span aria-hidden="true">/</span> <span>{{ page.breadcrumb | default: page.title | default: 'Home' }}</span></span>
+        <nav class="topbar-title" aria-label="Breadcrumb">
+          {% if page.url == '/' %}
+          <span class="topbar-current" aria-current="page">Home</span>
+          {% else %}
+          <a class="topbar-home" href="{{ '/' | relative_url }}">Home</a>
+          {% include icon.html name='chevron-right' %}
+          <span class="topbar-current" aria-current="page" title="{{ page.breadcrumb | default: page.title | escape }}">{{ page.breadcrumb | default: page.title | escape }}</span>
+          {% endif %}
+        </nav>
       </div>
       {% include gadgets/dock.html %}
-      <a class="search-link" aria-label="Search" href="{{ '/search/' | relative_url }}">{% include icon.html name='search' %}<span>Search</span><kbd>/</kbd></a>
+      <a class="search-link" aria-label="Search" aria-keyshortcuts="/ Meta+K Control+K" title="Search (/ or ⌘/Ctrl K)" href="{{ '/search/' | relative_url }}">{% include icon.html name='search' %}<span>Search</span><kbd aria-hidden="true">/</kbd></a>
     </header>
-    {% include gadgets/controls.html %}
     <p class="site-navigation-status sr-only" role="status" aria-live="polite"></p>
     <main id="main" tabindex="-1"><div data-page-content>{{ content }}</div></main>
     <footer class="site-footer"><span>© {{ site.time | date: '%Y' }} {{ site.title }}</span><span><a href="{{ '/feed.xml' | relative_url }}">RSS feed</a><span aria-hidden="true"> · </span><a href="{{ '/about/' | relative_url }}">Say hello ↗</a></span></footer>
   </div>
+  {% include quick-search.html %}
 </body>
 </html>

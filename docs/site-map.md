@@ -51,7 +51,8 @@ Keivan-Mirzaei.github.io/
 │   ├── css/               Main styles, shared controls, and activity-specific styles
 │   ├── js/
 │   │   ├── app.mjs        Page lifecycle, lazy feature mounting, and MathJax loading
-│   │   ├── navigation.js  Sidebar, keyboard search shortcut, bounded page prefetch
+│   │   ├── navigation.js  Sidebar and mobile navigation focus
+│   │   ├── quick-search.mjs  Header search dialog and keyboard shortcuts
 │   │   ├── search.js      Search UI; fetches the index when needed
 │   │   ├── widgets.js     Activates activities near the reader; games start immediately
 │   │   ├── widgets/       Controllers exporting mount(root) and a disposal function
@@ -106,6 +107,7 @@ Keivan-Mirzaei.github.io/
 | Add or revise research | `_research/` | Research index |
 | Update biography or professional profile | `about.md`, `linkedin_url` in `_config.yml` | About page and shared LinkedIn links |
 | Change the sidebar | `_data/navigation.yml` | Every ordinary page |
+| Change the header or quick search | `_layouts/default.html`, `_includes/quick-search.html`, `assets/css/site.css`, `assets/css/quick-search.css`, `assets/js/quick-search.mjs` | Persistent header, Home breadcrumb, and modal search on every page; both search interfaces share `assets/js/lib/site-search.mjs` |
 | Change colours or reading-page alignment | `assets/css/site.css` | All ordinary pages |
 | Change button sizing or Help behavior | `assets/css/controls.css`, `_includes/controls/`, `assets/js/widgets.js` | Shared activity and game controls |
 | Change dropdown appearance or behavior | `assets/css/dropdown.css`, `assets/js/lib/dropdown.mjs`, `_includes/widget-assets.html` | One component for named choices; follow `docs/element-standards.md` |

@@ -1,5 +1,6 @@
 /* Full-text search over a generated JSON file. No service or search library. */
 import { createPageEnvironment } from './lib/page-environment.mjs';
+import { findSearchResults, loadSearchIndex, searchTerms } from './lib/site-search.mjs';
 export function mount(root) {
   const environment = createPageEnvironment(root);
   const { document, window, setTimeout, clearTimeout } = environment;
@@ -11,43 +12,10 @@ export function mount(root) {
   const results = document.querySelector('#search-results');
   const more = document.querySelector('#search-more');
   const pageSize = 20;
-  let indexPromise;
   let request = 0;
   let timer;
   let matches = [];
   let shown = 0;
-
-  const normalize = (text) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
-  const termsFor = (query) => [...new Set(normalize(query).match(/[\p{L}\p{N}]+/gu) || [])];
-
-  async function loadIndex() {
-    if (!indexPromise) {
-      indexPromise = fetch(app.dataset.index)
-        .then((response) => {
-          if (!response.ok) throw new Error('Search index unavailable');
-          return response.json();
-        })
-        .then((entries) => entries.map((entry) => ({
-          ...entry,
-          titleText: normalize(entry.title),
-          topicText: normalize(`${entry.category} ${entry.tags}`),
-          bodyText: normalize(`${entry.description} ${entry.content}`)
-        })))
-        .catch((error) => { indexPromise = undefined; throw error; });
-    }
-    return indexPromise;
-  }
-
-  function rank(entry, terms) {
-    let score = 0;
-    for (const term of terms) {
-      if (entry.titleText.includes(term)) score += 10;
-      else if (entry.topicText.includes(term)) score += 5;
-      else if (entry.bodyText.includes(term)) score += 1;
-      else return 0;
-    }
-    return score;
-  }
 
   function showMore() {
     const batch = document.createDocumentFragment();
@@ -78,7 +46,7 @@ export function mount(root) {
   async function search(updateUrl = true) {
     const thisRequest = ++request;
     const query = input.value.trim().slice(0, 200);
-    const terms = termsFor(query);
+    const terms = searchTerms(query);
     if (updateUrl) {
       const url = new URL(window.location.href);
       if (query) url.searchParams.set('q', query);
@@ -94,12 +62,9 @@ export function mount(root) {
     }
     status.textContent = 'Searching…';
     try {
-      const entries = await loadIndex();
+      const entries = await loadSearchIndex(app.dataset.index);
       if (request !== thisRequest) return; // Ignore an older query's response.
-      matches = entries.map((entry) => ({ entry, score: rank(entry, terms) }))
-        .filter((result) => result.score > 0)
-        .sort((a, b) => b.score - a.score || a.entry.title.localeCompare(b.entry.title))
-        .map((result) => result.entry);
+      matches = findSearchResults(entries, query);
       shown = 0;
       status.textContent = matches.length
         ? `${matches.length} ${matches.length === 1 ? 'result' : 'results'} for “${query}”`

@@ -37,6 +37,8 @@ Keep agreed choices here. Ask about meaningful product choices at the relevant p
 
 ## Top-bar design
 
+The active dock now groups its countdown and chevron in a bordered capsule. Its controls open in a compact card below the header, with session state, separate Pause/Resume and Stop actions, independent sound controls, and volume. Opening or closing the card preserves the page layout. On phones the card stays inside the viewport; keyboard order follows the trigger into the panel, and Escape returns focus. Clearing a session moves focus to the remaining session or Search when the dock disappears.
+
 ### Wide screens
 
 Use the open area between the current location and Search in the supplied header reference. Keep navigation, the location, and search usable when titles are long or the sidebar is expanded.

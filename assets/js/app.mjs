@@ -1,5 +1,6 @@
 import { initializeNavigation } from './navigation.js';
 import { initializeSiteNavigation } from './lib/site-navigation.mjs';
+import { initializeQuickSearch } from './quick-search.mjs';
 import { typesetMath, clearMath } from './lib/math-typesetting.mjs';
 
 let pageDispose = () => {}, gadgetPromise = null, page = 0;
@@ -33,7 +34,8 @@ function enter(root) {
   }
 }
 const navigate = initializeSiteNavigation({ leave: () => pageDispose(), enter });
-initializeNavigation(navigate);
+initializeNavigation();
+initializeQuickSearch(navigate);
 // No gadget runtime or clock loop on an ordinary visit without an active session.
 try { const saved = JSON.parse(localStorage.getItem('almost-obvious:gadgets:v1')); if (saved?.version === 1 && (saved.timer || saved.sound)) gadgets().catch(error => console.warn(error)); } catch {}
 enter(document.querySelector('[data-page-content]'));
