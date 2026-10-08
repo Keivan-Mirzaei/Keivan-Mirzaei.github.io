@@ -1,8 +1,9 @@
 import { chimeNotes } from './chimes.mjs';
 // One context, one looping source. No recording transfers or idle processing.
 export function createAudioPlayer(environment = globalThis) {
-  let context = null, source = null, gain = null, filter = null, selected = null, generation = 0, stateListener = null, alarmGeneration = 0;
-  const alarms = new Map();
+  let context = null, source = null, gain = null, filter = null, selected = null, generation = 0, stateListener = null;
+  let previewGeneration = 0, previewPreparing = null, completionGeneration = 0, completion = null;
+  const previews = new Map(), completionNodes = new Map();
   function ensure() {
     if (!context) {
       const Audio = environment.AudioContext || environment.webkitAudioContext;
@@ -43,29 +44,58 @@ export function createAudioPlayer(environment = globalThis) {
     if (audio.state !== 'running') throw new Error('Sound was interrupted. Press Play to resume.');
     return true;
   }
-  function silenceChime() { alarmGeneration++; for (const [oscillator, envelope] of alarms) { oscillator.onended = null; oscillator.stop(); oscillator.disconnect(); envelope.disconnect(); } alarms.clear(); }
-  function pause() { generation++; disconnect(); silenceChime(); context?.suspend().catch(() => {}); }
+  function clearNotes(notes) {
+    for (const [oscillator, envelope] of notes) { oscillator.onended = null; oscillator.stop(); oscillator.disconnect(); envelope.disconnect(); }
+    notes.clear();
+  }
+  function silenceChime() { previewGeneration++; previewPreparing = null; clearNotes(previews); }
+  function cancelCompletion() { completionGeneration++; completion = null; clearNotes(completionNodes); }
+  function pause() { generation++; disconnect(); rest(); }
   function stop() { pause(); }
-  function rest() { if (!source && !alarms.size) pause(); }
-  function prime() { try { ensure().resume().catch(() => {}); } catch {} }
-  async function chime(choice = 'soft') {
-    const audio = ensure(); silenceChime(); const attempt = alarmGeneration;
-    await audio.resume();
-    if (attempt !== alarmGeneration) return false;
-    if (audio.state !== 'running') throw new Error('Sound is unavailable. Try Preview again.');
-    const now = audio.currentTime;
+  function rest() {
+    if (!source && !previews.size && previewPreparing === null && !completionNodes.size && !completion && context?.state === 'running') context.suspend().catch(() => {});
+  }
+  function scheduleNotes(audio, choice, when, notes, finished = () => {}) {
     for (const note of chimeNotes(choice)) {
-      const oscillator = audio.createOscillator(), envelope = audio.createGain(), time = now + note.delay;
+      const oscillator = audio.createOscillator(), envelope = audio.createGain(), time = when + note.delay;
       oscillator.type = note.waveform || 'sine'; oscillator.frequency.value = note.frequency;
       envelope.gain.setValueAtTime(0, time); envelope.gain.linearRampToValueAtTime(note.level, time + .015);
       if (note.hold) envelope.gain.setValueAtTime(note.level, time + .015 + note.hold);
       envelope.gain.exponentialRampToValueAtTime(.0001, time + note.duration);
       oscillator.connect(envelope); envelope.connect(audio.destination);
-      alarms.set(oscillator, envelope);
-      oscillator.onended = () => { oscillator.disconnect(); envelope.disconnect(); alarms.delete(oscillator); if (!source && !alarms.size) audio.suspend().catch(() => {}); };
+      notes.set(oscillator, envelope);
+      oscillator.onended = () => { oscillator.disconnect(); envelope.disconnect(); notes.delete(oscillator); if (!notes.size) finished(); rest(); };
       oscillator.start(time); oscillator.stop(time + note.duration + .025);
     }
-    return true;
   }
-  return { play, pause, stop, rest, volume, prime, chime, silenceChime, onState(listener) { stateListener = listener; }, get state() { return context?.state; } };
+  async function chime(choice = 'soft') {
+    silenceChime(); const attempt = previewGeneration; previewPreparing = attempt;
+    try {
+      const audio = ensure(); await audio.resume();
+      if (attempt !== previewGeneration) return false;
+      if (audio.state !== 'running') throw new Error('Sound is unavailable. Try Preview again.');
+      previewPreparing = null; scheduleNotes(audio, choice, audio.currentTime, previews); return true;
+    } catch (error) { if (attempt === previewGeneration) silenceChime(); throw error; }
+    finally { if (previewPreparing === attempt) previewPreparing = null; rest(); }
+  }
+  async function scheduleChime(deadline, choice = 'soft') {
+    cancelCompletion(); const attempt = completionGeneration, plan = { deadline, time: null }; completion = plan;
+    try {
+      const audio = ensure(); await audio.resume();
+      if (attempt !== completionGeneration || completion !== plan) return false;
+      const delay = (deadline - Date.now()) / 1000;
+      if (delay <= 0) { cancelCompletion(); return false; }
+      if (audio.state !== 'running') throw new Error('Time-up sound is unavailable. Use Preview to enable sound.');
+      plan.time = audio.currentTime + delay;
+      // Native audio timing keeps the alarm independent of hidden-tab JS callbacks.
+      scheduleNotes(audio, choice, plan.time, completionNodes, () => { if (completion === plan) completion = null; });
+      return true;
+    } catch (error) { if (completion === plan) cancelCompletion(); throw error; }
+    finally { rest(); }
+  }
+  function expireCompletion() {
+    // A sleeping/suspended audio clock must not play a missed alarm on return.
+    if (completion && (completion.time === null || completion.time > context.currentTime + .1)) cancelCompletion();
+  }
+  return { play, pause, stop, rest, volume, chime, silenceChime, scheduleChime, cancelCompletion, expireCompletion, onState(listener) { stateListener = listener; }, get state() { return context?.state; } };
 }

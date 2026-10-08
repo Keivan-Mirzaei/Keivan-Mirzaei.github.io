@@ -139,12 +139,12 @@ test('the sound player reuses one context, releases switched sources, and cancel
 });
 
 function environment(saved = null, wake = null) {
-  const browser = new EventTarget(), document = new EventTarget(), timers = new Map();
+  const browser = new EventTarget(), document = new EventTarget(), timers = new Map(), delays = new Map();
   document.hidden = false;
   let value = saved, count = 0;
   Object.assign(browser, fakeAudio(), { document, navigator: wake ? { wakeLock: wake } : {}, isSecureContext: true, crypto: { randomUUID: () => `tab-${Math.random()}` },
     localStorage: { getItem: () => value, setItem: (key, data) => { assert.equal(key, STORAGE_KEY); value = data; } },
-    setTimeout: callback => { const id = ++count; timers.set(id, callback); return id; }, clearTimeout: id => timers.delete(id), timers, saved: () => value });
+    setTimeout: (callback, delay) => { const id = ++count; timers.set(id, callback); delays.set(id, delay); return id; }, clearTimeout: id => { timers.delete(id); delays.delete(id); }, timers, delays, saved: () => value });
   return browser;
 }
 
@@ -153,14 +153,152 @@ test('selected completion sound persists without changing the deadline and rings
   const browser = environment(), service = createGadgetService(browser);
   service.start('exam', { ...defaults, examMinutes: 1, chime: true }); const deadline = service.getState().timer.deadline;
   service.chimeSound('two-tone');
+  await Promise.resolve();
   assert.equal(service.getState().timer.deadline, deadline);
   assert.equal(readState(browser.saved(), now).timer.config.chimeSound, 'two-tone');
-  await service.previewChime('bell'); now = deadline; service.refresh(); await Promise.resolve();
+  const completion = browser.oscillators.slice();
+  assert.equal(completion.length, 4); assert.equal(completion[0].startTime, 60);
+  await service.previewChime('bell'); now = deadline; browser.contexts[0].currentTime = 60; service.refresh(); await Promise.resolve();
   assert.equal(service.getState().timer.status, 'complete');
-  assert.deepEqual(browser.oscillators.slice(-2).map(note => note.frequency.value), [523.25, 783.99]);
-  service.stopChimePreview(); assert.ok(browser.oscillators.slice(-2).every(note => note.stopTimes.length === 1));
+  assert.deepEqual(completion.slice(-2).map(note => note.frequency.value), [523.25, 783.99]);
+  service.stopChimePreview(); assert.ok(completion.every(note => note.stopTimes.length === 1));
   const count = browser.oscillators.length; service.refresh(); await Promise.resolve(); assert.equal(browser.oscillators.length, count);
   service.chimeSound('unrecognized'); assert.equal(service.getState().preferences.chimeSound, 'soft');
+});
+
+test('exam and Pomodoro alarms are scheduled before tab hiding and never replay on return', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  for (const kind of ['exam', 'pomodoro']) {
+    const browser = environment(), service = createGadgetService(browser);
+    service.start(kind, { ...defaults, examMinutes: 1, focusMinutes: 1, chime: true, chimeSound: 'two-tone' });
+    await Promise.resolve();
+    const deadline = service.getState().timer.deadline, completion = browser.oscillators.slice();
+    assert.equal(completion.length, 4); assert.equal(completion[0].startTime, 60);
+    browser.document.hidden = true; browser.document.dispatchEvent(new Event('visibilitychange'));
+    assert.deepEqual([...browser.delays.values()], [60000]);
+    // The native audio clock advances while no JS timer callback is delivered.
+    now = deadline; browser.contexts[0].currentTime = 60;
+    assert.equal(service.getState().timer.status, 'running');
+    assert.ok(completion.some(note => note.startTime <= 60 && note.stopTimes[0] > 60 && !note.disconnected));
+    browser.document.hidden = false; browser.document.dispatchEvent(new Event('visibilitychange'));
+    service.refresh(); await Promise.resolve();
+    assert.equal(service.getState().timer.status, 'complete');
+    assert.equal(browser.oscillators.length, 4);
+    assert.ok(completion.every(note => note.stopTimes.length === 1));
+  }
+});
+
+test('pause, stop, restart, and chime settings cancel or replace only the future completion sound', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('pomodoro', { ...defaults, focusMinutes: 1, chime: true }); await Promise.resolve();
+  const original = browser.oscillators.slice(); now = 11000; browser.contexts[0].currentTime = 10;
+  service.pause(); assert.ok(original.every(note => note.disconnected)); assert.equal(browser.contexts[0].state, 'suspended');
+  now = 21000; service.resume(); await Promise.resolve();
+  const resumed = browser.oscillators.slice(-3); assert.equal(resumed[0].startTime, 60);
+  service.chime(false); assert.ok(resumed.every(note => note.disconnected));
+  service.chime(true); await Promise.resolve(); const enabled = browser.oscillators.slice(-3);
+  service.chimeSound('bell'); await Promise.resolve(); assert.ok(enabled.every(note => note.disconnected));
+  const changed = browser.oscillators.slice(-3); assert.equal(changed[0].frequency.value, 392); assert.equal(changed[0].startTime, 60);
+  now = 22000; browser.contexts[0].currentTime = 11; service.restart(); await Promise.resolve();
+  assert.ok(changed.every(note => note.disconnected)); assert.equal(browser.oscillators.at(-3).startTime, 71);
+  const count = browser.oscillators.length; service.stop(); assert.ok(browser.oscillators.slice(-3).every(note => note.disconnected));
+  service.start('exam', { ...defaults, examMinutes: 1, chime: true }); service.stop(); await Promise.resolve();
+  assert.equal(browser.oscillators.length, count); assert.equal(browser.contexts[0].state, 'suspended');
+});
+
+test('completion scheduling compensates for asynchronous audio resume and skips an already missed deadline', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = fakeAudio(), player = createAudioPlayer(browser);
+  const pending = player.scheduleChime(61000, 'two-tone'); now = 6000; browser.contexts[0].currentTime = 3;
+  assert.equal(await pending, true); assert.equal(browser.oscillators[0].startTime, 58);
+  player.cancelCompletion(); player.rest();
+  const count = browser.oscillators.length, expired = player.scheduleChime(61000);
+  now = 62000; assert.equal(await expired, false); assert.equal(browser.oscillators.length, count); assert.equal(player.state, 'suspended');
+});
+
+test('previews and ambient pause do not cancel an armed alarm or suspend its audio clock', async t => {
+  t.mock.method(Date, 'now', () => 1000);
+  const browser = fakeAudio(), player = createAudioPlayer(browser);
+  await player.play('brown', 25); await player.scheduleChime(61000, 'two-tone');
+  const completion = browser.oscillators.slice(); await player.chime('bell'); const preview = browser.oscillators.slice(-3);
+  player.silenceChime(); player.rest();
+  assert.ok(preview.every(note => note.disconnected)); assert.ok(completion.every(note => note.stopTimes.length === 1));
+  player.pause(); assert.equal(browser.sources[0].stopped, true); assert.equal(player.state, 'running');
+  assert.equal(browser.contexts.length, 1); assert.ok(completion.every(note => !note.disconnected));
+  player.cancelCompletion(); player.rest(); assert.equal(player.state, 'suspended');
+});
+
+test('finished tones release their nodes and the audio clock rests only after the last active sound', async t => {
+  t.mock.method(Date, 'now', () => 1000);
+  const browser = fakeAudio(), player = createAudioPlayer(browser);
+  await player.scheduleChime(61000, 'two-tone'); const completion = browser.oscillators.slice();
+  await player.chime('bell'); const preview = browser.oscillators.slice(-3);
+  for (const note of preview) note.onended();
+  assert.ok(preview.every(note => note.disconnected)); assert.equal(player.state, 'running');
+  for (const note of completion.slice(0, -1)) note.onended();
+  assert.equal(player.state, 'running'); completion.at(-1).onended();
+  assert.ok(completion.every(note => note.disconnected)); assert.equal(player.state, 'suspended');
+  await player.play('brown', 25); await player.scheduleChime(61000);
+  for (const note of browser.oscillators.slice(-3)) note.onended();
+  assert.equal(player.state, 'running'); assert.equal(browser.sources[0].stopped, false);
+  player.stop(); assert.equal(player.state, 'suspended');
+});
+
+test('each deliberate Pomodoro phase arms its own deadline and a reopened document stays silent', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('pomodoro', { ...defaults, focusMinutes: 1, breakMinutes: 1, chime: true }); await Promise.resolve();
+  const focus = browser.oscillators.slice(); now = 61000; browser.contexts[0].currentTime = 60;
+  service.refresh(); service.next(); await Promise.resolve();
+  assert.equal(service.getState().timer.phase, 'break'); assert.ok(focus.every(note => note.disconnected));
+  assert.equal(browser.oscillators.at(-3).startTime, 120);
+  const reopened = environment(browser.saved()), restored = createGadgetService(reopened);
+  assert.equal(restored.getState().timer.phase, 'break'); assert.equal(reopened.contexts.length, 0);
+  now = 121000; browser.contexts[0].currentTime = 120; service.refresh(); service.next(); await Promise.resolve();
+  assert.equal(service.getState().timer.phase, 'focus'); assert.equal(browser.oscillators.at(-3).startTime, 180);
+});
+
+test('a browser audio interruption re-arms against wall time before expiry and never rings late after expiry', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('exam', { ...defaults, examMinutes: 1, chime: true }); await Promise.resolve();
+  const original = browser.oscillators.slice();
+  browser.document.hidden = true; browser.document.dispatchEvent(new Event('visibilitychange'));
+  now = 21000; browser.contexts[0].currentTime = 20; browser.contexts[0].state = 'interrupted'; browser.contexts[0].dispatchEvent(new Event('statechange'));
+  assert.ok(original.every(note => note.disconnected));
+  now = 41000; browser.document.hidden = false; browser.document.dispatchEvent(new Event('visibilitychange')); await Promise.resolve();
+  const restored = browser.oscillators.slice(-3); assert.equal(restored[0].startTime, 40);
+  browser.document.hidden = true; browser.document.dispatchEvent(new Event('visibilitychange'));
+  browser.contexts[0].state = 'interrupted'; browser.contexts[0].dispatchEvent(new Event('statechange'));
+  const count = browser.oscillators.length; now = 90000;
+  browser.document.hidden = false; browser.document.dispatchEvent(new Event('visibilitychange')); await Promise.resolve();
+  assert.equal(service.getState().timer.status, 'complete'); assert.equal(browser.oscillators.length, count);
+  assert.ok(restored.every(note => note.disconnected));
+});
+
+test('a stalled audio clock and a delayed JS wake-up discard a missed alarm instead of replaying it', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('pomodoro', { ...defaults, focusMinutes: 1, chime: true }); await Promise.resolve();
+  const completion = browser.oscillators.slice(); browser.contexts[0].currentTime = 10; now = 90000;
+  service.refresh(); await Promise.resolve();
+  assert.equal(service.getState().timer.status, 'complete'); assert.ok(completion.every(note => note.disconnected));
+  assert.equal(browser.oscillators.length, completion.length); assert.equal(browser.contexts[0].state, 'suspended');
+});
+
+test('storage takeover and leaving the document cancel a future alarm without restoring stale audio', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('exam', { ...defaults, examMinutes: 1, chime: true }); await Promise.resolve();
+  const original = browser.oscillators.slice(), external = JSON.parse(browser.saved()); external.timer.alarmOwner = 'another-tab';
+  const storage = new Event('storage'); Object.assign(storage, { key: STORAGE_KEY, newValue: JSON.stringify(external) }); browser.dispatchEvent(storage);
+  assert.ok(original.every(note => note.disconnected));
+  service.start('pomodoro', { ...defaults, focusMinutes: 1, chime: true }); await Promise.resolve();
+  const local = browser.oscillators.slice(-3); browser.dispatchEvent(new Event('pagehide'));
+  assert.ok(local.every(note => note.disconnected)); assert.equal(browser.timers.size, 0);
+  now = 90000; browser.dispatchEvent(new Event('pageshow')); await Promise.resolve();
+  assert.equal(service.getState().timer.status, 'complete'); assert.equal(browser.oscillators.length, original.length + local.length);
 });
 
 test('a live reminder change is validated and restored without resetting the exam deadline', () => {
@@ -245,7 +383,8 @@ test('wake locks release on pause or hidden pages and a late request cannot keep
   wake.request = async () => { const lock = new EventTarget(); lock.released = false; lock.release = async () => { lock.released = true; lock.dispatchEvent(new Event('release')); }; locks.push(lock); return lock; };
   service.resume(); await Promise.resolve(); assert.equal(service.getState().wakeStatus, 'active');
   browser.document.hidden = true; browser.document.dispatchEvent(new Event('visibilitychange')); await Promise.resolve();
-  assert.equal(locks.at(-1).released, true); assert.equal(browser.timers.size, 0);
+  assert.equal(locks.at(-1).released, true); assert.equal(browser.timers.size, 1);
+  assert.ok([...browser.delays.values()][0] > 1000);
   browser.document.hidden = false; browser.document.dispatchEvent(new Event('visibilitychange')); await Promise.resolve();
   assert.equal(service.getState().wakeStatus, 'active'); service.stop(); await Promise.resolve(); assert.equal(locks.at(-1).released, true);
 });
@@ -258,7 +397,7 @@ test('denied storage and screen awake do not prevent a usable timer', async () =
 });
 
 
-test('a paused ambient source cannot restart when a timer primes its completion chime', async () => {
+test('a paused ambient source cannot restart when a timer arms its completion chime', async () => {
   const browser = environment(), service = createGadgetService(browser);
   await service.playSound('brown', 25); service.pauseSound();
   assert.equal(browser.sources[0].stopped, true);
@@ -267,10 +406,15 @@ test('a paused ambient source cannot restart when a timer primes its completion 
   service.pause(); assert.equal(browser.contexts[0].state, 'suspended');
 });
 
-test('browser audio interruption reports paused state with an explicit resume action', async () => {
+test('browser audio interruption leaves ambient sound paused when a future timer re-arms', async () => {
   const browser = environment(), service = createGadgetService(browser);
   await service.playSound('brown', 25);
+  service.start('exam', { ...defaults, chime: true }); await Promise.resolve();
   browser.contexts[0].state = 'interrupted'; browser.contexts[0].dispatchEvent(new Event('statechange'));
   assert.equal(service.getState().sound.playing, false); assert.match(service.getState().message, /interrupted/);
+  assert.equal(browser.sources[0].stopped, true);
+  browser.document.dispatchEvent(new Event('visibilitychange')); await Promise.resolve();
+  assert.equal(browser.sources.length, 1); assert.equal(service.getState().sound.playing, false);
+  assert.equal(browser.contexts[0].state, 'running');
   await service.playSound(); assert.equal(service.getState().sound.playing, true); assert.equal(service.getState().message, '');
 });
