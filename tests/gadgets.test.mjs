@@ -101,11 +101,11 @@ test('formatted rules treat executable and pasted HTML as plain text', () => {
   assert.equal(formatTime(1001), '00:02'); assert.equal(formatTime(3600000), '1:00:00');
 });
 
-function fakeAudio() {
-  const contexts = [], sources = [], oscillators = [];
+function fakeAudio(nativeOutput = false) {
+  const contexts = [], sources = [], oscillators = [], gains = [], media = [];
   class AudioContext extends EventTarget {
     constructor() { super(); this.sampleRate = 8000; this.currentTime = 0; this.state = 'suspended'; this.destination = {}; contexts.push(this); }
-    createGain() { return { gain: { value: 0, setTargetAtTime() {}, setValueAtTime() {}, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect() {}, disconnect() {} }; }
+    createGain() { const node = { gain: { value: 0, setTargetAtTime() {}, setValueAtTime() {}, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {} }, connections: [], connect(target) { this.connections.push(target); }, disconnect() {} }; gains.push(node); return node; }
     createBuffer(_, length) { const data = new Float32Array(length); return { getChannelData: () => data }; }
     createBufferSource() { const source = { stopped: false, connect() {}, disconnect() {}, start() {}, stop() { this.stopped = true; } }; sources.push(source); return source; }
     createBiquadFilter() { return { frequency: { value: 0 }, connect() {}, disconnect() {} }; }
@@ -113,7 +113,16 @@ function fakeAudio() {
     resume() { this.state = 'running'; this.dispatchEvent(new Event('statechange')); return Promise.resolve(); }
     suspend() { this.state = 'suspended'; this.dispatchEvent(new Event('statechange')); return Promise.resolve(); }
   }
-  return { AudioContext, contexts, sources, oscillators };
+  const result = { AudioContext, contexts, sources, oscillators, gains, media };
+  if (nativeOutput) {
+    AudioContext.prototype.createMediaStreamDestination = function() { this.mediaDestination = { stream: {} }; return this.mediaDestination; };
+    result.Audio = class extends EventTarget {
+      constructor() { super(); this.paused = true; this.playCalls = 0; media.push(this); }
+      play() { this.playCalls++; this.paused = false; return Promise.resolve(); }
+      pause() { this.paused = true; this.dispatchEvent(new Event('pause')); }
+    };
+  }
+  return result;
 }
 
 test('sound choices preview on one context without disturbing ambient playback, and cancel pending previews', async () => {
@@ -138,11 +147,11 @@ test('the sound player reuses one context, releases switched sources, and cancel
   assert.equal(player.state, 'suspended'); player.stop(); assert.equal(environment.sources.at(-1).stopped, true);
 });
 
-function environment(saved = null, wake = null) {
+function environment(saved = null, wake = null, nativeOutput = false) {
   const browser = new EventTarget(), document = new EventTarget(), timers = new Map(), delays = new Map();
   document.hidden = false;
   let value = saved, count = 0;
-  Object.assign(browser, fakeAudio(), { document, navigator: wake ? { wakeLock: wake } : {}, isSecureContext: true, crypto: { randomUUID: () => `tab-${Math.random()}` },
+  Object.assign(browser, fakeAudio(nativeOutput), { document, navigator: wake ? { wakeLock: wake } : {}, isSecureContext: true, crypto: { randomUUID: () => `tab-${Math.random()}` },
     localStorage: { getItem: () => value, setItem: (key, data) => { assert.equal(key, STORAGE_KEY); value = data; } },
     setTimeout: (callback, delay) => { const id = ++count; timers.set(id, callback); delays.set(id, delay); return id; }, clearTimeout: id => { timers.delete(id); delays.delete(id); }, timers, delays, saved: () => value });
   return browser;
@@ -186,6 +195,80 @@ test('exam and Pomodoro alarms are scheduled before tab hiding and never replay 
     assert.equal(browser.oscillators.length, 4);
     assert.ok(completion.every(note => note.stopTimes.length === 1));
   }
+});
+
+test('the alarm and ambient audio use one native stream, without connecting the suspended default output', async t => {
+  t.mock.method(Date, 'now', () => 1000);
+  const browser = fakeAudio(true), player = createAudioPlayer(browser);
+  const scheduled = player.scheduleChime(61000, 'two-tone');
+  assert.equal(browser.media[0].playCalls, 1); // Native play starts before the action returns.
+  assert.equal(await scheduled, true);
+  const context = browser.contexts[0], media = browser.media[0], completion = browser.oscillators.slice();
+  assert.equal(media.srcObject, context.mediaDestination.stream);
+  assert.ok(browser.gains.every(node => node.connections.includes(context.mediaDestination)));
+  assert.ok(browser.gains.every(node => !node.connections.includes(context.destination)));
+  await player.play('brown', 25); await player.chime('bell');
+  assert.equal(browser.contexts.length, 1); assert.equal(browser.media.length, 1);
+  player.silenceChime(); player.pause(); assert.equal(media.paused, false);
+  assert.ok(completion.every(note => !note.disconnected));
+  for (const note of completion) note.onended();
+  assert.equal(media.paused, true); assert.equal(context.state, 'suspended');
+});
+
+test('both timers keep native playback active while hidden and leave no player running after cancellation', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  for (const kind of ['exam', 'pomodoro']) {
+    const browser = environment(null, null, true), service = createGadgetService(browser);
+    service.start(kind, { ...defaults, examMinutes: 1, focusMinutes: 1, chime: true });
+    await new Promise(resolve => setImmediate(resolve));
+    const context = browser.contexts[0], media = browser.media[0], notes = browser.oscillators.slice();
+    browser.document.hidden = true; browser.document.dispatchEvent(new Event('visibilitychange'));
+    assert.equal(media.paused, false); assert.equal(notes[0].startTime, 60);
+    now = service.getState().timer.deadline; context.currentTime = 60;
+    [...browser.timers.values()][0]();
+    assert.equal(service.getState().timer.status, 'complete'); assert.equal(media.paused, false);
+    for (const note of notes) note.onended();
+    assert.equal(media.paused, true); assert.equal(context.state, 'suspended');
+    browser.document.hidden = false; browser.document.dispatchEvent(new Event('visibilitychange'));
+    assert.equal(browser.oscillators.length, notes.length); assert.equal(media.paused, true);
+    service.start(kind, { ...defaults, chime: true }); await new Promise(resolve => setImmediate(resolve));
+    service.pause(); assert.equal(media.paused, true);
+    service.resume(); await new Promise(resolve => setImmediate(resolve)); service.stop();
+    assert.equal(media.paused, true); assert.equal(context.state, 'suspended');
+  }
+});
+
+test('a canceled native playback request cannot report a failure or revive a stopped alarm', async t => {
+  t.mock.method(Date, 'now', () => 1000);
+  const browser = fakeAudio(true), player = createAudioPlayer(browser);
+  await player.scheduleChime(61000); player.cancelCompletion(); player.rest();
+  let reject;
+  browser.media[0].play = function() { this.paused = false; return new Promise((resolve, failed) => { reject = failed; }); };
+  const scheduled = player.scheduleChime(61000);
+  player.cancelCompletion(); player.rest(); reject(new Error('play() interrupted by pause()'));
+  assert.equal(await scheduled, false); assert.equal(browser.media[0].paused, true);
+  assert.equal(browser.contexts[0].state, 'suspended'); assert.equal(browser.oscillators.length, 3);
+});
+
+test('denied native playback reports the failure and releases the alarm instead of claiming it is armed', async t => {
+  t.mock.method(Date, 'now', () => 1000);
+  const browser = environment(null, null, true), service = createGadgetService(browser);
+  browser.Audio.prototype.play = function() { return Promise.reject(new Error('Browser blocked native playback')); };
+  service.start('exam', { ...defaults, chime: true }); await new Promise(resolve => setImmediate(resolve));
+  assert.match(service.getState().message, /blocked native playback/);
+  assert.equal(browser.media[0].paused, true); assert.equal(browser.contexts[0].state, 'suspended');
+  assert.equal(browser.oscillators.length, 0);
+});
+
+test('unsupported media streams retain ordinary audio playback without leaking a stream', async () => {
+  const browser = fakeAudio(true), player = createAudioPlayer(browser); let stopped = false;
+  browser.Audio = class { set srcObject(value) { throw new Error('MediaStream output unavailable'); } };
+  browser.AudioContext.prototype.createMediaStreamDestination = () => ({ stream: { getTracks: () => [{ stop() { stopped = true; } }] } });
+  await player.chime('bell');
+  assert.equal(stopped, true);
+  assert.ok(browser.gains.every(node => node.connections.includes(browser.contexts[0].destination)));
+  assert.equal(player.state, 'running'); player.silenceChime(); player.rest();
+  assert.equal(player.state, 'suspended');
 });
 
 test('pause, stop, restart, and chime settings cancel or replace only the future completion sound', async t => {

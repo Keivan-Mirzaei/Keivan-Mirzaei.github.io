@@ -35,7 +35,7 @@ export function createGadgetService(environment = globalThis) {
     if (alarmKey === key) return;
     alarmKey = key;
     audio.scheduleChime(timer.deadline, timer.config.chimeSound).catch(error => {
-      if (alarmKey !== key) return;
+      if (!canChime() || `${state.timer.deadline}:${state.timer.config.chimeSound}` !== key) return;
       message = error.message || 'Time-up sound could not be scheduled.'; notify();
     });
   }
