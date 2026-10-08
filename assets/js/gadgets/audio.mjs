@@ -56,8 +56,10 @@ export function createAudioPlayer(environment = globalThis) {
     const now = audio.currentTime;
     for (const note of chimeNotes(choice)) {
       const oscillator = audio.createOscillator(), envelope = audio.createGain(), time = now + note.delay;
-      oscillator.type = 'sine'; oscillator.frequency.value = note.frequency;
-      envelope.gain.setValueAtTime(0, time); envelope.gain.linearRampToValueAtTime(note.level, time + .015); envelope.gain.exponentialRampToValueAtTime(.0001, time + note.duration);
+      oscillator.type = note.waveform || 'sine'; oscillator.frequency.value = note.frequency;
+      envelope.gain.setValueAtTime(0, time); envelope.gain.linearRampToValueAtTime(note.level, time + .015);
+      if (note.hold) envelope.gain.setValueAtTime(note.level, time + .015 + note.hold);
+      envelope.gain.exponentialRampToValueAtTime(.0001, time + note.duration);
       oscillator.connect(envelope); envelope.connect(audio.destination);
       alarms.set(oscillator, envelope);
       oscillator.onended = () => { oscillator.disconnect(); envelope.disconnect(); alarms.delete(oscillator); if (!source && !alarms.size) audio.suspend().catch(() => {}); };
