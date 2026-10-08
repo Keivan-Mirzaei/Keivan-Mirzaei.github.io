@@ -3,6 +3,7 @@ import test from 'node:test';
 import { defaults, createTimer, remaining, pauseTimer, resumeTimer, reconcile, nextPhase, readState, rulesMarkup, formatTime, formatExamTime, examTone, timerInBar, STORAGE_KEY } from '../assets/js/gadgets/model.mjs';
 import { createAudioPlayer } from '../assets/js/gadgets/audio.mjs';
 import { createGadgetService } from '../assets/js/gadgets/service.mjs';
+import { sounds, noiseBuffer, seamlessLoop } from '../assets/js/gadgets/sounds.mjs';
 
 test('deadlines catch up after suspension while paused time remains frozen', () => {
   const timer = createTimer('exam', { ...defaults, examMinutes: 2 }, 1000);
@@ -105,8 +106,8 @@ function fakeAudio(nativeOutput = false) {
   const contexts = [], sources = [], oscillators = [], gains = [], media = [];
   class AudioContext extends EventTarget {
     constructor() { super(); this.sampleRate = 8000; this.currentTime = 0; this.state = 'suspended'; this.destination = {}; contexts.push(this); }
-    createGain() { const node = { gain: { value: 0, setTargetAtTime() {}, setValueAtTime() {}, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {} }, connections: [], connect(target) { this.connections.push(target); }, disconnect() {} }; gains.push(node); return node; }
-    createBuffer(_, length) { const data = new Float32Array(length); return { getChannelData: () => data }; }
+    createGain() { const node = { gain: { value: 0, setTargetAtTime(value) { this.value = value; }, setValueAtTime(value) { this.value = value; }, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {} }, connections: [], connect(target) { this.connections.push(target); }, disconnect() {} }; gains.push(node); return node; }
+    createBuffer(channels, length, sampleRate = this.sampleRate) { const data = Array.from({ length: channels }, () => new Float32Array(length)); return { length, sampleRate, numberOfChannels: channels, getChannelData: channel => data[channel] }; }
     createBufferSource() { const source = { stopped: false, connect() {}, disconnect() {}, start() {}, stop() { this.stopped = true; } }; sources.push(source); return source; }
     createBiquadFilter() { return { frequency: { value: 0 }, connect() {}, disconnect() {} }; }
     createOscillator() { const oscillator = { frequency: { value: 0 }, stopTimes: [], connect() {}, disconnect() { this.disconnected = true; }, start(time) { this.startTime = time; }, stop(time) { this.stopTimes.push(time); } }; oscillators.push(oscillator); return oscillator; }
@@ -500,4 +501,98 @@ test('browser audio interruption leaves ambient sound paused when a future timer
   assert.equal(browser.sources.length, 1); assert.equal(service.getState().sound.playing, false);
   assert.equal(browser.contexts[0].state, 'running');
   await service.playSound(); assert.equal(service.getState().sound.playing, true); assert.equal(service.getState().message, '');
+});
+
+test('all ambient choices restore safely and top-bar visibility defaults on for older preferences', () => {
+  for (const source of Object.keys(sounds)) {
+    const saved = { version: 1, preferences: { source }, sound: { source, volume: 40, playing: true } };
+    assert.equal(readState(saved).preferences.source, source);
+    assert.equal(readState(saved).sound.source, source);
+    assert.equal(readState(saved).preferences.soundInBar, true);
+    saved.preferences.soundInBar = false;
+    assert.equal(readState(saved).preferences.soundInBar, false);
+  }
+  assert.equal(readState({ version: 1, sound: { source: '__proto__' }, preferences: { source: '__proto__' } }).sound, null);
+  assert.equal(readState({ version: 1, preferences: { source: 'unknown', soundInBar: 'false' } }).preferences.source, 'brown');
+  assert.equal(readState({ version: 1, preferences: { soundInBar: 'false' } }).preferences.soundInBar, true);
+});
+
+test('hiding ambient controls persists without touching playback, the active timer, or its alarm', async () => {
+  const browser = environment(null, null, true), service = createGadgetService(browser);
+  await service.playSound('brown', 25); service.start('pomodoro', { ...defaults, chime: true }); await Promise.resolve();
+  const deadline = service.getState().timer.deadline, alarm = browser.oscillators.slice(), player = browser.media[0];
+  service.soundInBar(false);
+  assert.equal(readState(browser.saved()).preferences.soundInBar, false);
+  assert.equal(service.getState().sound.playing, true); assert.equal(browser.sources[0].stopped, false);
+  assert.equal(service.getState().timer.deadline, deadline); assert.equal(player.paused, false);
+  assert.ok(alarm.every(note => !note.disconnected));
+  service.restart(); await Promise.resolve();
+  assert.equal(service.getState().preferences.soundInBar, false); assert.equal(browser.sources[0].stopped, false);
+  service.soundInBar(true); assert.equal(readState(browser.saved()).preferences.soundInBar, true);
+});
+
+test('loop joins blend full opening audio at constant power and return directly into its continuation', () => {
+  const browser = fakeAudio(), audio = new browser.AudioContext(), input = audio.createBuffer(2, 40, 10);
+  input.getChannelData(0).set(Array.from({ length: 40 }, (_, i) => i / 100));
+  input.getChannelData(1).fill(.25);
+  const result = seamlessLoop(audio, input, 1), first = result.getChannelData(0), second = result.getChannelData(1);
+  assert.equal(result.length, 30); assert.equal(result.numberOfChannels, 2);
+  assert.equal(first[0], input.getChannelData(0)[10]);
+  assert.equal(first[20], input.getChannelData(0)[30]);
+  assert.equal(first[29], input.getChannelData(0)[9]);
+  assert.ok(Math.abs(first[0] - first.at(-1) - .01) < 1e-7);
+  assert.ok([...second].every(sample => sample >= .25));
+  let value = 0; const noise = noiseBuffer(audio, 'soft', () => (value++ % 97) / 97);
+  assert.equal(noise.length / noise.sampleRate, 58);
+  assert.ok(noise.getChannelData(0).some(sample => Math.abs(sample) > .1));
+});
+
+function recordingBrowser(native = true) {
+  const browser = fakeAudio(native), requests = [], decodes = [];
+  browser.fetch = (url, options) => new Promise(resolve => requests.push({ url, signal: options.signal, resolve, mediaPlaying: browser.media[0]?.paused === false }));
+  browser.AudioContext.prototype.decodeAudioData = function() { return new Promise(resolve => decodes.push({ resolve, audio: this })); };
+  browser.requests = requests; browser.decodes = decodes;
+  browser.download = async index => { requests[index].resolve({ ok: true, arrayBuffer: async () => new ArrayBuffer(8) }); for (let i = 0; i < 5; i++) await Promise.resolve(); };
+  browser.decode = index => { const { resolve, audio } = decodes[index]; const buffer = audio.createBuffer(1, audio.sampleRate * 12, audio.sampleRate); buffer.getChannelData(0).fill(.2); resolve(buffer); };
+  return browser;
+}
+
+test('recordings load only after native playback begins, share the alarm output, and reuse only the last buffer', async t => {
+  t.mock.method(Date, 'now', () => 1000);
+  const browser = recordingBrowser(), player = createAudioPlayer(browser);
+  assert.equal(browser.contexts.length, 0); assert.equal(browser.requests.length, 0);
+  const started = player.play('rain', 25);
+  assert.equal(browser.requests[0].mediaPlaying, true);
+  assert.match(String(browser.requests[0].url), /\/assets\/audio\/ambient\/rain\.mp3$/);
+  assert.equal(browser.sources.length, 0);
+  await player.scheduleChime(61000); const alarm = browser.oscillators.slice();
+  await browser.download(0); browser.decode(0); player.volume(60);
+  assert.equal(await started, true); assert.equal(browser.sources.length, 1);
+  assert.equal(browser.sources[0].buffer.length / browser.sources[0].buffer.sampleRate, 9);
+  assert.ok(Math.abs(browser.gains[0].gain.value - .192) < 1e-7);
+  assert.equal(browser.gains[0].connections[0], browser.contexts[0].mediaDestination);
+  player.pause(); assert.equal(browser.media[0].paused, false); assert.ok(alarm.every(note => !note.disconnected));
+  await player.play('rain', 25); assert.equal(browser.requests.length, 1);
+  player.stop(); const restarted = player.play('rain', 25); assert.equal(browser.requests.length, 2);
+  player.stop(); await browser.download(1); browser.decode(1); assert.equal(await restarted, false);
+  player.cancelCompletion(); player.rest(); assert.equal(browser.media[0].paused, true);
+});
+
+test('paused or superseded downloads and late decoding never revive an old recording', async () => {
+  const browser = recordingBrowser(), player = createAudioPlayer(browser);
+  const rain = player.play('rain', 25); await browser.download(0);
+  const river = player.play('river', 30); assert.equal(browser.requests[0].signal.aborted, true);
+  browser.decode(0); assert.equal(await rain, false); assert.equal(browser.sources.length, 0);
+  await browser.download(1); browser.decode(1); assert.equal(await river, true);
+  const jungle = player.play('jungle', 25); await browser.download(2); player.pause();
+  assert.equal(browser.requests[2].signal.aborted, true); browser.decode(2);
+  assert.equal(await jungle, false); assert.equal(browser.sources.length, 1);
+  assert.equal(browser.sources[0].stopped, true); assert.equal(browser.media[0].paused, true);
+});
+
+test('failed recording downloads report a recoverable error and release native playback', async () => {
+  const browser = recordingBrowser(), player = createAudioPlayer(browser), started = player.play('wind', 25);
+  browser.requests[0].resolve({ ok: false });
+  await assert.rejects(started, /could not load/);
+  assert.equal(browser.sources.length, 0); assert.equal(browser.media[0].paused, true); assert.equal(player.state, 'suspended');
 });

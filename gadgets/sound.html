@@ -5,23 +5,36 @@ section: gadgets
 gadget: sound
 permalink: /gadgets/sound/
 search: true
-description: A quiet background for the page in front of you.
+description: Nature sounds and gentle noise for focused work.
 ---
-<div class="page-wrap gadgets-wrap" data-gadget-workspace="sound"><header class="page-heading"><a class="gadget-back" href="{{ '/gadgets/' | relative_url }}">← Gadgets</a><h1>Ambient sound</h1><p class="page-description">{{ page.description }}</p></header>
+<div class="page-wrap gadgets-wrap" data-gadget-workspace="sound"><header class="page-heading"><a class="gadget-back" href="{{ '/gadgets/' | relative_url }}">← Gadgets</a><h1>Ambient sound</h1></header>
   <div class="gadget-workbench widget-frame">
+    <fieldset class="gadget-sources"><legend class="sr-only">Choose a sound</legend>
+      {% for sound in site.data.ambient_sounds %}
+      <label class="gadget-source"><input type="radio" name="source" value="{{ sound.id }}"{% if sound.id == 'brown' %} checked{% endif %}><span class="gadget-source-card">{% include gadgets/sound-icon.html name=sound.id %}<span>{{ sound.name }}</span></span></label>
+      {% endfor %}
+    </fieldset>
     <section class="gadget-display gadget-sound-display" aria-label="Ambient sound player">
-      <div class="gadget-sound-choice">{% include icon.html name='sound' %}<div><h2 data-workspace-source>Brown noise</h2><p data-workspace-source-description>A low, soft rumble.</p></div></div>
+      <div class="gadget-sound-choice"><h2 data-workspace-source>Brown noise</h2><p data-workspace-source-description>A low, soft rumble.</p></div>
       <div class="gadget-actions"><button class="gadget-primary" type="button" data-workspace-sound-toggle disabled>Play sound</button><button class="panel-button" type="button" data-workspace-sound-stop disabled hidden>Stop</button></div>
-      <p class="gadget-session-status" data-workspace-sound-status role="status">Ready when you are.</p><p class="gadget-message" data-workspace-message role="status"></p>
+      <p class="gadget-session-status" data-workspace-sound-status role="status"></p><p class="gadget-message" data-workspace-message role="status"></p>
     </section>
     {% include gadgets/panels.html %}
     <div class="widget-support-panel" data-widget-panel="settings" aria-label="Sound settings" hidden>
-      <fieldset class="gadget-sources"><legend>Background sound</legend><label><input type="radio" name="source" value="brown" checked><span><strong>Brown noise</strong><span>A low, soft rumble.</span></span></label><label><input type="radio" name="source" value="soft"><span><strong>Soft noise</strong><span>A gentle, even hush.</span></span></label></fieldset>
-      <div class="widget-slider-setting gadget-volume"><div class="widget-slider-heading"><label for="gadget-sound-volume">Volume</label><output data-volume-value>25%</output></div><input id="gadget-sound-volume" type="range" min="0" max="100" value="25" data-workspace-volume></div>
+      <label class="widget-switch"><span>Show in top bar</span><input type="checkbox" role="switch" name="soundInBar" data-preference="soundInBar" checked><span class="widget-switch-track" aria-hidden="true"></span></label>
+      <div class="widget-slider-setting"><div class="widget-slider-heading"><label for="gadget-sound-volume">Volume</label><output data-volume-value>25%</output></div><input id="gadget-sound-volume" type="range" min="0" max="100" value="25" data-workspace-volume></div>
     </div>
     <div class="widget-support-panel" data-widget-panel="info" aria-label="About ambient sound" hidden>
-      <p>Play a quiet background while you read or work. Choose your sound and volume in Settings.</p>
-      <p>Sound stays in the top bar as you browse and works independently of any timer. After refreshing or reopening the website, press Play to continue.</p>
+      <p>Choose a sound above. Change volume or turn off Show in top bar in Settings. Sound continues as you browse and works independently of timers. After refreshing or reopening the website, press Play to continue.</p>
+      <details class="gadget-sound-credits"><summary>Recording credits</summary>
+        <ul>
+          <li>Jungle: <a href="https://commons.wikimedia.org/wiki/File:Jungle_Sound_Thailand_Phuket.flac">Jungle Sound Thailand Phuket</a> by Amada44, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>.</li>
+          <li>Rain: <a href="https://commons.wikimedia.org/wiki/File:Heavy_rain_in_Glenshaw,_PA.ogg">Heavy rain in Glenshaw, PA</a> by Sage Ross, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>.</li>
+          <li>River: <a href="https://commons.wikimedia.org/wiki/File:James_River_Rapids_1.ogg">James River Rapids 1</a> by Jarrod stanley (JD Savanyu), <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+          <li>Wind: <a href="https://commons.wikimedia.org/wiki/File:Howling_wind.ogg">Howling wind</a> by Tvabutzku1234, <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+        </ul>
+        <p>Recordings are trimmed, converted to mono, volume-balanced, compressed, and blended at the loop boundary. Adapted recordings retain the licenses listed above.</p>
+      </details>
     </div>
   </div>
   <noscript><p>Enable JavaScript to play ambient sound.</p></noscript>

@@ -1,0 +1,12 @@
+- id: jungle
+  name: Jungle
+- id: rain
+  name: Rain
+- id: river
+  name: River
+- id: wind
+  name: Wind
+- id: brown
+  name: Brown noise
+- id: soft
+  name: Soft noise

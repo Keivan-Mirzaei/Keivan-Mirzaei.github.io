@@ -1,10 +1,11 @@
 import { STORAGE_KEY, readState, readPreferences, createTimer, pauseTimer, resumeTimer, reconcile, nextPhase, remaining } from './model.mjs';
 import { createAudioPlayer } from './audio.mjs';
+import { soundChoice } from './sounds.mjs';
 
 export function createGadgetService(environment = globalThis) {
   const { document, navigator } = environment, owner = environment.crypto.randomUUID(), listeners = new Set(), audio = createAudioPlayer(environment);
   let state; try { state = readState(environment.localStorage.getItem(STORAGE_KEY)); } catch { state = readState(null); }
-  let clock = null, lock = null, requesting = false, wakeStatus = 'off', message = '', soundPlaying = false, remotePlaying = false, previewing = false, alarmKey = null;
+  let clock = null, lock = null, requesting = false, wakeStatus = 'off', message = '', soundPlaying = false, soundLoading = false, remotePlaying = false, previewing = false, alarmKey = null;
   const channel = environment.BroadcastChannel ? new environment.BroadcastChannel('almost-obvious:gadgets') : null;
   channel?.addEventListener('message', event => {
     if (event.data?.type === 'hello' && soundPlaying) channel.postMessage({ type: 'playing', owner });
@@ -13,14 +14,14 @@ export function createGadgetService(environment = globalThis) {
   });
   channel?.postMessage({ type: 'hello' });
   // A new document always needs an explicit Play, even if it last owned sound.
-  function snapshot() { return { ...state, sound: state.sound ? { ...state.sound, playing: soundPlaying, elsewhere: remotePlaying && state.sound.playing && state.sound.owner !== owner } : null, wakeStatus, message }; }
+  function snapshot() { return { ...state, sound: state.sound ? { ...state.sound, playing: soundPlaying, loading: soundLoading, elsewhere: remotePlaying && state.sound.playing && state.sound.owner !== owner } : null, wakeStatus, message }; }
   function notify() { listeners.forEach(listener => listener(snapshot())); }
   function save() { try { environment.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { message = 'Changes work here, but this browser could not save them for a later visit.'; } }
   audio.onState(value => {
     if (value !== 'running' && alarmKey !== null) { alarmKey = null; audio.cancelCompletion(); }
     if (value === 'running' && canChime()) updateAlarm();
     if (soundPlaying && value !== 'running') {
-      soundPlaying = false; audio.pause(); if (state.sound?.owner === owner) state.sound.playing = false;
+      soundPlaying = soundLoading = false; audio.pause(); if (state.sound?.owner === owner) state.sound.playing = false;
       message = 'Sound was interrupted by the browser. Press Play to resume.'; save(); notify();
     }
   });
@@ -79,7 +80,7 @@ export function createGadgetService(environment = globalThis) {
     pause() { commit(pauseTimer(state.timer)); },
     resume() { commit(resumeTimer(state.timer)); },
     stop() { commit(null); },
-    restart() { if (state.timer) service.start(state.timer.kind, state.timer.config); },
+    restart() { if (state.timer) service.start(state.timer.kind, { ...state.timer.config, soundInBar: state.preferences.soundInBar, source: state.preferences.source, volume: state.preferences.volume }); },
     next() { commit(nextPhase(state.timer)); },
     awake(value) { if (state.timer) { state.timer.config.awake = value; save(); updateWake(); notify(); } },
     chime(value) { if (state.timer) { state.timer.config.chime = value; if (value && state.timer.status === 'running') state.timer.alarmOwner = owner; updateAlarm(); save(); notify(); } },
@@ -88,24 +89,26 @@ export function createGadgetService(environment = globalThis) {
     stopChimePreview() { if (previewing) { previewing = false; audio.silenceChime(); audio.rest(); } },
     examInBar(value) { service.preferences({ examInBar: value }); if (state.timer?.kind === 'exam') state.timer.config.examInBar = value === true; save(); notify(); },
     pomodoroInBar(value) { service.preferences({ pomodoroInBar: value }); if (state.timer?.kind === 'pomodoro') state.timer.config.pomodoroInBar = state.preferences.pomodoroInBar; save(); notify(); },
+    soundInBar(value) { service.preferences({ soundInBar: value }); notify(); },
     examReminder(enabled, minutes) {
       service.preferences({ examReminder: enabled, examWarningMinutes: minutes });
       if (state.timer?.kind === 'exam') Object.assign(state.timer.config, { examReminder: state.preferences.examReminder, examWarningMinutes: state.preferences.examWarningMinutes });
       save(); notify();
     },
     async playSound(source = state.sound?.source || state.preferences.source, volume = state.sound?.volume ?? state.preferences.volume) {
+      source = soundChoice(source);
       message = ''; remotePlaying = false; const selection = { source, volume, playing: true, owner }; state.sound = selection;
       try {
         // Claim the player immediately so the other tab can pause before loading.
-        save(); soundPlaying = true; notify();
+        save(); soundPlaying = soundLoading = true; notify();
         const played = await audio.play(source, volume);
-        if (played && state.sound === selection) { soundPlaying = true; channel?.postMessage({ type: 'playing', owner }); notify(); }
-      } catch (error) { if (state.sound !== selection) return; soundPlaying = false; state.sound.playing = false; audio.pause(); message = error.message || 'Sound could not play. Try Play again.'; save(); notify(); }
+        if (played && state.sound === selection) { soundPlaying = true; soundLoading = false; channel?.postMessage({ type: 'playing', owner }); notify(); }
+      } catch (error) { if (state.sound !== selection) return; soundPlaying = soundLoading = false; state.sound.playing = false; audio.pause(); message = error.message || 'Sound could not play. Try Play again.'; save(); notify(); }
     },
-    pauseSound() { soundPlaying = false; audio.pause(); remotePlaying = false; if (state.sound) { state.sound = { ...state.sound, playing: false, owner }; save(); } notify(); },
-    stopSound() { soundPlaying = false; audio.stop(); remotePlaying = false; state.sound = null; save(); notify(); },
+    pauseSound() { soundPlaying = soundLoading = false; audio.pause(); remotePlaying = false; if (state.sound) { state.sound = { ...state.sound, playing: false, owner }; save(); } notify(); },
+    stopSound() { soundPlaying = soundLoading = false; audio.stop(); remotePlaying = false; state.sound = null; save(); notify(); },
     volume(value) { service.preferences({ volume: value }); if (state.sound) state.sound.volume = value; audio.volume(value); save(); notify(); },
-    changeSource(value) { service.preferences({ source: value }); if (state.sound) { if (soundPlaying) service.playSound(value, state.sound.volume); else { state.sound.source = value; save(); notify(); } } },
+    changeSource(value) { service.preferences({ source: value }); value = state.preferences.source; if (state.sound) { if (soundPlaying) service.playSound(value, state.sound.volume); else { state.sound.source = value; save(); notify(); } } },
     refresh: tick
   };
   environment.addEventListener('storage', event => {
@@ -113,7 +116,7 @@ export function createGadgetService(environment = globalThis) {
     state = readState(event.key === null ? null : event.newValue);
     remotePlaying = !channel && state.sound?.playing && state.sound.owner !== owner;
     channel?.postMessage({ type: 'hello' });
-    if (!state.sound?.playing || state.sound.owner !== owner) { soundPlaying = false; audio.pause(); }
+    if (!state.sound?.playing || state.sound.owner !== owner) { soundPlaying = soundLoading = false; audio.pause(); }
     updateWake(); tick();
   });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) alarmKey = null; updateWake(); tick(); });

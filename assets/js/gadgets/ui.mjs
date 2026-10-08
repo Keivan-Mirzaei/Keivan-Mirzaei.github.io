@@ -5,8 +5,9 @@ import { createRulesView } from './rules.mjs';
 import { initializeStepper } from './stepper.mjs';
 import { createDial } from './dial.mjs';
 import { initializeDropdowns, disposeDropdowns } from '../lib/dropdown.mjs';
+import { sounds, soundChoice } from './sounds.mjs';
 
-export const soundLabel = source => source === 'soft' ? 'Soft noise' : 'Brown noise';
+export const soundLabel = source => sounds[soundChoice(source)].label;
 export function awakeLabel(state) {
   if (!state.timer?.config.awake) return '';
   return ({ active: 'Screen awake is active.', requesting: 'Requesting screen awake…', unavailable: 'Keeping the screen awake is unavailable in this browser.', denied: 'The browser declined screen awake. Your timer still works.', released: 'Screen awake was released by the browser. Turn the option off and on to retry.', hidden: 'Screen awake is paused while this page is hidden.', off: 'Screen awake is off while the timer is paused or finished.' })[state.wakeStatus] || '';
@@ -48,10 +49,11 @@ export function mountDock(service) {
   get('gadget-volume').addEventListener('input', event => service.volume(Number(event.target.value)));
   service.subscribe(state => {
     const showTimer = timerInBar(state.timer);
-    dock.hidden = !showTimer && !state.sound;
+    const showSound = !!state.sound && state.preferences?.soundInBar !== false;
+    dock.hidden = !showTimer && !showSound;
     if (dock.hidden) panel(false);
     get('dock-timer').hidden = get('control-timer').hidden = !showTimer;
-    get('dock-sound').hidden = get('control-sound').hidden = !state.sound;
+    get('dock-sound').hidden = get('control-sound').hidden = !showSound;
     if (state.timer) {
       const timer = state.timer, label = timerLabel(timer), time = formatTime(remaining(timer)), url = `${base}${timer.kind === 'exam' ? 'exam' : 'pomodoro'}/`;
       const action = timer.status === 'running' ? 'Pause' : timer.status === 'paused' ? 'Resume' : timer.kind === 'exam' ? 'Restart' : timer.phase === 'focus' ? 'Start break' : 'Start focus';
@@ -119,7 +121,7 @@ export function mountWorkspace(root, service) {
   function renderSoundChoice() {
     const source = workspace.querySelector('input[name="source"]:checked').value;
     text(get('workspace-source'), soundLabel(source));
-    text(get('workspace-source-description'), source === 'soft' ? 'A gentle, even hush.' : 'A low, soft rumble.');
+    text(get('workspace-source-description'), sounds[soundChoice(source)].description);
   }
   function preferences() {
     const config = { ...service.getState().preferences };
@@ -142,6 +144,7 @@ export function mountWorkspace(root, service) {
       if (key === 'chime' || key === 'chimeSound') renderChime(service.getState().timer?.kind === kind ? service.getState().timer.config : preferences());
       if (key === 'examInBar') service.examInBar(value);
       if (key === 'pomodoroInBar') service.pomodoroInBar(value);
+      if (key === 'soundInBar') service.soundInBar(value);
       if (['examReminder', 'examWarningMinutes'].includes(key) && input.validity.valid) { const saved = service.getState().preferences; service.examReminder(saved.examReminder, saved.examWarningMinutes); }
       if (input.type === 'number' && input.validity.valid && service.getState().timer?.kind !== kind) {
         const milliseconds = (kind === 'exam' ? preferences().examMinutes : preferences().focusMinutes) * 60000;
@@ -270,14 +273,17 @@ export function mountWorkspace(root, service) {
     }
     if (kind === 'sound') {
       const sound = state.sound;
+      workspace.querySelector('[data-preference="soundInBar"]').checked = state.preferences.soundInBar;
+      get('workspace-sound-toggle').setAttribute('aria-busy', String(!!sound?.loading));
       get('workspace-sound-stop').disabled = !sound;
       get('workspace-sound-stop').hidden = !sound;
       text(get('workspace-sound-toggle'), sound?.playing ? 'Pause sound' : 'Play sound');
-      text(get('workspace-sound-status'), sound?.elsewhere ? 'Playing in another tab. Press Play to move it here.' : sound?.playing ? 'Playing. You can carry on reading.' : sound ? 'Paused. Resume whenever you are ready.' : 'Ready when you are.');
+      text(get('workspace-sound-status'), sound?.elsewhere ? 'Playing in another tab. Press Play to move it here.' : sound?.loading ? 'Loading sound…' : '');
       if (sound) {
         workspace.querySelectorAll('input[name="source"]').forEach(input => { input.checked = input.value === sound.source; });
         if (document.activeElement !== get('workspace-volume')) get('workspace-volume').value = sound.volume;
       }
+      else workspace.querySelectorAll('input[name="source"]').forEach(input => { input.checked = input.value === state.preferences.source; });
       text(get('volume-value'), `${get('workspace-volume').value}%`);
       renderSoundChoice();
     }
