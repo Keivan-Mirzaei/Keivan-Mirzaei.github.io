@@ -73,7 +73,7 @@
 .gadget-number > span { color: var(--muted); font-size: 12px; }
 .gadget-field input { width: 84px; min-height: 44px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 7px; background: var(--paper); color: var(--ink); font: 14px var(--sans); }
 .gadget-workbench .gadget-form-hint { margin: 8px 0 18px; color: var(--muted); font-size: 12px; line-height: 1.7; }
-.gadget-options { padding-top: 10px; border-top: 1px solid var(--line); }
+.gadget-options { padding-top: 10px; }
 .gadget-chime-controls { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px; padding-bottom: 16px; }
 .gadget-chime-field { flex: 1; min-width: 170px; color: var(--ink); font-size: 13px; }
 .gadget-chime-field label { display: block; }
