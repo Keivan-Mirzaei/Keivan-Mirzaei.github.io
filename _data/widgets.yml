@@ -39,6 +39,10 @@ sphere-slice:
   script: /assets/js/widgets/sphere-slice.mjs
   selector: '[data-widget="sphere-slice"]'
   styles: [activities, widget-frame]
+stereographic-projection:
+  script: /assets/js/widgets/stereographic-projection.mjs
+  selector: '[data-widget="stereographic-projection"]'
+  styles: [activities, widget-frame, stereographic-projection]
 tilted-square:
   script: /assets/js/widgets/tilted-square.js
   selector: '[data-widget="tilted-square"]'

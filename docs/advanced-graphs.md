@@ -85,6 +85,12 @@ For a different custom scene, use `assets/js/widgets/sphere-slice.mjs` as the ex
 
 Register the new widget in `_data/widgets.yml`. If it imports `three` or `three/addons/`, extend the import-map condition in `_layouts/default.html` to include that widget name. The import map itself does not download the library. Imports belong inside the activation callback.
 
+### A planar graph and its spherical image
+
+Use `widgets: [stereographic-projection]` and include `widgets/stereographic-projection.html`, with a unique `id`. The activity shows a planar drawing of the cube graph and its exact stereographic image on a unit sphere. Readers drag Q freely on the plane, rotate the scene, and use Settings to show either graph and highlight corresponding vertices, edges, or faces. The outside face maps to the spherical face containing the north pole. It uses the same deliberate-open lifecycle as the sphere slice, with a shared mathematical model and generated static preview.
+
+See the [design sheet](widget-designs/stereographic-projection.md) for controls, finite-window behaviour, and mathematical assumptions. Regenerate the preview with `node scripts/stereographic_preview.mjs` after changing the model.
+
 ## Files and dependencies
 
 - `_data/graph_libraries.yml` pins the Plotly and Three.js URLs. Keep Three.js and its add-ons at the same release.

@@ -1,0 +1,18 @@
+.stereographic-widget { max-width: 660px; }
+.stereographic-widget .advanced-stage { position: relative; margin-inline: -8px; }
+.stereographic-widget .sp-view { position: relative; height: clamp(340px, 65vw, 480px); border-radius: 4px; }
+.stereographic-widget .sp-view canvas { touch-action: pan-y; outline-offset: -3px; }
+.stereographic-widget .sp-view canvas:focus-visible { outline: 2px solid var(--green); }
+.stereographic-widget .sp-caption { margin: 8px 0 16px; color: var(--muted); font: 13px/1.6 var(--sans); }
+.stereographic-widget .advanced-controls { margin-top: 12px; }
+.stereographic-widget .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.stereographic-widget .sp-feedback { min-height: 1.6em; margin: 8px 0 14px; color: var(--green); font: 13px/1.6 var(--sans); }
+.stereographic-widget .sp-view-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 16px; }
+.stereographic-widget .sp-view-controls .panel-button { flex: 1 1 auto; justify-content: center; font: 13px/1.4 var(--sans); min-height: 42px; padding: 8px; }
+.stereographic-widget .sp-point-control { position: absolute; width: 44px; height: 44px; transform: translate(-50%, -50%); border: 0; border-radius: 50%; padding: 0; background: transparent; cursor: grab; touch-action: none; }
+.stereographic-widget .sp-point-control:active { cursor: grabbing; }
+.stereographic-widget .sp-point-control:focus-visible { outline: 2px solid #a85928; outline-offset: -11px; }
+.stereographic-widget .sp-highlight-setting { margin: 12px 0; }
+@media (max-width: 400px) {
+  .stereographic-widget .sp-view-controls { display: grid; grid-template-columns: 1fr 1fr; }
+}
