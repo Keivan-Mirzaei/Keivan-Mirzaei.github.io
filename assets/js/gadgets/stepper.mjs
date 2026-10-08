@@ -6,7 +6,9 @@ export function initializeStepper(wrapper, fallback = () => 1) {
   }
   for (const button of buttons) button.addEventListener('click', () => {
     if (button.disabled || input.disabled) return;
-    input.value = Math.max(Number(input.min), Math.min(Number(input.max), (input.validity.valid ? Number(input.value) : fallback()) + Number(button.dataset.numberStep)));
+    const current = input.validity.valid ? Number(input.value) : fallback(), direction = Number(button.dataset.numberStep), step = Math.abs(direction);
+    const next = (direction > 0 ? Math.floor(current / step) + 1 : Math.ceil(current / step) - 1) * step;
+    input.value = Math.max(Number(input.min), Math.min(Number(input.max), next));
     const EventType = input.ownerDocument?.defaultView?.Event || Event;
     input.dispatchEvent(new EventType('input', { bubbles: true })); update();
   }, { signal: events.signal });

@@ -70,6 +70,7 @@ export function createGadgetService(environment = globalThis) {
     async previewChime(value = state.preferences.chimeSound) { previewing = true; try { message = ''; await audio.chime(readPreferences({ chimeSound: value }).chimeSound); } catch (error) { message = error.message || 'Sound could not play.'; } notify(); },
     stopChimePreview() { if (previewing) { previewing = false; audio.silenceChime(); audio.rest(); } },
     examInBar(value) { service.preferences({ examInBar: value }); if (state.timer?.kind === 'exam') state.timer.config.examInBar = value === true; save(); notify(); },
+    pomodoroInBar(value) { service.preferences({ pomodoroInBar: value }); if (state.timer?.kind === 'pomodoro') state.timer.config.pomodoroInBar = state.preferences.pomodoroInBar; save(); notify(); },
     examReminder(enabled, minutes) {
       service.preferences({ examReminder: enabled, examWarningMinutes: minutes });
       if (state.timer?.kind === 'exam') Object.assign(state.timer.config, { examReminder: state.preferences.examReminder, examWarningMinutes: state.preferences.examWarningMinutes });

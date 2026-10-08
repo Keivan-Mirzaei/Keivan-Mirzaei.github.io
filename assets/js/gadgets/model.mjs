@@ -1,10 +1,10 @@
 export const STORAGE_KEY = 'almost-obvious:gadgets:v1';
-export const defaults = { examMinutes: 60, focusMinutes: 25, breakMinutes: 5, rules: '', awake: false, chime: false, chimeSound: 'soft', examInBar: false, examReminder: true, examWarningMinutes: 5, source: 'brown', volume: 25 };
+export const defaults = { examMinutes: 60, focusMinutes: 25, breakMinutes: 5, rules: '', awake: false, chime: false, chimeSound: 'soft', examInBar: false, pomodoroInBar: true, examReminder: true, examWarningMinutes: 5, source: 'brown', volume: 25 };
 const number = (value, low, high, fallback) => typeof value === 'number' && Number.isFinite(value) && value >= low && value <= high ? value : fallback;
 export function readPreferences(value = {}) {
-  return { examMinutes: number(value.examMinutes, 1, 1440, 60), focusMinutes: number(value.focusMinutes, 1, 180, 25), breakMinutes: number(value.breakMinutes, 1, 60, 5), rules: typeof value.rules === 'string' ? value.rules.slice(0, 20000) : '', awake: value.awake === true, chime: value.chime === true, chimeSound: ['soft', 'two-tone', 'bell'].includes(value.chimeSound) ? value.chimeSound : 'soft', examInBar: value.examInBar === true, examReminder: typeof value.examReminder === 'boolean' ? value.examReminder : true, examWarningMinutes: number(value.examWarningMinutes, 1, 120, 5), source: value.source === 'soft' ? 'soft' : 'brown', volume: number(value.volume, 0, 100, 25) };
+  return { examMinutes: number(value.examMinutes, 1, 1440, 60), focusMinutes: number(value.focusMinutes, 1, 180, 25), breakMinutes: number(value.breakMinutes, 1, 60, 5), rules: typeof value.rules === 'string' ? value.rules.slice(0, 20000) : '', awake: value.awake === true, chime: value.chime === true, chimeSound: ['soft', 'two-tone', 'bell'].includes(value.chimeSound) ? value.chimeSound : 'soft', examInBar: value.examInBar === true, pomodoroInBar: typeof value.pomodoroInBar === 'boolean' ? value.pomodoroInBar : true, examReminder: typeof value.examReminder === 'boolean' ? value.examReminder : true, examWarningMinutes: number(value.examWarningMinutes, 1, 120, 5), source: value.source === 'soft' ? 'soft' : 'brown', volume: number(value.volume, 0, 100, 25) };
 }
-export function timerInBar(timer) { return !!timer && (timer.kind !== 'exam' || timer.config.examInBar === true); }
+export function timerInBar(timer) { return !!timer && (timer.kind === 'exam' ? timer.config.examInBar === true : timer.config.pomodoroInBar !== false); }
 export function remaining(timer, now = Date.now()) {
   if (!timer) return 0;
   return Math.max(0, timer.status === 'running' ? timer.deadline - now : timer.remaining);

@@ -54,6 +54,20 @@ test('exam timers opt out of the top bar by default; saved explicit choices and 
   assert.equal(timerInBar(readState(saved, 1000).timer), false);
 });
 
+test('Pomodoro top-bar visibility defaults on for older saved sessions and preserves an explicit opt-out', () => {
+  const timer = createTimer('pomodoro', defaults, 1000);
+  delete timer.config.pomodoroInBar;
+  const saved = { version: 1, timer, preferences: {} };
+  assert.equal(readState(saved, 1000).preferences.pomodoroInBar, true);
+  assert.equal(timerInBar(readState(saved, 1000).timer), true);
+  saved.timer.config.pomodoroInBar = false;
+  saved.preferences.pomodoroInBar = false;
+  assert.equal(timerInBar(readState(saved, 1000).timer), false);
+  assert.equal(readState(saved, 1000).preferences.pomodoroInBar, false);
+  saved.timer.config.pomodoroInBar = 'false';
+  assert.equal(timerInBar(readState(saved, 1000).timer), true);
+});
+
 test('Pomodoro waits at completion rather than skipping elapsed phases', () => {
   const timer = createTimer('pomodoro', { ...defaults, focusMinutes: 1, breakMinutes: 2 }, 1000);
   const complete = reconcile(timer, 999999);
@@ -175,6 +189,26 @@ test('changing exam top-bar visibility persists and notifies without restarting,
   service.stop(); service.start('exam', service.getState().preferences);
   assert.equal(timerInBar(service.getState().timer), false);
   service.stop(); service.start('pomodoro', defaults); service.examInBar(false);
+  assert.equal(timerInBar(service.getState().timer), true);
+});
+
+test('changing Pomodoro top-bar visibility leaves the timer, its next phase, and independent sound running', async () => {
+  const browser = environment(), service = createGadgetService(browser);
+  await service.playSound('brown', 25);
+  service.start('pomodoro', defaults);
+  const before = { ...service.getState().timer }; let calls = 0;
+  service.subscribe(() => calls++); service.pomodoroInBar(false);
+  assert.equal(calls, 2); assert.equal(timerInBar(service.getState().timer), false);
+  assert.equal(service.getState().timer.deadline, before.deadline);
+  assert.equal(service.getState().timer.status, 'running'); assert.equal(browser.timers.size, 1);
+  assert.equal(service.getState().sound.playing, true);
+  assert.equal(timerInBar(readState(browser.saved()).timer), false);
+  const completed = reconcile(service.getState().timer, before.deadline);
+  assert.equal(timerInBar(nextPhase(completed, before.deadline)), false);
+  service.stop(); service.start('pomodoro', service.getState().preferences);
+  assert.equal(timerInBar(service.getState().timer), false);
+  service.pomodoroInBar(true); assert.equal(timerInBar(service.getState().timer), true);
+  service.stop(); service.start('exam', { ...defaults, examInBar: true }); service.pomodoroInBar(false);
   assert.equal(timerInBar(service.getState().timer), true);
 });
 

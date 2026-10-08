@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mountDock } from '../assets/js/gadgets/ui.mjs';
 import { createTimer, defaults } from '../assets/js/gadgets/model.mjs';
 
-test('opting an exam out removes its header controls while preserving an independent sound player', t => {
+test('hiding either timer removes its header controls while preserving an independent sound player', t => {
   const elements = new Map(), handlers = new Map();
   function element(name) {
     if (!elements.has(name)) elements.set(name, {
@@ -42,4 +42,11 @@ test('opting an exam out removes its header controls while preserving an indepen
   assert.equal(element('[data-control-awake]').textContent, '');
   state.sound = null; state.timer = createTimer('pomodoro', defaults); update(state);
   assert.equal(element('[data-dock-timer]').hidden, false);
+  state.timer.config.pomodoroInBar = false; state.sound = { source: 'brown', playing: true, volume: 25 }; update(state);
+  assert.equal(element('[data-dock-timer]').hidden, true);
+  assert.equal(element('[data-control-timer]').hidden, true);
+  assert.equal(element('[data-dock-sound]').hidden, false);
+  assert.equal(element('[data-gadget-dock]').hidden, false);
+  state.sound = null; update(state);
+  assert.equal(element('[data-gadget-dock]').hidden, true);
 });

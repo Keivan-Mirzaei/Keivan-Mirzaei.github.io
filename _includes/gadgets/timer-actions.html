@@ -6,5 +6,5 @@
   <button class="panel-button" type="button" data-workspace-stop disabled hidden>Stop</button>
   {% if page.gadget == 'exam' %}<button class="panel-button" type="button" data-present disabled>{% include icon.html name='expand' %}<span>Present</span></button><button class="panel-button" type="button" data-presentation-exit hidden>Exit presentation</button>{% endif %}
 </div>
-<p class="gadget-session-status{% if page.gadget == 'exam' %} sr-only{% endif %}" data-workspace-status role="status"></p>
+<p class="gadget-session-status sr-only" data-workspace-status role="status"></p>
 {% include gadgets/confirmation.html %}

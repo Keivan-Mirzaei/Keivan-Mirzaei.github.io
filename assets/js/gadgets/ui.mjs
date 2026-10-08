@@ -3,6 +3,7 @@ import { initializeWidgetPanels } from '../lib/widget-panels.mjs';
 import { createCountdown } from './countdown.mjs';
 import { createRulesView } from './rules.mjs';
 import { initializeStepper } from './stepper.mjs';
+import { createDial } from './dial.mjs';
 import { initializeDropdowns, disposeDropdowns } from '../lib/dropdown.mjs';
 
 export const soundLabel = source => source === 'soft' ? 'Soft noise' : 'Brown noise';
@@ -84,6 +85,7 @@ export function mountWorkspace(root, service) {
   const kind = workspace.dataset.gadgetWorkspace, get = name => workspace.querySelector(`[data-${name}]`), events = new AbortController();
   const disposePanels = initializeWidgetPanels(workspace);
   const countdown = kind === 'exam' ? createCountdown(get('workspace-time')) : null;
+  const dial = kind === 'pomodoro' ? createDial(get('pomodoro-display'), get('focus-ring')) : null;
   const rulesView = kind === 'exam' ? createRulesView(get('exam-rules'), { onError: message => text(get('exam-rules-message'), message) }) : null;
   const steppers = [...workspace.querySelectorAll('[data-stepper]')].map(wrapper => initializeStepper(wrapper, () => service.getState().preferences[wrapper.querySelector('input').dataset.preference]));
   const listen = (element, type, callback) => element?.addEventListener(type, callback, { signal: events.signal });
@@ -91,6 +93,7 @@ export function mountWorkspace(root, service) {
   function renderTime(milliseconds, running = false) {
     if (countdown) countdown.render(formatExamTime(milliseconds), running && displayedTime !== null && Math.ceil(displayedTime / 1000) - Math.ceil(milliseconds / 1000) === 1);
     else text(get('workspace-time'), formatTime(milliseconds));
+    if (dial) get('pomodoro-display').dataset.longTime = String(formatTime(milliseconds).length > 5);
     displayedTime = milliseconds;
   }
   function renderDuration(timer = service.getState().timer?.kind === 'exam' ? service.getState().timer : null) {
@@ -104,6 +107,10 @@ export function mountWorkspace(root, service) {
     if (!controls || !select) return;
     controls.hidden = !config.chime; select.disabled = !config.chime;
     if (select.value !== config.chimeSound) select.value = config.chimeSound;
+  }
+  function renderPeriodHint(timer = service.getState().timer?.kind === 'pomodoro' ? service.getState().timer : null) {
+    const lengths = preferences();
+    get('period-hint').hidden = !timer || lengths.focusMinutes === timer.config.focusMinutes && lengths.breakMinutes === timer.config.breakMinutes;
   }
   function cancelReplacement() {
     pendingConfig = null; get('replace-confirm').hidden = true;
@@ -122,7 +129,7 @@ export function mountWorkspace(root, service) {
   const initial = service.getState();
   workspace.querySelectorAll('[data-preference]').forEach(input => {
     const key = input.dataset.preference;
-    const value = initial.timer?.kind === kind && ['awake', 'chime', 'chimeSound', 'examInBar', 'examMinutes', 'examReminder', 'examWarningMinutes'].includes(key) ? initial.timer.config[key] : initial.preferences[key];
+    const value = initial.timer?.kind === kind && ['awake', 'chime', 'chimeSound', 'examInBar', 'pomodoroInBar', 'examMinutes', 'examReminder', 'examWarningMinutes'].includes(key) ? initial.timer.config[key] : initial.preferences[key];
     if (input.type === 'checkbox') input.checked = value; else input.value = value;
     listen(input, 'input', () => {
       const key = input.dataset.preference, value = input.type === 'checkbox' ? input.checked : input.type === 'number' ? Number(input.value) : input.value;
@@ -134,9 +141,14 @@ export function mountWorkspace(root, service) {
       if (key === 'chimeSound' && service.getState().timer?.kind === kind) service.chimeSound(value);
       if (key === 'chime' || key === 'chimeSound') renderChime(service.getState().timer?.kind === kind ? service.getState().timer.config : preferences());
       if (key === 'examInBar') service.examInBar(value);
+      if (key === 'pomodoroInBar') service.pomodoroInBar(value);
       if (['examReminder', 'examWarningMinutes'].includes(key) && input.validity.valid) { const saved = service.getState().preferences; service.examReminder(saved.examReminder, saved.examWarningMinutes); }
-      if (input.type === 'number' && input.validity.valid && service.getState().timer?.kind !== kind) renderTime((kind === 'exam' ? preferences().examMinutes : preferences().focusMinutes) * 60000);
+      if (input.type === 'number' && input.validity.valid && service.getState().timer?.kind !== kind) {
+        const milliseconds = (kind === 'exam' ? preferences().examMinutes : preferences().focusMinutes) * 60000;
+        renderTime(milliseconds); dial?.render(null, milliseconds);
+      }
       if (key === 'examMinutes') renderDuration();
+      if (kind === 'pomodoro' && ['focusMinutes', 'breakMinutes'].includes(key)) renderPeriodHint();
     });
   });
   initializeDropdowns(workspace);
@@ -223,7 +235,8 @@ export function mountWorkspace(root, service) {
       const milliseconds = timer ? remaining(timer) : (kind === 'exam' ? preferences().examMinutes : preferences().focusMinutes) * 60000, tone = kind === 'exam' ? examTone(timer, milliseconds) : 'normal';
       const reminder = tone === 'warning' ? `Final ${timer.config.examWarningMinutes} ${timer.config.examWarningMinutes === 1 ? 'minute' : 'minutes'}` : '';
       renderTime(milliseconds, timer?.status === 'running');
-      text(get('workspace-phase'), kind === 'exam' ? timer?.status === 'paused' ? `Paused${reminder ? ` · ${reminder.toLowerCase()}` : ''}` : timer?.status === 'complete' ? 'Time is up' : reminder || 'Time remaining' : timer ? `${timerLabel(timer)} time` : 'Ready to focus');
+      dial?.render(timer, milliseconds);
+      text(get('workspace-phase'), kind === 'exam' ? timer?.status === 'paused' ? `Paused${reminder ? ` · ${reminder.toLowerCase()}` : ''}` : timer?.status === 'complete' ? 'Time is up' : reminder || 'Time remaining' : `${timer ? timerLabel(timer) : 'Focus'}${timer?.status === 'paused' ? ' · Paused' : timer?.status === 'complete' ? ' complete' : ''}`);
       text(get('workspace-round'), timer ? `Round ${timer.round}` : '');
       get('workspace-timer-toggle').disabled = !timer;
       get('start').hidden = !!timer;
@@ -235,10 +248,14 @@ export function mountWorkspace(root, service) {
       get('workspace-restart').hidden = !timer || timer.status === 'complete';
       get('workspace-stop').hidden = !timer;
       const key = `${timer?.status || ''}:${timer?.phase || ''}:${state.timer?.kind || ''}:${tone}:${reminder}`;
-      if (key !== statusKey) { statusKey = key; text(get('workspace-status'), kind === 'exam' ? timer?.status === 'complete' ? 'Time is up.' : timer?.status === 'paused' ? 'Paused.' : reminder ? `${reminder}.` : '' : timer?.status === 'complete' ? `Time is up. Start your ${timer.phase === 'focus' ? 'break' : 'next focus period'} when you are ready.` : timer?.status === 'paused' ? 'Paused. Resume whenever you are ready.' : timer ? 'Running. You can carry on reading.' : state.timer ? `The ${timerLabel(state.timer).toLowerCase()} timer is active. Starting here will replace it.` : 'Ready when you are.'); }
+      if (key !== statusKey) { statusKey = key; text(get('workspace-status'), kind === 'exam' ? timer?.status === 'complete' ? 'Time is up.' : timer?.status === 'paused' ? 'Paused.' : reminder ? `${reminder}.` : '' : timer?.status === 'complete' ? `${timerLabel(timer)} complete.` : timer?.status === 'paused' ? 'Paused.' : timer ? '' : state.timer ? `The ${timerLabel(state.timer).toLowerCase()} timer is active. Starting here will replace it.` : ''); }
       text(get('workspace-awake'), timer ? awakeLabel(state) : preferences().awake ? 'Requested when the timer starts, if your browser permits it.' : '');
       if (timer) for (const option of ['awake', 'chime']) workspace.querySelector(`[data-preference="${option}"]`).checked = timer.config[option];
       renderChime(timer?.config || preferences());
+      if (kind === 'pomodoro') {
+        workspace.querySelector('[data-preference="pomodoroInBar"]').checked = timer?.config.pomodoroInBar ?? state.preferences.pomodoroInBar;
+        renderPeriodHint(timer);
+      }
       if (kind === 'exam') rulesView.render(timer?.config.rules ?? preferences().rules);
       if (kind === 'exam') {
         renderDuration(timer);
