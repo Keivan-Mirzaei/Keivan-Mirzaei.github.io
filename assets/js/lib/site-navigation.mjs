@@ -1,9 +1,99 @@
+// Store source HTML, never live widget DOM. Evict large, old and least-used pages.
+export function createPageLoader(environment = globalThis) {
+  const pages = new Map(), requests = new Map();
+  const now = () => (environment.Date || Date).now();
+  let characters = 0;
+  const key = href => { const url = new URL(href, environment.location.href); url.hash = ''; return url.href; };
+  function forget(href) { characters -= pages.get(href)?.html.length || 0; pages.delete(href); }
+  function remember(href, page) {
+    href = key(href); forget(href);
+    if (page.html.length > 64 * 1024) return;
+    pages.set(href, { ...page, expires: now() + 5 * 60 * 1000 }); characters += page.html.length;
+    while (pages.size > 8 || characters > 256 * 1024) forget(pages.keys().next().value);
+  }
+  async function load(href, signal) {
+    href = key(href);
+    const cached = pages.get(href);
+    if (cached && cached.expires > now()) {
+      pages.delete(href); pages.set(href, cached); return cached;
+    }
+    if (cached) forget(href);
+    let request = requests.get(href);
+    if (request?.controller.signal.aborted) { requests.delete(href); request = null; }
+    if (!request) {
+      // At most two speculative HTML requests; a click can always proceed.
+      if (!signal && requests.size >= 2) return null;
+      const controller = new AbortController();
+      request = { controller };
+      const current = request;
+      requests.set(href, request);
+      request.promise = (async () => {
+        try {
+          const response = await environment.fetch(href, { signal: controller.signal, headers: { Accept: 'text/html' } });
+          if (!response.ok || !response.headers.get('content-type')?.includes('text/html')) throw new Error('Page unavailable');
+          const page = { html: await response.text(), url: response.url || href };
+          if (controller.signal.aborted) throw new Error('Navigation cancelled');
+          remember(href, page); return page;
+        } finally { if (requests.get(href) === current) requests.delete(href); }
+      })();
+    }
+    // A click reuses an in-flight hover request and takes over its cancellation.
+    const abort = () => request.controller.abort();
+    signal?.addEventListener('abort', abort, { once: true });
+    if (signal?.aborted) abort();
+    try { return await request.promise; }
+    finally { signal?.removeEventListener('abort', abort); }
+  }
+  return { load, remember };
+}
+
+function internalLink(event, environment) {
+  const link = event.target.closest?.('a[href]');
+  if (!link || link.target || link.hasAttribute('download') || link.hasAttribute('data-full-navigation') || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return null;
+  const url = new URL(link.href, environment.location.href);
+  return url.origin === environment.location.origin && /\/$|\.html$/.test(url.pathname) ? url : null;
+}
+
+// Fetch only the page a visitor is considering, including browsers without link-prefetch hints.
+export function initializePagePrefetch(load, environment = globalThis) {
+  const { document } = environment;
+  let timer = null;
+  const cancel = () => { environment.clearTimeout(timer); timer = null; };
+  const allowed = () => {
+    const connection = environment.navigator?.connection;
+    return !document.hidden && !connection?.saveData && !/^(slow-)?2g$/.test(connection?.effectiveType || '');
+  };
+  function prepare(event, immediate = false) {
+    const link = event.target.closest?.('a[href]');
+    if (event.relatedTarget && link?.contains(event.relatedTarget)) return;
+    cancel();
+    const url = internalLink(event, environment);
+    if (!url || event.defaultPrevented || !allowed()) return;
+    const current = new URL(environment.location.href);
+    if (url.pathname === current.pathname || url.search || url.hash) return;
+    const start = () => { timer = null; if (allowed()) load(url.href).catch(() => {}); };
+    if (immediate) start();
+    else timer = environment.setTimeout(start, 100);
+  }
+  document.addEventListener('pointerover', event => { if (event.pointerType === 'mouse') prepare(event); });
+  document.addEventListener('focusin', event => prepare(event));
+  document.addEventListener('pointerdown', event => { if (event.button === 0) prepare(event, true); });
+  for (const name of ['pointerout', 'focusout']) document.addEventListener(name, event => {
+    if (!event.target.closest?.('a[href]')?.contains(event.relatedTarget)) cancel();
+  });
+  document.addEventListener('site:page', cancel);
+}
+
 // Keep the site shell (and audio) alive. Ordinary URLs remain usable directly.
 export function initializeSiteNavigation({ leave, enter }, environment = globalThis) {
   const { document, location, history, DOMParser } = environment, window = environment;
-  const fetch = (...args) => environment.fetch(...args), setTimeout = (...args) => environment.setTimeout(...args), clearTimeout = id => environment.clearTimeout(id);
+  const setTimeout = (...args) => environment.setTimeout(...args), clearTimeout = id => environment.clearTimeout(id);
   const requestAnimationFrame = callback => environment.requestAnimationFrame(callback), scrollTo = (...args) => environment.scrollTo(...args);
   const main = document.querySelector('#main'), status = document.querySelector('.site-navigation-status');
+  const pages = createPageLoader(environment);
+  const styles = new Map([...document.querySelectorAll('link[data-page-style]')].map(link => [link.href, link]));
+  if (document.documentElement?.outerHTML) pages.remember(location.href, { html: document.documentElement.outerHTML, url: location.href });
+  initializePagePrefetch(pages.load, environment);
   let displayed = new URL(location.href), pending = null, sequence = 0, scrollFrame = 0, committing = false;
   history.scrollRestoration = 'manual';
   function saveScroll() {
@@ -35,31 +125,47 @@ export function initializeSiteNavigation({ leave, enter }, environment = globalT
     status.textContent = 'Loading page…'; main.setAttribute('aria-busy', 'true');
     let additions = [];
     try {
-      const response = await fetch(url.href, { signal: controller.signal, headers: { Accept: 'text/html' } });
-      if (!response.ok || !response.headers.get('content-type')?.includes('text/html')) throw new Error('Page unavailable');
-      const html = await response.text();
+      const page = await pages.load(url.href, controller.signal);
       if (controller.signal.aborted || visit !== sequence) return;
-      const incoming = new DOMParser().parseFromString(html, 'text/html');
+      const incoming = new DOMParser().parseFromString(page.html, 'text/html');
       if (!incoming.body.hasAttribute('data-site-shell') || !incoming.querySelector('[data-page-content]')) throw new Error('Different layout');
       const nextStyles = [...incoming.querySelectorAll('link[data-page-style]')];
-      const wanted = new Set(nextStyles.map(style => new URL(style.getAttribute('href'), response.url).href));
+      const wanted = new Set(nextStyles.map(style => new URL(style.getAttribute('href'), page.url).href));
       const existing = [...document.querySelectorAll('link[rel="stylesheet"]')];
       await Promise.all(nextStyles.map(style => {
-        const href = new URL(style.getAttribute('href'), response.url).href;
+        const href = new URL(style.getAttribute('href'), page.url).href;
         if (existing.some(link => link.href === href)) return;
         return new Promise((resolve, reject) => {
           const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = href; link.dataset.pageStyle = '';
           link.dataset.navigationStyle = String(visit);
-          const timeout = setTimeout(() => reject(new Error('Styles unavailable')), 15000);
-          link.onload = () => { clearTimeout(timeout); resolve(); };
-          link.onerror = () => { clearTimeout(timeout); reject(new Error('Styles unavailable')); };
-          controller.signal.addEventListener('abort', () => { clearTimeout(timeout); link.remove(); resolve(); }, { once: true });
+          const abort = () => { link.remove(); finish(); };
+          const finish = error => {
+            clearTimeout(timeout); link.onload = link.onerror = null;
+            controller.signal.removeEventListener('abort', abort);
+            if (error) reject(error); else resolve();
+          };
+          const timeout = setTimeout(() => finish(new Error('Styles unavailable')), 15000);
+          link.onload = () => { link.media = 'not all'; finish(); };
+          link.onerror = () => finish(new Error('Styles unavailable'));
+          controller.signal.addEventListener('abort', abort, { once: true });
           additions.push(link); document.head.append(link);
         });
       }));
       if (controller.signal.aborted || visit !== sequence) { additions.forEach(link => link.remove()); return; }
       committing = true;
       additions.forEach(link => delete link.dataset.navigationStyle);
+      for (const style of nextStyles) {
+        const href = new URL(style.getAttribute('href'), page.url).href;
+        const link = [...existing, ...additions].find(link => link.href === href);
+        link.media = style.getAttribute('media') || '';
+        if (Object.hasOwn(link.dataset, 'pageStyle')) { styles.delete(href); styles.set(href, link); }
+      }
+      // Retain up to twelve loaded stylesheets, with only this page's styles active.
+      for (const [href, link] of styles) if (!wanted.has(href)) link.media = 'not all';
+      for (const [href, link] of styles) {
+        if (styles.size <= 12) break;
+        if (!wanted.has(href)) { link.remove(); styles.delete(href); }
+      }
       const old = main.querySelector('[data-page-content]');
       leave(old);
       window.MathJax?.typesetClear?.([old]);
@@ -67,7 +173,6 @@ export function initializeSiteNavigation({ leave, enter }, environment = globalT
       old.replaceWith(next);
       document.querySelectorAll('[data-page-config]').forEach(node => node.remove());
       incoming.querySelectorAll('[data-page-config]').forEach(node => document.head.append(document.importNode(node, true)));
-      for (const link of document.querySelectorAll('link[data-page-style]')) if (!wanted.has(link.href)) link.remove();
       document.title = incoming.title;
       for (const selector of ['meta[name="description"]', 'link[rel="canonical"]']) {
         const replacement = incoming.querySelector(selector); if (replacement) document.querySelector(selector)?.replaceWith(document.importNode(replacement, true));
@@ -92,10 +197,9 @@ export function initializeSiteNavigation({ leave, enter }, environment = globalT
     }
   }
   document.addEventListener('click', event => {
-    const link = event.target.closest?.('a[href]');
-    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target || link.hasAttribute('download') || link.hasAttribute('data-full-navigation')) return;
-    const url = new URL(link.href, location.href);
-    if (url.origin !== location.origin || !/\/$|\.html$/.test(url.pathname)) return;
+    if (event.defaultPrevented || event.button !== 0) return;
+    const url = internalLink(event, environment);
+    if (!url) return;
     event.preventDefault(); navigate(url.href);
   });
   window.addEventListener('popstate', event => { committing = true; navigate(location.href, { pop: true, saved: event.state?.siteScroll || [0, 0] }); });
