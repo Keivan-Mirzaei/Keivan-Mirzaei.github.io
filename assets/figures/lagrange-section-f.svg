@@ -1,0 +1,44 @@
+<svg class="lm-svg" viewBox="0 0 280 185" xmlns="http://www.w3.org/2000/svg" width="280" height="185" role="img" aria-labelledby="lagrange-section-f-title lagrange-section-f-desc"><title id="lagrange-section-f-title">f directional cross section</title><desc id="lagrange-section-f-desc">f along a straight tangent at the initial feasible point. The short black segment shows the derivative at zero.</desc><style>svg{--paper:#fcfcf9;--sidebar:#f3f4ef;--ink:#282e29;--muted:#686e66;--line:#e0e4dc;--green:#285b46;--lm-objective:#a8592b;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}.lm-svg .lm-floor { fill: var(--paper); fill-opacity: .75; stroke: var(--line); stroke-width: .7; }
+.lm-svg .lm-surface-face { stroke-width: .4; stroke-opacity: .2; }
+.lm-svg .lm-face-f { fill: #ead6c5; stroke: var(--lm-objective); }
+.lm-svg .lm-face-g { fill: #c7dacc; stroke: var(--green); }
+.lm-svg .lm-plane-f { fill: var(--lm-objective); }
+.lm-svg .lm-plane-g { fill: var(--green); }
+.lm-svg .lm-height-plane { fill-opacity: .08; stroke: none; }
+.lm-svg .lm-height-contour { fill: none; stroke-width: 1.2; opacity: .55; }
+.lm-svg .lm-selected-contour { fill: none; stroke-width: 2; }
+.lm-svg .lm-line-f { stroke: var(--lm-objective); }
+.lm-svg .lm-line-g { stroke: var(--green); }
+.lm-svg .lm-ground-gradient { fill: none; stroke-width: 2; stroke-dasharray: 4 3; }
+.lm-svg .lm-lifted-gradient { fill: none; stroke-width: 2.8; }
+.lm-svg .lm-chosen-direction { fill: none; stroke: var(--ink); stroke-width: 1.8; }
+.lm-svg .lm-ink-fill { fill: var(--ink); }
+.lm-svg .lm-floor-constraint { fill: none; stroke: var(--green); stroke-width: 1.1; stroke-dasharray: 4 3; opacity: .5; }
+.lm-svg .lm-feasible-path { fill: none; stroke: var(--green); stroke-width: 2.3; }
+.lm-svg .lm-vertical-guide { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; opacity: .5; }
+.lm-svg .lm-g-contour { fill: none; stroke: var(--green); stroke-width: 1; stroke-dasharray: 4 3; opacity: .25; }
+.lm-svg { overflow: hidden; }
+.lm-svg text { fill: var(--muted); font: 12px var(--sans); }
+.lm-svg .lm-axis { fill: none; stroke: var(--muted); stroke-width: 1; opacity: .45; }
+.lm-svg .lm-grid { fill: none; stroke: var(--line); stroke-width: 1; }
+.lm-svg .lm-contour { fill: none; stroke: var(--lm-objective); stroke-width: 1; opacity: .22; }
+.lm-svg .lm-level { fill: none; stroke: var(--lm-objective); stroke-width: 1.6; opacity: .7; }
+.lm-svg .lm-constraint, .lm-svg .lm-curve-g { fill: none; stroke: var(--green); stroke-width: 2.5; }
+.lm-svg .lm-curve-f { fill: none; stroke: var(--lm-objective); stroke-width: 2.5; }
+.lm-svg .lm-direction { stroke: var(--ink); stroke-width: 1.2; stroke-dasharray: 5 5; opacity: .6; }
+.lm-svg .lm-gradient-f { stroke: var(--lm-objective); stroke-width: 2.5; }
+.lm-svg .lm-gradient-g { stroke: var(--green); stroke-width: 2.5; stroke-dasharray: 5 3; }
+.lm-svg .lm-f-fill { fill: var(--lm-objective); }
+.lm-svg .lm-g-fill { fill: var(--green); }
+.lm-svg .lm-point { fill: var(--ink); stroke: var(--paper); stroke-width: 1.5; }
+.lm-svg .lm-centre { fill: var(--muted); }
+.lm-svg .lm-zero { stroke: var(--muted); stroke-width: 1; opacity: .22; }
+.lm-svg .lm-reference { stroke: var(--green); stroke-width: 1; stroke-dasharray: 4 4; opacity: .55; }
+.lm-svg .lm-slope-line { stroke: var(--ink); stroke-width: 1.8; fill: none; }
+.lm-svg .lm-chart-point { stroke: var(--paper); stroke-width: 1.5; }</style>
+    <g class="lm-labels"><path class="lm-grid" d="M35 148.043H266"/><text x="28" y="152.043" text-anchor="end">0</text><path class="lm-grid" d="M35 108.913H266"/><text x="28" y="112.913" text-anchor="end">10</text><path class="lm-grid" d="M35 69.783H266"/><text x="28" y="73.783" text-anchor="end">20</text><path class="lm-grid" d="M35 30.652H266"/><text x="28" y="34.652" text-anchor="end">30</text><path class="lm-axis" d="M35 150v4"/><text x="35" y="168" text-anchor="middle">−0.65</text><path class="lm-axis" d="M150.5 150v4"/><text x="150.5" y="168" text-anchor="middle">0</text><path class="lm-axis" d="M266 150v4"/><text x="266" y="168" text-anchor="middle">0.65</text><text x="35" y="11">f</text><text x="266" y="182" text-anchor="end">t</text></g>
+    <path class="lm-axis" d="M35 15V150H266"/>
+    <path class="lm-zero" d="M150.5 15V150"/><path class="lm-slope-line" d="M111.408 132.836 L189.592 124.751"/>
+    <path class="lm-curve-f" d="M35 138.876 L37.406 138.704 L39.813 138.53 L42.219 138.355 L44.625 138.178 L47.031 137.999 L49.438 137.819 L51.844 137.637 L54.25 137.454 L56.656 137.269 L59.062 137.082 L61.469 136.894 L63.875 136.704 L66.281 136.513 L68.688 136.32 L71.094 136.125 L73.5 135.929 L75.906 135.731 L78.313 135.531 L80.719 135.33 L83.125 135.127 L85.531 134.923 L87.938 134.717 L90.344 134.509 L92.75 134.3 L95.156 134.089 L97.563 133.877 L99.969 133.663 L102.375 133.447 L104.781 133.23 L107.188 133.011 L109.594 132.79 L112 132.568 L114.406 132.344 L116.813 132.119 L119.219 131.892 L121.625 131.663 L124.031 131.433 L126.437 131.201 L128.844 130.968 L131.25 130.733 L133.656 130.496 L136.063 130.257 L138.469 130.018 L140.875 129.776 L143.281 129.533 L145.688 129.288 L148.094 129.042 L150.5 128.794 L152.906 128.544 L155.313 128.293 L157.719 128.04 L160.125 127.785 L162.531 127.529 L164.938 127.271 L167.344 127.012 L169.75 126.751 L172.156 126.488 L174.563 126.224 L176.969 125.958 L179.375 125.691 L181.781 125.422 L184.188 125.151 L186.594 124.879 L189 124.605 L191.406 124.33 L193.812 124.052 L196.219 123.774 L198.625 123.493 L201.031 123.211 L203.438 122.928 L205.844 122.643 L208.25 122.356 L210.656 122.067 L213.063 121.777 L215.469 121.485 L217.875 121.192 L220.281 120.897 L222.688 120.601 L225.094 120.303 L227.5 120.003 L229.906 119.701 L232.313 119.398 L234.719 119.094 L237.125 118.788 L239.531 118.48 L241.938 118.17 L244.344 117.859 L246.75 117.547 L249.156 117.232 L251.563 116.916 L253.969 116.599 L256.375 116.28 L258.781 115.959 L261.188 115.636 L263.594 115.312 L266 114.987"/>
+    <circle class="lm-chart-point lm-f-fill" cx="150.5" cy="128.794" r="4"/>
+    </svg>

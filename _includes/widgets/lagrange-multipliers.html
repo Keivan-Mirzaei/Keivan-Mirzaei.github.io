@@ -1,0 +1,62 @@
+{% assign lm_id = include.id | default: 'lagrange-sections' %}
+<section id="{{ lm_id }}" class="graph-widget widget-frame lm-widget" data-widget="lagrange-multipliers" aria-labelledby="{{ lm_id }}-title">
+  <h3 id="{{ lm_id }}-title">Surfaces, contours, and gradients</h3>
+  <div class="lm-map-choice"><label for="{{ lm_id }}-map">Map</label><select id="{{ lm_id }}-map" data-lm-map disabled><option value="surface">3D surfaces</option><option value="plan">Contours from above</option></select></div>
+  <div class="lm-surfaces" data-lm-surfaces>
+    <div><p class="lm-surface-title">Objective <i>f</i></p><div class="lm-surface" data-lm-surface-f role="img" aria-label="A tilted quadratic height field with elliptical contours, a feasible point, and ascent arrows."><img src="{{ '/assets/figures/lagrange-surface-f.svg' | relative_url }}" alt="The graph z=f(x,y), horizontal contours, and the lifted constraint curve." width="300" height="285" loading="lazy"></div></div>
+    <div><p class="lm-surface-title">Constraint function <i>g</i></p><div class="lm-surface" data-lm-surface-g role="img" aria-label="A quartic height field with oval contours. The constraint is its level curve at height one."><img src="{{ '/assets/figures/lagrange-surface-g.svg' | relative_url }}" alt="The graph z=g(x,y), oval contours, and the horizontal curve g=1." width="300" height="285" loading="lazy"></div></div>
+  </div>
+  <div class="lm-plan" data-lm-plan role="img" aria-label="Tilted elliptical objective contours and quartic constraint contours, with the gradients at the selected point." hidden>
+    <img src="{{ '/assets/figures/lagrange-sections.svg' | relative_url }}" alt="Elliptical objective contours meet a quartic oval constraint, with both gradients and a section line." width="580" height="406" loading="lazy">
+  </div>
+  <p class="lm-legend"><span class="lm-key-f">Objective</span><span class="lm-key-g">g = 1</span><span data-lm-line-label>Black arrow: chosen direction</span></p>
+  <p class="lm-caption lm-map-caption" data-lm-map-caption>Drag either map to rotate both. Dashed arrows: gradient directions in the input plane; solid coloured arrows: lifted steepest ascent.</p>
+  <dl class="lm-values">
+    <div><dt>Point P</dt><dd data-lm-point>≈ (0, 0.687)</dd></div>
+    <div><dt>Objective f(P)</dt><dd data-lm-value>≈ 4.92</dd></div>
+    <div><dt>∇f(P)</dt><dd data-lm-grad-f>≈ (−4.31, −3.88)</dd></div>
+    <div><dt>∇g(P)</dt><dd data-lm-grad-g>≈ (−0.324, 3.07)</dd></div>
+  </dl>
+  <div class="lm-position widget-slider-setting">
+    <label class="widget-slider-heading" for="{{ lm_id }}-theta">Position angle θ <output data-lm-theta-value>90°</output></label>
+    <input id="{{ lm_id }}-theta" data-lm-theta type="range" min="0" max="360" step="any" value="90" disabled>
+  </div>
+  <div class="lm-primary-actions">
+    <button class="panel-button" type="button" data-lm-minimum disabled>Minimum point</button>
+    <button class="panel-button" type="button" data-lm-maximum disabled>Maximum point</button>
+  </div>
+  <div class="lm-view-control"><label for="{{ lm_id }}-view">Cross section</label>
+    <select id="{{ lm_id }}-view" data-lm-view disabled><option value="direction">Along a straight line</option><option value="curve">Along the constraint curve</option></select>
+  </div>
+  <div data-lm-direction-panel>
+    <div class="widget-slider-setting lm-direction-control">
+      <label class="widget-slider-heading" for="{{ lm_id }}-phi">Direction from tangent <output data-lm-phi-value>0° · tangent</output></label>
+      <input id="{{ lm_id }}-phi" data-lm-phi type="range" min="-180" max="180" step="any" value="0" disabled>
+    </div>
+    <div class="lm-ascent-actions"><button class="panel-button" type="button" data-lm-ascent-f disabled>Follow ∇f</button><button class="panel-button" type="button" data-lm-ascent-g disabled>Follow ∇g</button></div>
+    <p class="lm-section-formula"><math xmlns="http://www.w3.org/1998/Math/MathML" aria-label="Section: f of P plus t v, and g of P plus t v"><mi>f</mi><mo>(</mo><mi>P</mi><mo>+</mo><mi>t</mi><mi>v</mi><mo>)</mo><mspace width="0.5em"/><mtext>and</mtext><mspace width="0.5em"/><mi>g</mi><mo>(</mo><mi>P</mi><mo>+</mo><mi>t</mi><mi>v</mi><mo>)</mo></math></p>
+    <div class="lm-sections">
+      <div><div data-lm-section-f role="img" aria-label="The objective cross section has value approximately 4.92 and slope approximately 4.70 at t=0."><img src="{{ '/assets/figures/lagrange-section-f.svg' | relative_url }}" alt="A quadratic objective section with a positive tangent slope." width="280" height="185" loading="lazy"></div><p class="lm-slope">Slope at 0: <output data-lm-slope-f>≈ 4.70</output></p><p class="lm-slope">Maximum upward slope: <output data-lm-max-f>≈ 5.80</output></p></div>
+      <div><div data-lm-section-g role="img" aria-label="The constraint cross section has value 1 and slope 0 at t=0."><img src="{{ '/assets/figures/lagrange-section-g.svg' | relative_url }}" alt="A quartic constraint section with a horizontal tangent at zero." width="280" height="185" loading="lazy"></div><p class="lm-slope">Slope at 0: <output data-lm-slope-g>0</output></p><p class="lm-slope">Maximum upward slope: <output data-lm-max-g>≈ 3.09</output></p></div>
+    </div>
+    <p class="lm-caption">Black segments: tangent slopes at t = 0. Dashed horizontal: g = 1.</p>
+    <p class="lm-ascent-result" data-lm-ascent-feedback role="status">Rotate the direction or follow a gradient to reach the largest upward slope.</p>
+  </div>
+  <div data-lm-curve-panel hidden>
+    <div data-lm-feasible role="img" aria-label="The objective along the oval constraint has a minimum near 35.2 degrees and a maximum near 221 degrees."></div>
+    <p class="lm-slope">Slope along the unit tangent: <output data-lm-tangent-slope>≈ 4.70</output></p>
+  </div>
+  <p class="activity-result" data-lm-feedback role="status" aria-live="polite">The constraint has zero tangent slope; the objective can still decrease along the curve.</p>
+  <div class="panel-actions" role="group" aria-label="Activity controls">
+    <button class="panel-button" type="button" data-panel-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
+    <button class="panel-button" type="button" data-panel-redo disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
+    <button class="panel-button" type="button" data-panel-reset disabled>{% include icon.html name='restart' %}<span>Reset</span></button>
+    <details class="panel-help"><summary class="panel-button">{% include icon.html name='settings' %}<span>Settings</span></summary><div class="panel-help-content lm-camera-settings">
+      <div class="widget-slider-setting"><label class="widget-slider-heading" for="{{ lm_id }}-azimuth">Rotation <output data-lm-azimuth-value>45°</output></label><input id="{{ lm_id }}-azimuth" data-lm-azimuth type="range" min="-180" max="180" step="any" value="45" disabled></div>
+      <div class="widget-slider-setting"><label class="widget-slider-heading" for="{{ lm_id }}-elevation">Elevation <output data-lm-elevation-value>35°</output></label><input id="{{ lm_id }}-elevation" data-lm-elevation type="range" min="15" max="75" step="any" value="35" disabled></div>
+      <button class="panel-button" type="button" data-lm-reset-view disabled>Reset view</button>
+    </div></details>
+    {% include controls/help.html text='<p>Both maps show actual height fields over −1.25 ≤ x,y ≤ 1.25. They share the same camera and scales, with vertical height compressed equally for readability. Surfaces are translucent so contours remain visible. The stronger horizontal contour passes through P; the green path follows g = 1, rising and falling on the objective graph. Drag either surface to rotate both, or use the camera sliders in Settings.</p><p>A gradient is a vector in the input plane, not the normal to the 3D graph. Dashed coloured arrows show normalized gradient directions in that plane. Solid coloured arrows lift these directions to the graph’s tangent plane; black arrows lift the chosen unit direction. Their heights encode directional derivatives. A lifted arrow is a tangent vector, not a path remaining on the surface.</p><p>Position angle moves P along g = 1. In Contours from above, dragging also moves P. Direction from tangent spans a full turn: 0° and ±180° are tangent, +90° is outward normal, and −90° inward. Follow ∇f and Follow ∇g choose the respective steepest ascent directions. The maximum slope is the gradient’s magnitude.</p><p>The curve profile uses the ray angle θ on its horizontal axis; its reported slope is along the unit tangent (per unit arc length). Minimum point and Maximum point are numerical solutions of the multiplier equations. Reset restores the starting point and tangent direction while preserving the map, profile, and camera. All changes are undoable. This short experiment does not save progress.</p>' %}
+  </div>
+  <noscript><p>The prepared maps show noncircular contours. At the starting point P≈(0,0.687), the unit tangent gives objective slope ≈4.70 and constraint slope zero; the largest upward slopes are ≈5.80 and ≈3.09. The article supplies the steepest-ascent argument, theorem, and complete solution.</p></noscript>
+</section>

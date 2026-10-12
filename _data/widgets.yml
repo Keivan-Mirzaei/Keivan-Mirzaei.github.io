@@ -1,4 +1,8 @@
 # Shared asset and loading registry. Used by both article and puzzle layouts.
+lagrange-multipliers:
+  script: /assets/js/widgets/lagrange-multipliers.mjs
+  selector: '[data-widget="lagrange-multipliers"]'
+  styles: [activities, widget-frame, lagrange-multipliers]
 function-machine:
   script: /assets/js/widgets/function-machine.mjs
   selector: '[data-widget="function-machine"]'
