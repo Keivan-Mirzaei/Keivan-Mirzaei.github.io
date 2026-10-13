@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Lagrange multipliers: follow the constraint"
-description: "Explore elliptical contours and steepest ascent, then solve a constrained minimum and an entropy problem."
+description: "Explore the method of Lagrange multipliers for constrained optimization, with a visual perspective."
 date: 2026-10-12 00:00:00 -0600
 permalink: /notes/lagrange-multipliers/
 format: exploration
@@ -25,30 +25,38 @@ $$
 g(x,y)=x^2+2y^2=1.
 $$
 
-Both functions have elliptical contours, with different centres and axis ratios. Partial derivatives and the chain rule are enough to follow the argument.
+This is a constrained optimization problem: we want to minimize $$f$$, but only among the points on the ellipse $$g=1$$. The method of Lagrange multipliers specifies a necessary condition for a constrained extremum: the gradients of $$f$$ and $$g$$ must be parallel. We will explore this condition visually, then solve the problem.
 
 ## An unconstrained attempt
 
 Without the constraint, $$f$$ has minimum zero at $$A=(2,0)$$. But $$g(A)=4$$, so this point is inadmissible. Setting $$\nabla f=0$$ does not solve our problem: a direction that decreases $$f$$ may leave the allowed curve.
 
-The gradients are
-
-$$
-\nabla f=\binom{2(x-2)}{8y},
-\qquad
-\nabla g=\binom{2x}{4y}.
-$$
-
 ## Height, contours, and steepest ascent
 
 The graph $$z=h(x,y)$$ of a scalar function is a height field. A horizontal cut $$z=c$$ gives a **contour**, the inputs satisfying $$h(x,y)=c$$. Our constraint is the height-one contour of $$g$$. Lifting those same inputs onto the graph of $$f$$ shows the values we may attain.
 
-For a unit input direction $$v$$ through $$P$$, the chain rule gives the slope
+For a unit input direction $$v$$ through a point $$P$$, the chain rule gives the slope
 
 $$
 \left.\frac{d}{dt}h(P+tv)\right|_{t=0}
 =\nabla h(P)\cdot v.
 $$
+
+This is the **directional derivative** of $$h$$ at $$P$$ in the direction $$v$$. This implies the following three facts:
+
+1. The directional derivative is maximized when $$v$$ points in the direction of the gradient.
+2. The directional derivative is minimized when $$v$$ points in the **opposite** direction of the gradient.
+3. The directional derivative is zero when $$v$$ is **perpendicular** to the gradient.
+
+To see this, observe that the third fact is immidiate and by Cauchy–Schwarz, for every unit $$v$$,
+
+$$
+-\lVert\nabla h(P)\rVert\leq\nabla h(P)\cdot v\leq\lVert\nabla h(P)\rVert.
+$$
+
+Given that $$\nabla h(P) \neq 0$$, the equalities hold when $$v$$ is parallel or antiparallel to the gradient. The gradient's magnitude is therefore the largest slope at $$P$$ and the negative of that magnitude is the smallest slope.
+
+On the other hand, if $$v$$ is perpendicular to the gradient, the slope is zero. This means that moving in a direction tangent to a contour does not change the function's value immidiately. The gradient is therefore normal to the contour.
 
 In [Surfaces, contours, and gradients](#lagrange-sections), move the point and change the direction. Follow each gradient to compare the chosen arrow with steepest ascent.
 
@@ -56,19 +64,7 @@ In [Surfaces, contours, and gradients](#lagrange-sections), move the point and c
 
 At the starting point $$P=(0,1/\sqrt2)$$, the unit tangent $$T=(-1,0)$$ gives objective slope $$4$$ and constraint slope zero. Yet the largest upward slopes are $$4\sqrt3$$ for $$f$$ and $$2\sqrt2$$ for $$g$$. The tangent is not the steepest ascent direction.
 
-Why does a gradient give the largest slope? By Cauchy–Schwarz, for every unit $$v$$,
 
-$$
-\nabla h(P)\cdot v\leq\lVert\nabla h(P)\rVert.
-$$
-
-When the gradient is nonzero, equality holds at
-
-$$
-v=\frac{\nabla h(P)}{\lVert\nabla h(P)\rVert}.
-$$
-
-Thus the gradient's direction gives **steepest first-order ascent**, and its magnitude gives the maximum slope. The solid coloured arrows lift these unit directions into the graph's tangent plane. The gradient itself is a vector in the input plane.
 
 ## What the constraint permits
 
@@ -78,7 +74,9 @@ $$
 \nabla g(\gamma(s))\cdot\gamma'(s)=0.
 $$
 
-The gradient is therefore perpendicular to the constraint's tangent. At an ordinary point, one of the two tangent directions decreases $$f$$. At a constrained extremum, neither does: $$\nabla f\cdot T=0$$ too. Both gradients then lie on the same normal line.
+The gradient is therefore perpendicular to the constraint's tangent. We can observe this in [Surfaces, contours, and gradients](#lagrange-sections) by looking at the contour of $$g$$ from above and following the tangent. The gradient always stays perpendicular to the tangent.
+
+At an ordinary point, one of the two tangent directions decreases $$f$$. One just needs to follow the constraint in that direction to find a smaller value. But at a constrained extremum, both tangent directions give zero slope for $$f$$. The gradient is therefore perpendicular to the tangent, and the two gradients are parallel.
 
 Equivalently, the objective contour and constraint have the same tangent where they touch. At the minimum, the two gradients point oppositely; at the maximum, they point the same way. Both satisfy the following theorem.
 
@@ -100,17 +98,21 @@ The number $$\lambda$$ is a **Lagrange multiplier**.
 
 </div>
 
-The regularity assumption lets the implicit function theorem describe the constraint locally as a smooth surface. Its tangent vectors are exactly those perpendicular to $$\nabla g(a)$$, and each is the velocity of a path on the surface. At an extremum, differentiating $$f$$ along every such path gives zero. Thus $$\nabla f(a)$$ is perpendicular to the whole tangent space and is a multiple of $$\nabla g(a)$$. See also [MIT's tangent-space proof](https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/pages/2.-partial-derivatives/part-c-lagrange-multipliers-and-constrained-differentials/session-40-proof-of-lagrange-multipliers/).
+The regularity assumption together with the non-vanishing gradient condition lets the implicit function theorem describe the constraint locally as a smooth surface. Its tangent vectors are exactly those perpendicular to $$\nabla g(a)$$, and each is the velocity of a path on the surface. At an extremum, differentiating $$f$$ along every such path gives zero. Thus $$\nabla f(a)$$ is perpendicular to the whole tangent space and is a multiple of $$\nabla g(a)$$.
 
-The theorem gives candidates for extrema; we must still determine which is the minimum.
+Now we can solve the problem. The gradients are
 
-## Solve the ellipse problem
+$$
+\nabla f=\binom{2(x-2)}{8y},
+\qquad
+\nabla g=\binom{2x}{4y}.
+$$
 
-The constraint gradient $$(2x,4y)$$ vanishes only at the origin, which is not on $$g=1$$. Applying [(1)](#lagrange-theorem) gives
+The constraint gradient vanishes only at the origin, which is not on $$g=1$$. Applying [(1)](#lagrange-theorem) gives
 
 $$
 \begin{aligned}
-x-2&=\lambda x,\\
+2(x-2)&=2\lambda x,\\
 8y&=4\lambda y,\\
 x^2+2y^2&=1.
 \end{aligned}
@@ -180,17 +182,6 @@ C_q(p)&\geq C_q(q)\\
 $$
 
 Strict convexity makes equality possible only at $$p=q$$. This certifies the unique global minimum.
-
-Equivalently,
-
-$$
-\begin{aligned}
-C_q(p)-H(q)&=\sum_i q_i\log\frac{q_i}{p_i}\\
-&=D(q\Vert p)\geq0,
-\end{aligned}
-$$
-
-which is Gibbs' inequality for discrete KL divergence.
 
 </div>
 </details>
