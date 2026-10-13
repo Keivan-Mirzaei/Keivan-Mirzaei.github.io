@@ -55,6 +55,7 @@ func entry(_ path: CGPath, tex: String) -> [String: Any] {
 // Mathematical italic letters, upright delimiters, and explicit conditional spacing.
 let conditional = outline("𝑃(𝐴 ∣ 𝐵)")
 let data = try JSONSerialization.data(withJSONObject: [
-    "conditional": entry(conditional, tex: "P(A\\mid B)")
+    "conditional": entry(conditional, tex: "P(A\\mid B)"),
+    "lagrange": entry(outline("𝜆"), tex: "\\lambda")
 ], options: [.prettyPrinted, .sortedKeys])
 FileHandle.standardOutput.write(data)

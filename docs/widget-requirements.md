@@ -20,6 +20,7 @@ This is the reference for interactive widgets in articles, lessons, and standalo
 - Use sliders for numerical quantities, such as position, rotation, size, or a parameter, and show the current value. Use dropdowns for distinct named alternatives such as triangle shapes, functions, board types, goals, and difficulty levels, following the [element standards](element-standards.md#dropdowns). A natural ordering does not make categories suitable for a slider. Use visible choice buttons only when direct comparison or frequent switching clearly benefits the activity, and explain that exception in its design sheet.
 - Use toggle switches for on/off options instead of visible checkboxes.
 - Keep the activity unobstructed. Omit unnecessary numbering, labels, and oversized handles, particularly when they cover points, lines, or other important content.
+- Prevent text selection and native image dragging on draggable plots and boards, including Safari (`-webkit-user-select: none`). Cancel the browser's default action when a drag starts, capture the pointer, and set touch behavior deliberately. Scope these protections to the interaction area so article text, Info, and editable inputs remain usable.
 - When an activity has a meaningful goal, make achievement visibly clear with a restrained colour effect and a concise confirmation. Remove the success effect if the current state no longer meets the goal.
 
 ## 2. Supporting panels
@@ -146,6 +147,7 @@ The one-font rule applies to the interface. A mathematical font is appropriate w
 - For function evaluators, show **Undefined** when an entered value has no defined output, together with the relevant error. Leave an empty input in a neutral state.
 - Respect reduced-motion preferences and avoid unnecessary animation.
 - Check desktop and mobile layouts with supporting panels both open and closed.
+- For every draggable visual, check mouse and touch drags across labels and beyond the plot edge: no selected text, native image drag, or unwanted page scrolling. Verify pointer cancellation, lost capture, and Undo; keep surrounding reading text selectable.
 - Verify the mathematical behavior and nontrivial history, saving, linked-state, and loading behavior affected by a change.
 
 ## 9. Roadmap
@@ -158,6 +160,7 @@ The one-font rule applies to the interface. A mathematical font is appropriate w
 | Define the reusable starter | Extract the frame, optional controls, panel behavior, history conventions, formula rendering, and numeric formatting. Document one small example for each needed activity type. | New widgets can follow the standard without copying activity-specific logic. Fixed and changing formulas, scientific notation, and accessible alternatives work in the target environment. |
 | Apply to future website work | Integrate approved widgets and shared services when website changes are requested. | A new widget meets the review checklist and fits its page. |
 | Migrate existing widgets gradually | Update existing widgets when relevant work is requested, using representative explorers, simulations, walkthroughs, and games. | Shared behavior improves consistency while preserving each activity's mathematical rules. |
+| Prevent drag-selection regressions | Use scoped selection and native-drag protection on every new or revised draggable visual. Lagrange maps updated on 13 October 2026. | Mouse and touch gestures, labels, plot boundaries, cancellation, and history pass the drag checks; reading text remains selectable. |
 
 The first website migration is **Hex**, covering its standalone puzzle and the same game embedded in the Hex article. See [its design sheet](widget-designs/hex.md). Keivan reviewed and approved this implementation on 4 October 2026 and authorized publication. Continue with Klotski, Lights Out, and Floor tiling, one at a time; prepare and check each implementation for Keivan's review before publishing it. The earlier conversation prototypes remain useful references.
 

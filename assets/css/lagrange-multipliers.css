@@ -1,7 +1,11 @@
 .lm-widget { --lm-objective: #a8592b; }
 .lm-map-choice { margin: 16px 0; }
 .lm-map-choice label { font-size: 12px; }
-.lm-surfaces { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; touch-action: pan-y; user-select: none; }
+.lm-surfaces { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; cursor: grab; }
+.lm-surfaces:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; border-radius: 8px; }
+.lm-surfaces:active { cursor: grabbing; }
+.lm-surfaces, .lm-widget .lm-plan { touch-action: none; user-select: none; -webkit-user-select: none; }
+.lm-surfaces *, .lm-plan * { user-select: none; -webkit-user-select: none; -webkit-user-drag: none; }
 .lm-surfaces > div { min-width: 0; }
 .lm-surface { border-radius: 8px; background: var(--sidebar); overflow: hidden; }
 .lm-widget[data-complete='true'] .lm-surface { background: var(--tint); }
@@ -18,18 +22,13 @@
 .lm-svg .lm-selected-contour { fill: none; stroke-width: 2; }
 .lm-svg .lm-line-f { stroke: var(--lm-objective); }
 .lm-svg .lm-line-g { stroke: var(--green); }
-.lm-svg .lm-ground-gradient { fill: none; stroke-width: 2; stroke-dasharray: 4 3; }
-.lm-svg .lm-lifted-gradient { fill: none; stroke-width: 2.8; }
-.lm-svg .lm-chosen-direction { fill: none; stroke: var(--ink); stroke-width: 1.8; }
-.lm-svg .lm-ink-fill { fill: var(--ink); }
+.lm-svg .lm-ground-gradient { fill: none; stroke-width: 2.5; }
+.lm-svg .lm-ground-gradient.lm-line-g { stroke-dasharray: 5 3; }
 .lm-svg .lm-floor-constraint { fill: none; stroke: var(--green); stroke-width: 1.1; stroke-dasharray: 4 3; opacity: .5; }
 .lm-svg .lm-feasible-path { fill: none; stroke: var(--green); stroke-width: 2.3; }
 .lm-svg .lm-vertical-guide { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; opacity: .5; }
 .lm-svg .lm-g-contour { fill: none; stroke: var(--green); stroke-width: 1; stroke-dasharray: 4 3; opacity: .25; }
-.lm-ascent-actions { display: flex; gap: 8px; margin: 6px 0 14px; }
-.lm-ascent-actions > button { flex: 1; }
-.lm-camera-settings .widget-slider-setting { margin-bottom: 12px; }
-.lm-widget .lm-plan { margin-top: 16px; border-radius: 8px; background: var(--sidebar); touch-action: pan-y; user-select: none; }
+.lm-widget .lm-plan { margin-top: 16px; border-radius: 8px; background: var(--sidebar); cursor: crosshair; }
 .lm-widget[data-complete='true'] .lm-plan { background: var(--tint); }
 .lm-plan svg, .lm-plan img { display: block; width: 100%; height: auto; }
 .lm-svg { overflow: hidden; }
@@ -38,7 +37,6 @@
 .lm-svg .lm-contour { fill: none; stroke: var(--lm-objective); stroke-width: 1; opacity: .22; }
 .lm-svg .lm-level { fill: none; stroke: var(--lm-objective); stroke-width: 1.6; opacity: .7; }
 .lm-svg .lm-constraint { fill: none; stroke: var(--green); stroke-width: 2.5; }
-.lm-svg .lm-direction { stroke: var(--ink); stroke-width: 1.2; stroke-dasharray: 5 5; opacity: .6; }
 .lm-svg .lm-gradient-f { stroke: var(--lm-objective); stroke-width: 2.5; }
 .lm-svg .lm-gradient-g { stroke: var(--green); stroke-width: 2.5; stroke-dasharray: 5 3; }
 .lm-svg .lm-f-fill { fill: var(--lm-objective); }
@@ -46,8 +44,12 @@
 .lm-svg .lm-point { fill: var(--ink); stroke: var(--paper); stroke-width: 1.5; }
 .lm-svg .lm-centre { fill: var(--muted); }
 .lm-widget .lm-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; font-size: 12px; margin: 10px 0 18px; }
-.lm-key-f::before, .lm-key-g::before { content: ''; display: inline-block; width: 15px; margin: 0 6px 3px 0; border-top: 2px solid var(--lm-objective); }
-.lm-key-g::before { border-color: var(--green); border-top-style: dashed; }
+.lm-legend > span { display: inline-flex; align-items: center; gap: 5px; }
+.lm-key-f { --lm-key-color: var(--lm-objective); }
+.lm-key-g { --lm-key-color: var(--green); }
+.lm-key-line { position: relative; width: 22px; margin-right: 3px; border-top: 2px solid var(--lm-key-color); }
+.lm-key-g .lm-key-line { border-top-style: dashed; }
+.lm-key-line::after { content: ''; position: absolute; right: -1px; top: -4px; width: 6px; height: 6px; border-top: 2px solid var(--lm-key-color); border-right: 2px solid var(--lm-key-color); transform: rotate(45deg); }
 .lm-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; margin: 0 0 18px; }
 .lm-values dt { color: var(--muted); font-size: 12px; }
 .lm-values dd { margin: 0; font-size: 14px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }

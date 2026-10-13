@@ -2,14 +2,14 @@
 <section id="{{ lm_id }}" class="graph-widget widget-frame lm-widget" data-widget="lagrange-multipliers" aria-labelledby="{{ lm_id }}-title">
   <h3 id="{{ lm_id }}-title">Surfaces, contours, and gradients</h3>
   <div class="lm-map-choice"><label for="{{ lm_id }}-map">Map</label><select id="{{ lm_id }}-map" data-lm-map disabled><option value="surface">3D surfaces</option><option value="plan">Contours from above</option></select></div>
-  <div class="lm-surfaces" data-lm-surfaces>
-    <div><p class="lm-surface-title">Objective <i>f</i></p><div class="lm-surface" data-lm-surface-f role="img" aria-label="A quadratic height field with elliptical contours, a feasible point, and ascent arrows."><img src="{{ '/assets/figures/lagrange-surface-f.svg' | relative_url }}" alt="The graph z=f(x,y), horizontal contours, and the lifted constraint curve." width="300" height="285" loading="lazy"></div></div>
+  <div class="lm-surfaces" data-lm-surfaces tabindex="0" role="group" aria-label="Linked 3D maps. Drag or use arrow keys to rotate.">
+    <div><p class="lm-surface-title">Objective <i>f</i></p><div class="lm-surface" data-lm-surface-f role="img" aria-label="A quadratic height field with elliptical contours, a feasible point, and a gradient arrow in the xy plane."><img src="{{ '/assets/figures/lagrange-surface-f.svg' | relative_url }}" alt="The graph z=f(x,y), horizontal contours, and the lifted constraint curve." width="300" height="285" loading="lazy"></div></div>
     <div><p class="lm-surface-title">Constraint function <i>g</i></p><div class="lm-surface" data-lm-surface-g role="img" aria-label="A quadratic height field with elliptical contours. The constraint is its level curve at height one."><img src="{{ '/assets/figures/lagrange-surface-g.svg' | relative_url }}" alt="The graph z=g(x,y), oval contours, and the horizontal curve g=1." width="300" height="285" loading="lazy"></div></div>
   </div>
   <div class="lm-plan" data-lm-plan role="img" aria-label="Elliptical objective and constraint contours, with the gradients at the selected point." hidden>
-    <img src="{{ '/assets/figures/lagrange-sections.svg' | relative_url }}" alt="Two families of elliptical contours, with both gradients and a chosen direction." width="580" height="406" loading="lazy">
+    <img src="{{ '/assets/figures/lagrange-sections.svg' | relative_url }}" alt="Two families of elliptical contours, with both gradients at P." width="580" height="406" loading="lazy">
   </div>
-  <p class="lm-legend"><span class="lm-key-f">Objective</span><span class="lm-key-g">g = 1</span><span>Black: chosen direction</span></p>
+  <p class="lm-legend" aria-label="Contours and their gradient arrows"><span class="lm-key-f"><span class="lm-key-line" aria-hidden="true"></span>Objective <i>f</i> · ∇<i>f</i></span><span class="lm-key-g"><span class="lm-key-line" aria-hidden="true"></span>Constraint <i>g</i> = 1 · ∇<i>g</i></span></p>
   <dl class="lm-values">
     <div><dt>Point P</dt><dd data-lm-point>≈ (0, 0.707)</dd></div>
     <div><dt>Objective f(P)</dt><dd data-lm-value>6</dd></div>
@@ -24,21 +24,11 @@
     <button class="panel-button" type="button" data-lm-minimum disabled>Minimum point</button>
     <button class="panel-button" type="button" data-lm-maximum disabled>Maximum point</button>
   </div>
-  <div class="widget-slider-setting lm-direction-control">
-    <label class="widget-slider-heading" for="{{ lm_id }}-phi">Direction from tangent <output data-lm-phi-value>0° · tangent</output></label>
-    <input id="{{ lm_id }}-phi" data-lm-phi type="range" min="-180" max="180" step="any" value="0" disabled>
-  </div>
-  <div class="lm-ascent-actions"><button class="panel-button" type="button" data-lm-ascent-f disabled>Follow ∇f</button><button class="panel-button" type="button" data-lm-ascent-g disabled>Follow ∇g</button></div>
   <p class="activity-result" data-lm-feedback role="status" aria-live="polite" hidden></p>
   <div class="panel-actions" role="group" aria-label="Activity controls">
     <button class="panel-button" type="button" data-panel-undo disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
     <button class="panel-button" type="button" data-panel-redo disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
     <button class="panel-button" type="button" data-panel-reset disabled>{% include icon.html name='restart' %}<span>Reset</span></button>
-    <details class="panel-help"><summary class="panel-button">{% include icon.html name='settings' %}<span>Settings</span></summary><div class="panel-help-content lm-camera-settings">
-      <div class="widget-slider-setting"><label class="widget-slider-heading" for="{{ lm_id }}-azimuth">Rotation <output data-lm-azimuth-value>45°</output></label><input id="{{ lm_id }}-azimuth" data-lm-azimuth type="range" min="-180" max="180" step="any" value="45" disabled></div>
-      <div class="widget-slider-setting"><label class="widget-slider-heading" for="{{ lm_id }}-elevation">Elevation <output data-lm-elevation-value>35°</output></label><input id="{{ lm_id }}-elevation" data-lm-elevation type="range" min="15" max="75" step="any" value="35" disabled></div>
-      <button class="panel-button" type="button" data-lm-reset-view disabled>Reset view</button>
-    </div></details>
-    {% include controls/help.html text='<p>Drag either map to rotate both; Settings provides camera sliders. Position angle moves P along g = 1. The top-down map also lets you drag P.</p><p>Dashed coloured arrows show unit gradient directions in the input plane. Solid coloured arrows lift those directions into the surface’s tangent plane; their height shows the maximum upward slope. Black arrows lift your chosen direction. Both maps use the same scales, with height compressed by 0.14.</p><p>Direction from tangent: 0° is tangent, +90° is outward, −90° is inward. Follow ∇f or Follow ∇g selects steepest ascent. Reset restores the starting point and direction while keeping your view.</p>' %}
+    {% include controls/help.html text='<p>Drag either surface to rotate both; arrow keys also rotate the focused maps. In the top view, drag P along g = 1.</p><p>Gradient arrows stay in the xy plane, with lengths on a shared scale. Reset restores P and keeps your view.</p>' %}
   </div>
 </section>

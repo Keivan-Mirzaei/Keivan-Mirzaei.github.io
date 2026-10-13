@@ -6,7 +6,7 @@ date: 2026-10-12 00:00:00 -0600
 permalink: /notes/lagrange-multipliers/
 format: exploration
 image: /assets/images/exploration-thumbnails/lagrange-multipliers.svg
-image_alt: An elliptical objective contour touches an elliptical constraint, with opposite gradient arrows.
+image_alt: The Greek letter lambda in green.
 tags: [calculus, optimization, information theory]
 math: true
 widgets: [lagrange-multipliers]
@@ -56,7 +56,7 @@ Given that $$\nabla h(P) \neq 0$$, the equalities hold when $$v$$ is parallel or
 
 On the other hand, if $$v$$ is perpendicular to the gradient, the slope is zero. This means that moving in a direction tangent to a contour does not change the function's value immidiately. The gradient is therefore normal to the contour.
 
-In [Surfaces, contours, and gradients](#lagrange-sections), move the point and change the direction. Follow each gradient to compare the chosen arrow with steepest ascent.
+In [Surfaces, contours, and gradients](#lagrange-sections), move the point along the constraint and compare the gradients. Rotate the surfaces or switch to the top view to see how the arrows meet the contours.
 
 {% include widgets/lagrange-multipliers.html id='lagrange-sections' %}
 

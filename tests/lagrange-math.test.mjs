@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {sectionState,objective,constraint,objectiveGradient,constraintGradient,constraintPoint,objectiveContour,dot,MINIMUM_ANGLE,MAXIMUM_ANGLE,ascentAngle,crossEntropy} from '../assets/js/lib/lagrange-math.mjs';
-import {surfaceProjection,liftedDirection,surfaceDiagram} from '../assets/js/lib/lagrange-surfaces.mjs';
+import {surfaceProjection,surfaceDiagram} from '../assets/js/lib/lagrange-surfaces.mjs';
+import {planDiagram} from '../assets/js/lib/lagrange-diagrams.mjs';
 const close=(a,b,tolerance=1e-10)=>assert.ok(Math.abs(a-b)<tolerance,`${a} != ${b}`);
 
 test('elliptical constraint is feasible; normals and tangents are orthonormal throughout',()=>{
@@ -64,16 +65,24 @@ test('exact extrema solve the multiplier equations and give the full constrained
   }
 });
 
-test('lifted 3D arrows encode actual directional derivatives with shared projection scales',()=>{
+test('3D gradient arrows stay at z=0 with actual magnitudes and shared projection scales',()=>{
   const s=sectionState(90),point=[...s.point,s.value];
-  const end=liftedDirection(point,s.gradF,s.direction,.4);close((end[2]-point[2])/.4,s.slopeF);
-  const u=s.gradF.map(x=>x/s.normF);close((liftedDirection(point,s.gradF,u,.4)[2]-point[2])/.4,s.normF);
   const p=surfaceProjection(300,135,35),q=surfaceProjection(300,135,35);assert.deepEqual(p.map(point),q.map(point));
   assert.notDeepEqual(p.map(point),surfaceProjection(300,75,35).map(point));
-  for(const kind of ['f','g'])for(const a of [-180,0,135,180])for(const e of [15,35,75]) {
-    const svg=surfaceDiagram(s,kind,240,a,e,'test');assert.ok(!/NaN|Infinity|undefined/.test(svg));
-    assert.ok(svg.includes(`test-surface-${kind}-gradient`));assert.ok(svg.includes('lm-height-contour'));
+  for(const theta of [0,90,180,265])for(const kind of ['f','g'])for(const a of [-180,0,135,180])for(const e of [15,35,75]) {
+    const state=sectionState(theta),svg=surfaceDiagram(state,kind,240,a,e,'test');
+    assert.ok(!/NaN|Infinity|undefined/.test(svg));
+    const projection=surfaceProjection(240,a,e),gradient=kind==='f'?state.gradF:state.gradG;
+    const base=[...state.point,0],end=[base[0]+.12*gradient[0],base[1]+.12*gradient[1],0];
+    const screen=v=>projection.map(v).slice(0,2).map(x=>Number(x.toFixed(3))).join(' ');
+    const arrow=svg.match(/class="lm-ground-gradient[^\"]*" d="([^\"]+)"/)[1];
+    assert.equal(arrow,`M${screen(base)}L${screen(end)}`);
+    assert.equal((svg.match(/marker-end=/g)||[]).length,1);
+    assert.ok(!svg.includes('lm-lifted-gradient'));assert.ok(!svg.includes('lm-chosen-direction'));
+    assert.ok(svg.includes('lm-height-contour'));
   }
+  const plan=planDiagram(s);assert.equal((plan.match(/marker-end=/g)||[]).length,2);
+  assert.ok(!plan.includes('class="lm-direction"'));
 });
 
 test('cross entropy retains its minimum at the fixed law and diverges at the boundary',()=>{

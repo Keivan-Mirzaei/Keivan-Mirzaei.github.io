@@ -22,7 +22,6 @@ export function planDiagram(state, width = 580, prefix = 'lagrange') {
     return `<line class="${klass}" x1="${points[0]}" y1="${points[1]}" x2="${points[2]}" y2="${points[3]}" ${extra}/>`;
   };
   const arrow = (gradient, klass, marker) => line(state.point, state.point.map((x, i) => x + .12 * gradient[i]), klass, `marker-end="url(#${marker})"`);
-  const guide = line(state.point.map((x, i) => x - 1.05 * state.direction[i]), state.point.map((x, i) => x + 1.05 * state.direction[i]), 'lm-direction');
   const labelRight = state.point[0] < 0;
   return `<svg class="lm-svg lm-plan-svg" viewBox="0 0 ${width} ${height}" aria-hidden="true">
     <defs><clipPath id="${clip}"><rect x="12" y="12" width="${width - 24}" height="${height - 24}"/></clipPath>
@@ -34,7 +33,7 @@ export function planDiagram(state, width = 580, prefix = 'lagrange') {
       ${[1,4,9].map(level => contour('f',level,'lm-contour')).join('')}
       ${[.25,2,4].map(level => contour('g',level,'lm-g-contour')).join('')}
       ${contour('f',state.value,'lm-level')}${contour('g',1,'lm-constraint')}
-      ${guide}${arrow(state.gradF, 'lm-gradient-f', markerF)}${arrow(state.gradG, 'lm-gradient-g', markerG)}
+      ${arrow(state.gradF, 'lm-gradient-f', markerF)}${arrow(state.gradG, 'lm-gradient-g', markerG)}
       <circle class="lm-point" cx="${fixed(px)}" cy="${fixed(py)}" r="4.5"/>
       <circle class="lm-centre" cx="${fixed(ax)}" cy="${fixed(ay)}" r="3"/>
     </g>

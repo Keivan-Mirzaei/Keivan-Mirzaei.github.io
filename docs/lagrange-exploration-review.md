@@ -1,19 +1,20 @@
 # Lagrange multipliers exploration — release review
 
-Updated on 12 October 2026 at `/notes/lagrange-multipliers/`.
+Approved release on 13 October 2026 at `/notes/lagrange-multipliers/`.
 
-The revised example is `f=(x−2)²+4y²` on the ellipse `x²+2y²=1`. Its multiplier equations have exactly two candidates: (1,0), with value 1 and multiplier −1, and (−1,0), with value 9 and multiplier 3. Compactness and comparison certify the unique global minimum and maximum. No numerical root-finding or Hessian classification is needed.
+The widget keeps linked 3D surfaces and top-down contours for `f=(x−2)²+4y²` on `x²+2y²=1`. The direction slider, Follow gradient buttons, chosen-direction graphics, lifted gradient arrows, and Settings panel have been removed. Every gradient arrow is two-dimensional and lies at z=0, with actual magnitudes on a common scale. The two-item legend identifies the objective and constraint together with their gradients. Info contains only operating gestures, arrow interpretation, and Reset behavior.
 
-The widget retains the linked 3D maps, top-down contours, point and direction controls, gradients, and shared camera/history. The cross-section plots and curve profile have been removed, along with their assets and rendering code. Routine captions and repeated status comments are gone; extrema use brief confirmations and operating instructions remain in Info. Both contour families are noncircular ellipses.
+Dragging either surface rotates both maps. The focused maps also accept arrow keys; a held key forms one history action. The position slider and extrema buttons remain, and dragging the top view moves P along the constraint. Undo/Redo includes point, map, and camera changes. Reset restores P while keeping the view. Canceled gestures restore the previous state without discarding Redo.
 
-The article keeps the steepest-ascent argument, tangent-space explanation, theorem and proof, exact worked solution, and final cross-entropy minimization exercise. The title, identifying mark, static previews, widget model, and text agree. The existing roadmaps guide the framing, controls, references, numeric formatting, disclosures, and static reading path.
+Plots prevent text selection and native image dragging, including Safari, and capture accepted pointer gestures. Touch scrolling is disabled inside the interactive maps. Article text, Info, and inputs remain outside those protections. The shared widget roadmap now requires this protection and drag verification for future and revised widgets.
+
+The identifying mark is a green lambda exported as STIX mathematical outlines. The article's interaction invitation, image alternative, static previews, and widget design sheet match the revised interface. The mathematical argument and worked solutions are preserved.
 
 ## Verification
 
-The seven mathematical checks cover feasibility and tangent geometry, the steepest-ascent bound and equality cases, independent finite-difference derivatives, contour equations, exact multiplier solutions and the constrained range, lifted arrows and linked projection, and entropy.
+- All 371 JavaScript tests in the isolated release pass, including three controller checks for linked rotation, default-action suppression, cancellation, Redo retention, held-key history, point dragging, and camera-preserving Reset. All six Python tests also pass.
+- Projected-arrow checks compare every arrow endpoint with z=0 projections across four points, four camera rotations, and three elevations. Only the relevant gradient arrows remain.
+- The strict production build and asset optimizer pass. Site checks validate all local links, image alternatives, anchors, search, feed, and sitemap across 63 HTML pages. All four generated SVGs parse.
+- Browser checks confirm exact minima and maxima, linked camera rotation without moving P, selection-free surface and point dragging, concise Info, and no Settings panel. At 320 pixels, the top view and legend fit with no horizontal page overflow.
 
-- The isolated production build and asset optimizer passed, followed by all local link, image, anchor, search, feed, and sitemap checks for 63 HTML pages.
-- All 368 JavaScript tests and six Python tests passed. All four generated SVGs parse.
-- Browser checks confirmed the exact point, value, gradients, and classification at both extrema. Follow ∇f and Follow ∇g give the maximum slopes. Camera changes affect both maps without moving the point; Undo restores the camera and the previous extremum.
-- Settings sliders work with the keyboard; Info and Settings remain mutually exclusive and close with Escape. The top-down view works, and no cross-section controls or plots remain.
-- At 320 pixels the maps stack, the page has no horizontal overflow, and the open entropy solution has no wide formulas or rendering errors. The desktop view and camera were restored, and a complete widget screenshot is retained with the chat.
+Keivan authorized publication on 13 October 2026. Release checks exclude unrelated unfinished changes in the working copy.

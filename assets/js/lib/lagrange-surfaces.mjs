@@ -43,13 +43,9 @@ function contourPoints(kind,level) {
   return points;
 }
 
-export function liftedDirection(point,gradient,direction,length=.4) {
-  return [point[0]+length*direction[0],point[1]+length*direction[1],point[2]+length*dot(gradient,direction)];
-}
-
 export function surfaceDiagram(state,kind,width=300,azimuth=45,elevation=35,prefix='lagrange') {
   const {map,height}=surfaceProjection(width,azimuth,elevation),fn=models[kind],g=kind==='f'?state.gradF:state.gradG;
-  const magnitude=Math.hypot(...g),unit=g.map(value=>value/magnitude),level=kind==='f'?state.value:1;
+  const level=kind==='f'?state.value:1;
   const id=`${prefix}-surface-${kind}`,point=[...state.point,fn(...state.point)],base=[...state.point,0];
   const screen=p=>map(p).slice(0,2).map(n).join(' ');
   const line=(a,b,klass,extra='')=>`<path class="${klass}" d="M${screen(a)}L${screen(b)}" ${extra}/>`;
@@ -62,26 +58,22 @@ export function surfaceDiagram(state,kind,width=300,azimuth=45,elevation=35,pref
   const floor=[[-SURFACE_RANGE,-SURFACE_RANGE,0],[SURFACE_RANGE,-SURFACE_RANGE,0],[SURFACE_RANGE,SURFACE_RANGE,0],[-SURFACE_RANGE,SURFACE_RANGE,0]];
   const plane=floor.map(([x,y])=>[x,y,level]);
   const levels=kind==='f'?[1,2,4,6,9,12,16]:[.25,.5,1,2,4];
-  const gradientBase=liftedDirection(base,[0,0],unit,.5),lifted=liftedDirection(point,g,unit);
-  const chosen=liftedDirection(point,g,state.direction,.4);
+  const gradientBase=[base[0]+.12*g[0],base[1]+.12*g[1],0];
   const feasible=sequence(240,t=>{const xy=constraintPoint(t*360);return [...xy,kind==='f'?objective(...xy):1];});
   const [px,py]=map(point),[bx,by]=map(base);
   const axesOrigin=[-SURFACE_RANGE,-SURFACE_RANGE,0],xEnd=[SURFACE_RANGE,-SURFACE_RANGE,0],yEnd=[-SURFACE_RANGE,SURFACE_RANGE,0],zEnd=[-SURFACE_RANGE,-SURFACE_RANGE,18];
   const label=(p,text,dx=0,dy=0)=>{const [x,y]=map(p);return `<text x="${n(x+dx)}" y="${n(y+dy)}" text-anchor="middle">${text}</text>`;};
   return `<svg class="lm-svg lm-surface-svg" viewBox="0 0 ${width} ${height}" aria-hidden="true">
-    <defs><marker id="${id}-gradient" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="lm-${kind}-fill" d="M0 0L10 5L0 10Z"/></marker>
-      <marker id="${id}-direction" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path class="lm-ink-fill" d="M0 0L10 5L0 10Z"/></marker></defs>
+    <defs><marker id="${id}-gradient" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="lm-${kind}-fill" d="M0 0L10 5L0 10Z"/></marker></defs>
     <path class="lm-floor" d="M${floor.map(screen).join('L')}Z"/>
     ${curve(feasible.map(([x,y])=>[x,y,0]),'lm-floor-constraint')}
-    ${line(base,gradientBase,`lm-ground-gradient lm-line-${kind}`,`marker-end="url(#${id}-gradient)"`)}
-    <circle class="lm-point" cx="${n(bx)}" cy="${n(by)}" r="3"/>
     <path class="lm-height-plane lm-plane-${kind}" d="M${plane.map(screen).join('L')}Z"/>
     ${faces}${levels.map(value=>curve(contourPoints(kind,value),`lm-height-contour lm-line-${kind}`)).join('')}
     ${curve(contourPoints(kind,level),`lm-selected-contour lm-line-${kind}`)}
     ${curve(feasible,'lm-feasible-path')}
     ${line(base,point,'lm-vertical-guide')}
-    ${line(point,lifted,`lm-lifted-gradient lm-line-${kind}`,`marker-end="url(#${id}-gradient)"`)}
-    ${line(point,chosen,'lm-chosen-direction',`marker-end="url(#${id}-direction)"`)}
+    ${line(base,gradientBase,`lm-ground-gradient lm-line-${kind}`,`marker-end="url(#${id}-gradient)"`)}
+    <circle class="lm-point" cx="${n(bx)}" cy="${n(by)}" r="3"/>
     <circle class="lm-point" cx="${n(px)}" cy="${n(py)}" r="4"/>
     ${line(axesOrigin,xEnd,'lm-axis')}${line(axesOrigin,yEnd,'lm-axis')}${line(axesOrigin,zEnd,'lm-axis')}
     <g class="lm-labels">${label(xEnd,'x',-8,18)}${label(yEnd,'y',8,18)}${label(zEnd,kind,0,-8)}
