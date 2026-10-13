@@ -55,13 +55,13 @@ function internalLink(event, environment) {
 }
 
 // Fetch only the page a visitor is considering, including browsers without link-prefetch hints.
-export function initializePagePrefetch(load, environment = globalThis) {
+export function initializePagePrefetch(load, environment = globalThis, enabled = () => true) {
   const { document } = environment;
   let timer = null;
   const cancel = () => { environment.clearTimeout(timer); timer = null; };
   const allowed = () => {
     const connection = environment.navigator?.connection;
-    return !document.hidden && !connection?.saveData && !/^(slow-)?2g$/.test(connection?.effectiveType || '');
+    return enabled() && !document.hidden && !connection?.saveData && !/^(slow-)?2g$/.test(connection?.effectiveType || '');
   };
   function prepare(event, immediate = false) {
     const link = event.target.closest?.('a[href]');
@@ -85,7 +85,7 @@ export function initializePagePrefetch(load, environment = globalThis) {
 }
 
 // Keep the site shell (and audio) alive. Ordinary URLs remain usable directly.
-export function initializeSiteNavigation({ leave, enter }, environment = globalThis) {
+export function initializeSiteNavigation({ leave, enter, preserveSession = () => true }, environment = globalThis) {
   const { document, location, history, DOMParser } = environment, window = environment;
   const setTimeout = (...args) => environment.setTimeout(...args), clearTimeout = id => environment.clearTimeout(id);
   const requestAnimationFrame = callback => environment.requestAnimationFrame(callback), scrollTo = (...args) => environment.scrollTo(...args);
@@ -93,9 +93,9 @@ export function initializeSiteNavigation({ leave, enter }, environment = globalT
   const pages = createPageLoader(environment);
   const styles = new Map([...document.querySelectorAll('link[data-page-style]')].map(link => [link.href, link]));
   if (document.documentElement?.outerHTML) pages.remember(location.href, { html: document.documentElement.outerHTML, url: location.href });
-  initializePagePrefetch(pages.load, environment);
-  let displayed = new URL(location.href), pending = null, sequence = 0, scrollFrame = 0, committing = false;
-  history.scrollRestoration = 'manual';
+  initializePagePrefetch(pages.load, environment, preserveSession);
+  let displayed = new URL(location.href), pending = null, pendingURL = null, sequence = 0, scrollFrame = 0, committing = false;
+  history.scrollRestoration = 'auto';
   function saveScroll() {
     if (!committing) history.replaceState({ ...history.state, siteScroll: [environment.scrollX, environment.scrollY] }, '', location.href);
   }
@@ -111,19 +111,30 @@ export function initializeSiteNavigation({ leave, enter }, environment = globalT
   }
   async function navigate(href, { pop = false, saved = null } = {}) {
     const url = new URL(href, location.href);
-    if (url.origin !== location.origin) { location.assign(url.href); return; }
+    if (url.origin !== location.origin || (!pop && !preserveSession())) { pending?.abort(); history.scrollRestoration = 'auto'; location.assign(url.href); return; }
+    history.scrollRestoration = 'manual';
+    // A second click is still the same visit, including while its styles load.
+    if (!pop && pending && pendingURL === url.href) return;
     if (url.pathname === displayed.pathname && url.search === displayed.search) {
       pending?.abort(); sequence++;
       document.querySelectorAll('[data-navigation-style]').forEach(link => link.remove());
       if (!pop) { saveScroll(); history.pushState({ siteScroll: [0, 0] }, '', url); }
-      displayed = url; committing = false; pending = null; main.removeAttribute('aria-busy'); status.textContent = ''; position(url, saved); return;
+      displayed = url; committing = false; pending = pendingURL = null; main.removeAttribute('aria-busy'); delete status.dataset.navigationPending; status.textContent = ''; position(url, saved); return;
     }
     if (!pop) saveScroll();
     pending?.abort(); document.querySelectorAll('[data-navigation-style]').forEach(link => link.remove());
-    const controller = new AbortController(); pending = controller;
+    const controller = new AbortController(); pending = controller; pendingURL = url.href;
     const visit = ++sequence;
-    status.textContent = 'Loading page…'; main.setAttribute('aria-busy', 'true');
+    status.textContent = 'Loading page…'; status.dataset.navigationPending = ''; main.setAttribute('aria-busy', 'true');
     let additions = [];
+    // Bound the whole visit, including HTML and styles, so a link cannot hang.
+    const deadline = setTimeout(() => {
+      if (controller.signal.aborted || visit !== sequence) return;
+      controller.abort(); additions.forEach(link => link.remove());
+      committing = false; pending = pendingURL = null;
+      main.removeAttribute('aria-busy'); delete status.dataset.navigationPending;
+      history.scrollRestoration = 'auto'; location.assign(url.href);
+    }, 5000);
     try {
       const page = await pages.load(url.href, controller.signal);
       if (controller.signal.aborted || visit !== sequence) return;
@@ -191,18 +202,21 @@ export function initializeSiteNavigation({ leave, enter }, environment = globalT
     } catch (error) {
       additions.forEach(link => link.remove());
       if (controller.signal.aborted || visit !== sequence) return;
-      location.assign(url.href);
+      history.scrollRestoration = 'auto'; location.assign(url.href);
     } finally {
-      if (visit === sequence) { committing = false; main.removeAttribute('aria-busy'); pending = null; }
+      clearTimeout(deadline);
+      if (visit === sequence) { committing = false; main.removeAttribute('aria-busy'); delete status.dataset.navigationPending; pending = pendingURL = null; }
     }
   }
   document.addEventListener('click', event => {
     if (event.defaultPrevented || event.button !== 0) return;
     const url = internalLink(event, environment);
     if (!url) return;
+    if (!preserveSession()) { history.scrollRestoration = 'auto'; return; }
     event.preventDefault(); navigate(url.href);
   });
   window.addEventListener('popstate', event => { committing = true; navigate(location.href, { pop: true, saved: event.state?.siteScroll || [0, 0] }); });
   window.addEventListener('pageshow', event => { if (event.persisted) { displayed = new URL(location.href); document.dispatchEvent(new Event('site:page')); } });
+  window.addEventListener('pagehide', () => { history.scrollRestoration = 'auto'; });
   return navigate;
 }

@@ -3,10 +3,10 @@ import { initializeSiteNavigation } from './lib/site-navigation.mjs';
 import { initializeQuickSearch } from './quick-search.mjs';
 import { typesetMath, clearMath } from './lib/math-typesetting.mjs';
 
-let pageDispose = () => {}, gadgetPromise = null, page = 0;
+let pageDispose = () => {}, gadgetPromise = null, gadgetService = null, page = 0;
 function gadgets() {
   if (!gadgetPromise) gadgetPromise = Promise.all([import('./gadgets/service.mjs'), import('./gadgets/ui.mjs')]).then(([model, ui]) => {
-    const service = model.createGadgetService(); ui.mountDock(service); return { service, ui };
+    const service = model.createGadgetService(); ui.mountDock(service); gadgetService = service; return { service, ui };
   }).catch(error => { gadgetPromise = null; throw error; });
   return gadgetPromise;
 }
@@ -33,7 +33,13 @@ function enter(root) {
     gadgets().then(({ service, ui }) => { if (!closed) cleanups.push(ui.mountWorkspace(root, service)); }).catch(error => console.warn('Gadgets could not load:', error));
   }
 }
-const navigate = initializeSiteNavigation({ leave: () => pageDispose(), enter });
+function preserveSession() {
+  if (gadgetPromise && !gadgetService) return true;
+  const state = gadgetService?.getState();
+  return Boolean(state?.sound?.playing || state?.sound?.loading || state?.timer?.status === 'running');
+}
+// Let the browser navigate normally unless live audio or a timer needs this document.
+const navigate = initializeSiteNavigation({ leave: () => pageDispose(), enter, preserveSession });
 initializeNavigation();
 initializeQuickSearch(navigate);
 // No gadget runtime or clock loop on an ordinary visit without an active session.

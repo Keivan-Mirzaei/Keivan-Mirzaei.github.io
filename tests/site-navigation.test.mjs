@@ -2,11 +2,11 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createPageLoader, initializePagePrefetch, initializeSiteNavigation } from '../assets/js/lib/site-navigation.mjs';
 
-function setup({ autoStyles = true, initialCSS = [] } = {}) {
+function setup({ autoStyles = true, initialCSS = [], preserveSession = () => true } = {}) {
   const browser = new EventTarget(), document = new EventTarget(), requests = [], styles = [], entered = [], left = [], source = new Map();
   const location = { href: 'https://example.test/search/?q=math', origin: 'https://example.test', assigned: [], assign(url) { this.assigned.push(url); } };
   const history = { state: { keep: 'query' }, entries: [], replaceState(state, _, href) { this.state = state; location.href = String(href); }, pushState(state, _, href) { this.state = state; location.href = String(href); this.entries.push(String(href)); } };
-  const status = { textContent: '' }, title = { innerHTML: 'Search' }, nav = { innerHTML: 'Search nav' };
+  const status = { textContent: '', dataset: {} }, title = { innerHTML: 'Search' }, nav = { innerHTML: 'Search nav' };
   const main = { busy: false, focused: 0, setAttribute() { this.busy = true; }, removeAttribute() { this.busy = false; }, focus() { this.focused++; }, querySelector: () => document.content };
   function content(id) { return { id, isConnected: true, replaceWith(next) { this.isConnected = false; document.content = next; } }; }
   document.content = content('search');
@@ -29,7 +29,7 @@ function setup({ autoStyles = true, initialCSS = [] } = {}) {
     DOMParser: class { parseFromString(value) { return source.get(value); } },
     fetch(url, { signal }) { return new Promise((resolve, reject) => { requests.push({ url, signal, resolve: page => resolve({ ok: true, url, headers: { get: () => 'text/html' }, text: async () => encode(page) }), reject }); signal.addEventListener('abort', () => reject(new Error('aborted')), { once: true }); }); }
   });
-  const navigate = initializeSiteNavigation({ leave: root => left.push(root.id), enter: root => entered.push(root.id) }, browser);
+  const navigate = initializeSiteNavigation({ leave: root => left.push(root.id), enter: root => entered.push(root.id), preserveSession }, browser);
   return { browser, document, requests, styles, entered, left, history, status, main, nav, title, incoming, navigate };
 }
 
@@ -56,6 +56,72 @@ test('a competing navigation aborts the older request without replacing content 
   app.requests[1].resolve(app.incoming('fast')); await Promise.all([slow, next]);
   assert.deepEqual(app.entered, ['fast']); assert.deepEqual(app.left, ['search']); assert.deepEqual(app.browser.location.assigned, []);
   assert.equal(app.history.entries.length, 1);
+});
+
+test('ordinary links and search navigation use the browser when no session needs preserving', async () => {
+  const app = setup({ preserveSession: () => false });
+  const link = { href: 'https://example.test/lesson/', target: '', hasAttribute: () => false };
+  for (const type of ['pointerdown', 'click']) {
+    const event = new Event(type, { cancelable: true }); Object.assign(event, { button: 0 });
+    Object.defineProperty(event, 'target', { value: { closest: () => link } }); app.document.dispatchEvent(event);
+    assert.equal(event.defaultPrevented, false);
+  }
+  assert.equal(app.requests.length, 0);
+  assert.equal(app.history.scrollRestoration, 'auto');
+  await app.navigate('/search/?q=geometry');
+  assert.deepEqual(app.browser.location.assigned, ['https://example.test/search/?q=geometry']);
+  assert.deepEqual(app.left, []);
+});
+
+test('an active session switches navigation on and stopping it restores ordinary links', async () => {
+  let active = false;
+  const app = setup({ preserveSession: () => active });
+  active = true;
+  const next = app.navigate('/lesson/'); app.requests[0].resolve(app.incoming('lesson')); await next;
+  assert.deepEqual(app.entered, ['lesson']); assert.deepEqual(app.browser.location.assigned, []);
+  assert.equal(app.history.scrollRestoration, 'manual');
+  active = false;
+  await app.navigate('/research/');
+  assert.equal(app.requests.length, 1); assert.deepEqual(app.browser.location.assigned, ['https://example.test/research/']);
+  assert.equal(app.history.scrollRestoration, 'auto');
+});
+
+test('repeated clicks on a pending page keep its HTML request and stylesheet load', async () => {
+  const app = setup({ autoStyles: false });
+  const first = app.navigate('/lesson/'), repeated = app.navigate('/lesson/');
+  assert.equal(app.requests.length, 1); assert.equal(app.requests[0].signal.aborted, false);
+  app.requests[0].resolve(app.incoming('lesson', { css: ['/assets/lesson.css'] }));
+  await new Promise(setImmediate);
+  const stylesheet = app.styles[0], duringStyles = app.navigate('/lesson/');
+  assert.equal(app.styles[0], stylesheet); assert.equal(app.requests[0].signal.aborted, false);
+  stylesheet.onload(); await Promise.all([first, repeated, duringStyles]);
+  assert.deepEqual(app.entered, ['lesson']); assert.equal(app.history.entries.length, 1);
+});
+
+test('a stalled HTML request falls back after five seconds and clears loading feedback', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const app = setup(), next = app.navigate('/slow/');
+  assert.equal(app.status.dataset.navigationPending, '');
+  t.mock.timers.tick(5000); await next;
+  assert.equal(app.requests[0].signal.aborted, true);
+  assert.deepEqual(app.browser.location.assigned, ['https://example.test/slow/']);
+  assert.deepEqual(app.left, []); assert.equal(app.main.busy, false);
+  assert.equal(app.history.scrollRestoration, 'auto');
+  assert.equal(app.status.dataset.navigationPending, undefined);
+});
+
+test('the navigation deadline also covers styles and cannot fire after a successful visit', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const app = setup({ autoStyles: false });
+  const slow = app.navigate('/slow/'); app.requests[0].resolve(app.incoming('slow', { css: ['/assets/slow.css'] }));
+  await new Promise(setImmediate);
+  t.mock.timers.tick(5000); await slow;
+  assert.equal(app.styles.length, 0); assert.deepEqual(app.left, []);
+  assert.deepEqual(app.browser.location.assigned, ['https://example.test/slow/']);
+  const next = app.navigate('/fast/'); app.requests[1].resolve(app.incoming('fast')); await next;
+  t.mock.timers.tick(5000);
+  assert.deepEqual(app.entered, ['fast']); assert.equal(app.browser.location.assigned.length, 1);
+  assert.equal(app.status.dataset.navigationPending, undefined);
 });
 
 test('failed requests or unsupported documents fall back without disposing the current page', async () => {
