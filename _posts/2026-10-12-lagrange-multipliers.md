@@ -25,11 +25,9 @@ $$
 g(x,y)=x^2+2y^2=1.
 $$
 
-This is a constrained optimization problem: we want to minimize $$f$$, but only among the points on the ellipse $$g=1$$. The method of Lagrange multipliers specifies a necessary condition for a constrained extremum: the gradients of $$f$$ and $$g$$ must be parallel. We will explore this condition visually, then solve the problem.
+This is a constrained optimization problem: we want to minimize $$f$$, but only among the points on the ellipse $$g=1$$. Without the constraint, $$f$$ has minimum zero at $$A=(2,0)$$. But $$g(A)=4$$, so this point is inadmissible. Setting $$\nabla f=0$$ does not solve our problem: a direction that decreases $$f$$ may leave the allowed curve. The method of Lagrange multipliers specifies a necessary condition for a constrained extremum: the gradients of $$f$$ and $$g$$ must be parallel. We will explore this condition visually, then solve the problem.
 
-## An unconstrained attempt
 
-Without the constraint, $$f$$ has minimum zero at $$A=(2,0)$$. But $$g(A)=4$$, so this point is inadmissible. Setting $$\nabla f=0$$ does not solve our problem: a direction that decreases $$f$$ may leave the allowed curve.
 
 ## Height, contours, and steepest ascent
 
