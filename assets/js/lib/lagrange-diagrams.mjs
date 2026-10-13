@@ -1,5 +1,4 @@
-import { sectionValue, feasibleValue, constraintPoint, objectiveContour } from './lagrange-math.mjs';
-import { formatNumber } from './widget-math.mjs';
+import { constraintPoint, objectiveContour } from './lagrange-math.mjs';
 
 const fixed = value => Number(value.toFixed(3));
 const path = (points, map) => points.map((point, i) => `${i ? 'L' : 'M'}${map(point).map(fixed).join(' ')}`).join(' ');
@@ -15,7 +14,7 @@ export function planGeometry(width = 580) {
 
 export function planDiagram(state, width = 580, prefix = 'lagrange') {
   const { height, scale, origin, map } = planGeometry(width);
-  const [px, py] = map(state.point), [ax, ay] = map([2, 1]);
+  const [px, py] = map(state.point), [ax, ay] = map([2, 0]);
   const clip = `${prefix}-plan-clip`, markerF = `${prefix}-arrow-f`, markerG = `${prefix}-arrow-g`;
   const contour = (kind, level, klass) => `<path class="${klass}" d="${path(samples(0,360,240, angle=>kind==='f'?objectiveContour(angle,level):constraintPoint(angle,level)),map)}Z"/>`;
   const line = (a, b, klass, extra = '') => {
@@ -45,37 +44,4 @@ export function planDiagram(state, width = 580, prefix = 'lagrange') {
       <text x="${fixed(origin[0] - 10)}" y="${fixed(origin[1] + 17)}" text-anchor="end">0</text>
       <text x="${fixed(origin[0] + scale)}" y="${fixed(origin[1] + 17)}" text-anchor="middle">1</text>
     </g></svg>`;
-}
-
-function chart({ width, height = 185, xRange, yRange, xTicks, yTicks, curve, reference, point, kind, xLabel, yLabel, vertical = 0, horizontal }) {
-  const left = 35, right = width - 14, top = 15, bottom = height - 35;
-  const map = ([x,y]) => [left + (right - left) * (x - xRange[0]) / (xRange[1] - xRange[0]), bottom - (bottom - top) * (y - yRange[0]) / (yRange[1] - yRange[0])];
-  const [px,py] = map(point), [zx] = map([vertical, 0]);
-  const ticks = xTicks.map(x => { const [sx] = map([x, 0]); return `<path class="lm-axis" d="M${fixed(sx)} ${bottom}v4"/><text x="${fixed(sx)}" y="${bottom + 18}" text-anchor="middle">${formatNumber(x)}</text>`; }).join('');
-  const yticks = yTicks.map(y => { const [,sy] = map([0, y]); return `<path class="lm-grid" d="M${left} ${fixed(sy)}H${right}"/><text x="${left - 7}" y="${fixed(sy + 4)}" text-anchor="end">${formatNumber(y)}</text>`; }).join('');
-  const ref = reference ? `<path class="lm-slope-line" d="${path(reference, map)}"/>` : '';
-  const level = horizontal === undefined ? '' : `<path class="lm-reference" d="M${left} ${fixed(map([0,horizontal])[1])}H${right}"/>`;
-  return `<svg class="lm-svg" viewBox="0 0 ${width} ${height}" aria-hidden="true">
-    <g class="lm-labels">${yticks}${ticks}<text x="${left}" y="11">${yLabel}</text><text x="${right}" y="${height - 3}" text-anchor="end">${xLabel}</text></g>
-    <path class="lm-axis" d="M${left} ${top}V${bottom}H${right}"/>
-    <path class="lm-zero" d="M${fixed(zx)} ${top}V${bottom}"/>${level}${ref}
-    <path class="lm-curve-${kind}" d="${path(curve, map)}"/>
-    <circle class="lm-chart-point lm-${kind}-fill" cx="${fixed(px)}" cy="${fixed(py)}" r="4"/>
-    </svg>`;
-}
-
-export function sectionDiagram(state, kind, width = 280) {
-  const base = kind === 'f' ? state.value : 1, slope = kind === 'f' ? state.slopeF : state.slopeG;
-  const yRange = kind === 'f' ? [-.5, 34] : [0, 12];
-  // Short tangents stay inside the fixed axes even near the extrema.
-  return chart({ width, xRange: [-.65,.65], yRange, xTicks: [-.65,0,.65], yTicks: kind === 'f' ? [0,10,20,30] : [0,4,8,12],
-    curve: samples(-.65,.65,96, t => [t, sectionValue(state, kind, t)]),
-    reference: [[-.22,base - .22 * slope],[.22,base + .22 * slope]], horizontal: kind === 'g' ? 1 : undefined,
-    point: [0,base], kind, xLabel: 't', yLabel: kind });
-}
-
-export function feasibleDiagram(state, width = 580) {
-  return chart({ width, height: 205, xRange: [0,360], yRange: [0,20], xTicks: [0,90,180,270,360], yTicks: [0,5,10,15,20],
-    curve: samples(0,360,240, theta => [theta,feasibleValue(theta)]), point: [state.theta,state.value], kind: 'f',
-    xLabel: 'θ (degrees)', yLabel: 'f on the constraint', vertical: state.theta });
 }

@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {sectionState,sectionValue,objective,constraint,objectiveGradient,constraintGradient,constraintHessian,objectiveHessian,constraintPoint,objectiveContour,dot,MINIMUM_ANGLE,MAXIMUM_ANGLE,ascentAngle,crossEntropy} from '../assets/js/lib/lagrange-math.mjs';
+import {sectionState,objective,constraint,objectiveGradient,constraintGradient,constraintPoint,objectiveContour,dot,MINIMUM_ANGLE,MAXIMUM_ANGLE,ascentAngle,crossEntropy} from '../assets/js/lib/lagrange-math.mjs';
 import {surfaceProjection,liftedDirection,surfaceDiagram} from '../assets/js/lib/lagrange-surfaces.mjs';
 const close=(a,b,tolerance=1e-10)=>assert.ok(Math.abs(a-b)<tolerance,`${a} != ${b}`);
 
-test('quartic constraint is feasible; normals and tangents are orthonormal throughout',()=>{
+test('elliptical constraint is feasible; normals and tangents are orthonormal throughout',()=>{
   for(let theta=0;theta<=360;theta+=3)for(const phi of [-180,-90,-35,0,28,90,180]) {
     const s=sectionState(theta,phi);close(constraint(...s.point),1);close(dot(s.direction,s.direction),1);
     close(dot(s.tangent,s.normal),0);close(dot(s.tangent,s.gradG),0);
@@ -26,11 +26,12 @@ test('analytic gradients and sections agree with independently computed differen
   for(const theta of [0,26,90,185,270])for(const phi of [-180,-90,-30,0,47,90,180]) {
     const s=sectionState(theta,phi);
     for(const [kind,fn,grad] of [['f',objective,objectiveGradient],['g',constraint,constraintGradient]]) {
-      close((sectionValue(s,kind,e)-sectionValue(s,kind,-e))/(2*e),kind==='f'?s.slopeF:s.slopeG,3e-8);
+      const value=t=>fn(...s.point.map((x,i)=>x+t*s.direction[i]));
+      close((value(e)-value(-e))/(2*e),kind==='f'?s.slopeF:s.slopeG,3e-8);
       const [x,y]=s.point;close((fn(x+e,y)-fn(x-e,y))/(2*e),grad(x,y)[0],3e-8);
       close((fn(x,y+e)-fn(x,y-e))/(2*e),grad(x,y)[1],3e-8);
     }
-    if(phi%180===0){assert.equal(s.slopeG,0);assert.ok(sectionValue(s,'g',.3)>1);}
+    if(phi%180===0){assert.equal(s.slopeG,0);assert.ok(constraint(...s.point.map((x,i)=>x+.3*s.direction[i]))>1);}
   }
 });
 
@@ -41,26 +42,26 @@ test('contours satisfy their actual levels and neither family is circular',()=>{
   }
   assert.notEqual(Math.hypot(...constraintPoint(0)),Math.hypot(...constraintPoint(90)));
   const a=objectiveContour(0,4),b=objectiveContour(90,4);
-  assert.notEqual(Math.hypot(a[0]-2,a[1]-1),Math.hypot(b[0]-2,b[1]-1));
-  assert.ok(Math.abs(Math.hypot(...constraintPoint(135,4))/Math.hypot(...constraintPoint(135,1))-2)>.1);
+  assert.notEqual(Math.hypot(a[0]-2,a[1]),Math.hypot(b[0]-2,b[1]));
+  close(Math.hypot(...constraintPoint(135,4))/Math.hypot(...constraintPoint(135,1)),2);
 });
 
-test('calculated extrema solve the multiplier equations, with global Hessian certificates',()=>{
-  for(const [angle,classification,value] of [[MINIMUM_ANGLE,'minimum',3.06900274930869],[MAXIMUM_ANGLE,'maximum',18.19057461094327]]) {
-    const s=sectionState(angle);assert.equal(s.stationary,classification);close(s.value,value);close(s.tangentSlope,0);
+test('exact extrema solve the multiplier equations and give the full constrained range',()=>{
+  for(const [angle,classification,point,multiplier,value] of [[MINIMUM_ANGLE,'minimum',[1,0],-1,1],[MAXIMUM_ANGLE,'maximum',[-1,0],3,9]]) {
+    const s=sectionState(angle);assert.equal(s.stationary,classification);assert.deepEqual(s.point,point);
+    assert.equal(s.value,value);assert.equal(s.multiplier,multiplier);assert.equal(s.tangentSlope,0);
     s.gradF.forEach((component,i)=>close(component,s.multiplier*s.gradG[i]));
-    assert.equal(sectionState(Number(angle.toPrecision(15))).stationary,classification);
+    assert.equal(sectionState(angle+360).stationary,classification);
     assert.equal(sectionState(angle+1e-8).stationary,null);
     assert.notEqual(sectionState(angle+1e-8).slopeF,0);
-    const sign=classification==='minimum'?1:-1;
-    for(const [x,y] of [[0,0],[-2,3],[3,-4],[1,1]]) {
-      const a=objectiveHessian(),b=constraintHessian(x,y);
-      const m=a.map((row,i)=>row.map((value,j)=>sign*(value-s.multiplier*b[i][j])));
-      assert.ok(m[0][0]>0&&m[0][0]*m[1][1]-m[0][1]*m[1][0]>0);
-    }
   }
-  const low=sectionState(MINIMUM_ANGLE).value,high=sectionState(MAXIMUM_ANGLE).value;
-  for(let theta=0;theta<360;theta+=.5){const s=sectionState(theta);assert.ok(s.value>=low-1e-12&&s.value<=high+1e-12);}
+  for(let theta=0;theta<360;theta+=.5) {
+    const s=sectionState(theta),[x,y]=s.point;
+    close(s.value,6-4*x-x*x);
+    close(s.value-1,(1-x)*(x+5));
+    close(9-s.value,(x+1)*(x+3));
+    assert.ok(s.value>=1&&s.value<=9);
+  }
 });
 
 test('lifted 3D arrows encode actual directional derivatives with shared projection scales',()=>{

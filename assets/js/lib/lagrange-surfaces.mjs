@@ -1,9 +1,7 @@
-// Actual sampled height fields, orthographic 3D projection, and exact level curves.
-// SVG keeps these small, rotatable teaching maps available without a GPU/library.
 import { objective, constraint, objectiveGradient, constraintGradient, constraintPoint, objectiveContour, dot } from './lagrange-math.mjs';
 
 export const SURFACE_RANGE=1.25;
-export const HEIGHT_SCALE=.08;
+export const HEIGHT_SCALE=.14;
 const n=value=>Number(value.toFixed(3));
 const sequence=(count,fn)=>Array.from({length:count+1},(_,i)=>fn(i/count));
 const models={f:objective,g:constraint};
@@ -14,8 +12,8 @@ export function surfaceProjection(width=300,azimuth=45,elevation=35) {
   const a=azimuth*Math.PI/180,e=elevation*Math.PI/180;
   const raw=([x,y,z])=>{const depth=-Math.sin(a)*x+Math.cos(a)*y;
     return [Math.cos(a)*x+Math.sin(a)*y,Math.sin(e)*depth-Math.cos(e)*HEIGHT_SCALE*z,-Math.cos(e)*depth+Math.sin(e)*HEIGHT_SCALE*z];};
-  // Fit the same actual geometry in both maps rather than an oversized cuboid.
-  const corners=[...mesh('f').flatMap(face=>face.points),...mesh('g').flatMap(face=>face.points),[-SURFACE_RANGE,-SURFACE_RANGE,32]].map(raw);
+  const floor=[[-SURFACE_RANGE,-SURFACE_RANGE,0],[SURFACE_RANGE,-SURFACE_RANGE,0],[SURFACE_RANGE,SURFACE_RANGE,0],[-SURFACE_RANGE,SURFACE_RANGE,0]];
+  const corners=[...mesh('f').flatMap(face=>face.points),...mesh('g').flatMap(face=>face.points),...floor,[-SURFACE_RANGE,-SURFACE_RANGE,18]].map(raw);
   const low=corners.reduce((p,c)=>[Math.min(p[0],c[0]),Math.min(p[1],c[1])],[Infinity,Infinity]);
   const high=corners.reduce((p,c)=>[Math.max(p[0],c[0]),Math.max(p[1],c[1])],[-Infinity,-Infinity]);
   const scale=Math.min((width-48)/(high[0]-low[0]),(height-56)/(high[1]-low[1]));
@@ -41,7 +39,6 @@ function contourPoints(kind,level) {
   const key=`${kind}:${level}`;
   if(cached.has(key))return cached.get(key);
   const points=sequence(360,t=>{const xy=kind==='f'?objectiveContour(t*360,level):constraintPoint(t*360,level);return [...xy,level];});
-  // Fixed contours are retained; a selected level changes on every point edit.
   if([.25,.5,1,2,3,4,6,8,10,15,20,25,30].includes(level))cached.set(key,points);
   return points;
 }
@@ -64,12 +61,12 @@ export function surfaceDiagram(state,kind,width=300,azimuth=45,elevation=35,pref
   const faces=sorted.map(face=>`<path class="lm-surface-face lm-face-${kind}" opacity="${n(face.shade)}" d="M${face.points.map(screen).join('L')}Z"/>`).join('');
   const floor=[[-SURFACE_RANGE,-SURFACE_RANGE,0],[SURFACE_RANGE,-SURFACE_RANGE,0],[SURFACE_RANGE,SURFACE_RANGE,0],[-SURFACE_RANGE,SURFACE_RANGE,0]];
   const plane=floor.map(([x,y])=>[x,y,level]);
-  const levels=kind==='f'?[3,6,10,15,20,25,30]:[.25,.5,1,2,4,8];
+  const levels=kind==='f'?[1,2,4,6,9,12,16]:[.25,.5,1,2,4];
   const gradientBase=liftedDirection(base,[0,0],unit,.5),lifted=liftedDirection(point,g,unit);
   const chosen=liftedDirection(point,g,state.direction,.4);
   const feasible=sequence(240,t=>{const xy=constraintPoint(t*360);return [...xy,kind==='f'?objective(...xy):1];});
   const [px,py]=map(point),[bx,by]=map(base);
-  const axesOrigin=[-SURFACE_RANGE,-SURFACE_RANGE,0],xEnd=[SURFACE_RANGE,-SURFACE_RANGE,0],yEnd=[-SURFACE_RANGE,SURFACE_RANGE,0],zEnd=[-SURFACE_RANGE,-SURFACE_RANGE,32];
+  const axesOrigin=[-SURFACE_RANGE,-SURFACE_RANGE,0],xEnd=[SURFACE_RANGE,-SURFACE_RANGE,0],yEnd=[-SURFACE_RANGE,SURFACE_RANGE,0],zEnd=[-SURFACE_RANGE,-SURFACE_RANGE,18];
   const label=(p,text,dx=0,dy=0)=>{const [x,y]=map(p);return `<text x="${n(x+dx)}" y="${n(y+dy)}" text-anchor="middle">${text}</text>`;};
   return `<svg class="lm-svg lm-surface-svg" viewBox="0 0 ${width} ${height}" aria-hidden="true">
     <defs><marker id="${id}-gradient" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="lm-${kind}-fill" d="M0 0L10 5L0 10Z"/></marker>
@@ -88,6 +85,6 @@ export function surfaceDiagram(state,kind,width=300,azimuth=45,elevation=35,pref
     <circle class="lm-point" cx="${n(px)}" cy="${n(py)}" r="4"/>
     ${line(axesOrigin,xEnd,'lm-axis')}${line(axesOrigin,yEnd,'lm-axis')}${line(axesOrigin,zEnd,'lm-axis')}
     <g class="lm-labels">${label(xEnd,'x',-8,18)}${label(yEnd,'y',8,18)}${label(zEnd,kind,0,-8)}
-      ${[0,16,32].map(z=>label([-SURFACE_RANGE,-SURFACE_RANGE,z],String(z),-13,4)).join('')}
+      ${[0,9,18].map(z=>label([-SURFACE_RANGE,-SURFACE_RANGE,z],String(z),-13,4)).join('')}
       ${label(point,'P',-10,-9)}</g></svg>`;
 }

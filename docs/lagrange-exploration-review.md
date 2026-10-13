@@ -1,27 +1,19 @@
 # Lagrange multipliers exploration — release review
 
-Updated on 12 October 2026 at `/notes/lagrange-multipliers/`. Publication requested after local review.
+Updated on 12 October 2026 at `/notes/lagrange-multipliers/`.
 
-## Investigation
+The revised example is `f=(x−2)²+4y²` on the ellipse `x²+2y²=1`. Its multiplier equations have exactly two candidates: (1,0), with value 1 and multiplier −1, and (−1,0), with value 9 and multiplier 3. Compactness and comparison certify the unique global minimum and maximum. No numerical root-finding or Hessian classification is needed.
 
-The problem now uses a tilted quadratic objective and a quartic oval constraint. Linked 3D maps show actual sampled height fields, analytic noncircular contours, the feasible curve lifted onto each surface, normalized input-plane gradient directions, and their lifted tangent vectors. Shared rotation and a top-down view let readers examine the geometry from different directions.
+The widget retains the linked 3D maps, top-down contours, point and direction controls, gradients, and shared camera/history. The cross-section plots and curve profile have been removed, along with their assets and rendering code. Routine captions and repeated status comments are gone; extrema use brief confirmations and operating instructions remain in Info. Both contour families are noncircular ellipses.
 
-The article develops steepest ascent from directional cross sections and proves the maximum slope is the gradient magnitude by Cauchy–Schwarz. It distinguishes an input gradient from a three-dimensional graph normal, then uses contour normals and allowed tangent directions to motivate and state the Lagrange multiplier theorem. Numerical solutions of the updated multiplier equations are accompanied by global convexity/concavity certificates, separating calculation from proof. The final cross-entropy minimization exercise, Hint, and Solution remain in place.
-
-The title, descriptive reference anchor, identifying mark, model, widget, static previews, and worked solution agree. Ordinary reading remains useful without interaction. Numerical precision beyond three significant digits is reserved for reproducing the stationary-point calculation.
+The article keeps the steepest-ascent argument, tangent-space explanation, theorem and proof, exact worked solution, and final cross-entropy minimization exercise. The title, identifying mark, static previews, widget model, and text agree. The existing roadmaps guide the framing, controls, references, numeric formatting, disclosures, and static reading path.
 
 ## Verification
 
-- The strict build, production asset optimizer, and site checker passed for 67 pages, including links, anchors, images, search, feed, and sitemap.
-- All 390 JavaScript tests and 13 Python tests passed. Seven focused tests cover the new model, steepest-ascent bound and equality cases, finite-difference derivatives, noncircular contours, multiplier residuals and certificates, 3D arrow geometry and projection, and entropy.
-- All six generated SVGs parse. The five static views and the identifying mark are regenerated from the shared model.
-- Browser checks confirmed Follow ∇f gives slope ≈5.80 at the starting point, matching its maximum, and Follow ∇g gives ≈3.09, also matching its maximum.
-- Selecting the calculated minimum gives objective ≈3.07 and opposite gradients. Maximum selection gives ≈18.2 and clears the minimum effect. Both candidates have zero tangent slopes.
-- Dragging one map rotates both without moving the selected point; one Undo restores the camera. Camera sliders work with the keyboard. Settings and Info are mutually exclusive and close with Escape.
-- At 320 pixels the maps stack, the page has no horizontal overflow, and the displayed formulas have no rendering errors. The top-down map, curve profile, history, and reset behavior follow the same shared state.
+The seven mathematical checks cover feasibility and tangent geometry, the steepest-ascent bound and equality cases, independent finite-difference derivatives, contour equations, exact multiplier solutions and the constrained range, lifted arrows and linked projection, and entropy.
 
-## Publication verification
-
-The isolated release passed the strict production build, asset optimizer, all local link checks for 63 HTML pages, all 368 JavaScript tests, and all six Python tests. A link to the separate, unpublished entropy exploration was replaced by a self-contained interpretation of the KL identity.
-
-The final screenshot is retained with this chat. The release includes this exploration, its widget, figures, identifying mark, mathematical tests, and documentation, using the existing GitHub Pages workflow.
+- The isolated production build and asset optimizer passed, followed by all local link, image, anchor, search, feed, and sitemap checks for 63 HTML pages.
+- All 368 JavaScript tests and six Python tests passed. All four generated SVGs parse.
+- Browser checks confirmed the exact point, value, gradients, and classification at both extrema. Follow ∇f and Follow ∇g give the maximum slopes. Camera changes affect both maps without moving the point; Undo restores the camera and the previous extremum.
+- Settings sliders work with the keyboard; Info and Settings remain mutually exclusive and close with Escape. The top-down view works, and no cross-section controls or plots remain.
+- At 320 pixels the maps stack, the page has no horizontal overflow, and the open entropy solution has no wide formulas or rendering errors. The desktop view and camera were restored, and a complete widget screenshot is retained with the chat.

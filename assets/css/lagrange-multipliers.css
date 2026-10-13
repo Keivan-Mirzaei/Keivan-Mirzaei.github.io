@@ -28,20 +28,16 @@
 .lm-svg .lm-g-contour { fill: none; stroke: var(--green); stroke-width: 1; stroke-dasharray: 4 3; opacity: .25; }
 .lm-ascent-actions { display: flex; gap: 8px; margin: 6px 0 14px; }
 .lm-ascent-actions > button { flex: 1; }
-.lm-widget .lm-ascent-result { margin: 12px 0 0; font-size: 13px; }
-.lm-widget[data-ascent='true'] .lm-ascent-result { color: var(--green); }
 .lm-camera-settings .widget-slider-setting { margin-bottom: 12px; }
 .lm-widget .lm-plan { margin-top: 16px; border-radius: 8px; background: var(--sidebar); touch-action: pan-y; user-select: none; }
 .lm-widget[data-complete='true'] .lm-plan { background: var(--tint); }
-.lm-plan svg, .lm-plan img, .lm-sections svg, .lm-sections img, [data-lm-feasible] svg { display: block; width: 100%; height: auto; }
+.lm-plan svg, .lm-plan img { display: block; width: 100%; height: auto; }
 .lm-svg { overflow: hidden; }
 .lm-svg text { fill: var(--muted); font: 12px var(--sans); }
 .lm-svg .lm-axis { fill: none; stroke: var(--muted); stroke-width: 1; opacity: .45; }
-.lm-svg .lm-grid { fill: none; stroke: var(--line); stroke-width: 1; }
 .lm-svg .lm-contour { fill: none; stroke: var(--lm-objective); stroke-width: 1; opacity: .22; }
 .lm-svg .lm-level { fill: none; stroke: var(--lm-objective); stroke-width: 1.6; opacity: .7; }
-.lm-svg .lm-constraint, .lm-svg .lm-curve-g { fill: none; stroke: var(--green); stroke-width: 2.5; }
-.lm-svg .lm-curve-f { fill: none; stroke: var(--lm-objective); stroke-width: 2.5; }
+.lm-svg .lm-constraint { fill: none; stroke: var(--green); stroke-width: 2.5; }
 .lm-svg .lm-direction { stroke: var(--ink); stroke-width: 1.2; stroke-dasharray: 5 5; opacity: .6; }
 .lm-svg .lm-gradient-f { stroke: var(--lm-objective); stroke-width: 2.5; }
 .lm-svg .lm-gradient-g { stroke: var(--green); stroke-width: 2.5; stroke-dasharray: 5 3; }
@@ -49,10 +45,6 @@
 .lm-svg .lm-g-fill { fill: var(--green); }
 .lm-svg .lm-point { fill: var(--ink); stroke: var(--paper); stroke-width: 1.5; }
 .lm-svg .lm-centre { fill: var(--muted); }
-.lm-svg .lm-zero { stroke: var(--muted); stroke-width: 1; opacity: .22; }
-.lm-svg .lm-reference { stroke: var(--green); stroke-width: 1; stroke-dasharray: 4 4; opacity: .55; }
-.lm-svg .lm-slope-line { stroke: var(--ink); stroke-width: 1.8; fill: none; }
-.lm-svg .lm-chart-point { stroke: var(--paper); stroke-width: 1.5; }
 .lm-widget .lm-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; font-size: 12px; margin: 10px 0 18px; }
 .lm-key-f::before, .lm-key-g::before { content: ''; display: inline-block; width: 15px; margin: 0 6px 3px 0; border-top: 2px solid var(--lm-objective); }
 .lm-key-g::before { border-color: var(--green); border-top-style: dashed; }
@@ -61,18 +53,9 @@
 .lm-values dd { margin: 0; font-size: 14px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .lm-primary-actions { display: flex; gap: 8px; margin: 8px 0 20px; }
 .lm-primary-actions > button { flex: 1; }
-.lm-view-control { margin-bottom: 16px; }
-.lm-view-control > label { font-size: 12px; }
-.lm-widget .lm-section-formula { text-align: center; margin: 8px 0 12px; }
-.lm-sections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.lm-sections > div { min-width: 0; }
-.lm-widget .lm-slope { font-size: 12px; color: var(--muted); margin: 4px 0; }
-.lm-slope output { color: var(--ink); font-variant-numeric: tabular-nums; }
-.lm-widget .lm-caption { font-size: 12px; color: var(--muted); margin: 12px 0 0; }
-.lm-widget .lm-map-caption { margin: 12px 0 18px; }
-.lm-widget .activity-result { min-height: 56px; padding: 10px 0; }
+.lm-widget .activity-result { margin: 8px 0; padding: 0; }
 .lm-widget .widget-slider-heading { flex-wrap: wrap; gap: 0 12px; }
-@media (max-width: 540px) { .lm-sections,.lm-surfaces { grid-template-columns: 1fr; gap: 12px; } }
+@media (max-width: 540px) { .lm-surfaces { grid-template-columns: 1fr; gap: 12px; } }
 @media (max-width: 360px) {
   .lm-primary-actions { flex-direction: column; }
   .lm-values { gap: 12px; }

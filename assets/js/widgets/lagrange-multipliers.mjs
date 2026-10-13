@@ -1,5 +1,5 @@
 import { DEFAULT_STATE, MINIMUM_ANGLE, MAXIMUM_ANGLE, sectionState, normalizeAngle, ascentAngle } from '../lib/lagrange-math.mjs';
-import { planDiagram, planGeometry, sectionDiagram, feasibleDiagram } from '../lib/lagrange-diagrams.mjs';
+import { planDiagram, planGeometry } from '../lib/lagrange-diagrams.mjs';
 import { surfaceDiagram } from '../lib/lagrange-surfaces.mjs';
 import { formatNumber } from '../lib/widget-math.mjs';
 import { bindPanelHistory, trackControlEdits } from '../lib/panel-history.mjs';
@@ -13,59 +13,39 @@ export function mount(root = globalThis.document) {
   for (const widget of root.querySelectorAll('[data-widget="lagrange-multipliers"]')) {
     const field = name => widget.querySelector(`[data-lm-${name}]`);
     const put = (name, value) => { field(name).textContent = value; };
-    const controls = [field('theta'), field('phi'), field('view'),field('map'),field('azimuth'),field('elevation')];
+    const controls = [field('theta'), field('phi'), field('map'),field('azimuth'),field('elevation')];
     const plan = field('plan');
     let current = controls.map(control=>control.value);
     let drag = null;
-    const display = value => value === 0 ? '0' : `≈ ${formatNumber(value)}`;
+    const display = value => Number.isInteger(value) ? String(value) : `≈ ${formatNumber(value)}`;
     const vector = values => `(${values.map(value => formatNumber(value)).join(', ')})`;
+    const vectorLabel = values => `${values.every(Number.isInteger) ? '' : '≈ '}${vector(values)}`;
 
     function render() {
       current = controls.map(control => control.value);
-      const curved = current[2] === 'curve';
-      const state = sectionState(Number(current[0]), curved ? 0 : Number(current[1]));
-      const surface=current[3]==='surface';
+      const state = sectionState(Number(current[0]), Number(current[1]));
+      const surface=current[2]==='surface';
       plan.hidden=surface;field('surfaces').hidden=!surface;
       const width = Math.max(220, widget.clientWidth-40);
       plan.innerHTML = planDiagram(state, width, widget.id);
-      plan.setAttribute('aria-label', `P approximately ${vector(state.point)} on the oval g=1. Objective gradient ${vector(state.gradF)}, constraint gradient ${vector(state.gradG)}. Section direction ${state.phi} degrees from tangent. Gradient arrows use a common scale.`);
+      plan.setAttribute('aria-label', `P approximately ${vector(state.point)} on the ellipse g=1. Objective gradient ${vector(state.gradF)}, constraint gradient ${vector(state.gradG)}. Chosen direction ${state.phi} degrees from tangent. Gradient arrows use a common scale.`);
       if(surface)for(const kind of ['f','g']) {
         const map=field(`surface-${kind}`);
-        map.innerHTML=surfaceDiagram(state,kind,Math.max(220,map.clientWidth||300),Number(current[4]),Number(current[5]),widget.id);
-        map.setAttribute('aria-label', `3D graph of ${kind}, with ${kind==='f'?'tilted elliptical':'quartic oval'} contours and the same feasible point P. Coloured arrows show steepest ascent; the black arrow shows the selected direction. Selected slope ${formatNumber(kind==='f'?state.slopeF:state.slopeG)}, maximum ${formatNumber(kind==='f'?state.normF:state.normG)}.`);
+        map.innerHTML=surfaceDiagram(state,kind,Math.max(220,map.clientWidth||300),Number(current[3]),Number(current[4]),widget.id);
+        map.setAttribute('aria-label', `3D graph of ${kind}, with elliptical contours and the same feasible point P. Coloured arrows show steepest ascent; the black arrow shows the selected direction. Selected slope ${formatNumber(kind==='f'?state.slopeF:state.slopeG)}, maximum ${formatNumber(kind==='f'?state.normF:state.normG)}.`);
       }
-      put('point', `≈ ${vector(state.point)}`); put('value', display(state.value));
-      put('grad-f', `≈ ${vector(state.gradF)}`); put('grad-g', `≈ ${vector(state.gradG)}`);
+      put('point', vectorLabel(state.point)); put('value', display(state.value));
+      put('grad-f', vectorLabel(state.gradF)); put('grad-g', vectorLabel(state.gradG));
       put('theta-value', `${formatNumber(state.theta)}°`);
       field('theta').setAttribute('aria-valuetext', `${formatNumber(state.theta)} degrees`);
       put('phi-value', `${formatNumber(state.phi)}°${state.phi%180 === 0 ? ' · tangent' : Math.abs(state.phi) === 90 ? ' · normal' : ''}`);
       field('phi').setAttribute('aria-valuetext', `${state.phi} degrees from tangent`);
-      put('line-label', surface?'Black arrow: chosen direction':curved?'Grey dashed: tangent line':'Grey dashed: section line');
-      put('map-caption',surface?'Drag either map to rotate both. Dashed arrows: input-plane gradient directions; solid coloured arrows: lifted steepest ascent.':'Drag to move P on g = 1. Both gradients are perpendicular to their own contours.');
-      put('azimuth-value',`${formatNumber(Number(current[4]))}°`);put('elevation-value',`${formatNumber(Number(current[5]))}°`);
-      field('direction-panel').hidden = curved; field('curve-panel').hidden = !curved;
-      for (const kind of ['f','g']) {
-        const graph = field(`section-${kind}`), slope = kind === 'f' ? state.slopeF : state.slopeG;
-        graph.innerHTML = sectionDiagram(state, kind, Math.max(220, graph.clientWidth || width));
-        graph.setAttribute('aria-label', `${kind}(P+tv): value ${formatNumber(kind === 'f' ? state.value : 1)} and slope ${formatNumber(slope)} at t=0. The black segment is the tangent.`);
-        put(`slope-${kind}`, display(slope));
-        put(`max-${kind}`,display(kind==='f'?state.normF:state.normG));
-      }
-      const reachesF=Math.abs(state.slopeF-state.normF)<1e-10,reachesG=Math.abs(state.slopeG-state.normG)<1e-10;
-      widget.dataset.ascent=String(!curved&&(reachesF||reachesG));
-      put('ascent-feedback',reachesF&&reachesG?'Both functions rise fastest in this direction: their gradients point the same way.':reachesF?'Steepest ascent of f: the slope equals the magnitude of ∇f.':reachesG?'Steepest ascent of g: the slope equals the magnitude of ∇g.':'Rotate the direction or follow a gradient to reach the largest upward slope.');
-      field('feasible').innerHTML = feasibleDiagram(state, width);
-      field('feasible').setAttribute('aria-label', `Objective restricted to g=1: value ${formatNumber(state.value)}, slope ${formatNumber(state.tangentSlope)} per unit arc length at ray angle ${formatNumber(state.theta)} degrees. Minimum approximately 3.069; maximum approximately 18.191.`);
-      put('tangent-slope', display(state.tangentSlope));
+      put('azimuth-value',`${formatNumber(Number(current[3]))}°`);put('elevation-value',`${formatNumber(Number(current[4]))}°`);
       widget.dataset.complete = String(state.stationary === 'minimum');
-      const feedback = state.stationary === 'minimum'
-        ? 'Minimum on the constraint (calculated). The gradients point in opposite directions; the tangent slope is zero.'
-        : state.stationary === 'maximum'
-          ? 'Maximum on the constraint (calculated). The gradients point in the same direction; the tangent slope is also zero.'
-          : curved ? 'The sign of the slope shows which direction around the constraint decreases f.'
-            : state.phi%180 === 0 ? 'The constraint has zero tangent slope; the objective can still decrease along the curve.'
-              : 'This direction crosses the constraint. Compare each slope with its gradient’s component along the section.';
+      const feedback = state.stationary === 'minimum' ? 'Minimum: f = 1 at (1, 0).'
+        : state.stationary === 'maximum' ? 'Maximum: f = 9 at (−1, 0).' : '';
       put('feedback', feedback);
+      field('feedback').hidden = !feedback;
     }
 
     const restore = values => { controls.forEach((control, i) => { control.value = values[i]; }); render(); };
