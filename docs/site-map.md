@@ -1,205 +1,83 @@
-# Where everything lives
+# Directory map and maintenance
 
-Almost Obvious is a static Jekyll site. You edit Markdown, small data files, and shared templates. Jekyll turns them into the pages served by GitHub Pages. The browser runs the activities locally.
+Start with [README](../README.md) for common edits and [writing](writing.md) for content examples. These are Jekyll's standard folders; keeping their names lets the site build without a custom publishing system.
 
-## Directory map
+## Content and settings
 
-```text
-Keivan-Mirzaei.github.io/
-├── _posts/                Published problems and explorations, named YYYY-MM-DD-title.md
-├── _drafts/               Post drafts; included only with --drafts
-├── _modules/              Learning-module overview pages, including derivatives.md
-├── _lessons/derivatives/  The five individual derivative lessons
-├── _research/             Research summaries and paper metadata
-├── learning/              Course overview pages, including introductory-calculus.md
-├── notes/index.html       Template for the paginated post archive
-├── puzzles/               Puzzle catalogue and small standalone game entry pages
-├── gadgets/               Gadget catalogue, exam clock, Pomodoro, and sound workspaces
-├── _data/                 Shared lists and activity configuration
-│   ├── navigation.yml     Main sidebar links
-│   ├── formats.yml        Names and descriptions of content formats
-│   ├── courses.yml        Course cards and roadmaps
-│   ├── modules.yml        Module order and lesson navigation
-│   ├── puzzles.yml        Puzzle cards; add a game here to list it
-│   ├── widgets.yml        Activity scripts, activation selectors, and required styles
-│   ├── gadgets.yml        Gadget catalogue: stable IDs, titles, routes, descriptions, icons
-│   └── graph_libraries.yml  Pinned optional Plotly/Three.js library URLs
-├── _layouts/              Whole-page templates
-│   ├── default.html       Shared site frame: sidebar, top bar, footer, assets
-│   ├── post.html          Problems and explorations
-│   ├── page.html          Ordinary Markdown pages
-│   ├── puzzle.html        Focused game content inside the shared persistent frame
-│   ├── learning.html      Learning index
-│   ├── course.html        Course overview
-│   ├── module.html        Module and individual lesson pages
-│   ├── research.html      Research entry pages
-│   ├── format.html        Problem/exploration indexes
-│   ├── category.html      Subject indexes retained for existing addresses
-│   └── redirect.html      Compatibility redirects
-├── _includes/             Reusable pieces of pages
-│   ├── controls/          Shared action buttons, Undo/Reset row, and compact Help
-│   ├── puzzles/           Game panels and optional progress setting
-│   ├── widgets/           Activity markup and small inline SVG previews
-│   ├── gadgets/           Persistent dock, active controls, and shared gadget setup
-│   ├── icon.html          One source for interface icons
-│   ├── site-icons.html    One source for favicon and touch-icon links
-│   ├── content-logo.html  Shared problem, exploration, and puzzle logo renderer
-│   ├── widget-assets.html One source for activity styles and deferred loading
-│   ├── tilted-square.html Homepage visual proof
-│   └── *.html             Cards, navigation lists, media embeds, and shared links
-├── assets/                Files visitors actually download
-│   ├── css/               Main styles, shared controls, and activity-specific styles
-│   ├── js/
-│   │   ├── app.mjs        Page lifecycle, lazy feature mounting, and MathJax loading
-│   │   ├── navigation.js  Sidebar and mobile navigation focus
-│   │   ├── quick-search.mjs  Header search dialog and keyboard shortcuts
-│   │   ├── search.js      Search UI; fetches the index when needed
-│   │   ├── widgets.js     Activates activities near the reader; games start immediately
-│   │   ├── widgets/       Controllers exporting mount(root) and a disposal function
-│   │   ├── gadgets/       Timer model, singleton service, audio player, and views
-│   │   └── lib/           Shared maths, renderers, undo history, storage, and workers
-│   ├── images/            Game boards, course art, and cacheable activity previews
-│   ├── figures/           Static mathematical illustrations
-│   ├── papers/            Thesis PDF
-│   ├── explorations/      Supporting exploration PDF
-│   └── favicon.svg        Master vector logo, reused in navigation and browser tabs
-├── Figures/1001.png       Original trigonometry figure; kept at its published address
-├── pages/                 Redirects for old /pages/ URLs; keep these for existing links
-├── docs/
-│   ├── site-map.md        This maintenance guide
-│   ├── writing.md         Content-authoring instructions and examples
-│   ├── logo-roadmap.md    Shared logo standard and reusable problem family
-│   ├── gadget-roadmap.md  Agreed Gadgets behaviour, implementation record, and future growth
-│   ├── advanced-graphs.md Optional interactive graph authoring
-│   ├── introductory-calculus-plan.md  Course planning notes
-│   └── templates/         Starter Markdown for each content format
-├── scripts/               Authoring, preview generation, build optimization, checks
-├── tests/                 Mathematical, controller, authoring, and asset-version tests
-├── .github/workflows/     GitHub Pages build, checks, and deployment
-├── index.html             Homepage composition
-├── about.md               Editable biography and LinkedIn profile link
-├── learning.html          Learning index entry page
-├── research.html          Research index entry page
-├── problems.md, explorations.md  Content-format indexes
-├── math.md, code.md, experiments.md  Existing subject indexes
-├── search.html            Search page
-├── search.json            Search-index template; Jekyll fills it from the content
-├── 404.html               Missing-page response
-├── _config.yml            Site identity, URL, collections, defaults, build exclusions
-├── Gemfile, Gemfile.lock  Ruby dependencies and locked versions
-├── CNAME                  Custom domain for GitHub Pages
-├── favicon.ico, apple-touch-icon.png  Browser/iOS exports of the vector logo
-├── .gitignore             Generated/local files that must stay out of Git
-├── LICENSE                Repository licence
-└── README.md              Quick start and links to these guides
-```
-
-`_site/`, `.jekyll-cache/`, `__pycache__/`, and dependency folders are generated locally, ignored by Git, and safe to remove when no build is running. Do not edit `_site/`: the next build replaces it. `.git/` contains version history and should be left alone. Documentation, scripts, tests, and drafts are excluded from the published site.
-
-## What to edit
-
-| Task | Edit here | What updates automatically |
-| --- | --- | --- |
-| Publish a problem or exploration | `_posts/` | Archive, relevant format index, search, feed |
-| Write privately | `_drafts/`, or `published: false` on a module | Excluded from ordinary builds |
-| Revise a lesson | `_lessons/derivatives/` | That lesson page and searchable text |
-| Change a course or module roadmap | `_data/courses.yml`, `_data/modules.yml` | Cards and lesson navigation |
-| Add or revise research | `_research/` | Research index |
-| Update biography or professional profile | `about.md`, `linkedin_url` in `_config.yml` | About page and shared LinkedIn links |
-| Change the sidebar | `_data/navigation.yml` | Every ordinary page |
-| Change the header or quick search | `_layouts/default.html`, `_includes/quick-search.html`, `assets/css/site.css`, `assets/css/quick-search.css`, `assets/js/quick-search.mjs` | Persistent header, Home breadcrumb, and modal search on every page; both search interfaces share `assets/js/lib/site-search.mjs` |
-| Change colours or reading-page alignment | `assets/css/site.css` | All ordinary pages |
-| Change button sizing or Help behavior | `assets/css/controls.css`, `_includes/controls/`, `assets/js/widgets.js` | Shared activity and game controls |
-| Change dropdown appearance or behavior | `assets/css/dropdown.css`, `assets/js/lib/dropdown.mjs`, `_includes/widget-assets.html` | One component for named choices; follow `docs/element-standards.md` |
-| Change a particular activity | `_includes/widgets/`, `assets/js/widgets/`, its registered CSS | Every page embedding it |
-| Change Hex | `_includes/puzzles/hex.html`, `assets/js/widgets/hex.mjs`, `assets/js/lib/hex-*` | Both the article game and standalone game |
-| Add a game to the catalogue | `_data/puzzles.yml` | `/puzzles/` |
-| Select a problem's logo | Its front matter `difficulty: 1`–`4` | The shared mark in every list and article heading |
-| Change content logo artwork | Family generator and image metadata; see [logo roadmap](logo-roadmap.md) | Every occurrence of the same reusable SVG |
-| Plan or extend the Gadgets section | [gadget-roadmap.md](gadget-roadmap.md) | Records decisions, implemented behaviour, validation, and future development phases |
-| Change the logo | `assets/favicon.svg`; regenerate the `.ico` and touch exports | Sidebar, top bar, browser tabs; iOS uses its PNG export |
-
-## How shared activities fit together
-
-```text
-page front matter: widgets: [hex]
-                 │
-                 ▼
-_data/widgets.yml ──► _includes/widget-assets.html
-                       │ required CSS + loading descriptor
-                       ▼
-                  assets/js/widgets.js
-                       │ activates one controller when needed
-                       ▼
-                  assets/js/widgets/hex.mjs
-                       │ imports maths, worker, storage and shared helpers
-                       ▼
-                  assets/js/lib/
-
-article ──► _includes/widgets/hex-game.html ─┐
-                                         ├──► _includes/puzzles/hex.html
-standalone puzzle ────────────────────────┘
-```
-
-Add an activity to the registry with `script`, `selector`, and `styles`. The selector must match its rendered panel. Register linked diagrams together when one controller updates all of them. List the activity in the page's `widgets` front matter; do not copy script tags into the article. The shared loader downloads each registered controller once, calls its exported `mount(root)` on each visit, and calls the returned cleanup when leaving. Static content and native Help disclosures remain available without JavaScript.
-
-Use `_includes/controls/panel.html` for a compact Undo/Reset/Help row. A controller can use `bindInputHistory` for form-based views, or `bindPanelHistory` for internal state. Undo records one slider edit rather than every animation frame, and shared history keeps at most 60 snapshots. Existing games keep their own turn-aware undo and redo rules.
-
-Keep board renderers and game rules in `assets/js/lib/`; keep browser event handling in `assets/js/widgets/`. The logo and board previews use shared asset paths. Large static diagrams belong in `assets/images/` so they can be cached. Small interactive SVGs may stay inline when their individual elements need to be styled or manipulated.
-
-## Preview, verify, publish
-
-For ordinary editing:
-
-```sh
-bundle exec jekyll serve
-```
-
-Open `http://127.0.0.1:4000`. Add `--drafts` for draft posts and `--unpublished` for unpublished collection entries. Refresh after editing shared JavaScript. The development server serves the source asset names directly.
-
-To verify the same asset versions used for deployment:
-
-```sh
-bundle exec jekyll build --strict_front_matter
-python3 scripts/optimize_build.py
-python3 scripts/check_site.py
-python3 -m unittest discover -s tests
-node --test tests/*.test.mjs
-```
-
-The optimizer adds a content hash to asset URLs in the generated site, including module imports and workers. Unchanged assets keep the same URL across releases. If a shared dependency changes, its importing controllers get a new version too. You do not need to maintain version numbers or regenerate source files. For a site with `baseurl: /repository`, pass that value as the second argument to both build scripts: `python3 scripts/optimize_build.py _site /repository` and `python3 scripts/check_site.py _site /repository`.
-
-The GitHub Actions workflow runs these steps before publishing pushes to `main`. Pull requests are checked without being published. Existing compatibility pages and the `Figures/` image stay because people may have bookmarked their URLs. `pages/linkedin.html` and `pages/CV.html` send the former CV addresses to the configured LinkedIn profile; the CV content and PDF have been removed.
-
-| Helper script | Purpose |
+| Location | What belongs here |
 | --- | --- |
-| `new_post.py` | Create content from the starter templates |
-| `check_site.py` | Check built page structure, links, lazy activity scripts, search, feed, and sitemap |
-| `optimize_build.py` | Version generated browser assets and their dependencies by content |
-| `hex_previews.mjs`, `cevian_previews.mjs`, `magician_previews.mjs` | Regenerate the diagrams used by those activities |
-| `exploration_thumbnails.mjs` | Regenerate exploration SVG logos using shared geometry, mathematics, and saved formula outlines; see the [logo roadmap](logo-roadmap.md) |
-| `problem_logos.mjs` | Regenerate the four shared circle/woven-loop marks from `_data/problem_logos.json` |
-| `puzzle_thumbnails.mjs`, `four_regions_preview.mjs` | Regenerate the existing puzzle catalogue marks from their game geometry |
-| `advanced_previews.py`, `graph_data.py` | Prepare optional static previews and scientific plot data |
-| `tiling_catalogue.mjs` | Generate the deterministic tiling puzzle catalogue |
+| `_posts/` | Published problems and explorations, named `YYYY-MM-DD-title.md` |
+| `_drafts/` | Future post drafts; created when needed and included only with `--drafts` |
+| `_modules/` | Chapter overview pages |
+| `_lessons/` | Individual lessons, grouped into chapter folders |
+| `_research/` | Research summaries, paper metadata, and links |
+| `learning/` | Course overview pages |
+| `puzzles/`, `gadgets/` | Catalogues and entry pages for games and tools |
+| `notes/index.html` | Paginated post archive |
+| `index.html`, `about.md`, `research.html`, `learning.html` | Main section pages |
+| `problems.md`, `explorations.md` | Lists filtered by post format |
+| `math.md`, `code.md`, `experiments.md` | Existing subject indexes |
+| `search.html`, `search.json` | Search page and template for its generated index |
+| `_config.yml` | Site name, contact details, domain, collections, defaults, and exclusions |
+| `_data/` | Small editable lists and settings used by templates |
 
-To regenerate mathematical board or chart previews, run the matching script in `scripts/`: `hex_previews.mjs`, `cevian_previews.mjs`, or `magician_previews.mjs`. The Cevian generator also embeds drawing styles in its standalone landscape SVG. `tiling_catalogue.mjs` regenerates the deterministic tiling catalogue; its tests validate the generated puzzles.
+Important data files: `navigation.yml` controls the menu; `home_sections.yml` controls homepage cards; `courses.yml` and `modules.yml` control course outlines and lesson order; `puzzles.yml` and `gadgets.yml` control their catalogues. `problem_logos.json` maps the four problem marks. `widgets.yml` lists activity assets. `ambient_sounds.yml` and `chimes.yml` list audio choices; `graph_libraries.yml` pins Three.js for the stereographic activity.
 
+The existing posts and lessons are enabled for publication. A forthcoming item in a course outline is a data entry, not an unfinished lesson file. Add its URL only when the page exists and is ready.
 
-## Gadgets and page navigation
+## Presentation and media
 
-The catalogue is `_data/gadgets.yml`. Entry pages live in `gadgets/`; all have real, searchable URLs and use the existing Jekyll layout. `section: gadgets` selects the workspace style; `gadget: exam`, `pomodoro`, or `sound` identifies a setup page. Add new catalogue entries only when their pages are ready.
+| Location | Purpose |
+| --- | --- |
+| `_layouts/` | Complete page templates; `default.html` is the shared frame |
+| `_includes/` | Reusable cards, navigation, controls, and activity markup |
+| `_includes/widgets/`, `_includes/puzzles/` | Article activities and game panels |
+| `_includes/gadgets/` | Gadget controls, panels, and persistent header dock |
+| `assets/css/` | Shared and activity-specific styles |
+| `assets/js/widgets/` | Activity controllers |
+| `assets/js/lib/` | Shared mathematics, drawing, history, storage, and workers |
+| `assets/js/gadgets/` | Timer, sound, and gadget services |
+| `assets/images/` | Logos, catalogue thumbnails, and board previews |
+| `assets/figures/` | Mathematical illustrations used within articles |
+| `assets/audio/` | Ambient sounds and their credits |
+| `assets/papers/`, `assets/explorations/` | Linked PDFs |
 
-`assets/js/app.mjs` loads ordinary page features when needed. `lib/site-navigation.mjs` fetches eligible internal pages and replaces only `[data-page-content]`. The sidebar, header, active-controls panel, and gadget service stay alive. Page configuration and active styles change together; titles, descriptions, canonical links, breadcrumbs, history, scroll, focus, and MathJax are maintained. `lib/math-typesetting.mjs` shares the lazy MathJax load and a single rendering queue between articles and editable exam rules; rules without equations do not load it. External, download, modified, and new-tab links keep their normal browser behaviour. Failed requests fall back to a document load. Puzzles share this shell with a focused layout and hidden sidebar/footer.
+Edit finished SVG artwork directly. The website uses the saved image files; it does not need the one-off scripts that originally drew them. Keep paths stable when replacing artwork so existing page references continue to work. See [design standards](element-standards.md#content-artwork).
 
-Navigation caches source HTML rather than live DOM, so revisits still mount fresh controllers and clean up the previous page. The cache includes the initial page, preserves query parameters, ignores fragments, expires entries after five minutes, and evicts the least-used entries above eight pages or 256 Ki characters (roughly 512 KiB of text). Pages larger than 64 Ki characters are not retained. A brief hover, keyboard focus, or touch press requests only the chosen page's HTML, with at most two speculative requests and no preloading on reduced-data connections or hidden pages. A click shares an existing request; cancelling that navigation aborts it, and a later attempt can retry. Up to twelve loaded page stylesheets are retained; inactive sheets use `media="not all"`, and revisits reactivate them without waiting for another load. New sheets load normally before being made inactive; do not await a stylesheet initially marked disabled or with non-matching media.
+`pages/` contains redirects for former addresses. `404.html`, `CNAME`, `favicon.ico`, and `apple-touch-icon.png` also belong at the root. The old raster figure has been replaced by the vector illustration used by the trigonometry article.
 
-Every activity controller exports `mount(root)` and returns a cleanup function. The root is the incoming content, not the whole document. New controllers should own listeners with an AbortController and release observers, animation frames, timers, workers, and renderers on disposal. Existing legacy activities use `lib/page-environment.mjs` for scoped browser APIs; it does not modify global browser functions. An optional renderer loading after a page has been left must dispose its result immediately. Register new page-level features in `app.mjs`, rather than adding auto-running script tags to layouts.
+## Find an activity's files
 
-`gadgets/service.mjs` owns the one active timer and independent sound session. `model.mjs` provides deadline calculations, restoration validation, phase transitions, and safe rule formatting. `rules.mjs` coalesces equation edits and releases typeset math on leaving. `stepper.mjs` supplies bounded −/+ inputs for duration and reminder minutes. `audio.mjs` creates one Web Audio context on a user action, uses one looping source, and releases it on pause or stop. Short completion tones are defined in `chimes.mjs` and listed in `_data/chimes.yml`; previews use the same player and stop on leaving their workspace. `_includes/gadgets/card-icon.html` renders the catalogue illustrations. `ui.mjs` subscribes the permanent dock and current workspace to the same service. The service is loaded only on Gadgets pages or when saved sessions exist. No timer loop runs without a running timer; hidden pages catch up by deadline when they return. Noise and completion tones require no audio file transfer.
+Start with its name in `_data/widgets.yml`. The record gives the controller, activation selector, and required styles. A page's `widgets: [hex]` field asks `_includes/widget-assets.html` to supply that record to the loader in `assets/js/widgets.js`.
 
-State uses the versioned local-storage key `almost-obvious:gadgets:v1`. Running timers count elapsed time across reloads; paused timers remain paused. Reopened audio always waits for Play. Storage events synchronize sessions between tabs, and BroadcastChannel discovers a live sound owner. Deliberate playback in another tab pauses the old player. Settings and rules stay on this device. If storage is blocked, the current session still works and the UI reports that it could not save.
+An activity usually has matching names in `_includes/widgets/`, `assets/js/widgets/`, and `assets/css/`. The controller imports its mathematics and drawing helpers from `assets/js/lib/`. The Hex article and standalone game reuse `_includes/puzzles/hex.html`; other shared games follow the same pattern.
 
-Screen awake is a browser request for an active, visible timer. The service releases it on pause, completion, stopping, or hidden-page transitions, and retries on becoming visible. The interface reports actual availability, denial, and release. It cannot override operating-system policy. Presentation mode uses native fullscreen when available and a spacious in-browser view otherwise; it isolates focus and exits through its own button or Escape.
+Controllers export `mount(root)` and return cleanup for listeners, timers, workers, observers, and renderers. `assets/js/app.mjs` manages page features when navigating between pages. Keep mathematical rules separate from event handling where useful. Shared controls live in `_includes/controls/`; history, panels, and storage helpers live in `assets/js/lib/`.
 
-To extend the runtime, add a model and workspace with explicit actions, subscribe to the existing service, and add compact controls only if the gadget has an ongoing session. Keep page setup out of the dock. Update the registry, roadmap, and meaningful transition tests, then run the verification commands above. Publishing remains a separate step.
+The persistent site frame lets timers and sound continue between pages. `gadgets/service.mjs` owns the active timer and independent sound session; `model.mjs` handles timer calculations; `audio.mjs` owns playback; `ui.mjs` connects the dock and current workspace to that service. Use the existing service for new controls rather than creating another timer or audio player. Search is shared by the header dialog and dedicated page through `site-search.mjs`.
+
+The planar-graphs article uses `stereographic-projection` for its Three.js view. Its controller and `stereographic-math.mjs` share exact geometry; `interactive-view.mjs` handles opening, closing, loading feedback, and disposal. Keep heavy imports inside activation and retain the static SVG preview. Ordinary pages do not download Three.js.
+
+## Maintenance tools
+
+Only recurring tools remain in `scripts/`:
+
+| Script | Purpose |
+| --- | --- |
+| `new_post.py` | Create content from `docs/templates/` without overwriting saved work |
+| `optimize_build.py` | Add content-based asset versions to the generated site |
+| `check_site.py` | Validate links, headings, images, search, feed, sitemap, exclusions, and unused assets, including imported modules and computed sound URLs |
+| `lights_out_catalogue.mjs` | Rebuild the deterministic Lights Out puzzle catalogue |
+| `tiling_catalogue.mjs` | Rebuild the deterministic tiling puzzle catalogue |
+
+Puzzle numbers are tied to saved progress. Regenerate a catalogue only for an intentional catalogue change; ordinary content editing does not require it. `tests/` checks the maintained mathematics, controllers, storage, navigation, authoring, and asset versions. Keep tests for retained behavior.
+
+The three guides in `docs/` and four starter files in `docs/templates/` are maintenance material and are excluded from publication. Historical plans, review transcripts, and completed production scripts belong in Git history rather than the working directory.
+
+## Build files and cleanup
+
+`Gemfile` and `Gemfile.lock` define Ruby dependencies. `.github/workflows/pages.yml` builds, checks, and deploys. `.gitignore` excludes local dependencies and generated files. `.git/` is version history.
+
+`_site/`, `.jekyll-cache/`, and Python caches can be removed when no build is running. They return as needed. Build and check using the commands in [README](../README.md#check-and-publish). For a site with a nonempty `baseurl`, pass it after the destination to both build scripts, for example `python3 scripts/check_site.py _site /repository`.
+
+Before removing a page or asset, search for its filename and URL in content, data, templates, imports, and styles. Keep linked downloads and compatibility URLs. When removing an unused activity, remove its registry entry and dedicated tests too, then rebuild and check the remaining site.

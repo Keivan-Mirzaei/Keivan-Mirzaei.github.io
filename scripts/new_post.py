@@ -66,7 +66,7 @@ def main():
     content += ["tags: []", f"math: {str(args.math).lower()}"]
     if args.type == "module":
         content += ['duration: ""', 'level: ""', 'prerequisites: []', 'objectives:',
-                    '  - State the first learning objective.', 'widgets: [quadratic]']
+                    '  - State the first learning objective.', 'widgets: []']
     body = (TEMPLATES / f"{args.type}.md").read_text()
     if args.without_solution:
         body = body.split("<!-- solution -->")[0].rstrip() + "\n"

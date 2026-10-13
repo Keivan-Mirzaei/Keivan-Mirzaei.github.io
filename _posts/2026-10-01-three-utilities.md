@@ -10,70 +10,74 @@ math: true
 widgets: [three-utilities]
 ---
 
-Three houses each need **gas, water, and electricity**. Draw a separate pipe from every house to every utility: nine pipes in all.
+Three houses each need **gas, water, and electricity**. Can we draw all nine pipes **on the plane without crossings**?
 
-Can you do it **on the plane without any pipes crossing**?
+Pipes may bend and meet at a shared endpoint. They cannot overlap, cross, or pass through another house or utility. No tunnels or bridges are allowed.
 
-Pipes can bend as much as you like. They may meet at a shared house or utility, but cannot cross, overlap, or pass through another house or utility as a junction. No tunnels, bridges, or trips above the surface are allowed.
+Explore **Try it on the plane** below and its Info panel. The eight-connection example leaves one pipe missing: does rerouting seem to make room for it?
 
 {% include widgets/three-utilities-plane.html %}
 
-Choose endpoints and place points along the route; the board joins them with a smooth curve. To delete a pipe, choose its two endpoints again without placing path points. To change its route, choose those endpoints with new path points in between. **Undo** restores a removed or redrawn pipe.
+A failed drawing does not settle the question. Perhaps a different arrangement would work. We need an obstruction that applies to every arrangement.
 
-If you get stuck, choose **Try eight connections**. Only one pipe remains. Is there somewhere else it could go—or is the surface itself the problem?
+## Count regions instead of trying more routes
 
-## Why the plane refuses
+Replace the houses and utilities by vertices, and the pipes by edges. The graph is $$K_{3,3}$$: two groups of three vertices, with every vertex in one group connected to every vertex in the other. It has $$V=6$$ vertices and $$E=9$$ edges.
 
-Replace each house and utility by a dot, and each pipe by a curve. This gives the graph $$K_{3,3}$$: two groups of three vertices, with every vertex in one group joined to every vertex in the other. It has **six vertices and nine edges**.
+A crossing-free drawing of a connected graph in the plane satisfies Euler’s formula
 
-Suppose a drawing with no crossings existed. Euler’s formula for a connected graph on the plane says
+$$
+V-E+F=2,
+$$
 
-$$V-E+F=2,$$
+where $$F$$ includes the unbounded outside region. Our drawing would therefore have five regions.
 
-where $$F$$ counts the regions, **including the unbounded outside region**. Our drawing would therefore have
+Every region needs at least four edge-sides around its boundary. There are no loops or parallel edges. Every cycle alternates between houses and utilities, so it has even length and cannot be a triangle. Nor is any edge a bridge: each belongs to a four-edge cycle. A two-sided boundary from retracing a bridge is therefore impossible too.
 
-$$F=2-6+9=5.$$
+Each edge supplies two sides to region boundaries. Nine edges supply eighteen sides, while five regions require at least twenty:
 
-Every region must have at least **four edge-sides** around its boundary. There are no loops or parallel edges, and no triangles: every step alternates between a house and a utility, so every cycle has even length. There are also no bridges—each pipe lies on a four-edge cycle—so a two-sided region cannot arise by going out and back along a bridge.
+$$
+2E\geq4F\qquad\Longrightarrow\qquad18\geq20.
+$$
 
-Each edge contributes two sides to region boundaries. Nine edges supply **18 sides**, but five regions would need at least **20**:
+**No planar drawing exists.** Moving the endpoints or making the pipes curvier cannot change this count. The difficulty in the [plane experiment](#tu-plane-title) comes from the surface itself.
 
-$$2E\geq 4F\qquad\Longrightarrow\qquad18\geq20.$$
+## What changes on a mug?
 
-That is impossible. Curvier pipes, moving the houses, or using more of the plane cannot fix it. The obstruction applies to every planar drawing, not just the routes in the activity.
+Put the same houses and utilities on the **whole boundary surface of a thick mug with one handle**: outside, inside, rim, underside, and handle. Its bowl has a bottom; the opening is an indentation, while the handle supplies one through-hole.
 
-## The same question, on a mug
-
-Now put the houses and utilities **on the surface of a mug**. Can all nine pipes stay on that surface without crossing?
-
-Imagine a thick ceramic mug with one ordinary handle. Use its **whole boundary surface**: outside, inside, rim, underside, and handle. The bowl has a bottom; its opening is an indentation, not a second hole all the way through. The handle contributes the one through-hole.
-
-Topology lets us stretch and reshape a surface while preserving which points are connected. Round the mug’s body, shrink its bowl-shaped indentation, and enlarge the handle opening. The surface can become a **donut**, or **torus**, without cutting or gluing it.
-
-Drag to rotate the 3D mug and look into its bowl. Move the slider slowly, or play the transformation, and keep your eye on the handle opening. The same surface stays in view throughout.
+That surface can be continuously reshaped into a donut, or **torus**, without cutting or joining it. The [surface transformation](#tu-surface-title) follows the hole through the change.
 
 {% include widgets/three-utilities-surface.html %}
 
-The first step changes only the shape. The next two steps **cut the torus open to draw it flat**. First cut around the tube and straighten the ring into an open tube. Then slit the tube along its length and flatten it. Stretch the resulting rectangle into a square.
+The first stage only deforms the surface. The later stages **cut it open** so we can work with a flat picture: open the ring into a tube, slit the tube lengthwise, and flatten it into a rectangle, then a square.
 
-The cuts create pairs of edges that belonged together. To recover the torus, identify
+The cut edges retain their original pairings. Recovering the torus means identifying
 
-$$ (x,0)\sim(x,1),\qquad (0,y)\sim(1,y). $$
+<div id="torus-identifications" markdown="1">
 
-In ordinary words: **top matches bottom at the same horizontal position; left matches right at the same vertical position**. Matching dashed sides show the pairs. No edge is flipped.
+$$
+\begin{gathered}
+(x,0)\sim(x,1),\\
+(0,y)\sim(1,y).
+\end{gathered}
+\tag{1}
+$$
 
-## Solve it on the square
+</div>
 
-Seven pipes stay inside the square. The remaining two use the paired edges.
+Top matches bottom at the same horizontal position; left matches right at the same vertical position. No edge is reversed. Leaving through one side and returning through its partner is a continuous journey on the torus.
+
+## Use the joined edges for the missing pipes
+
+Seven pipes stay inside the square. The remaining two use the [edge pairings (1)](#torus-identifications).
 
 {% include widgets/three-utilities-square.html %}
 
-The **House 1 → Water** pipe leaves through the top and continues from the matching point on the bottom. The **House 3 → Gas** pipe leaves through the right and continues from the matching point on the left. The paired dots are not gaps in the pipes: each pair represents **one point of the torus**.
+In [the figure](#tu-square-title), **House 1 → Water** continues from the top to the matching point on the bottom. **House 3 → Gas** continues from the right to the matching point on the left. Each pair of seam dots represents one point of the torus, rather than a gap in a pipe.
 
-All nine pipes now connect their required endpoints. None crosses another pipe in the square, and the two seam continuations occur at distinct points. Gluing the edges therefore gives a valid drawing on the donut. Reshaping the donut back into a mug carries the drawing with it and preserves the absence of crossings.
+All nine routes now join the required endpoints without crossings. Their seam continuations use distinct points, so joining the edges introduces no new intersection. Reshaping the torus back into the mug carries the pipes with it.
 
-The figure shows every route at once, including the two that use the joined edges.
+The handle has changed which routes are available. The planar counting obstruction still holds on the plane; the mug admits a drawing because its surface is different.
 
-**The answer changes because the surface changes.** On the plane there is no way to fit the ninth pipe. On the mug, its handle gives the routes room to go around the obstruction.
-
-For more about deforming a coffee cup into a torus, see the opening chapter of John M. Lee’s [*Introduction to Topological Manifolds*](https://sites.math.washington.edu/~lee/Books/ITM/c01.pdf).
+John M. Lee’s [*Introduction to Topological Manifolds*, opening chapter](https://sites.math.washington.edu/~lee/Books/ITM/c01.pdf), illustrates the coffee-cup–torus deformation and introduces the distinction between shape and topology.

@@ -111,11 +111,11 @@ A cue without a solution.
             create("Invalid format option", "--type", "module", "--without-solution", success=False)
             create("Invalid logo format", "--type", "exploration", "--difficulty", "2", success=False)
             create("Invalid logo difficulty", "--type", "problem", "--difficulty", "5", success=False)
-            (source / "_modules/fixture-sphere.md").write_text(r"""---
-title: Fixture sphere
+            (source / "_modules/fixture-graph.md").write_text(r"""---
+title: Fixture stereographic graph
 description: Check optional graph rendering.
 format: module
-widgets: [sphere-slice]
+widgets: [stereographic-projection]
 math: true
 ---
 For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
@@ -125,7 +125,7 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
 | 0 | 1 |
 | 1 | 0 |
 
-{% include widgets/sphere-slice.html id='fixture-sphere' %}
+{% include widgets/stereographic-projection.html id='fixture-graph' %}
 """)
 
             # A duplicate must never overwrite the author's existing content.
@@ -190,31 +190,27 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertNotIn('class="problem-solution"', page("fixture-hint-only"))
             module = page("fixture-lesson", "learning")
             self.assertIn("Before you start", module)
-            self.assertIn('data-widget="quadratic"', module)
+            self.assertNotIn('data-widget-src=', module)
             self.assertIn('aria-label="More learning modules"', module)
             self.assertIn('← Previous module', module)
             self.assertIn('Next module →', module)
             self.assertIn('href="/notes/derivatives/"', module)
-            self.assertIn('href="/learning/fixture-sphere/"', module)
-            widget_source = r'src="/assets/js/widgets/quadratic\.js(?:\?[^\"]+)?"'
-            self.assertRegex(module, widget_source)
-            self.assertNotRegex(problem, widget_source)
+            self.assertIn('href="/learning/fixture-graph/"', module)
             # Optional graph modules must stay off ordinary pages.
             # The tiny shared map makes 3D imports available after navigation;
             # it declares URLs but does not load those libraries.
             self.assertIn('type="importmap"', problem)
             self.assertNotIn('src="https://cdn.jsdelivr.net/npm/three', problem)
-            self.assertNotIn('scientific-plot.mjs', problem)
-            self.assertNotIn('sphere-slice.mjs', problem)
-            sphere = page("fixture-sphere", "learning")
-            self.assertIn('type="importmap"', sphere)
-            self.assertIn('type="module"', sphere)
-            self.assertIn('sphere-slice.mjs', sphere)
+            self.assertNotIn('stereographic-projection.mjs', problem)
+            graph = page("fixture-graph", "learning")
+            self.assertIn('type="importmap"', graph)
+            self.assertIn('type="module"', graph)
+            self.assertIn('stereographic-projection.mjs', graph)
             # Absolute-value bars previously became Markdown table separators.
             polynomial = page("conservative-polynomials")
             self.assertNotIn('<table>', polynomial)
             self.assertIn(r'\lvert P\rvert', polynomial)
-            self.assertEqual(sphere.count('<table>'), 1)
+            self.assertEqual(graph.count('<table>'), 1)
             self.assertTrue((destination / "research/fixture-research/index.html").is_file())
             self.assertFalse((destination / "research/unpublished-research-sentinel").exists())
             self.assertFalse((destination / "learning/unpublished-module-sentinel").exists())

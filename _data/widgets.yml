@@ -7,10 +7,6 @@ function-machine:
   script: /assets/js/widgets/function-machine.mjs
   selector: '[data-widget="function-machine"]'
   styles: [function-machine, widget-frame]
-quadratic:
-  script: /assets/js/widgets/quadratic.js
-  selector: '[data-widget="quadratic"]'
-  styles: [activities, widget-frame]
 derivative:
   script: /assets/js/widgets/derivative.js
   selector: '[data-widget="derivative"]'
@@ -19,30 +15,10 @@ differentiability:
   script: /assets/js/widgets/differentiability.mjs
   selector: '[data-widget="differentiability"]'
   styles: [activities, widget-frame]
-bayes:
-  script: /assets/js/widgets/bayes.js
-  selector: '[data-widget="bayes"]'
-  styles: [activities, widget-frame]
-card-trick:
-  script: /assets/js/widgets/card-trick.js
-  selector: '[data-widget="card-trick"]'
-  styles: [activities, widget-frame]
 three-cups:
   script: /assets/js/widgets/three-cups.mjs
   selector: '[data-three-cups]'
   styles: [activities, three-cups, widget-frame]
-random-walk:
-  script: /assets/js/widgets/random-walk.js
-  selector: '[data-widget="random-walk"]'
-  styles: [activities, widget-frame]
-scientific-plot:
-  script: /assets/js/widgets/scientific-plot.mjs
-  selector: '[data-widget="scientific-plot"]'
-  styles: [activities, widget-frame]
-sphere-slice:
-  script: /assets/js/widgets/sphere-slice.mjs
-  selector: '[data-widget="sphere-slice"]'
-  styles: [activities, widget-frame]
 stereographic-projection:
   script: /assets/js/widgets/stereographic-projection.mjs
   selector: '[data-widget="stereographic-projection"]'

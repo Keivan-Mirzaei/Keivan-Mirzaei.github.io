@@ -5,13 +5,13 @@ format: exploration
 image: /assets/images/exploration-thumbnails/magicians-problem.svg
 image_alt: A magnifying glass reveals a repeating ripple in an apparently settling probability curve.
 tags: ["probability", "oscillations", "limits"]
-math: false
+math: true
 widgets: [magicians-problem]
 ---
 
-A magician hands over a written prediction. The audience stands up. Everyone guesses heads or tails, a coin is tossed, and the people who guessed incorrectly sit down. Repeat. The crowd dwindles, one person remains, and the prediction describes that person.
+A magician hands over a written prediction. The audience stands up. Everyone guesses heads or tails, a coin is tossed, and those who guessed incorrectly sit down. Repeat until one person remains; the prediction describes that person.
 
-Wes Iseli performed this routine on *Penn & Teller: Fool Us*. Watch the audience shrink—and pay attention to what happens when only two people remain.
+Wes Iseli performed this routine on *Penn & Teller: Fool Us*. Watch what happens when only two people remain.
 
 {% include embed.html src="https://www.youtube-nocookie.com/embed/rQ0YN7RpvFQ" title="Wes Iseli’s audience coin routine on Penn and Teller: Fool Us" caption="The original performance, shared on Wes Iseli’s own YouTube channel." %}
 
@@ -19,59 +19,69 @@ Wes Iseli performed this routine on *Penn & Teller: Fool Us*. Watch the audience
 
 ## Let chance finish the game
 
-In the performance, the final two people are told to choose **different sides**. The next toss must leave exactly one standing.
+The final two participants are told to choose **different sides**. The next toss must leave exactly one standing.
 
-Now remove that instruction. Let everyone make a fresh, independent, fair guess in every round—even the last two. Each person has a half chance of staying. Sometimes the game reaches one person; sometimes the last few people all sit down together.
+Remove that instruction. Let everyone make a fresh, independent, fair guess in every round, including the last two. Now the game can jump from several survivors to none.
 
-**How does the chance of ever reaching exactly one person depend on the size of the audience?**
+**How does the chance of ever reaching exactly one person depend on the initial audience size?**
 
-Try a small version. Each dot is a person, and each click runs one round. This is one simulated performance, not an estimate of the overall probability.
+Explore the audience simulation below and its Info panel. One run can suggest what happens; it does not estimate the overall probability.
+
+<div id="audience-simulation" markdown="1">
 
 {% include widgets/magician-game.html %}
 
-With just two people, independent play reaches one survivor with probability **2/3**. Telling them to choose opposite sides raises that chance to **1**. That small change matters.
+</div>
 
-## A very convincing flat line
+Two people already reveal the difference. A round leaves one survivor with probability $$1/2$$, none with probability $$1/4$$, and both with probability $$1/4$$. In the last case we try again. Conditional on eventually leaving the two-person state, the chance of success is $$(1/2)/(3/4)=2/3$$. Coordinating the final guesses raises it to $$1$$.
 
-As the audience grows, the probability seems to settle near **72.13%**. The early wiggles shrink so quickly that an ordinary graph appears to have answered the question.
+## The probability microscope
+{: #probability-microscope }
 
-The graph below uses calculated finite-audience probabilities, rather than simulated frequencies. Press **Magnify the ripple** to look more closely at the almost flat part.
+For a larger audience, write $$P_n$$ for the chance of reaching one survivor from $$n$$ people. The calculated values appear to settle near **72.13%**. It is tempting to guess that $$P_n$$ has a limit.
 
 {% include widgets/magician-probability.html %}
 
-The late ripple has a peak-to-peak height of only about **0.001426 percentage points**. Its highest and lowest probabilities differ by roughly **14 in a million**.
+The overview calculates finite-audience probabilities. The magnified view shows the **limiting profile** derived in the [mathematical write-up]({{ '/assets/explorations/magicians-problem.pdf' | relative_url }}). Its peak-to-peak height is about **0.001426 percentage points**: the highest and lowest probabilities differ by roughly **14 in a million**.
 
-The early oscillations damp dramatically. But the remaining ripple does **not** keep shrinking to zero. It repeats at that tiny scale, however far out we go.
+That distinction matters. The early oscillations shrink rapidly; the question is whether the remaining ripple eventually disappears. Drawing the limiting profile makes the proposed answer visible, but we still need to understand why that profile governs large audiences.
 
 ## Why doubling brings the wiggle back
 
-While the crowd is large, each round removes roughly half of it. Start with twice as many people and, after one extra round, you are roughly back where you started.
+While many people remain, each round roughly halves the crowd. Starting with twice as many people should therefore resemble starting with the original audience after one extra round. This suggests that doubling brings the probability back to nearly the same point in a cycle.
 
-So doubling the audience brings the probability back to almost the same place in its cycle. Moving **between** one power of two and the next takes us through the whole wiggle.
+The decisive rounds occur when only a few people remain. Write the starting size as $$n=2^{m+\theta}$$, where $$m$$ is an integer and $$0\leq\theta<1$$. After $$m+j$$ rounds, the expected number standing is $$2^{\theta-j}$$. The large factor $$2^m$$ has disappeared, but the position $$\theta$$ between successive powers of two remains.
 
-The last few people are where randomness matters most. At that point, “roughly half” can mean two survivors, one survivor, or none. Rounds happen in whole steps, and the game remembers where the starting audience sat between successive powers of two.
+At this scale, the survivor count still fluctuates: an expectation near one does not guarantee one survivor. Because rounds occur in whole steps, changing $$\theta$$ changes the sequence of small populations the game passes through.
 
-In the magnified graph, move along the ripple, then jump **20 more doublings** into the distance. The audience is now over a million times larger. The same pattern is still there. Jump again.
+The write-up makes this reasoning precise. It establishes a continuous, nonconstant function $$F$$ such that
 
-## Two roads toward infinity
+<div id="limiting-profile" markdown="1">
 
-A genuine limiting probability would be the same however we let the audience grow.
+$$
+\begin{gathered}
+P_n=F(\log_2 n)+o(1),\\
+F(t+1)=F(t).
+\end{gathered}
+\tag{1}
+$$
 
-Take one route through powers of two: 256, 512, 1,024, and so on. Take another with audiences about **1.414… times as large**—the square root of two times those sizes, rounded down. Keep doubling on both routes.
+</div>
+
+Here $$o(1)$$ is an error tending to zero as $$n$$ grows. The probability approaches a repeating profile in logarithmic audience size, rather than one constant. The [probability microscope](#probability-microscope) displays that profile; its jumps to larger audience windows illustrate the period in [equation (1)](#limiting-profile).
+
+## Two routes toward infinity
+{: #two-routes }
+
+A single limit would have to agree along every route to larger audiences. Compare powers of two with $$\lfloor\sqrt{2}\,2^m\rfloor$$: audiences about $$1.414\ldots$$ times as large, rounded down. Their logarithmic positions approach $$0$$ and $$1/2$$, respectively.
 
 {% include widgets/magician-routes.html %}
 
-Both routes become enormous, yet they approach different probabilities:
+Applying [equation (1)](#limiting-profile), the two routes approach different values:
 
 - **Powers of two:** approximately **72.1352103%**.
 - **Powers of two × √2, rounded down:** approximately **72.1342938%**.
 
-The gap is tiny, but it stays. That is enough to rule out a single limit.
+The extra decimal places expose the tiny difference. These are distinct limiting values, not just two unequal probabilities at finite audience sizes. They rule out a single limit for $$P_n$$.
 
-## Almost settled
-
-On an ordinary scale, this probability looks constant. On a finer scale, it keeps moving through the same cycle. More people stretch the oscillation across larger audience sizes; they do not erase its final, very small height.
-
-That is the surprise hiding behind the coin: **a probability can look settled to several decimal places and still never converge.**
-
-For the exact formulas, proofs, and connections with random leader election, read the [full mathematical write-up]({{ '/assets/explorations/magicians-problem.pdf' | relative_url }}).
+More people stretch the ripple across larger audience sizes without erasing its final height. A probability can look settled to several decimal places and still never converge. The [full write-up]({{ '/assets/explorations/magicians-problem.pdf' | relative_url }}) derives the exact probabilities, proves the profile and its nonconstancy, and connects the question with random leader election.

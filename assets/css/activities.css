@@ -29,12 +29,6 @@
 .graph-widget > p { font-size: 14px; }
 .graph-widget .activity-result { padding: 14px 0; margin: 8px 0; font-size: 14px; color: var(--green); }
 .activity-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
-.card-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.card-columns > div { min-width: 0; text-align: center; }
-.card-columns p { font: 12px var(--mono); margin-bottom: 12px; }
-.card-pile { list-style: none; margin: 0 0 15px; padding: 0; display: grid; gap: 6px; }
-.prose .card-pile li { padding: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: 4px; font: 18px/1.5 var(--serif); }
-.card-columns button { padding: 9px 5px; width: 100%; font-size: 12px; }
 button:disabled { cursor: default; opacity: .55; }
 .plot-secant { fill: none; stroke: #a85928; stroke-width: 2.5; }
 .plot-second-point { fill: #a85928; stroke: var(--paper); stroke-width: 2; }
@@ -46,11 +40,6 @@ button:disabled { cursor: default; opacity: .55; }
 .differentiability-other-guide { fill: none; stroke: #a85928; stroke-width: 1.3; stroke-dasharray: 3 5; }
 .differentiability-rational { fill: var(--green); }
 .differentiability-irrational { fill: #a85928; }
-.probability-table { margin: 20px 0; width: 100%; }
-.probability-table caption { text-align: left; color: var(--muted); font-size: 12px; }
-.probability-bar { height: 34px; border: 1px solid var(--green); background: repeating-linear-gradient(135deg, #e6ece1 0 5px, #bccdb5 5px 7px); overflow: hidden; border-radius: 3px; }
-.probability-bar > span { display: block; height: 100%; background: var(--green); }
-.sample-notice { padding: 15px 20px; background: var(--sidebar); border-left: 3px solid var(--green); font-size: 14px; }
 
 /* Advanced plots start as ordinary images. Their libraries load on request. */
 .advanced-stage { min-width: 0; margin: 16px 0; }

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Check a Jekyll build for broken local links, missing content, and draft leaks."""
+"""Check a Jekyll build for broken links, unused assets, and draft leaks."""
 
+from html import unescape
 from html.parser import HTMLParser
 import json
 from pathlib import Path
+import re
 import sys
 from urllib.parse import unquote, urlsplit
 import xml.etree.ElementTree as ET
@@ -64,6 +66,44 @@ def resolve_link(url, source):
     return target.resolve(), unquote(parts.fragment)
 
 
+def check_assets(page_paths):
+    """Follow page references, module imports, workers, and CSS dependencies."""
+    asset_root = ROOT / "assets"
+    assets = {p.resolve() for p in asset_root.rglob("*") if p.is_file()}
+    quoted_url = re.compile(
+        r'''["'`]([^"'`<>\r\n]+\.(?:svg|png|jpg|jpeg|webp|gif|ico|mp4|mp3|pdf|py|json|js|mjs|css|woff2?|ttf|otf|vtt|txt|md)(?:\?[^"'`<>\s]*)?(?:\#[^"'`<>\s]*)?)["'`]''',
+        re.IGNORECASE,
+    )
+    css_url = re.compile(r'''url\(\s*["']?([^\s)"']+)["']?\s*\)''')
+    text_types = {".html", ".js", ".mjs", ".css", ".svg", ".json"}
+    pending, reached = list(page_paths), set()
+    while pending:
+        path = pending.pop()
+        if path in reached:
+            continue
+        reached.add(path)
+        if path.suffix not in text_types:
+            continue
+        text = path.read_text()
+        urls = quoted_url.findall(text) + css_url.findall(text)
+        if path == ROOT / "assets/js/gadgets/sounds.mjs":
+            # audio.mjs builds these URLs from the shared sound registry.
+            urls += ["../../audio/ambient/" + name for name in re.findall(
+                r'''file:\s*["']([^"']+)["']''', text
+            )]
+        for url in urls:
+            if "${" in url:
+                continue
+            target, _ = resolve_link(unescape(url), path)
+            if target is not None and target.is_relative_to(ROOT) and target.is_file():
+                pending.append(target)
+    notices = {"CREDITS.md", "LICENSE", "LICENSE.md", "NOTICE", "NOTICE.md"}
+    unused = sorted(p for p in assets - reached if p.name not in notices)
+    for path in unused:
+        errors.append(f"Unused asset: {path.relative_to(ROOT)}")
+    return len(assets)
+
+
 pages = {p.resolve(): Page(p) for p in ROOT.rglob("*.html")}
 if not pages:
     errors.append("No built pages found. Run bundle exec jekyll build first.")
@@ -113,7 +153,8 @@ for private in ("legacy", "_drafts", "docs", "scripts", "tests", "Gemfile", "Gem
     if (ROOT / private).exists():
         errors.append(f"Authoring material leaked into the build: {private}")
 
+asset_count = check_assets(pages)
 if errors:
     print("\n".join(errors), file=sys.stderr)
     sys.exit(1)
-print(f"Checked {len(pages)} HTML pages, all local links, search entries, feed, and sitemap.")
+print(f"Checked {len(pages)} HTML pages, {asset_count} assets, all local links, search entries, feed, and sitemap.")

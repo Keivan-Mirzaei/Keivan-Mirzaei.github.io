@@ -4,8 +4,7 @@ Introduce the concept and ask students to make a prediction.
 
 ## Try it
 
-<!-- Replace this sample interaction with one that fits your lesson. -->
-{% include widgets/quadratic.html id='lesson-graph' %}
+Add an example or an existing activity only when it serves the lesson's question.
 
 ## Explain what happened
 
