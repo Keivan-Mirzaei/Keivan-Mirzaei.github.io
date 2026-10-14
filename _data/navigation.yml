@@ -10,10 +10,6 @@
   url: /puzzles/
   key: puzzles
   icon: puzzle
-- title: Learning Modules
-  url: /learning/
-  key: module
-  icon: learning
 - title: Gadgets
   url: /gadgets/
   key: gadgets

@@ -1,15 +1,12 @@
 # Almost Obvious
 
-A Jekyll website for mathematical problems, explorations, courses, research, puzzles, and study gadgets. Edit the source files below; Jekyll builds the pages, navigation, search index, feed, and sitemap.
+A Jekyll website for mathematical problems, explorations, research, puzzles, and study gadgets. Edit the source files below; Jekyll builds the pages, navigation, search index, feed, and sitemap.
 
 ## Start with the file you want to change
 
 | Change | File or folder |
 | --- | --- |
 | A problem or exploration | `_posts/` — find the dated filename matching its title |
-| A lesson | `_lessons/` — grouped by chapter |
-| A chapter introduction | `_modules/` |
-| Course order, outlines, or descriptions | `_data/courses.yml`, `_data/modules.yml` |
 | Research | `_research/` |
 | Biography or contact details | `about.md`, `_config.yml` |
 | Homepage | `index.html`, `_data/home_sections.yml` |
@@ -40,7 +37,7 @@ python3 scripts/new_post.py "An interesting problem" --type problem --math --dif
 python3 scripts/new_post.py "Following an idea" --type exploration --draft
 ```
 
-Future post drafts go in `_drafts/`, which the helper creates when needed. Preview with `--drafts`. Unpublished lessons, modules, and research use `published: false`; preview with `--unpublished`. See the [writing guide](docs/writing.md#drafts-and-publication) before publishing.
+Future post drafts go in `_drafts/`, which the helper creates when needed. Preview with `--drafts`. For unpublished research, use `published: false` and preview with `--unpublished`. See the [writing guide](docs/writing.md#drafts-and-publication) before publishing.
 
 ## Check and publish
 

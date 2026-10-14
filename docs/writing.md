@@ -8,8 +8,6 @@ Write Markdown in the source files. Jekyll supplies the shared presentation and 
 | --- | --- | --- |
 | Problem | `_posts/YYYY-MM-DD-title.md` | `format: problem` |
 | Exploration | `_posts/YYYY-MM-DD-title.md` | `format: exploration` |
-| Chapter or single-page module | `_modules/title.md` | `format: module` |
-| Lesson within a chapter | `_lessons/chapter/01-title.md` | `module_id`, `module_step` |
 | Research | `_research/title.md` | Paper metadata and `links` |
 
 The title portion of a post filename determines its `/notes/title/` address unless it has an explicit `permalink`. Keep existing filenames and permalinks stable when editing. Topics belong in `tags`; `category` is retained for older subject indexes.
@@ -22,7 +20,6 @@ Copy a suitable existing file or use the optional helper:
 python3 scripts/new_post.py "An interesting problem" --type problem --math --difficulty 2
 python3 scripts/new_post.py "A challenge" --type problem --without-solution
 python3 scripts/new_post.py "Following an idea" --type exploration --math --draft
-python3 scripts/new_post.py "A new chapter" --type module --draft
 python3 scripts/new_post.py "My research project" --type research --draft
 ```
 
@@ -129,31 +126,6 @@ Add the activity's registered name to `widgets`, then include its markup:
 
 Do not paste script tags into the article. The registry supplies styles and controllers. For components supporting multiple instances, pass a distinct `id` to each include. Use activities only where changing, comparing, or tracing something helps answer the article's question. Keep the main argument usable without interaction.
 
-## Courses, chapters, and lessons
-
-Course cards and outlines come from `_data/courses.yml`. Their overview pages live in `learning/` and use `layout: course` with the matching `course_id`. The Calculus I page reuses the first six chapters of the larger sequence through `module_source` and `module_part`. Its `lesson_outline` describes planned lessons.
-
-A chapter overview lives in `_modules/`; its lessons live in `_lessons/chapter/`. Register chapter and lesson titles, URLs, and order in `_data/modules.yml`. Give each page a stable permalink, matching `module_id`, and numeric `module_step` (`0` for the overview, `1` onward for lessons).
-
-```yaml
----
-title: A lesson title
-layout: module
-module_id: my-chapter
-module_step: 1
-permalink: /learning/my-chapter/my-lesson/
-math: true
-widgets: []
-published: false
----
-```
-
-Use actual chapter IDs and paths. The module layout provides contents and previous/next links; only chapter overviews appear in the module list. Set `course_id` on a chapter to group it under a course. Add its URL to the course outline when ready; entries without a URL are forthcoming labels. Update course lesson counts when publishing new lessons.
-
-Single-page modules need no chapter registration. Their front matter may include `objectives`, `prerequisites`, `duration`, and `level`; the helper supplies examples. New modules start without a widget. Add a maintained activity and its `widgets` entry only when it serves the lesson.
-
-Follow [course standards](element-standards.md#courses) when developing lessons. The current sequence contains one functions lesson and five derivatives lessons. Planned chapters remain in the course data, without placeholder lesson files.
-
 ## Research
 
 Research is separate from the post archive and feed. Put metadata and a short readable summary in `_research/`:
@@ -185,7 +157,7 @@ bundle exec jekyll serve --drafts
 
 Publish by moving the file to `_posts/YYYY-MM-DD-title.md`. Future-dated posts remain excluded until a build after their date; a push or manual workflow run triggers that build.
 
-Unpublished modules, lessons, and research stay in their normal collections with `published: false`. Preview with `--unpublished`, then remove the flag when ready. To preview both kinds:
+Unpublished research stays in `_research/` with `published: false`. Preview with `--unpublished`, then remove the flag when ready. To preview both kinds:
 
 ```sh
 bundle exec jekyll serve --drafts --unpublished

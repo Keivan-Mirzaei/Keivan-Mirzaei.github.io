@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { numberParts, numberMarkup, formatNumber, differentiabilityFormula } from '../assets/js/lib/widget-math.mjs';
+import { numberParts, numberMarkup, formatNumber } from '../assets/js/lib/widget-math.mjs';
 
 test('rounding and notation preserve tiny nonzero values and normalize boundary carries', () => {
   assert.equal(formatNumber(-1e-202), '−1.00 × 10⁻²⁰²');
@@ -17,9 +17,7 @@ test('rounding and notation preserve tiny nonzero values and normalize boundary 
     if (parts.exponent !== null) assert.ok(Math.abs(coefficient) >= 1 && Math.abs(coefficient) < 10);
   }
 });
-test('math markup uses real fractions, subscripts and powers, with readable undefined output', () => {
+test('math markup uses powers with readable undefined output', () => {
   assert.match(numberMarkup(1e-10, true), /<mo>≈<\/mo>.*<msup>/);
   assert.equal(numberMarkup(NaN), 'Undefined');
-  assert.match(differentiabilityFormula('oscillation'), /<mfrac>/);
-  assert.match(differentiabilityFormula('rational-square'), /<msub>/);
 });

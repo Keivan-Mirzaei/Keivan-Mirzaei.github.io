@@ -8,7 +8,7 @@
   <div class="quick-search-body">
     <p id="quick-search-status" class="quick-search-status" role="status" aria-live="polite">Find a post, puzzle, or idea.</p>
     <nav class="quick-search-shortcuts" aria-label="Explore">
-      {% for item in site.data.navigation %}{% if item.key == 'notes' or item.key == 'puzzles' or item.key == 'module' or item.key == 'gadgets' %}
+      {% for item in site.data.navigation %}{% if item.key == 'notes' or item.key == 'puzzles' or item.key == 'gadgets' %}
       <a href="{{ item.url | relative_url }}">{% include icon.html name=item.icon %}<span>{{ item.title }}</span>{% include icon.html name='chevron-right' %}</a>
       {% endif %}{% endfor %}
     </nav>

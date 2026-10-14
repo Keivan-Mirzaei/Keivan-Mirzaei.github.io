@@ -1,5 +1,5 @@
 title: Almost Obvious
-description: A notebook of mathematical problems, explorations, interactive learning, research, and puzzles to play.
+description: A notebook of mathematical problems, explorations, research, and puzzles to play.
 url: https://keivan-mirzaei.com
 baseurl: ""
 lang: en
@@ -14,13 +14,6 @@ paginate_path: /notes/page/:num/
 feed:
   excerpt_only: true # Keep solutions out of feed previews.
 collections:
-  modules:
-    output: true
-    permalink: /learning/:name/
-    sort_by: title
-  lessons:
-    output: true
-    permalink: /learning/:path/
   research:
     output: true
     permalink: /research/:name/
@@ -38,22 +31,6 @@ plugins:
   - jekyll-sitemap
 
 defaults:
-  - scope:
-      path: ""
-      type: modules
-    values:
-      layout: post
-      format: module
-      section: module
-      search: true
-  - scope:
-      path: ""
-      type: lessons
-    values:
-      layout: module
-      format: module
-      section: module
-      search: true
   - scope:
       path: ""
     values:

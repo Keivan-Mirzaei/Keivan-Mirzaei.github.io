@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create a problem, exploration, learning module, or research entry in Markdown."""
+"""Create a problem, exploration, or research entry in Markdown."""
 
 import argparse
 from datetime import date
@@ -15,7 +15,7 @@ TEMPLATES = ROOT / "docs" / "templates"
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("title", help='For example, "An interesting random walk"')
-    parser.add_argument("--type", choices=["problem", "exploration", "module", "research"], default="exploration")
+    parser.add_argument("--type", choices=["problem", "exploration", "research"], default="exploration")
     parser.add_argument("--category", help="Optional legacy subject category; use tags for topics")
     parser.add_argument("--date", type=date.fromisoformat, default=date.today())
     parser.add_argument("--draft", action="store_true")
@@ -37,17 +37,16 @@ def main():
         existing = (ROOT / "_research" / f"{slug}.md").exists()
     else:
         existing = (list((ROOT / "_posts").glob(f"*-{slug}.md"))
-                    or (ROOT / "_drafts" / f"{slug}.md").exists()
-                    or (ROOT / "_modules" / f"{slug}.md").exists())
+                    or (ROOT / "_drafts" / f"{slug}.md").exists())
     if existing:
         parser.error(f"An entry with the slug '{slug}' already exists.")
 
-    if args.type in ("module", "research"):
-        folder = ROOT / ("_modules" if args.type == "module" else "_research")
+    if args.type == "research":
+        folder = ROOT / "_research"
     else:
         folder = ROOT / ("_drafts" if args.draft else "_posts")
     folder.mkdir(exist_ok=True)
-    filename = f"{slug}.md" if args.draft or args.type in ("module", "research") else f"{args.date.isoformat()}-{slug}.md"
+    filename = f"{slug}.md" if args.draft or args.type == "research" else f"{args.date.isoformat()}-{slug}.md"
     path = folder / filename
     content = ["---", f"title: {json.dumps(args.title, ensure_ascii=False)}",
                'description: "Write a short introduction here."']
@@ -57,16 +56,11 @@ def main():
         content.append(f"format: {args.type}")
     if args.type == "problem":
         content.append(f"difficulty: {args.difficulty if args.difficulty is not None else 'null'}")
-    if args.type == "module":
-        content.append(f"date: {args.date.isoformat()}")
-    if args.type in ("module", "research") and args.draft:
+    if args.type == "research" and args.draft:
         content.append('published: false')
     if args.category:
         content.append(f"category: {json.dumps(args.category)}")
     content += ["tags: []", f"math: {str(args.math).lower()}"]
-    if args.type == "module":
-        content += ['duration: ""', 'level: ""', 'prerequisites: []', 'objectives:',
-                    '  - State the first learning objective.', 'widgets: []']
     body = (TEMPLATES / f"{args.type}.md").read_text()
     if args.without_solution:
         body = body.split("<!-- solution -->")[0].rstrip() + "\n"

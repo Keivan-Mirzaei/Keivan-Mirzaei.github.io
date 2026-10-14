@@ -102,19 +102,17 @@ A cue without a solution.
                 fixture = source / "_posts" / f"2024-04-02-{slug}.md"
                 header = fixture.read_text().split("\n\n", 1)[0]
                 fixture.write_text(header + "\n\n" + body)
-            create("Fixture lesson", "--type", "module")
             create("Fixture research", "--type", "research")
             create("Unpublished research sentinel", "--type", "research", "--draft")
-            create("Unpublished module sentinel", "--type", "module", "--draft")
             create("Unpublished post sentinel", "--type", "exploration", "--draft")
             create("Invalid slug", "--slug", "../escape", success=False)
-            create("Invalid format option", "--type", "module", "--without-solution", success=False)
+            create("Invalid format option", "--type", "exploration", "--without-solution", success=False)
             create("Invalid logo format", "--type", "exploration", "--difficulty", "2", success=False)
             create("Invalid logo difficulty", "--type", "problem", "--difficulty", "5", success=False)
-            (source / "_modules/fixture-graph.md").write_text(r"""---
+            (source / "_posts/2024-04-02-fixture-graph.md").write_text(r"""---
 title: Fixture stereographic graph
 description: Check optional graph rendering.
-format: module
+format: exploration
 widgets: [stereographic-projection]
 math: true
 ---
@@ -134,11 +132,10 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             preserved = original.read_text()
             create("Fixture problem", "--type", "problem", success=False)
             self.assertEqual(original.read_text(), preserved)
-            original_module = source / "_modules/fixture-lesson.md"
-            preserved_module = original_module.read_text()
-            create("Fixture lesson", "--type", "module", success=False)
-            create("Fixture lesson", "--type", "problem", success=False)
-            self.assertEqual(original_module.read_text(), preserved_module)
+            original_research = source / "_research/fixture-research.md"
+            preserved_research = original_research.read_text()
+            create("Fixture research", "--type", "research", success=False)
+            self.assertEqual(original_research.read_text(), preserved_research)
 
             result = subprocess.run(
                 ["bundle", "exec", "jekyll", "build", "--strict_front_matter",
@@ -188,21 +185,13 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertNotIn('class="problem-disclosures"', page("fixture-empty-support"))
             self.assertEqual(ProblemRows(page("fixture-hint-only")).labels, ["Hint"])
             self.assertNotIn('class="problem-solution"', page("fixture-hint-only"))
-            module = page("fixture-lesson", "learning")
-            self.assertIn("Before you start", module)
-            self.assertNotIn('data-widget-src=', module)
-            self.assertIn('aria-label="More learning modules"', module)
-            self.assertIn('← Previous module', module)
-            self.assertIn('Next module →', module)
-            self.assertIn('href="/notes/derivatives/"', module)
-            self.assertIn('href="/learning/fixture-graph/"', module)
             # Optional graph modules must stay off ordinary pages.
             # The tiny shared map makes 3D imports available after navigation;
             # it declares URLs but does not load those libraries.
             self.assertIn('type="importmap"', problem)
             self.assertNotIn('src="https://cdn.jsdelivr.net/npm/three', problem)
             self.assertNotIn('stereographic-projection.mjs', problem)
-            graph = page("fixture-graph", "learning")
+            graph = page("fixture-graph")
             self.assertIn('type="importmap"', graph)
             self.assertIn('type="module"', graph)
             self.assertIn('stereographic-projection.mjs', graph)
@@ -213,71 +202,31 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertEqual(graph.count('<table>'), 1)
             self.assertTrue((destination / "research/fixture-research/index.html").is_file())
             self.assertFalse((destination / "research/unpublished-research-sentinel").exists())
-            self.assertFalse((destination / "learning/unpublished-module-sentinel").exists())
             self.assertFalse((destination / "notes/unpublished-post-sentinel").exists())
-            self.assertTrue((destination / "notes/derivatives/index.html").is_file())
-            for lesson_slug in ("rates", "definition", "rules", "techniques", "local-linearity"):
-                self.assertTrue((destination / "notes/derivatives" / lesson_slug / "index.html").is_file())
-            learning = (destination / "learning/index.html").read_text()
-            self.assertIn("Fixture lesson", learning)
-            self.assertIn("Introductory Calculus", learning)
-            self.assertIn('href="/learning/introductory-calculus/"', learning)
-            self.assertNotIn("Derivatives: from rates to local linearity", learning)
-            self.assertNotIn('aria-label="Browse post formats"', learning)
-            course = page("introductory-calculus", "learning")
-            for heading in ("About the course", "Learning objectives", "Table of contents",
-                            "How the notes develop understanding", "Prerequisites",
-                            "University objectives behind the course"):
-                self.assertIn(heading, course)
-            self.assertIn('href="/notes/derivatives/"', course)
-            self.assertIn("Available · 5 lessons", course)
-            self.assertEqual(course.count('class="course-module-status">Forthcoming'), 11)
-            self.assertIn("Available · 1 lesson</span>", course)
-            self.assertIn('href="/learning/calculus-i/functions-limits/"', course)
-            self.assertIn('id="calculus-i-heading"', course)
-            self.assertIn('id="calculus-ii-heading"', course)
-            self.assertIn('<ol class="course-module-list" start="7">', course)
-            self.assertIn('href="/learning/calculus-i/"', course)
-            self.assertIn('href="/learning/calculus-i/"', page("derivatives"))
-            calculus_i = page("calculus-i", "learning")
-            self.assertIn('href="/learning/introductory-calculus/"', calculus_i)
-            self.assertIn("6 chapters on the roadmap", calculus_i)
-            self.assertEqual(calculus_i.count('class="course-module-status">Forthcoming'), 4)
-            self.assertIn("2 available now · 6 lessons", calculus_i)
-            self.assertNotIn("Companion reading", calculus_i)
-            self.assertNotIn('id="course-references-heading"', calculus_i)
-            functions = page("functions-limits/functions", "learning/calculus-i")
-            self.assertIn('data-widget="function-machine"', functions)
-            self.assertNotIn("Draft for review", functions)
-            self.assertEqual(calculus_i.count('class="course-lesson-outline"'), 6)
-            self.assertIn("<strong>Exercises review learning.</strong>", calculus_i)
-            self.assertIn("<strong>Problems challenge understanding.</strong>", calculus_i)
-            self.assertNotIn('id="calculus-ii-heading"', calculus_i)
-            sidebar = learning.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
+            self.assertFalse((destination / "learning").exists())
+            self.assertFalse((destination / "notes/derivatives").exists())
+            for html_file in destination.rglob("*.html"):
+                html = html_file.read_text()
+                self.assertNotIn('href="/learning/', html)
+                self.assertNotIn('href="/notes/derivatives/', html)
+            homepage = (destination / "index.html").read_text()
+            sidebar = homepage.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
             self.assertNotIn('<details', sidebar)
-            self.assertEqual(sidebar.count('class="nav-link'), 7)
+            self.assertEqual(sidebar.count('class="nav-link'), 6)
             self.assertIn('href="/gadgets/"', sidebar)
             posts_sidebar = problem.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
             self.assertIn('href="/notes/" aria-current="true"', posts_sidebar)
             for archive in [destination / "notes/index.html", *(destination / "notes/page").glob("*/index.html")]:
-                # Learning links in the shared sidebar do not make modules posts.
                 archive_content = archive.read_text().partition('<main ')[2].partition('</main>')[0]
                 self.assertTrue(archive_content)
-                self.assertNotIn("Fixture lesson", archive_content)
-                self.assertNotIn("Fixture sphere", archive_content)
-                self.assertNotIn("Derivatives: from rates to local linearity", archive_content)
+                self.assertNotIn("Fixture research", archive_content)
             feed = (destination / "feed.xml").read_text()
-            self.assertNotIn("Fixture lesson", feed)
-            self.assertNotIn("Derivatives: from rates to local linearity", feed)
+            self.assertNotIn("Fixture research", feed)
             index = json.loads((destination / "search.json").read_text())
             self.assertFalse(any("sentinel" in entry["title"].lower() for entry in index))
             self.assertTrue(any(entry["title"] == "Fixture research" for entry in index))
-            module_result = next(entry for entry in index if entry["title"] == "Fixture lesson")
-            self.assertEqual(module_result["category"], "Learning module")
-            self.assertEqual(module_result["url"], "/learning/fixture-lesson/")
-            course_result = next(entry for entry in index if entry["title"] == "Introductory Calculus")
-            self.assertEqual(course_result["category"], "Learning course")
-            self.assertEqual(course_result["url"], "/learning/introductory-calculus/")
+            self.assertFalse(any(entry["url"].startswith("/learning/")
+                                 or entry["url"].startswith("/notes/derivatives/") for entry in index))
             self.assertNotIn("Write the solution here.", feed)
 
             preview = Path(directory) / "preview"
@@ -289,10 +238,10 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
                 capture_output=True, text=True
             )
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            self.assertTrue((preview / "learning/unpublished-module-sentinel/index.html").is_file())
+            self.assertTrue((preview / "research/unpublished-research-sentinel/index.html").is_file())
             self.assertFalse((preview / "notes/unpublished-post-sentinel").exists())
             preview_index = json.loads((preview / "search.json").read_text())
-            self.assertTrue(any(entry["title"] == "Unpublished module sentinel" for entry in preview_index))
+            self.assertTrue(any(entry["title"] == "Unpublished research sentinel" for entry in preview_index))
 
 
 if __name__ == "__main__":

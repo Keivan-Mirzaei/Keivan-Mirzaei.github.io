@@ -20,19 +20,6 @@ layout: default
     <div class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}">{% if page.archived %}From the {{ page.date | date: '%Y' }} archive{% else %}{{ page.date | date: '%B %-d, %Y' }}{% endif %}</time><span aria-hidden="true">·</span><span>{% assign minutes = content | strip_html | number_of_words | divided_by: 200 | plus: 1 %}{{ minutes }} min read</span></div>
     {% if page.tags.size > 0 %}<ul class="tags" aria-label="Topics">{% for tag in page.tags %}<li><a href="{{ '/search/' | relative_url }}?q={{ tag | url_encode }}">{{ tag }}</a></li>{% endfor %}</ul>{% endif %}
   </header>
-  {% if page.format == 'module' %}
-  <section class="module-overview" aria-labelledby="before-you-start">
-    <h2 id="before-you-start">Before you start</h2>
-    <dl>
-      {% if page.duration and page.duration != '' %}<div><dt>Allow</dt><dd>{{ page.duration }}</dd></div>{% endif %}
-      {% if page.prerequisites.size > 0 %}<div><dt>Helpful background</dt><dd>{{ page.prerequisites | join: ', ' }}</dd></div>{% endif %}
-    </dl>
-    {% if page.objectives.size > 0 %}
-    <p>By the end, you’ll be able to:</p>
-    <ul>{% for objective in page.objectives %}<li>{{ objective }}</li>{% endfor %}</ul>
-    {% endif %}
-  </section>
-  {% endif %}
   <div class="prose">
     {% if page.format == 'problem' %}
       {% include problem-content.html content=content %}
@@ -41,9 +28,8 @@ layout: default
     {% endif %}
   </div>
   <footer class="article-footer"><p>Have a question, a different approach, or an idea to share?</p><a href="mailto:{{ site.email }}">I’d love to hear it. ↗</a></footer>
-  {% assign entry_kind = 'note' %}{% if page.format == 'module' %}{% assign entry_kind = 'module' %}{% endif %}
-  <nav class="post-pagination" aria-label="{% if page.format == 'module' %}More learning modules{% else %}More notes{% endif %}">
-    {% if page.previous %}<a href="{{ page.previous.url | relative_url }}"><span class="eyebrow">← Previous {{ entry_kind }}</span>{{ page.previous.title }}</a>{% endif %}
-    {% if page.next %}<a href="{{ page.next.url | relative_url }}"><span class="eyebrow">Next {{ entry_kind }} →</span>{{ page.next.title }}</a>{% endif %}
+  <nav class="post-pagination" aria-label="More notes">
+    {% if page.previous %}<a href="{{ page.previous.url | relative_url }}"><span class="eyebrow">← Previous note</span>{{ page.previous.title }}</a>{% endif %}
+    {% if page.next %}<a href="{{ page.next.url | relative_url }}"><span class="eyebrow">Next note →</span>{{ page.next.title }}</a>{% endif %}
   </nav>
 </article>

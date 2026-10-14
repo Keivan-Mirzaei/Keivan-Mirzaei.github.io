@@ -21,10 +21,3 @@ export function numberMarkup(value, approximate = false, digits = 3) {
   const body = parts.exponent === null ? `<mn>${parts.text}</mn>` : `<mn>${parts.coefficient}</mn><mo>×</mo><msup><mn>10</mn><mn>${String(parts.exponent).replace('-', '−')}</mn></msup>`;
   return `<math xmlns="http://www.w3.org/1998/Math/MathML">${approximate && value !== 0 ? '<mo>≈</mo>' : ''}${body}</math>`;
 }
-export function differentiabilityFormula(model) {
-  const square = '<msup><mi>x</mi><mn>2</mn></msup>';
-  const body = model === 'absolute' ? '<mo>|</mo><mi>x</mi><mo>|</mo>'
-    : model === 'oscillation' ? `${square}<mi>sin</mi><mo>(</mo><mfrac><mn>1</mn><mi>x</mi></mfrac><mo>)</mo>`
-    : model.startsWith('rational-') ? `${model === 'rational-square' ? square : '<mi>x</mi>'}<msub><mn>1</mn><mi mathvariant="double-struck">Q</mi></msub><mo>(</mo><mi>x</mi><mo>)</mo>` : square;
-  return `<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo>${body}</math><span class="widget-formula-context">${model === 'oscillation' ? ', f(0) = 0' : ''} · at a = ${model === 'square' ? '1' : '0'}</span>`;
-}

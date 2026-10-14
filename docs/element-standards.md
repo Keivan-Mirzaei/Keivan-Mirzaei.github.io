@@ -12,16 +12,6 @@ Use hints, alternative solutions, extensions, data, and code only when they add 
 
 Give cited figures and equations stable anchors and concise names. Number equations only when referred to later. Use one reference convention within each article; separate article reference labels from labels inside a diagram. Captions explain how to read the visual; the surrounding argument interprets it.
 
-## Courses
-
-Teach students to calculate, interpret, and justify. Write explanations in original prose. State domains, quantifiers, theorem hypotheses, and variable roles precisely. Establish prerequisites before using them; identify results used without proof and distinguish optional enrichment from core material.
-
-Each definition, example, activity, exercise, and problem must serve an observable learning objective. Exercises consolidate taught skills; problems require a new combination, strategy, proof, counterexample, or model. Solve every proposed task before publishing. Keep challenging problem statements visible and collapse hints or solutions where useful.
-
-Check endpoint and one-sided cases, signs, units, zeros, denominators, and the restrictions retained after simplification. Distinguish value, limit, continuity, differentiability, extrema, and signed accumulation. State the eligible form and hypotheses for L'Hôpital's rule and the version of the Fundamental Theorem being used. A finite diagram or simulation supports exploration and does not prove a universal claim.
-
-The existing function machine uses natural log. It shows three truncated decimal places followed by an ellipsis, without an approximation sign, and keeps the exact result 0. Its input domain is checked exactly; it displays Undefined outside the domain and leaves an empty input neutral. Preserve this local display convention when editing it.
-
 ## Content artwork
 
 Use one identifying mark per exploration or puzzle. Depict its distinctive mathematical object, formula, or playable configuration; omit decorative labels and unnecessary detail. Use the site's paper, ink, and green palette, matching typography and fine lines. SVGs should be self-contained and legible at their displayed size. Exploration and puzzle thumbnails use a `440 × 410` canvas.

@@ -9,11 +9,7 @@
     <div class="note-meta">
       <span>{{ post_format.label | default: 'Post' }}</span><span aria-hidden="true">·</span>
       {% if include.post.sample %}<span>Sample</span><span aria-hidden="true">·</span>{% endif %}
-      {% if include.post.format == 'module' and include.post.duration and include.post.duration != '' %}
-      <span>{{ include.post.duration }}</span>
-      {% else %}
       <time datetime="{{ include.post.date | date_to_xmlschema }}">{{ include.post.date | date: '%b %Y' }}</time>
-      {% endif %}
       {% assign note_parts = include.post.content | split: '<!-- solution -->' %}
       {% assign note_solution = note_parts[1] | split: '<!-- alternative -->' | first | split: '<!-- extension -->' | first | split: '<!-- hint -->' | first | strip %}
       {% if include.post.format == 'problem' and note_solution != '' %}<span class="solution-label">Solution included</span>{% endif %}

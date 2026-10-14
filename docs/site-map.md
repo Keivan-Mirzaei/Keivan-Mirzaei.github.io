@@ -8,22 +8,19 @@ Start with [README](../README.md) for common edits and [writing](writing.md) for
 | --- | --- |
 | `_posts/` | Published problems and explorations, named `YYYY-MM-DD-title.md` |
 | `_drafts/` | Future post drafts; created when needed and included only with `--drafts` |
-| `_modules/` | Chapter overview pages |
-| `_lessons/` | Individual lessons, grouped into chapter folders |
 | `_research/` | Research summaries, paper metadata, and links |
-| `learning/` | Course overview pages |
 | `puzzles/`, `gadgets/` | Catalogues and entry pages for games and tools |
 | `notes/index.html` | Paginated post archive |
-| `index.html`, `about.md`, `research.html`, `learning.html` | Main section pages |
+| `index.html`, `about.md`, `research.html` | Main section pages |
 | `problems.md`, `explorations.md` | Lists filtered by post format |
 | `math.md`, `code.md`, `experiments.md` | Existing subject indexes |
 | `search.html`, `search.json` | Search page and template for its generated index |
 | `_config.yml` | Site name, contact details, domain, collections, defaults, and exclusions |
 | `_data/` | Small editable lists and settings used by templates |
 
-Important data files: `navigation.yml` controls the menu; `home_sections.yml` controls homepage cards; `courses.yml` and `modules.yml` control course outlines and lesson order; `puzzles.yml` and `gadgets.yml` control their catalogues. `problem_logos.json` maps the four problem marks. `widgets.yml` lists activity assets. `ambient_sounds.yml` and `chimes.yml` list audio choices; `graph_libraries.yml` pins Three.js for the stereographic activity.
+Important data files: `navigation.yml` controls the menu; `home_sections.yml` controls homepage cards; `puzzles.yml` and `gadgets.yml` control their catalogues. `problem_logos.json` maps the four problem marks. `widgets.yml` lists activity assets. `ambient_sounds.yml` and `chimes.yml` list audio choices; `graph_libraries.yml` pins Three.js for the stereographic activity.
 
-The existing posts and lessons are enabled for publication. A forthcoming item in a course outline is a data entry, not an unfinished lesson file. Add its URL only when the page exists and is ready.
+The existing posts are enabled for publication.
 
 ## Presentation and media
 
@@ -72,7 +69,7 @@ Only recurring tools remain in `scripts/`:
 
 Puzzle numbers are tied to saved progress. Regenerate a catalogue only for an intentional catalogue change; ordinary content editing does not require it. `tests/` checks the maintained mathematics, controllers, storage, navigation, authoring, and asset versions. Keep tests for retained behavior.
 
-The three guides in `docs/` and four starter files in `docs/templates/` are maintenance material and are excluded from publication. Historical plans, review transcripts, and completed production scripts belong in Git history rather than the working directory.
+The three guides in `docs/` and three starter files in `docs/templates/` are maintenance material and are excluded from publication. Historical plans, review transcripts, and completed production scripts belong in Git history rather than the working directory.
 
 ## Build files and cleanup
 
