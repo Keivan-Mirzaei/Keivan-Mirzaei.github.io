@@ -28,3 +28,9 @@
   image: /assets/images/puzzle-thumbnails/four-equal-regions.svg
   image_alt: Coloured points separated into four regions by a solid line and a dashed line.
   players: A point-partition puzzle
+- title: One Odd Coin
+  url: /puzzles/one-odd-coin/
+  description: Weigh the coins, keep your own notes, and identify the odd one. Can you match the minimum?
+  image: /assets/images/puzzle-thumbnails/one-odd-coin.svg
+  image_alt: Three numbered coins beside a two-pan balance scale, with one pan slightly lower.
+  players: 1,000 cases against a computer opponent

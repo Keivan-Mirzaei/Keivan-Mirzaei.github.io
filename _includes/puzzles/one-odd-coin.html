@@ -1,0 +1,117 @@
+<section class="oc-game widget-frame" data-odd-coin aria-label="One Odd Coin game">
+  <div class="oc-info" role="region" aria-label="Puzzle information">
+    <div class="oc-info-main">
+      <div class="oc-info-heading">
+        <button class="oc-puzzle-link" type="button" data-oc-name data-widget-panel-trigger="puzzles" aria-expanded="false" disabled>Easy · Puzzle 1</button>
+        <p class="oc-rule" data-oc-rule>3 coins · one heavier</p>
+      </div>
+      <dl class="oc-metrics" aria-label="Weighing counts">
+        <div><dt>Optimal</dt><dd data-oc-minimum>1</dd></div>
+        <div><dt>Used</dt><dd data-oc-used>0</dd></div>
+      </dl>
+    </div>
+    <div class="oc-clues" data-oc-clues hidden>
+      <p data-oc-genuine hidden></p>
+      <div class="oc-evidence" data-oc-evidence-details hidden><span>Given weighings</span><ol class="oc-log" data-oc-evidence aria-label="Given weighings"></ol></div>
+    </div>
+    <p class="oc-feedback" data-oc-status role="status" aria-live="polite" aria-atomic="true">Enable JavaScript to play.</p>
+  </div>
+  <div class="oc-workbench" data-oc-workbench>
+    <div class="oc-scale" data-oc-scale data-outcome="0">
+      <button class="panel-button oc-primary oc-scale-weigh" type="button" data-oc-weigh disabled>Weigh</button>
+      <svg class="oc-column" viewBox="0 0 80 240" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M17 0h46C51 75 53 151 72 240H8C27 151 29 75 17 0Z" fill="url(#oc-ivory-column)"/></svg>
+      <svg class="oc-pedestal" viewBox="0 0 160 82" aria-hidden="true" focusable="false">
+        <path d="M13 39C13 17 147 17 147 39l3 27c0 17-140 17-140 0Z" fill="url(#oc-ivory-base)"/>
+        <ellipse cx="80" cy="39" rx="67" ry="20" fill="url(#oc-ivory-top)"/>
+        <path d="M15 64c6 15 124 15 132 0" fill="none" stroke="#bdb7a0" stroke-opacity=".45"/>
+      </svg>
+      <svg class="oc-balance" viewBox="0 0 800 84" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="oc-sage-beam" x2="0" y2="1"><stop stop-color="#c3d0bc"/><stop offset=".2" stop-color="#9cb298"/><stop offset=".55" stop-color="#7d987e"/><stop offset="1" stop-color="#627f66"/></linearGradient>
+          <radialGradient id="oc-sage-cap" cx=".3" cy=".2" r=".85"><stop stop-color="#b7c9ae"/><stop offset=".45" stop-color="#91aa8e"/><stop offset="1" stop-color="#607c63"/></radialGradient>
+          <linearGradient id="oc-ivory-base" x2="0" y2="1"><stop stop-color="#f0ecdc"/><stop offset=".45" stop-color="#e4decb"/><stop offset="1" stop-color="#c5bea8"/></linearGradient>
+          <linearGradient id="oc-ivory-column"><stop stop-color="#cfc7b1"/><stop offset=".3" stop-color="#f4efdf"/><stop offset=".55" stop-color="#ebe5d2"/><stop offset="1" stop-color="#cbc3ab"/></linearGradient>
+          <radialGradient id="oc-ivory-top" cx=".4" cy=".25" r=".85"><stop stop-color="#fffdf0"/><stop offset=".5" stop-color="#f0ebda"/><stop offset="1" stop-color="#ddd6c1"/></radialGradient>
+          <radialGradient id="oc-coral" cx=".3" cy=".2" r=".9"><stop stop-color="#ffbb91"/><stop offset=".35" stop-color="#efa178"/><stop offset="1" stop-color="#ca7752"/></radialGradient>
+        </defs>
+        <g class="oc-beam" data-oc-beam>
+          <rect x="152" y="31" width="496" height="18" rx="9" fill="url(#oc-sage-beam)"/>
+          <path d="M160 34h480" fill="none" stroke="#d6e0cd" stroke-opacity=".55" stroke-width="1.5"/>
+          <g fill="url(#oc-sage-cap)"><circle cx="152" cy="40" r="15"/><circle cx="648" cy="40" r="15"/></g>
+          <g fill="none" stroke="#d2dfc9" stroke-opacity=".35" stroke-width="2"><path d="M142 40a10 10 0 0 1 10-10m486 10a10 10 0 0 1 10-10"/></g>
+        </g>
+        <ellipse cx="400" cy="42" rx="20" ry="24" fill="url(#oc-ivory-top)" stroke="#d3ccb6"/>
+        <path d="M385 34a16 19 0 0 1 28-5" fill="none" stroke="#fffdf5" stroke-width="2"/>
+        <circle cx="400" cy="42" r="10" fill="url(#oc-coral)" stroke="#d18a66" stroke-width=".8"/>
+      </svg>
+      <div class="oc-pans">
+        <div class="oc-pan" data-oc-zone="1" role="group" aria-label="Left pan">
+          <svg class="oc-suspension" viewBox="0 0 320 160" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M160 0 10 151M160 0l150 151"/></svg>
+          <img class="oc-pan-bowl" src="{{ '/assets/images/odd-coin/sage-pan.webp' | relative_url }}" width="2172" height="724" alt="" aria-hidden="true" draggable="false">
+          <div class="oc-pan-heading puzzle-sr-only"><button type="button" data-oc-place="1" aria-label="Move selected coins to left pan" disabled><span aria-hidden="true">←</span></button><span data-oc-left-count>0 coins</span></div>
+          <div class="oc-coins" data-oc-left></div>
+        </div>
+        <div class="oc-pan" data-oc-zone="-1" role="group" aria-label="Right pan">
+          <svg class="oc-suspension" viewBox="0 0 320 160" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M160 0 10 151M160 0l150 151"/></svg>
+          <img class="oc-pan-bowl" src="{{ '/assets/images/odd-coin/sage-pan.webp' | relative_url }}" width="2172" height="724" alt="" aria-hidden="true" draggable="false">
+          <div class="oc-pan-heading puzzle-sr-only"><button type="button" data-oc-place="-1" aria-label="Move selected coins to right pan" disabled><span aria-hidden="true">→</span></button><span data-oc-right-count>0 coins</span></div>
+          <div class="oc-coins" data-oc-right></div>
+        </div>
+      </div>
+    </div>
+    <div class="oc-tray" data-oc-zone="0" role="group" aria-label="Coin shelf">
+      <span class="oc-tray-art" aria-hidden="true"></span>
+      <div class="oc-tray-heading"><span>Off the scale <span class="puzzle-sr-only" data-oc-tray-count>· 3 coins</span></span><button type="button" data-oc-place="0" hidden>Return selected coins</button></div>
+      <div class="oc-tray-bed">
+        <div class="oc-coins oc-tray-space" data-oc-tray-space aria-hidden="true"></div>
+        <div class="oc-coins" data-oc-tray><img src="{{ '/assets/images/puzzle-thumbnails/one-odd-coin.svg' | relative_url }}" width="440" height="410" alt="Three coins and a two-pan balance. Make comparisons to identify the odd coin."></div>
+      </div>
+    </div>
+    <form class="oc-label-panel" data-oc-label-panel aria-label="Coin labels" hidden>
+      <div class="oc-label-heading"><span data-oc-selection-count>Select a coin</span><button class="oc-dismiss" type="button" data-oc-dismiss-selection aria-label="Clear selection" hidden>×</button></div>
+      <div class="oc-label-actions" role="group" aria-label="Mark selected coins">
+        <button type="button" data-oc-mark="1" aria-pressed="false" title="Mark heavier · select again to clear" disabled>↑ Heavier</button><button type="button" data-oc-mark="-1" aria-pressed="false" title="Mark lighter · select again to clear" disabled>↓ Lighter</button><button type="button" data-oc-mark="0" aria-pressed="false" title="Mark genuine · select again to clear" disabled>✓ Genuine</button>
+        <button class="oc-note-toggle" type="button" data-oc-note-toggle aria-expanded="false" disabled>Note…</button>
+      </div>
+      <div class="oc-note-entry" data-oc-note-entry hidden><input type="text" maxlength="16" data-oc-note-text aria-label="Note for selected coins" placeholder="Your note…" autocomplete="off"><button type="submit">Save</button></div>
+    </form>
+    <div class="oc-weigh-actions">
+      <button class="panel-button oc-validate" type="button" data-oc-validate disabled>Validate</button>
+      <button class="oc-clear" type="button" data-oc-clear disabled>Clear</button>
+      <button class="panel-button oc-primary" type="button" data-oc-next hidden disabled>Next puzzle {% include icon.html name='arrow' %}</button>
+      <button class="oc-clear" type="button" data-oc-replay hidden disabled>Replay</button>
+    </div>
+    <div class="oc-summary" data-oc-summary hidden><p data-oc-score></p></div>
+  </div>
+  <div class="oc-controls" role="group" aria-label="Game controls">
+    <button class="puzzle-icon-button oc-tool" type="button" data-oc-undo aria-label="Undo action" data-tooltip="Undo" disabled>{% include icon.html name='undo' %}</button>
+    <button class="puzzle-icon-button oc-tool" type="button" data-oc-redo aria-label="Redo action" data-tooltip="Redo" disabled>{% include icon.html name='redo' %}</button>
+    <button class="puzzle-icon-button oc-tool" type="button" data-oc-reset aria-label="Reset board" data-tooltip="Restart" disabled>{% include icon.html name='restart' %}</button>
+    <button class="puzzle-icon-button oc-tool" type="button" data-oc-shuffle aria-label="Shuffle unsolved puzzles" data-tooltip="Shuffle" disabled>{% include icon.html name='shuffle' %}</button>
+    <button class="puzzle-icon-button oc-tool" type="button" data-oc-hint aria-label="Hint" data-tooltip="Hint" disabled>{% include icon.html name='hint' %}</button>
+    <button class="puzzle-icon-button oc-tool" type="button" data-widget-panel-trigger="settings" aria-label="Settings and help" data-tooltip="Settings & help" aria-expanded="false" disabled>{% include icon.html name='settings' %}</button>
+  </div>
+  <details class="oc-history" data-oc-history hidden><summary>Your weighings <span data-oc-log-count></span></summary><ol class="oc-log" data-oc-log aria-label="Your weighings"></ol></details>
+  <div class="widget-support-panel" data-widget-panel="settings" aria-label="Game settings" hidden>
+    <div class="widget-slider-setting">
+      <div class="widget-slider-heading"><label data-oc-difficulty-name>Difficulty</label><output data-oc-difficulty-label hidden>Easy</output></div>
+      <select aria-label="Difficulty" data-oc-difficulty data-dropdown="difficulty" disabled><option value="1">Easy</option><option value="2">Medium</option><option value="3">Hard</option><option value="4">Expert</option></select>
+      <p data-oc-level-detail>A known heavy or light coin · 1–2 weighings</p>
+    </div>
+    <label class="widget-switch"><span>Save progress</span><input type="checkbox" role="switch" data-puzzle-remember checked disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
+    {% include controls/reset-progress.html message='Clear <strong data-widget-progress-scope>Easy</strong> boards, notes, solved records, and undo history? Other difficulties are kept.' %}
+    <details class="oc-disclosure"><summary>How to play</summary>
+      <p>Drag equal groups onto the pans and weigh. Select the odd coin, label its weight if needed, then Validate. You can go beyond the optimal count; repeating a comparison is free.</p>
+      <p class="widget-note">Click a coin to label it. Shift-click to select a group. Double-click a pan coin to return it. Keyboard: arrows to focus, Space to select, L / R / T to move.</p>
+    </details>
+  </div>
+  <div class="widget-support-panel" data-widget-panel="puzzles" aria-label="Choose a puzzle" hidden>
+    <form data-oc-jump>
+      <div class="widget-slider-heading"><label data-oc-number-name>Puzzle number</label><output data-oc-number-label>1 / 250</output></div>
+      <input type="range" min="1" max="250" step="1" value="1" aria-label="Puzzle number slider" data-oc-number-slider disabled>
+      <div class="oc-number-entry"><input type="number" min="1" max="250" step="1" value="1" inputmode="numeric" data-oc-number required disabled><button class="panel-button" type="submit" data-oc-open disabled>{% include icon.html name='arrow' %}<span>Open puzzle</span></button></div>
+      <p data-oc-completed>0 / 250 Easy puzzles solved</p>
+    </form>
+  </div>
+  <noscript><p>This game needs JavaScript. Start with three coins, one known to be heavy. Weigh one against another: either the heavier pan or the unweighed coin must contain the odd one.</p></noscript>
+</section>
