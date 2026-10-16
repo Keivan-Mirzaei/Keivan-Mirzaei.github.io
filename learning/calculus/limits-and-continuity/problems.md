@@ -1,5 +1,6 @@
 ---
 layout: learning-topic
+problem_set: true
 title: "Problems"
 permalink: /learning/calculus/limits-and-continuity/problems/
 course_key: calculus
@@ -10,7 +11,7 @@ math: true
 sitemap: false
 ---
 
-Choose a method and justify why it applies: limit laws, algebraic rewriting, the squeeze theorem, one-sided analysis, or continuity. This set covers the whole module. Hints and solutions stay collapsed until you open them.
+Choose a method and justify your reasoning. Swipe between problems or use the arrows below. Help reveals hints first, then the solution.
 
 ## Read and construct graphs
 

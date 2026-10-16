@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" role="img" aria-labelledby="title desc"><title id="title">Read the function values and one-sided limits</title><desc id="desc">A removable hole occurs at input minus one, and a jump at input one.</desc><style>.axis{fill:none;stroke:#c9d1c6;stroke-width:1}.curve{fill:none;stroke:#285b46;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}.label{font:14px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;fill:#686e66}.axis-name{font:italic 17px Georgia,serif;fill:#282e29}</style>
 <path class="axis" d="M65 260H585M320 350V35"/>
 <path class="curve" d="M95 315L395 95M395 315L545 260"/>
-<circle cx="245" cy="205" r="7" fill="#f1f2ef" stroke="#285b46" stroke-width="2"/>
-<circle cx="395" cy="95" r="7" fill="#f1f2ef" stroke="#285b46" stroke-width="2"/>
+<circle cx="245" cy="205" r="7" fill="#f3f0f5" stroke="#285b46" stroke-width="2"/>
+<circle cx="395" cy="95" r="7" fill="#f3f0f5" stroke="#285b46" stroke-width="2"/>
 <circle cx="245" cy="95" r="6" fill="#285b46"/>
 <circle cx="395" cy="315" r="6" fill="#285b46"/>
 <g class="label"><text x="245" y="286" text-anchor="middle">−1</text><text x="395" y="286" text-anchor="middle">1</text><text x="302" y="210" text-anchor="end">1</text><text x="302" y="100" text-anchor="end">3</text><text x="302" y="320" text-anchor="end">−1</text></g><g class="axis-name"><text x="595" y="266">x</text><text x="335" y="35">y</text></g><path class="axis-ticks" d="M245 257V263M395 257V263M317 205H323M317 95H323M317 315H323" fill="none" stroke="#9eac96" stroke-width="1"/>

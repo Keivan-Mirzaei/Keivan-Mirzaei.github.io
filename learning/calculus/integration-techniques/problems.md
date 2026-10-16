@@ -1,5 +1,6 @@
 ---
 layout: learning-topic
+problem_set: true
 title: "Problems"
 permalink: /learning/calculus/integration-techniques/problems/
 course_key: calculus

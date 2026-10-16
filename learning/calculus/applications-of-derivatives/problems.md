@@ -1,5 +1,6 @@
 ---
 layout: learning-topic
+problem_set: true
 title: "Problems"
 permalink: /learning/calculus/applications-of-derivatives/problems/
 course_key: calculus

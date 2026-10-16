@@ -1,0 +1,39 @@
+.problems-enhanced > h2 { display: none; }
+.problems-deck { margin: 28px 0; }
+.topic-wrap .problem-card { background: #f3f0f5; padding: 26px; margin: 0; border-radius: 7px; touch-action: pan-y pinch-zoom; transition: transform .16s ease-out; scroll-margin-top: 20px; }
+.problem-card[hidden] { display: none; }
+.problem-card.is-swiping { transition: none; user-select: none; -webkit-user-select: none; cursor: grabbing; }
+.problem-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; margin-bottom: 24px; }
+.problem-card-name { min-width: 0; }
+.problem-card-number { font: 11px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif !important; color: var(--muted); margin: 0 0 6px; }
+.problem-card-name h3 { font: 600 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; margin: 0; }
+.problem-card .disclosure > summary { display: none; }
+.problem-card .disclosure[open] { padding: 18px 20px; background: #e9e3ed; border-radius: 4px; margin-top: 20px; }
+.problem-card .disclosure[open] > :last-child { margin-bottom: 0; }
+.problem-help { margin-top: 18px; padding: 10px 15px; border-radius: 4px; background: #e9e3ed; color: var(--green); font-size: 13px; }
+.problem-help[hidden] { display: none; }
+.problem-status-menu { position: relative; flex-shrink: 0; }
+.problem-status-menu summary { display: flex; align-items: center; gap: 7px; min-height: 40px; font-size: 12px; color: var(--muted); cursor: pointer; list-style: none; }
+.problem-status-menu summary::-webkit-details-marker { display: none; }
+.problem-status-menu svg { fill: none; }
+.problem-status-menu summary[data-status]:not([data-status=""]) svg { fill: currentColor; }
+.problem-status-menu summary[data-status=revisit] { color: #80612a; }
+.problem-status-menu summary[data-status=confident] { color: #285b46; }
+.problem-status-menu summary[data-status=skip] { color: #7a708c; }
+.problem-status-options { position: absolute; z-index: 3; top: 100%; right: 0; min-width: 150px; padding: 6px; background: var(--paper); border-radius: 5px; box-shadow: 0 6px 24px #282e291c; }
+.problem-status-options button { display: block; width: 100%; text-align: left; padding: 11px 12px; color: var(--muted); font-size: 12px; border-radius: 3px; }
+.problem-status-options [aria-pressed=true] { background: #e9eee4; }
+.problem-card-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 28px; }
+.problem-card-nav > button { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; color: var(--green); }
+.problem-card-nav > button:disabled { opacity: .25; }
+.problem-squares { display: flex; flex-wrap: wrap; justify-content: center; min-width: 0; }
+.problem-squares button { position: relative; display: grid; place-items: center; width: 30px; height: 40px; }
+.problem-squares span { width: 7px; height: 7px; border-radius: 1px; background: #b8b9b3; }
+.problem-squares [data-status=revisit] span { background: #a67936; }
+.problem-squares [data-status=confident] span { background: #285b46; }
+.problem-squares [data-status=skip] span { background: #8c849b; }
+.problem-squares [aria-current=true]::after { content: ''; position: absolute; width: 12px; height: 2px; bottom: 7px; border-radius: 1px; background: var(--muted); }
+.problems-empty { color: var(--muted); padding: 24px; border-radius: 7px; background: #f3f0f5; }
+@media(max-width:600px) { .topic-wrap .problem-card { padding: 20px; } .problem-card-header { flex-wrap: wrap; gap: 8px; } .problem-status-menu { margin-left: auto; } .problem-card-nav { gap: 4px; } .problem-squares button { width: 28px; } }
+@media(prefers-reduced-motion:reduce) { .problem-card { transition: none; } }
+@media(max-width:600px) { .problem-squares { display: grid; grid-template-columns: repeat(8,minmax(0,1fr)); width: min(224px,100%); } .problem-squares button { width: 100%; } }

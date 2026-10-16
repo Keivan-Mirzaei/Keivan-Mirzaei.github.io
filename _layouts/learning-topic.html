@@ -30,6 +30,10 @@ layout: null
   <link rel="stylesheet" href="{{ '/assets/css/learning.css' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/css/learning-topic.css' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/css/sliders.css' | relative_url }}">
+  {% if page.problem_set %}
+  <link rel="stylesheet" href="{{ '/assets/css/learning-problems.css' | relative_url }}">
+  <script type="module" src="{{ '/assets/js/learning-problems.js' | relative_url }}"></script>
+  {% endif %}
   <script defer src="{{ '/assets/js/learning-topic.js' | relative_url }}"></script>
   {% if page.topic_script %}<script defer src="{{ page.topic_script | relative_url }}"></script>{% endif %}
 </head>
@@ -44,7 +48,7 @@ layout: null
       <p class="eyebrow">{{ learning_course.title | escape }}{% if learning_module.title != page.title %} / {{ learning_module.title | escape }}{% endif %}</p>
       <h1>{{ page.title | escape }}</h1>
       {% if page.description %}<p class="topic-lead">{{ page.description | escape }}</p>{% endif %}
-      {{ content }}
+      {% if page.problem_set %}<div id="module-problems">{{ content }}</div>{% else %}{{ content }}{% endif %}
       {% if page.exercises.size > 0 %}
       <section id="practice" class="practice" aria-labelledby="practice-title">
         <h2 id="practice-title">Quiz</h2>

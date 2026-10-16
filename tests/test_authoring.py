@@ -212,6 +212,7 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertTrue((destination / "learning/index.html").is_file())
             self.assertFalse((destination / "learning/topic").exists())
             self.assertFalse((destination / "learning/thumbnail-options").exists())
+            self.assertFalse((destination / "learning/problem-layout-options").exists())
             catalogue = (destination / "learning/index.html").read_text()
             self.assertIn("Calculus for Engineers and Scientists", catalogue)
             self.assertNotIn("275", catalogue)
@@ -223,6 +224,10 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
                     self.assertIn('id="practice"', html)
                 else:
                     self.assertNotIn('id="practice"', html)
+                if topic['slug'] == 'problems':
+                    self.assertIn('learning-problems.js', html)
+                    self.assertIn('learning-problems.css', html)
+                    self.assertIn('id="module-problems"', html)
                 self.assertNotIn("learning-slope", html)
                 if i:
                     self.assertIn(f'href="{topics[i-1]["url"]}" aria-label="Previous topic"', html)
