@@ -237,7 +237,7 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
                 self.assertEqual(module["topics"][-1]["slug"], "problems")
             module_problems = (destination / "learning/calculus/limits-and-continuity/problems/index.html").read_text()
             problem_disclosures = ProblemRows(module_problems)
-            self.assertEqual(problem_disclosures.labels.count("Solution"), 12)
+            self.assertEqual(problem_disclosures.labels.count("Solution"), 16)
             self.assertTrue(all(not row[2] for row in problem_disclosures.rows if row[0] == "disclosure"))
             self.assertNotIn('id="practice"', module_problems)
             topic_fixture = (destination / "learning/fixture-topic/index.html").read_text()

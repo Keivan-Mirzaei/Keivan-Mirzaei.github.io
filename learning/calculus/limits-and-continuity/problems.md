@@ -5,22 +5,12 @@ permalink: /learning/calculus/limits-and-continuity/problems/
 course_key: calculus
 module_key: limits-and-continuity
 position: "1.7"
-description: Explore graphs, new algebraic methods, applications, and two challenges using limits and continuity.
+description: Connect limit laws, squeezing, asymptotes, continuity, and the Intermediate Value Theorem through problems and applications.
 math: true
 sitemap: false
 ---
 
-Use algebra, one-sided limits, continuity, and the Intermediate Value Theorem. Give a reason for each conclusion. Open a hint if you need a starting point; the solutions stay hidden until you choose to read them.
-
-<section class="theorem" markdown="1">
-<p class="element-label">Rules</p>
-<h3>Limit laws used in this set</h3>
-
-When two functions have finite limits, the limit of their sum, difference, or product is the corresponding sum, difference, or product of those limits. For a quotient, the same rule applies provided the denominator's limit is nonzero.
-
-Polynomials and square-root functions are continuous wherever defined. Sums, differences, products, and compositions of continuous functions remain continuous; quotients do too where their denominator is nonzero.
-
-</section>
+Choose a method and justify why it applies: limit laws, algebraic rewriting, the squeeze theorem, one-sided analysis, or continuity. This set covers the whole module. Hints and solutions stay collapsed until you open them.
 
 ## Read and construct graphs
 
@@ -89,44 +79,44 @@ The theorem guarantees *at least one* zero between endpoints of opposite signs. 
 </details>
 </section>
 
-## Limits that need a new step
+## Limit laws and algebraic methods
 
 <section class="worked" markdown="1">
 <p class="element-label">Problem 3</p>
-<h3>The conjugate method</h3>
+<h3>Recover the hidden limits</h3>
 
-Evaluate
+Two functions satisfy
 
-$$\lim_{x\to0}\frac{\sqrt{9+x}-3}{x}.$$
+$$\begin{aligned}
+\lim_{x\to a}(2f(x)+g(x))&=7,\\
+\lim_{x\to a}(f(x)-g(x))&=2.
+\end{aligned}$$
+
+Without assuming beforehand that the individual limits exist, find
+
+$$\lim_{x\to a}\frac{f(x)}{g(x)}.$$
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
 
-<aside class="prerequisite" markdown="1">
-<p class="element-label">Prerequisite</p>
-
-The difference-of-squares identity is $$(a-b)(a+b)=a^2-b^2$$. The expressions $$a-b$$ and $$a+b$$ are **conjugates**.
-
-</aside>
-
-Multiply the numerator and denominator by $$\sqrt{9+x}+3$$. This changes the form of the quotient without changing its nearby values.
+Call the two combinations $$A(x)$$ and $$B(x)$$. Express $$f$$ and $$g$$ in terms of these combinations before using the limit laws.
 
 </details>
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-For $$x\ne0$$ near $$0$$,
+With $$A=2f+g$$ and $$B=f-g$$, algebra gives
 
-$$\frac{\sqrt{9+x}-3}{x}
-=\frac{(9+x)-9}{x(\sqrt{9+x}+3)}
-=\frac1{\sqrt{9+x}+3}.$$
+$$f=\frac{A+B}{3},\qquad g=\frac{A-2B}{3}.$$
 
-The new denominator tends to $$6$$, so
+Both right-hand sides have limits, so
 
-$$\lim_{x\to0}\frac{\sqrt{9+x}-3}{x}
-=\lim_{x\to0}\frac1{\sqrt{9+x}+3}=\frac16.$$
+$$\lim_{x\to a}f(x)=\frac{7+2}{3}=3,\qquad
+\lim_{x\to a}g(x)=\frac{7-4}{3}=1.$$
 
-Cancellation uses nearby nonzero inputs; it does not assign a value to the original quotient at $$0$$.
+Since the denominator limit is nonzero, the quotient law now applies:
+
+$$\lim_{x\to a}\frac{f(x)}{g(x)}=\frac31=3.$$
 
 </details>
 </section>
@@ -214,7 +204,7 @@ Evaluate
 
 $$\lim_{x\to+\infty}\left(\sqrt{4x^2+x}-2x\right).$$
 
-Here $$x\to+\infty$$ means that the *input* grows without bound. The question is whether the difference approaches a finite output.
+Find the finite separation that remains between these two unbounded quantities.
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
@@ -244,37 +234,189 @@ Both original terms grow without bound, but their difference approaches a finite
 
 <section class="worked" markdown="1">
 <p class="element-label">Problem 7</p>
-<h3>Oscillation inside a shrinking envelope</h3>
+<h3>Oscillation far from the origin</h3>
 
-The function $$\sin(1/x)$$ has no limit at $$0$$. Does multiplying it by $$x$$ repair the limit?
+The numerator keeps changing sign. Determine the horizontal asymptote at each end:
 
-$$\lim_{x\to0}x\sin(1/x).$$
+$$F(x)=\frac{x\cos x}{x^2+1}.$$
+
+Would applying the product law to $$\cos x$$ and $$x/(x^2+1)$$ be justified?
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
 
-<aside class="prerequisite" markdown="1">
-<p class="element-label">Prerequisite</p>
-
-For every real angle $$t$$, $$\lvert\sin t\rvert\le1$$.
-
-</aside>
-
-How far from zero can the product be?
+Bound the absolute value. For $$\lvert x\rvert\ge1$$, compare $$\lvert x\rvert/(x^2+1)$$ with $$1/\lvert x\rvert$$.
 
 </details>
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-For $$x\ne0$$,
+Using $$\lvert\cos x\rvert\le1$$ gives
 
-$$\lvert x\sin(1/x)\rvert\le\lvert x\rvert.$$
+$$0\le\left\lvert\frac{x\cos x}{x^2+1}\right\rvert
+\le\frac{\lvert x\rvert}{x^2+1}
+\le\frac1{\lvert x\rvert}.$$
 
-As $$x\to0$$, the right side tends to zero. Given any desired closeness to zero, taking $$\lvert x\rvert$$ smaller than that distance forces the product to be at least as close. Thus
+The final bound tends to zero at either end. The squeeze theorem therefore gives
 
-$$\lim_{x\to0}x\sin(1/x)=0.$$
+$$\lim_{x\to+\infty}F(x)=\lim_{x\to-\infty}F(x)=0.$$
 
-This is a **squeezing argument**: oscillations can continue while their entire envelope shrinks to a single height.
+Thus $$y=0$$ is a horizontal asymptote at both ends, even though the graph crosses it infinitely often. The product law cannot be applied directly because $$\cos x$$ has no limit at either infinity.
+
+</details>
+</section>
+
+## Infinite limits and asymptotes
+
+<section class="worked" markdown="1">
+<p class="element-label">Problem 8</p>
+<h3>A vanishing denominator, three outcomes</h3>
+
+For each function, determine both one-sided limits at $$x=3$$ and decide whether a two-sided infinite limit exists:
+
+$$\begin{aligned}
+A(x)&=\frac{x-4}{(x-3)^2},\\
+B(x)&=\frac{x-4}{x-3},\\
+C(x)&=\frac{\sin(x-3)}{x-3}.
+\end{aligned}$$
+
+Which graphs have a vertical asymptote there?
+
+<details class="disclosure" markdown="1">
+<summary>Hint</summary>
+
+Near $$3$$ the numerator $$x-4$$ is negative. A squared denominator stays positive. For $$C$$, recognise a basic trigonometric limit.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Solution</summary>
+
+For $$A$$, the numerator approaches $$-1$$ and the denominator approaches zero through positive values:
+
+$$\lim_{x\to3^-}A(x)=\lim_{x\to3^+}A(x)=-\infty.$$
+
+Hence $$\lim_{x\to3}A(x)=-\infty$$, and $$x=3$$ is a vertical asymptote.
+
+For $$B$$, the denominator changes sign:
+
+$$\lim_{x\to3^-}B(x)=+\infty,\qquad
+\lim_{x\to3^+}B(x)=-\infty.$$
+
+There is a vertical asymptote, but no two-sided infinite limit.
+
+For $$C$$, set $$t=x-3$$. The basic sine limit gives
+
+$$\lim_{x\to3}C(x)=\lim_{t\to0}\frac{\sin t}{t}=1.$$
+
+Both one-sided limits are $$1$$. There is a removable hole, repaired by assigning the value $$1$$, and no vertical asymptote. A zero denominator alone does not tell us which behavior occurs.
+
+</details>
+</section>
+
+<section class="worked" markdown="1">
+<p class="element-label">Problem 9</p>
+<h3>A hole and three asymptotes</h3>
+
+Find every vertical and slant asymptote of
+
+$$R(x)=\frac{(x^2-4)(2x^2+x+1)}{(x-2)(x^2-1)}.$$
+
+Locate any removable discontinuity and state the value that would repair it. Does this function have a horizontal asymptote?
+
+<details class="disclosure" markdown="1">
+<summary>Hint</summary>
+
+Factor before classifying the excluded inputs. After cancellation, polynomial division separates a line from a remainder that tends to zero.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Solution</summary>
+
+For $$x\ne2,1,-1$$,
+
+$$\begin{aligned}
+R(x)&=\frac{(x+2)(2x^2+x+1)}{x^2-1}\\
+&=2x+5+\frac{6x+7}{x^2-1}.
+\end{aligned}$$
+
+The cancelled factor leaves a finite limit at $$2$$:
+
+$$\lim_{x\to2}R(x)=\frac{(2+2)(8+2+1)}{4-1}=\frac{44}{3}.$$
+
+Defining $$R(2)=44/3$$ repairs the hole. At $$1$$ and $$-1$$, the simplified numerator is nonzero while the denominator tends to zero and changes sign. Thus $$x=1$$ and $$x=-1$$ are vertical asymptotes.
+
+Finally,
+
+$$\lim_{x\to\pm\infty}\bigl(R(x)-(2x+5)\bigr)
+=\lim_{x\to\pm\infty}\frac{6x+7}{x^2-1}=0.$$
+
+The slant asymptote is $$y=2x+5$$ at both ends. There is no horizontal asymptote, since the function grows without bound in magnitude.
+
+</details>
+</section>
+
+## Trigonometric limits and applications
+
+<section class="worked" markdown="1">
+<p class="element-label">Problem 10</p>
+<h3>Height lost on a circular track</h3>
+
+A point on a circle of radius $$r>0$$ moves through a small angle $$\theta$$ from the top. Its horizontal displacement is $$d=r\sin\theta$$ and its vertical drop is $$h=r(1-\cos\theta)$$. Find
+
+$$\lim_{\theta\to0}\frac{h}{d^2}.$$
+
+What does this suggest about how the drop changes when a very small horizontal displacement doubles?
+
+<details class="disclosure" markdown="1">
+<summary>Hint</summary>
+
+Use both basic trigonometric limits by dividing the numerator and denominator by $$\theta^2$$. Angles are in radians.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Solution</summary>
+
+For nearby nonzero angles,
+
+$$\frac{h}{d^2}=\frac1r\,
+\frac{(1-\cos\theta)/\theta^2}{(\sin\theta/\theta)^2}.$$
+
+The denominator tends to $$1\ne0$$, so
+
+$$\lim_{\theta\to0}\frac{h}{d^2}
+=\frac1r\frac{1/2}{1^2}=\frac1{2r}.$$
+
+Thus $$h$$ is approximately $$d^2/(2r)$$ for small displacements. Doubling a very small displacement makes the drop approximately four times as large. The ratio has units of inverse length.
+
+</details>
+</section>
+
+<section class="worked" markdown="1">
+<p class="element-label">Problem 11</p>
+<h3>A mixture with a limiting concentration</h3>
+
+A tank initially contains $$20\,\mathrm{L}$$ of solution with $$4\,\mathrm{g}$$ of dissolved salt. Solution containing $$3\,\mathrm{g/L}$$ is added at $$2\,\mathrm{L/min}$$, with no outflow and enough tank capacity. Assume the contents are well mixed.
+
+Find the salt concentration $$C(t)$$ after $$t\ge0$$ minutes, its long-term limit, and whether it ever reaches that limit at a finite time.
+
+<details class="disclosure" markdown="1">
+<summary>Hint</summary>
+
+Track salt mass and total volume separately. Then rewrite concentration as its limiting value plus a remainder.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Solution</summary>
+
+The added salt mass is $$6t\,\mathrm{g}$$ and the added volume is $$2t\,\mathrm{L}$$, so
+
+$$C(t)=\frac{4+6t}{20+2t}=3-\frac{56}{20+2t}\quad\mathrm{g/L}.$$
+
+Therefore,
+
+$$\lim_{t\to+\infty}C(t)=3\quad\mathrm{g/L}.$$
+
+The remainder is negative for every finite $$t\ge0$$. The concentration approaches the incoming concentration from below but never equals it at a finite time. The horizontal asymptote is $$C=3$$; the model is only used for nonnegative time.
 
 </details>
 </section>
@@ -282,7 +424,7 @@ This is a **squeezing argument**: oscillations can continue while their entire e
 ## Continuity and models
 
 <section class="worked" markdown="1">
-<p class="element-label">Problem 8</p>
+<p class="element-label">Problem 12</p>
 <h3>Build a continuous bridge</h3>
 
 Choose $$a,b$$ so that the following function is continuous everywhere:
@@ -320,7 +462,7 @@ The middle formula then has the same values as the adjacent limits at both joins
 </section>
 
 <section class="worked" markdown="1">
-<p class="element-label">Problem 9</p>
+<p class="element-label">Problem 13</p>
 <h3>The area of a thin ring</h3>
 
 A circular plate has radius $$10\,\mathrm{cm}$$. A narrow ring extends its radius by $$h>0$$ centimetres. Let $$A(h)$$ be the area of the added ring.
@@ -358,7 +500,7 @@ Area divided by radial thickness has units $$\mathrm{cm^2}/\mathrm{cm}=\mathrm{c
 </section>
 
 <section class="worked" markdown="1">
-<p class="element-label">Problem 10</p>
+<p class="element-label">Problem 14</p>
 <h3>Two boxes with the same volume</h3>
 
 Squares of side $$x$$ centimetres are cut from the corners of a $$20\,\mathrm{cm}$$ by $$30\,\mathrm{cm}$$ sheet. Folding the sides makes an open box with volume
@@ -390,7 +532,7 @@ These open intervals do not overlap, so the cuts are distinct. This argument est
 ## Challenges
 
 <section class="worked" markdown="1">
-<p class="element-label">Problem 11 · Challenge</p>
+<p class="element-label">Problem 15 · Challenge</p>
 <h3>Two radicals, one cancellation</h3>
 
 Evaluate
@@ -434,7 +576,7 @@ $$\begin{aligned}
 </section>
 
 <section class="worked" markdown="1">
-<p class="element-label">Problem 12 · Challenge</p>
+<p class="element-label">Problem 16 · Challenge</p>
 <h3>Two points half an interval apart</h3>
 
 Suppose $$f$$ is continuous on $$[0,1]$$ and $$f(0)=f(1)$$. Prove that there is some $$c\in[0,1/2]$$ such that
