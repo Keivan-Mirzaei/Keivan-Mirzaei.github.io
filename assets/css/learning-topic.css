@@ -41,9 +41,10 @@
 fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 legend { font-size: 16px; line-height: 1.6; padding: 0; margin-bottom: 15px; }
 .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.answer { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; background: var(--paper); border-radius: 5px; min-height: 48px; padding: 10px 12px; font-size: 14px; color: var(--ink); cursor: pointer; }
+.answer { position: relative; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; background: var(--paper); border-radius: 5px; min-height: 48px; padding: 10px 12px; font-size: 14px; color: var(--ink); cursor: pointer; }
 .answer:has(input:checked) { background: #e0ead9; }
-input[type=radio] { accent-color: var(--green); width: 16px; height: 16px; margin: 0; }
+.answer input[type=radio] { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.answer:has(input:focus-visible) { outline: 2px solid var(--green); outline-offset: 2px; }
 .question-check { margin-top: 15px; font-size: 12px; background: var(--green); color: white; }
 .question-check:hover { background: #214a39; color: white; }
 .feedback { font-size: 13px; margin: 14px 0 0; line-height: 1.7; }
@@ -116,9 +117,29 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 #question-dots [data-result=correct] > span { background: #dcebd5; color: #29513a; }
 #question-dots [data-result=incorrect] > span { background: #f1dcd7; color: #843f35; }
 #question-dots [aria-current] > span { outline: 1px solid #858b81; outline-offset: 3px; }
-.quiz-status { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.quiz-status, .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 .quiz-actions { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 .quiz-actions .question-check { margin: 0; }
 .check-current { padding: 9px 0; background: transparent; color: var(--muted); font-size: 12px; }
 .check-current:hover { background: transparent; color: var(--green); }
+.continuity-widget { margin: 25px 0 35px; }
+.continuity-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 16px; }
+.continuity-readouts output { font-variant-numeric: tabular-nums; }
+.graph-handle { cursor: grab; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.graph-handle[data-dragging] { cursor: grabbing; }
+.graph-handle:focus, .graph-handle:focus-visible { outline: none; }
+.graph-focus-ring { visibility: hidden; pointer-events: none; }
+.graph-handle:focus-visible .graph-focus-ring { visibility: visible; }
+#continuity-explorer svg { color: #a67936; }
+#continuity-explorer svg[data-continuous=true] { color: #285b46; }
+.continuity-curve { stroke: currentColor; transition: stroke .2s; }
+.continuity-branch:hover .continuity-curve,
+.continuity-branch:focus-visible .continuity-curve { stroke-width: 4; }
+#continuity-join-glow { transition: opacity .2s; }
+.continuity-album { margin: 24px 0 35px; }
+.continuity-album:has(input[value=missing]:checked) .continuity-missing,
+.continuity-album:has(input[value=misplaced]:checked) .continuity-misplaced,
+.continuity-album:has(input[value=jump]:checked) .continuity-jump,
+.continuity-album:has(input[value=unbounded]:checked) .continuity-unbounded,
+.continuity-album:has(input[value=oscillation]:checked) .continuity-oscillation { display: block; }
