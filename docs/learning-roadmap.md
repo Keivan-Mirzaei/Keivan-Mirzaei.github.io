@@ -25,6 +25,7 @@ Question data supports plain text and LaTeX delimited by `\(` and `\)`. The Quiz
 - Worked examples: always visible in light grey blocks.
 - Figures and interactive figures: transparent, with only necessary labels. Graph captions and widget subtitles share one small, centered muted style. Keep a widget’s short interaction instruction inside its container. Widgets disable text selection and native image dragging; draggable points also support keyboard input.
 - Do not put highlights inside warnings.
+- Proofs may use only facts already established in the course or justified in the proof. Omit a proof rather than silently assume an unintroduced result.
 - Use explicit limit notation when evaluating a limit or deriving a derivative. Write primes as superscripts, for example `f^{\prime}(a)`.
 - Use familiar contexts and explain scientific terms only when they help the mathematical idea. Quiz questions should test distinct reasoning rather than repeat worked examples.
 - Graphs use green curves, light axes, muted numeric labels without opaque halos, and transparent backgrounds so they blend with their containing block.
