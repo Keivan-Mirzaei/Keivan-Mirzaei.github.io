@@ -3,7 +3,7 @@ layout: default
 title: Research
 section: research
 permalink: /research/
-description: Research interests in probability, analysis, control, and optimization.
+description: My research interests include stochastic analysis, probability theory, stochastic differential equations, control theory, partial differential equations, and optimization.
 ---
 <div class="page-wrap research-index">
   <header class="page-heading">
@@ -11,10 +11,6 @@ description: Research interests in probability, analysis, control, and optimizat
     <h1>Research</h1>
     <p class="page-description">{{ page.description }}</p>
   </header>
-  <div class="research-intro">
-    <p>My research interests include stochastic analysis, probability theory, stochastic differential equations, control theory, partial differential equations, and optimization.</p>
-    <a class="text-link" href="{{ site.linkedin_url }}">View my LinkedIn profile <span aria-hidden="true">↗</span></a>
-  </div>
   {% assign papers = site.research | where: 'kind', 'Paper' %}
   {% if papers.size > 0 %}
   <section aria-labelledby="research-papers">
