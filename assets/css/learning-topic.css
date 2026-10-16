@@ -1,0 +1,83 @@
+/* Chosen learning style: borderless surfaces, visible examples, guided practice. */
+.topic-wrap { max-width: 680px; margin: 45px auto 0; }
+.topic-wrap h1 { font-size: 46px; }
+.topic-wrap h2 { font-size: 28px; margin: 0 0 18px; }
+.topic-lead { font: 21px/1.6 Georgia, serif; color: var(--muted); margin-bottom: 38px; }
+.topic-wrap section > p { font: 18px/1.85 Georgia, serif; }
+.topic-section { margin: 40px 0; }
+.element-label { display: block; font: 10px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-transform: uppercase; letter-spacing: 1.4px; color: var(--green); margin: 0 0 10px; }
+.definition, .theorem { padding: 22px 25px; border-radius: 5px; margin: 25px 0; }
+.definition { background: #edf3e7; }
+.theorem { background: #edf1f8; }
+.theorem > .element-label { color: #4e6385; }
+.definition h3 { font-size: 23px; margin: 0 0 14px; }
+.definition p:not(.element-label), .theorem > p:not(.element-label), .disclosure p, .remark, .attention p:not(.element-label), .caution p:not(.element-label) { font: 17px/1.85 Georgia, serif; }
+.definition p:last-child, .attention p:last-child, .caution p:last-child { margin-bottom: 0; }
+.attention, .caution { background: #faf1dd; border-radius: 5px; padding: 18px 20px; margin: 28px 0; }
+.attention > .element-label, .caution > .element-label { color: #80612a; }
+.disclosure { margin-top: 16px; }
+.disclosure summary { padding: 12px 0; font-size: 13px; color: var(--green); }
+.disclosure p { margin-top: 10px; }
+.remark { margin-top: 25px; color: var(--muted); }
+.display-math { padding: 14px 0; overflow-x: auto; font-size: 22px; }
+.display-math math { margin: 0; }
+.topic-wrap mark { color: inherit; background: linear-gradient(transparent 32%, #f3df8cb3 32%, #f3df8cb3 91%, transparent 91%); padding: .06em .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; border-radius: .15em; }
+.topic-wrap mark.math-marker { display: inline-block; vertical-align: baseline; background: linear-gradient(transparent 7%, #f3df8cb3 7%, #f3df8cb3 94%, transparent 94%); padding: .12em .22em; line-height: 1.4; }
+.math-marker math { font-size: 1.05em; }
+.highlight-equation { display: flex; justify-content: center; max-width: 100%; overflow-x: auto; margin: 22px 0 30px; padding: 10px 0; font-size: 25px; }
+.highlight-equation .math-marker { flex-shrink: 0; padding: .18em .4em; }
+.section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.section-heading > span { font-size: 11px; color: var(--muted); }
+.worked-examples { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.worked-title { font: 16px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 14px 0; }
+.worked-title > span { font-size: 10px; color: var(--muted); margin-right: 10px; }
+.worked-body p { font-size: 15px; margin-bottom: 14px; }
+.topic-figure { margin: 25px 0; }
+.topic-figure img, .topic-figure svg, .topic-widget > svg { display: block; width: 100%; }
+.widget-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 16px 24px; padding-top: 20px; }
+.widget-controls label { flex: 1 1 160px; font-size: 12px; color: var(--ink); }
+.widget-controls output { float: right; color: var(--green); font-variant-numeric: tabular-nums; }
+.widget-controls input { display: block; width: 100%; min-height: 44px; margin: 0; accent-color: var(--green); }
+.widget-controls button { background: #e7ece1; font-size: 12px; }
+.widget-result { font-size: 13px; color: var(--green); margin: 16px 0 0; }
+.practice { margin: 45px 0 30px; background: #f2edf7; padding: 25px; border-radius: 8px; }
+.practice .section-heading h2 { color: #645078; }
+.topic-wrap .practice-intro { font: 13px/1.7 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--muted); }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+legend { font-size: 16px; line-height: 1.6; padding: 0; margin-bottom: 15px; }
+.answers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.answer { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; background: var(--paper); border-radius: 5px; min-height: 48px; padding: 10px 12px; font-size: 14px; color: var(--ink); cursor: pointer; }
+.answer:has(input:checked) { background: #e0ead9; }
+input[type=radio] { accent-color: var(--green); width: 16px; height: 16px; margin: 0; }
+.question-check { margin-top: 15px; font-size: 12px; background: var(--green); color: white; }
+.question-check:hover { background: #214a39; color: white; }
+.feedback { font-size: 13px; margin: 14px 0 0; line-height: 1.7; }
+.feedback:empty { display: none; }
+.answer-verdict { margin-left: auto; font-size: 10px; white-space: nowrap; }
+.answer[data-result=correct], .answer[data-result=correct]:has(input:checked), .feedback[data-result=correct] { background: #e0eedb; color: #29513a; }
+.answer[data-result=incorrect], .answer[data-result=incorrect]:has(input:checked), .feedback[data-result=incorrect] { background: #f6e3df; color: #843f35; }
+.feedback[data-result] { padding: 12px 14px; border-radius: 5px; }
+.question-number { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+#question-controls { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; gap: 10px; }
+#question-controls button { font-size: 12px; background: #e7ece1; }
+#question-position { font-size: 11px; color: var(--muted); }
+.table-scroll { overflow-x: auto; }
+.topic-wrap table { border-collapse: collapse; width: 100%; font-size: 13px; }
+.topic-wrap caption { text-align: left; font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+.topic-wrap th, .topic-wrap td { text-align: left; padding: 12px; }
+.topic-wrap thead { background: #f0f3ec; }
+.topic-wrap th { font-weight: 500; }
+.derivation { padding-left: 22px; font: 17px/1.8 Georgia, serif; }
+.derivation li { padding: 6px 0; }
+.topic-wrap pre { padding: 20px; background: #f0f0ed; overflow-x: auto; border-radius: 4px; font: 12px/1.8 ui-monospace, monospace; }
+.topic-wrap blockquote { margin: 28px 0; padding: 0 20px; font: italic 21px/1.6 Georgia, serif; }
+.topic-wrap blockquote cite { display: block; font: 11px/1.7 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--muted); margin-top: 10px; }
+section[id], figure[id] { scroll-margin-top: 24px; }
+@media(max-width:600px) {
+  .topic-wrap { margin-top: 30px; }
+  .topic-wrap h1 { font-size: 37px; }
+  .practice, .definition, .theorem { padding: 18px; }
+  .section-heading { align-items: start; }
+  .section-heading > span { max-width: 100px; text-align: right; }
+  .display-math { font-size: 20px; }
+}

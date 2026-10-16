@@ -1,0 +1,88 @@
+---
+layout: null
+---
+{% assign learning_course = site.data.learning_courses[page.course_key] %}
+{% assign learning_module = learning_course.modules | where: 'slug', page.module_key | first %}
+{% assign previous_topic = nil %}
+{% assign next_topic = nil %}
+{% assign course_topics = '' | split: ',' %}
+{% for module in learning_course.modules %}
+  {% assign course_topics = course_topics | concat: module.topics %}
+{% endfor %}
+{% for topic in course_topics %}
+  {% if topic.url == page.url %}
+    {% unless forloop.first %}
+      {% assign previous_index = forloop.index0 | minus: 1 %}
+      {% assign previous_topic = course_topics[previous_index].url %}
+    {% endunless %}
+    {% unless forloop.last %}
+      {% assign next_index = forloop.index0 | plus: 1 %}
+      {% assign next_topic = course_topics[next_index].url %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+<!doctype html>
+<html lang="{{ site.lang | default: 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ page.title | escape }} · {{ site.title | escape }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/learning.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/learning-topic.css' | relative_url }}">
+  <script defer src="{{ '/assets/js/learning-topic.js' | relative_url }}"></script>
+  {% if page.topic_script %}<script defer src="{{ page.topic_script | relative_url }}"></script>{% endif %}
+</head>
+<body data-topic-math="{{ page.math | default: false }}">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="masthead">
+    <a class="brand" href="{{ '/' | relative_url }}">{{ site.title | escape }}<span>Mathematics &amp; other curiosities</span></a>
+    <a href="{{ '/learning/' | relative_url }}">Learning</a>
+  </header>
+  <main id="main">
+    <article class="topic-wrap">
+      <p class="eyebrow">{{ learning_course.title | escape }}{% if learning_module.title != page.title %} / {{ learning_module.title | escape }}{% endif %}</p>
+      <h1>{{ page.title | escape }}</h1>
+      {% if page.description %}<p class="topic-lead">{{ page.description | escape }}</p>{% endif %}
+      {{ content }}
+      {% if page.exercises.size > 0 %}
+      <section id="practice" class="practice" aria-labelledby="practice-title">
+        <div class="section-heading"><h2 id="practice-title">Try it yourself</h2><span>{{ page.exercises.size }} questions</span></div>
+        <p class="practice-intro">One question at a time. Choose an answer, then check it.</p>
+        <div id="question-area"></div>
+        <div id="question-controls">
+          <button id="question-back">← Previous</button><span id="question-position"></span><button id="question-next">Next →</button>
+        </div>
+        <script type="application/json" id="exercise-data">{{ page.exercises | jsonify | replace: '<', '\u003c' }}</script>
+        <noscript>
+          <p>Enable JavaScript for interactive answer checking.</p>
+          {% for question in page.exercises %}
+          <p>{{ question.text | escape }}</p>
+          <ul>{% for option in question.options %}<li>{{ option | escape }}</li>{% endfor %}</ul>
+          <details><summary>Explanation</summary>{{ question.why | escape }}</details>
+          {% endfor %}
+        </noscript>
+      </section>
+      {% endif %}
+      <nav id="reading-dock" aria-label="Course navigation">
+        {% if previous_topic %}<a href="{{ previous_topic | relative_url }}" aria-label="Previous topic">←</a>{% endif %}
+        <button id="topic-contents" aria-haspopup="dialog" aria-expanded="false">Course contents{% if page.position %} <span>{{ page.position }}</span>{% endif %}</button>
+        {% if next_topic %}<a href="{{ next_topic | relative_url }}" aria-label="Next topic">→</a>{% endif %}
+      </nav>
+    </article>
+  </main>
+  <footer>{{ site.title }}<span>A notebook, always in progress.</span></footer>
+  <dialog id="topic-map" aria-labelledby="contents-title">
+    <div class="dialog-heading"><h2 id="contents-title">{{ learning_course.title | escape }}</h2><button id="close-course-map" aria-label="Close course contents">×</button></div>
+    <nav class="topic-contents-list" aria-label="Course contents">
+      {% for module in learning_course.modules %}
+      <details class="course-module"{% if module.slug == page.module_key %} open{% endif %}>
+        <summary>{{ module.title | escape }}</summary>
+        {% for topic in module.topics %}
+        <a href="{{ topic.url | relative_url }}"{% if topic.url == page.url %} aria-current="page"{% endif %}>{{ topic.title | escape }}</a>
+        {% endfor %}
+      </details>
+      {% endfor %}
+    </nav>
+  </dialog>
+</body>
+</html>

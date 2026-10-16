@@ -10,6 +10,7 @@ A Jekyll website for mathematical problems, explorations, research, puzzles, and
 | Research | `_research/` |
 | Biography or contact details | `about.md`, `_config.yml` |
 | Homepage | `index.html`, `_data/home_sections.yml` |
+| Learning topics | `learning/`, `_layouts/learning-topic.html` — see [the learning guide](docs/learning-roadmap.md) and [starter](docs/templates/learning-topic.md) |
 | Menu links | `_data/navigation.yml` |
 | Puzzle or gadget catalogue | `_data/puzzles.yml`, `_data/gadgets.yml` |
 | Artwork | `assets/images/`, `assets/figures/` — edit the SVG itself |

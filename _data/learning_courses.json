@@ -1,0 +1,204 @@
+{
+  "calculus": {
+    "title": "Calculus for Engineers and Scientists",
+    "slug": "calculus",
+    "modules": [
+      {
+        "slug": "limits-and-continuity",
+        "title": "Limits and continuity",
+        "url": "/learning/calculus/limits-and-continuity/",
+        "topics": [
+          {
+            "slug": "limits",
+            "title": "Limits",
+            "url": "/learning/calculus/limits-and-continuity/limits/"
+          },
+          {
+            "slug": "continuity",
+            "title": "Continuity",
+            "url": "/learning/calculus/limits-and-continuity/continuity/"
+          },
+          {
+            "slug": "intermediate-value-theorem",
+            "title": "The intermediate value theorem",
+            "url": "/learning/calculus/limits-and-continuity/intermediate-value-theorem/"
+          }
+        ]
+      },
+      {
+        "slug": "derivative-foundations",
+        "title": "Derivative foundations",
+        "url": "/learning/calculus/derivative-foundations/",
+        "topics": [
+          {
+            "slug": "definition-and-geometry",
+            "title": "Definition and geometry of the derivative",
+            "url": "/learning/calculus/derivative-foundations/definition-and-geometry/"
+          },
+          {
+            "slug": "differentiation-rules",
+            "title": "Differentiation rules",
+            "url": "/learning/calculus/derivative-foundations/differentiation-rules/"
+          },
+          {
+            "slug": "trigonometric-derivatives",
+            "title": "Derivatives of trigonometric functions",
+            "url": "/learning/calculus/derivative-foundations/trigonometric-derivatives/"
+          },
+          {
+            "slug": "inverse-function-derivatives",
+            "title": "Derivatives of inverse functions",
+            "url": "/learning/calculus/derivative-foundations/inverse-function-derivatives/"
+          },
+          {
+            "slug": "hyperbolic-functions",
+            "title": "Hyperbolic functions and their derivatives",
+            "url": "/learning/calculus/derivative-foundations/hyperbolic-functions/"
+          }
+        ]
+      },
+      {
+        "slug": "implicit-and-logarithmic-differentiation",
+        "title": "Implicit and logarithmic differentiation",
+        "url": "/learning/calculus/implicit-and-logarithmic-differentiation/",
+        "topics": [
+          {
+            "slug": "implicit-differentiation",
+            "title": "Implicit differentiation",
+            "url": "/learning/calculus/implicit-and-logarithmic-differentiation/implicit-differentiation/"
+          },
+          {
+            "slug": "logarithmic-differentiation",
+            "title": "Logarithmic differentiation",
+            "url": "/learning/calculus/implicit-and-logarithmic-differentiation/logarithmic-differentiation/"
+          }
+        ]
+      },
+      {
+        "slug": "applications-of-derivatives",
+        "title": "Applications of derivatives",
+        "url": "/learning/calculus/applications-of-derivatives/",
+        "topics": [
+          {
+            "slug": "linear-approximation-and-differentials",
+            "title": "Linear approximation and differentials",
+            "url": "/learning/calculus/applications-of-derivatives/linear-approximation-and-differentials/"
+          },
+          {
+            "slug": "related-rates",
+            "title": "Related rates",
+            "url": "/learning/calculus/applications-of-derivatives/related-rates/"
+          },
+          {
+            "slug": "extreme-values",
+            "title": "Extreme values",
+            "url": "/learning/calculus/applications-of-derivatives/extreme-values/"
+          },
+          {
+            "slug": "mean-value-theorem",
+            "title": "The mean value theorem",
+            "url": "/learning/calculus/applications-of-derivatives/mean-value-theorem/"
+          },
+          {
+            "slug": "curve-sketching",
+            "title": "Curve sketching",
+            "url": "/learning/calculus/applications-of-derivatives/curve-sketching/"
+          },
+          {
+            "slug": "optimization",
+            "title": "Global and applied optimization",
+            "url": "/learning/calculus/applications-of-derivatives/optimization/"
+          },
+          {
+            "slug": "indeterminate-forms-and-lhopitals-rule",
+            "title": "Indeterminate forms and l’Hôpital’s rule",
+            "url": "/learning/calculus/applications-of-derivatives/indeterminate-forms-and-lhopitals-rule/"
+          }
+        ]
+      },
+      {
+        "slug": "integral-foundations",
+        "title": "Integral foundations",
+        "url": "/learning/calculus/integral-foundations/",
+        "topics": [
+          {
+            "slug": "area-and-riemann-sums",
+            "title": "The area problem and Riemann sums",
+            "url": "/learning/calculus/integral-foundations/area-and-riemann-sums/"
+          },
+          {
+            "slug": "definite-integral",
+            "title": "The definite integral",
+            "url": "/learning/calculus/integral-foundations/definite-integral/"
+          },
+          {
+            "slug": "fundamental-theorem-part-one",
+            "title": "The Fundamental Theorem of Calculus: Part I",
+            "url": "/learning/calculus/integral-foundations/fundamental-theorem-part-one/"
+          },
+          {
+            "slug": "fundamental-theorem-part-two",
+            "title": "The Fundamental Theorem of Calculus: Part II",
+            "url": "/learning/calculus/integral-foundations/fundamental-theorem-part-two/"
+          }
+        ]
+      },
+      {
+        "slug": "integration-techniques",
+        "title": "Integration techniques",
+        "url": "/learning/calculus/integration-techniques/",
+        "topics": [
+          {
+            "slug": "substitution",
+            "title": "Substitution",
+            "url": "/learning/calculus/integration-techniques/substitution/"
+          },
+          {
+            "slug": "integration-by-parts",
+            "title": "Integration by parts",
+            "url": "/learning/calculus/integration-techniques/integration-by-parts/"
+          },
+          {
+            "slug": "trigonometric-substitution",
+            "title": "Trigonometric substitution",
+            "url": "/learning/calculus/integration-techniques/trigonometric-substitution/"
+          }
+        ]
+      },
+      {
+        "slug": "integral-applications-and-improper-integrals",
+        "title": "Integral applications and improper integrals",
+        "url": "/learning/calculus/integral-applications-and-improper-integrals/",
+        "topics": [
+          {
+            "slug": "areas",
+            "title": "Areas using integrals",
+            "url": "/learning/calculus/integral-applications-and-improper-integrals/areas/"
+          },
+          {
+            "slug": "improper-integrals",
+            "title": "Improper integrals",
+            "url": "/learning/calculus/integral-applications-and-improper-integrals/improper-integrals/"
+          }
+        ]
+      },
+      {
+        "slug": "taylor-polynomials-and-power-series",
+        "title": "Taylor polynomials and power series",
+        "url": "/learning/calculus/taylor-polynomials-and-power-series/",
+        "topics": [
+          {
+            "slug": "taylor-polynomials",
+            "title": "Taylor polynomials",
+            "url": "/learning/calculus/taylor-polynomials-and-power-series/taylor-polynomials/"
+          },
+          {
+            "slug": "power-series",
+            "title": "Power series",
+            "url": "/learning/calculus/taylor-polynomials-and-power-series/power-series/"
+          }
+        ]
+      }
+    ]
+  }
+}

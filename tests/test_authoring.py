@@ -126,6 +126,12 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
 {% include widgets/stereographic-projection.html id='fixture-graph' %}
 """)
 
+            # Render the reusable topic starter only inside the test checkout.
+            starter = (ROOT / "docs/templates/learning-topic.md").read_text()
+            (source / "learning/fixture-topic.md").write_text(
+                starter.replace("/learning/course/topic/", "/learning/fixture-topic/")
+            )
+
             # A duplicate must never overwrite the author's existing content.
             original = source / "_posts/2024-04-02-fixture-problem.md"
             original.write_text(original.read_text().replace("Write the problem here.", "An author's saved problem."))
@@ -203,11 +209,36 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertTrue((destination / "research/fixture-research/index.html").is_file())
             self.assertFalse((destination / "research/unpublished-research-sentinel").exists())
             self.assertFalse((destination / "notes/unpublished-post-sentinel").exists())
-            self.assertFalse((destination / "learning").exists())
+            self.assertTrue((destination / "learning/index.html").is_file())
+            self.assertFalse((destination / "learning/topic").exists())
+            self.assertFalse((destination / "learning/thumbnail-options").exists())
+            catalogue = (destination / "learning/index.html").read_text()
+            self.assertIn("Calculus for Engineers and Scientists", catalogue)
+            self.assertNotIn("275", catalogue)
+            course = json.loads((source / "_data/learning_courses.json").read_text())["calculus"]
+            topics = [topic for module in course["modules"] for topic in module["topics"]]
+            for i, topic in enumerate(topics):
+                html = (destination / topic["url"].strip("/") / "index.html").read_text()
+                self.assertNotIn('id="practice"', html)
+                self.assertNotIn("learning-slope", html)
+                if i:
+                    self.assertIn(f'href="{topics[i-1]["url"]}" aria-label="Previous topic"', html)
+                else:
+                    self.assertNotIn('aria-label="Previous topic"', html)
+                if i + 1 < len(topics):
+                    self.assertIn(f'href="{topics[i+1]["url"]}" aria-label="Next topic"', html)
+                else:
+                    self.assertNotIn('aria-label="Next topic"', html)
+            topic_fixture = (destination / "learning/fixture-topic/index.html").read_text()
+            self.assertIn('id="practice"', topic_fixture)
+            self.assertIn('<p>State the definition precisely.</p>', topic_fixture)
+            self.assertIn('class="math-marker"', topic_fixture)
+            self.assertIn(r'\(m = \frac{2}{3}\)', topic_fixture)
+            self.assertNotIn('&lt;/div&gt;', topic_fixture)
+            self.assertEqual(ProblemRows(topic_fixture).labels[0], "Proof")
             self.assertFalse((destination / "notes/derivatives").exists())
             for html_file in destination.rglob("*.html"):
                 html = html_file.read_text()
-                self.assertNotIn('href="/learning/', html)
                 self.assertNotIn('href="/notes/derivatives/', html)
             homepage = (destination / "index.html").read_text()
             sidebar = homepage.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
