@@ -1,10 +1,10 @@
 ---
 layout: learning-topic
-title: Continuity
+title: "Continuity and discontinuities"
 permalink: /learning/calculus/limits-and-continuity/continuity/
 course_key: calculus
 module_key: limits-and-continuity
-position: '1.2'
+position: "1.5"
 description: When the value at a point agrees with what the nearby values approach.
 math: true
 topic_script: /assets/js/learning-continuity.js

@@ -1,10 +1,10 @@
 ---
 layout: learning-topic
-title: Differentiation rules
+title: "Differentiation rules"
 permalink: /learning/calculus/derivative-foundations/differentiation-rules/
 course_key: calculus
 module_key: derivative-foundations
-position: '2.2'
+position: "2.2"
 description: Differentiate the parts, then combine them according to the structure of the function.
 math: true
 topic_script: /assets/js/learning-rules.js

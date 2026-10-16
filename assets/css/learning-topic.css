@@ -191,3 +191,9 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .implicit-axis { position: absolute; font-size: 13px; pointer-events: none; }
 .implicit-axis-x { left: 88%; top: 48%; }
 .implicit-axis-y { left: 52%; top: 1%; }
+
+.prerequisite { background: #f7ece7; border-radius: 5px; padding: 18px 20px; margin: 25px 0; }
+.prerequisite > .element-label { color: #895d4e; }
+.prerequisite h3 { font: 500 16px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0 0 14px; }
+.prerequisite p:not(.element-label) { font: 17px/1.85 Georgia, serif; }
+.prerequisite p:last-child { margin-bottom: 0; }

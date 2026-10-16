@@ -1,9 +1,9 @@
 ---
 layout: learning-topic
-title: "Taylor polynomials"
+title: "Taylor and Maclaurin polynomials"
 permalink: /learning/calculus/taylor-polynomials-and-power-series/taylor-polynomials/
 course_key: calculus
-module_key: taylor-polynomials-and-power-series
-position: "8.1"
+module_key: taylor-approximation
+position: "10.1"
 sitemap: false
 ---

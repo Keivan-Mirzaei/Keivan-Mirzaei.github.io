@@ -10,18 +10,38 @@
         "topics": [
           {
             "slug": "limits",
-            "title": "Limits",
+            "title": "Limits and one-sided limits",
             "url": "/learning/calculus/limits-and-continuity/limits/"
           },
           {
+            "slug": "limit-laws",
+            "title": "Limit laws and algebraic methods",
+            "url": "/learning/calculus/limits-and-continuity/limit-laws/"
+          },
+          {
+            "slug": "squeeze-theorem",
+            "title": "Squeeze theorem and trigonometric limits",
+            "url": "/learning/calculus/limits-and-continuity/squeeze-theorem/"
+          },
+          {
+            "slug": "infinite-limits-and-limits-at-infinity",
+            "title": "Infinite limits, limits at infinity and asymptotes",
+            "url": "/learning/calculus/limits-and-continuity/infinite-limits-and-limits-at-infinity/"
+          },
+          {
             "slug": "continuity",
-            "title": "Continuity",
+            "title": "Continuity and discontinuities",
             "url": "/learning/calculus/limits-and-continuity/continuity/"
           },
           {
             "slug": "intermediate-value-theorem",
-            "title": "The intermediate value theorem",
+            "title": "Intermediate value theorem",
             "url": "/learning/calculus/limits-and-continuity/intermediate-value-theorem/"
+          },
+          {
+            "slug": "problems",
+            "title": "Problems",
+            "url": "/learning/calculus/limits-and-continuity/problems/"
           }
         ]
       },
@@ -41,19 +61,46 @@
             "url": "/learning/calculus/derivative-foundations/differentiation-rules/"
           },
           {
+            "slug": "chain-rule",
+            "title": "Chain rule",
+            "url": "/learning/calculus/derivative-foundations/chain-rule/"
+          },
+          {
+            "slug": "higher-derivatives",
+            "title": "Derivatives as functions and higher derivatives",
+            "url": "/learning/calculus/derivative-foundations/higher-derivatives/"
+          },
+          {
+            "slug": "problems",
+            "title": "Problems",
+            "url": "/learning/calculus/derivative-foundations/problems/"
+          }
+        ]
+      },
+      {
+        "slug": "elementary-function-derivatives",
+        "title": "Derivatives of elementary functions",
+        "url": "/learning/calculus/elementary-function-derivatives/",
+        "topics": [
+          {
             "slug": "trigonometric-derivatives",
-            "title": "Derivatives of trigonometric functions",
+            "title": "Trigonometric derivatives",
             "url": "/learning/calculus/derivative-foundations/trigonometric-derivatives/"
           },
           {
             "slug": "inverse-function-derivatives",
-            "title": "Derivatives of inverse functions",
+            "title": "Inverse functions and inverse trigonometric derivatives",
             "url": "/learning/calculus/derivative-foundations/inverse-function-derivatives/"
           },
           {
             "slug": "hyperbolic-functions",
-            "title": "Hyperbolic functions and their derivatives",
+            "title": "Exponential, logarithmic and hyperbolic functions and their derivatives",
             "url": "/learning/calculus/derivative-foundations/hyperbolic-functions/"
+          },
+          {
+            "slug": "problems",
+            "title": "Problems",
+            "url": "/learning/calculus/elementary-function-derivatives/problems/"
           }
         ]
       },
@@ -71,6 +118,11 @@
             "slug": "logarithmic-differentiation",
             "title": "Logarithmic differentiation",
             "url": "/learning/calculus/implicit-and-logarithmic-differentiation/logarithmic-differentiation/"
+          },
+          {
+            "slug": "problems",
+            "title": "Problems",
+            "url": "/learning/calculus/implicit-and-logarithmic-differentiation/problems/"
           }
         ]
       },
@@ -91,13 +143,23 @@
           },
           {
             "slug": "extreme-values",
-            "title": "Extreme values",
+            "title": "Extreme values and critical numbers",
             "url": "/learning/calculus/applications-of-derivatives/extreme-values/"
           },
           {
             "slug": "mean-value-theorem",
-            "title": "The mean value theorem",
+            "title": "Rolle’s theorem and mean value theorem",
             "url": "/learning/calculus/applications-of-derivatives/mean-value-theorem/"
+          },
+          {
+            "slug": "derivative-tests",
+            "title": "Increasing, decreasing and concavity",
+            "url": "/learning/calculus/applications-of-derivatives/derivative-tests/"
+          },
+          {
+            "slug": "indeterminate-forms-and-lhopitals-rule",
+            "title": "Indeterminate forms and l’Hôpital’s rule",
+            "url": "/learning/calculus/applications-of-derivatives/indeterminate-forms-and-lhopitals-rule/"
           },
           {
             "slug": "curve-sketching",
@@ -106,13 +168,13 @@
           },
           {
             "slug": "optimization",
-            "title": "Global and applied optimization",
+            "title": "Applied optimization",
             "url": "/learning/calculus/applications-of-derivatives/optimization/"
           },
           {
-            "slug": "indeterminate-forms-and-lhopitals-rule",
-            "title": "Indeterminate forms and l’Hôpital’s rule",
-            "url": "/learning/calculus/applications-of-derivatives/indeterminate-forms-and-lhopitals-rule/"
+            "slug": "problems",
+            "title": "Problems",
+            "url": "/learning/calculus/applications-of-derivatives/problems/"
           }
         ]
       },
@@ -122,24 +184,39 @@
         "url": "/learning/calculus/integral-foundations/",
         "topics": [
           {
+            "slug": "antiderivatives",
+            "title": "Antiderivatives and indefinite integrals",
+            "url": "/learning/calculus/integral-foundations/antiderivatives/"
+          },
+          {
             "slug": "area-and-riemann-sums",
-            "title": "The area problem and Riemann sums",
+            "title": "Area and Riemann sums",
             "url": "/learning/calculus/integral-foundations/area-and-riemann-sums/"
           },
           {
             "slug": "definite-integral",
-            "title": "The definite integral",
+            "title": "Definite integrals and their properties",
             "url": "/learning/calculus/integral-foundations/definite-integral/"
           },
           {
             "slug": "fundamental-theorem-part-one",
-            "title": "The Fundamental Theorem of Calculus: Part I",
+            "title": "Fundamental theorem of calculus: differentiating accumulation",
             "url": "/learning/calculus/integral-foundations/fundamental-theorem-part-one/"
           },
           {
             "slug": "fundamental-theorem-part-two",
-            "title": "The Fundamental Theorem of Calculus: Part II",
+            "title": "Fundamental theorem of calculus: evaluating definite integrals",
             "url": "/learning/calculus/integral-foundations/fundamental-theorem-part-two/"
+          },
+          {
+            "slug": "basic-integration-formulas",
+            "title": "Basic integration formulas",
+            "url": "/learning/calculus/integral-foundations/basic-integration-formulas/"
+          },
+          {
+            "slug": "problems",
+            "title": "Problems",
+            "url": "/learning/calculus/integral-foundations/problems/"
           }
         ]
       },
@@ -162,6 +239,11 @@
             "slug": "trigonometric-substitution",
             "title": "Trigonometric substitution",
             "url": "/learning/calculus/integration-techniques/trigonometric-substitution/"
+          },
+          {
+            "slug": "problems",
+            "title": "Problems",
+            "url": "/learning/calculus/integration-techniques/problems/"
           }
         ]
       },
@@ -171,31 +253,93 @@
         "url": "/learning/calculus/integral-applications-and-improper-integrals/",
         "topics": [
           {
+            "slug": "net-change",
+            "title": "Net change and average value",
+            "url": "/learning/calculus/integral-applications-and-improper-integrals/net-change/"
+          },
+          {
             "slug": "areas",
-            "title": "Areas using integrals",
+            "title": "Areas between curves",
             "url": "/learning/calculus/integral-applications-and-improper-integrals/areas/"
           },
           {
             "slug": "improper-integrals",
-            "title": "Improper integrals",
+            "title": "Improper integrals over unbounded intervals",
             "url": "/learning/calculus/integral-applications-and-improper-integrals/improper-integrals/"
+          },
+          {
+            "slug": "unbounded-integrands",
+            "title": "Improper integrals with unbounded integrands",
+            "url": "/learning/calculus/integral-applications-and-improper-integrals/unbounded-integrands/"
+          },
+          {
+            "slug": "problems",
+            "title": "Problems",
+            "url": "/learning/calculus/integral-applications-and-improper-integrals/problems/"
           }
         ]
       },
       {
-        "slug": "taylor-polynomials-and-power-series",
-        "title": "Taylor polynomials and power series",
-        "url": "/learning/calculus/taylor-polynomials-and-power-series/",
+        "slug": "sequences-and-power-series",
+        "title": "Sequences and power series",
+        "url": "/learning/calculus/sequences-and-power-series/",
         "topics": [
           {
-            "slug": "taylor-polynomials",
-            "title": "Taylor polynomials",
-            "url": "/learning/calculus/taylor-polynomials-and-power-series/taylor-polynomials/"
+            "slug": "sequences",
+            "title": "Sequences and convergence",
+            "url": "/learning/calculus/sequences-and-power-series/sequences/"
+          },
+          {
+            "slug": "infinite-series",
+            "title": "Infinite series and geometric series",
+            "url": "/learning/calculus/sequences-and-power-series/infinite-series/"
+          },
+          {
+            "slug": "convergence-tools",
+            "title": "Convergence tools for power series",
+            "url": "/learning/calculus/sequences-and-power-series/convergence-tools/"
           },
           {
             "slug": "power-series",
-            "title": "Power series",
+            "title": "Power series: radius and interval of convergence",
             "url": "/learning/calculus/taylor-polynomials-and-power-series/power-series/"
+          },
+          {
+            "slug": "power-series-operations",
+            "title": "Operations on power series",
+            "url": "/learning/calculus/sequences-and-power-series/power-series-operations/"
+          },
+          {
+            "slug": "problems",
+            "title": "Problems",
+            "url": "/learning/calculus/sequences-and-power-series/problems/"
+          }
+        ]
+      },
+      {
+        "slug": "taylor-approximation",
+        "title": "Taylor approximation and Taylor series",
+        "url": "/learning/calculus/taylor-approximation/",
+        "topics": [
+          {
+            "slug": "taylor-polynomials",
+            "title": "Taylor and Maclaurin polynomials",
+            "url": "/learning/calculus/taylor-polynomials-and-power-series/taylor-polynomials/"
+          },
+          {
+            "slug": "taylor-error",
+            "title": "Taylor’s theorem and approximation error",
+            "url": "/learning/calculus/taylor-approximation/taylor-error/"
+          },
+          {
+            "slug": "taylor-series",
+            "title": "Taylor and Maclaurin series",
+            "url": "/learning/calculus/taylor-approximation/taylor-series/"
+          },
+          {
+            "slug": "problems",
+            "title": "Problems",
+            "url": "/learning/calculus/taylor-approximation/problems/"
           }
         ]
       }

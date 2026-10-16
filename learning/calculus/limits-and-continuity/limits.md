@@ -1,10 +1,10 @@
 ---
 layout: learning-topic
-title: Limits
+title: "Limits and one-sided limits"
 permalink: /learning/calculus/limits-and-continuity/limits/
 course_key: calculus
 module_key: limits-and-continuity
-position: '1.1'
+position: "1.1"
 description: What a function approaches, even when its value at the point tells a different story.
 math: true
 topic_script: /assets/js/learning-limits.js

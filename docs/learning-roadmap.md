@@ -19,6 +19,8 @@ Question data supports plain text and LaTeX delimited by `\(` and `\)`. The Quiz
 - Block labels identify the type. Optional example, definition, and theorem names use small interface type, leaving large serif headings for sections.
 - Definition: pale sage (`definition`).
 - Theorem: pale blue (`theorem`) with a closed `disclosure` labelled “Proof (optional)” when a proof is useful.
+- Prerequisite reminders: soft peach (class prerequisite), with an explicit label; place recalled definitions and identities here.
+- Keep proofs and derivations collapsed by default, marked optional when appropriate.
 - Note: neutral grey (`note`) for supporting interpretation.
 - Attention and Warning: shared pale amber (`attention`, `warning`; `caution` remains an alias), distinguished by explicit labels.
 - Practice: pale lavender; generated from the topic's exercises.
@@ -44,3 +46,7 @@ The template uses a compact learning header matching the site's identity. Main-s
 ## Check
 
 Run the repository build and site checks from README. Preview `/learning/` and a calculus topic; check course navigation and sheet dismissal at desktop and phone widths. When lesson content is added, also check keyboard input, proof disclosures, widget dragging and keyboard input, wrong/correct/retry feedback, and practice navigation.
+
+## Module problems
+
+End a module with a Problems submodule after its teaching topics. Use open-response problems to develop methods and applications, including graph interpretation and one or two challenges. Keep hints and complete solutions in separate, closed disclosures. Use only established tools, or introduce a new method explicitly before relying on it. Add the page to the module hierarchy so previous/next navigation and course contents include it. Limits and Continuity has the first authored set; every other module has an empty Problems page awaiting supervised authoring.

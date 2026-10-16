@@ -219,7 +219,7 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             topics = [topic for module in course["modules"] for topic in module["topics"]]
             for i, topic in enumerate(topics):
                 html = (destination / topic["url"].strip("/") / "index.html").read_text()
-                if topic['slug'] in {'limits', 'continuity', 'intermediate-value-theorem', 'definition-and-geometry', 'differentiation-rules', 'trigonometric-derivatives', 'inverse-function-derivatives', 'hyperbolic-functions', 'implicit-differentiation'}:
+                if topic['slug'] in {'limits', 'continuity', 'intermediate-value-theorem', 'definition-and-geometry', 'differentiation-rules', 'trigonometric-derivatives', 'inverse-function-derivatives', 'hyperbolic-functions', 'implicit-differentiation', 'logarithmic-differentiation'}:
                     self.assertIn('id="practice"', html)
                 else:
                     self.assertNotIn('id="practice"', html)
@@ -232,6 +232,14 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
                     self.assertIn(f'href="{topics[i+1]["url"]}" aria-label="Next topic"', html)
                 else:
                     self.assertNotIn('aria-label="Next topic"', html)
+            self.assertEqual(len(course["modules"]), 10)
+            for module in course["modules"]:
+                self.assertEqual(module["topics"][-1]["slug"], "problems")
+            module_problems = (destination / "learning/calculus/limits-and-continuity/problems/index.html").read_text()
+            problem_disclosures = ProblemRows(module_problems)
+            self.assertEqual(problem_disclosures.labels.count("Solution"), 12)
+            self.assertTrue(all(not row[2] for row in problem_disclosures.rows if row[0] == "disclosure"))
+            self.assertNotIn('id="practice"', module_problems)
             topic_fixture = (destination / "learning/fixture-topic/index.html").read_text()
             self.assertIn('id="practice"', topic_fixture)
             self.assertIn('<p>State the definition precisely.</p>', topic_fixture)

@@ -1,10 +1,10 @@
 ---
 layout: learning-topic
-title: Definition and geometry of the derivative
+title: "Definition and geometry of the derivative"
 permalink: /learning/calculus/derivative-foundations/definition-and-geometry/
 course_key: calculus
 module_key: derivative-foundations
-position: '2.1'
+position: "2.1"
 description: From the slope between two points to the rate of change at one instant.
 math: true
 topic_script: /assets/js/learning-derivative.js

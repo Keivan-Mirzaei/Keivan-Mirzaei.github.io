@@ -1,10 +1,10 @@
 ---
 layout: learning-topic
-title: Hyperbolic functions and their derivatives
+title: "Exponential, logarithmic and hyperbolic functions and their derivatives"
 permalink: /learning/calculus/derivative-foundations/hyperbolic-functions/
 course_key: calculus
-module_key: derivative-foundations
-position: '2.5'
+module_key: elementary-function-derivatives
+position: "3.3"
 description: Functions built from exponentials, with derivative rules that resemble—but do not copy—the trigonometric rules.
 math: true
 topic_script: /assets/js/learning-hyperbolic.js

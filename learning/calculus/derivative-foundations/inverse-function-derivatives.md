@@ -1,10 +1,10 @@
 ---
 layout: learning-topic
-title: Derivatives of inverse functions
+title: "Inverse functions and inverse trigonometric derivatives"
 permalink: /learning/calculus/derivative-foundations/inverse-function-derivatives/
 course_key: calculus
-module_key: derivative-foundations
-position: '2.4'
+module_key: elementary-function-derivatives
+position: "3.2"
 description: An inverse swaps inputs and outputs, so its tangent slope is reciprocal at the corresponding point.
 math: true
 topic_script: /assets/js/learning-inverse.js

@@ -1,10 +1,10 @@
 ---
 layout: learning-topic
-title: Derivatives of trigonometric functions
+title: "Trigonometric derivatives"
 permalink: /learning/calculus/derivative-foundations/trigonometric-derivatives/
 course_key: calculus
-module_key: derivative-foundations
-position: '2.3'
+module_key: elementary-function-derivatives
+position: "3.1"
 description: Connect sine and cosine to their slopes, then apply the differentiation rules.
 math: true
 topic_script: /assets/js/learning-trig.js

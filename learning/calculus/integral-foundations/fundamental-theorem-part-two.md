@@ -1,9 +1,9 @@
 ---
 layout: learning-topic
-title: "The Fundamental Theorem of Calculus: Part II"
+title: "Fundamental theorem of calculus: evaluating definite integrals"
 permalink: /learning/calculus/integral-foundations/fundamental-theorem-part-two/
 course_key: calculus
 module_key: integral-foundations
-position: "5.4"
+position: "6.5"
 sitemap: false
 ---
