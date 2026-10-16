@@ -244,3 +244,13 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .chain-tank { display: block; width: 100%; max-height: 440px; }
 .chain-values { gap: 10px 24px; }
 .chain-rates { margin-top: 6px; font-size: 15px; }
+
+.higher-widget { margin: 28px 0 36px; }
+.higher-widget svg { display: block; width: 100%; overflow: visible; }
+.higher-values { gap: 10px 24px; }
+@media(max-width:600px) { .higher-widget svg { min-width: 440px; } .higher-widget { overflow-x: auto; } }
+
+.higher-playback { display: flex; justify-content: center; margin-bottom: 8px; }
+.higher-playback button { font: inherit; font-size: 14px; color: #285b46; background: #edf1e9; border: 0; border-radius: 4px; padding: 9px 22px; min-width: 90px; cursor: pointer; }
+.higher-playback button:hover { background: #e1e9dc; }
+.higher-playback button:focus-visible { outline: 2px solid #285b46; outline-offset: 3px; }
