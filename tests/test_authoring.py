@@ -219,7 +219,7 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             topics = [topic for module in course["modules"] for topic in module["topics"]]
             for i, topic in enumerate(topics):
                 html = (destination / topic["url"].strip("/") / "index.html").read_text()
-                if topic['slug'] in {'limits', 'continuity', 'intermediate-value-theorem'}:
+                if topic['slug'] in {'limits', 'continuity', 'intermediate-value-theorem', 'definition-and-geometry'}:
                     self.assertIn('id="practice"', html)
                 else:
                     self.assertNotIn('id="practice"', html)
@@ -238,7 +238,7 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertIn('class="math-marker"', topic_fixture)
             self.assertIn(r'\(m = \frac{2}{3}\)', topic_fixture)
             self.assertNotIn('&lt;/div&gt;', topic_fixture)
-            self.assertEqual(ProblemRows(topic_fixture).labels[0], "Proof")
+            self.assertEqual(ProblemRows(topic_fixture).labels[0], "Proof (optional)")
             self.assertFalse((destination / "notes/derivatives").exists())
             for html_file in destination.rglob("*.html"):
                 html = html_file.read_text()

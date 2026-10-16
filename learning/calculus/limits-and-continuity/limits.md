@@ -76,8 +76,6 @@ when we can make $$f(x)$$ as close to $$L$$ as we wish by taking $$x$$ sufficien
 
 The key distinction is <mark>approaching a point is different from evaluating at the point</mark>. A limit may exist even if $$f(a)$$ is missing or has a different value.
 
-
-
 ## A practical starting point
 
 For a polynomial, substitute the approaching value. For a quotient of polynomials, this also works **when the denominator is nonzero there**. If substitution fails, investigate; it is not automatically a failed limit.
@@ -118,7 +116,7 @@ Cancellation is valid here because a limit uses nearby points, where $$x-2\ne 0$
 
 </section>
 
-<aside class="caution" markdown="1">
+<aside class="warning" markdown="1">
 <p class="element-label">Warning</p>
 
 $$0/0$$ is not an answer. It means direct substitution is inconclusive, not that the limit is zero or that it does not exist.
@@ -150,8 +148,6 @@ $$
 $$
 
 The one-sided limits disagree, so **the two-sided limit does not exist**. The fact that $$g(0)=3$$ cannot repair the jump.
-
-
 
 </section>
 

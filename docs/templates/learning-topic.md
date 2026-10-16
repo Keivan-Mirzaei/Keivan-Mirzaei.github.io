@@ -32,12 +32,12 @@ State the definition precisely.
 <section class="theorem" markdown="1">
 <p class="element-label">Theorem</p>
 
-## A useful result
+### A useful result
 
 State the assumptions and conclusion.
 
 <details class="disclosure" markdown="1">
-<summary>Proof</summary>
+<summary>Proof (optional)</summary>
 
 Give the proof here.
 

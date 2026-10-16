@@ -139,11 +139,15 @@ $$
 \frac{x^2-4}{x-2}=x+2,\qquad x\ne2.
 $$
 
-Thus $$\lim_{x\to2}h(x)=4$$. Since $$h(2)=k$$, continuity requires **$$k=4$$**. The same principle applies in the widget when both approached heights are set to $$4$$.
+Taking the limit,
+
+$$\lim_{x\to2}h(x)=\lim_{x\to2}(x+2)=4.$$
+
+Since $$h(2)=k$$, continuity requires **$$k=4$$**. The same principle applies in the widget when both approached heights are set to $$4$$.
 
 </section>
 
-<aside class="caution" markdown="1">
+<aside class="warning" markdown="1">
 <p class="element-label">Warning</p>
 
 Cancelling a factor does not define the original quotient at the missing point. The quotient $$\frac{x^2-4}{x-2}$$ is still undefined at $$2$$; assigning the value $$4$$ creates a continuous extension.

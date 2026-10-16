@@ -2,7 +2,7 @@
 
 Course title verified against the [UCalgary calendar](https://calendar.ucalgary.ca/courses/1627841). Topic coverage follows the supplied tentative schedule; weeks, dates, homework, tests, reading week, and review/catch-up are omitted. This is a subject-based outline, not an official course schedule.
 
-The source of truth for the eight modules and their 28 submodules is `_data/learning_courses.json`. Limits, Continuity, and the Intermediate Value Theorem are authored submodules using the standard topic template. The other 25 submodule bodies remain empty.
+The source of truth for the eight modules and their 28 submodules is `_data/learning_courses.json`. Limits, Continuity, the Intermediate Value Theorem, and Definition and Geometry of the Derivative are authored submodules using the standard topic template. The other 24 submodule bodies remain empty.
 
 ## Organization notes
 

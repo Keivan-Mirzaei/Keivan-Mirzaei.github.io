@@ -18,13 +18,16 @@ Question data supports plain text and LaTeX delimited by `\(` and `\)`. The Quiz
 
 - Block labels identify the type. Optional example, definition, and theorem names use small interface type, leaving large serif headings for sections.
 - Definition: pale sage (`definition`).
-- Theorem: pale blue (`theorem`) with a closed `disclosure` proof.
+- Theorem: pale blue (`theorem`) with a closed `disclosure` labelled “Proof (optional)” when a proof is useful.
 - Note: neutral grey (`note`) for supporting interpretation.
-- Attention and Warning: shared pale amber (`attention`, `caution`), distinguished by explicit labels.
+- Attention and Warning: shared pale amber (`attention`, `warning`; `caution` remains an alias), distinguished by explicit labels.
 - Practice: pale lavender; generated from the topic's exercises.
 - Worked examples: always visible in light grey blocks.
 - Figures and interactive figures: transparent, with only necessary labels. Graph captions and widget subtitles share one small, centered muted style. Keep a widget’s short interaction instruction inside its container. Widgets disable text selection and native image dragging; draggable points also support keyboard input.
 - Do not put highlights inside warnings.
+- Use explicit limit notation when evaluating a limit or deriving a derivative. Write primes as superscripts, for example `f^{\prime}(a)`.
+- Use familiar contexts and explain scientific terms only when they help the mathematical idea. Quiz questions should test distinct reasoning rather than repeat worked examples.
+- Graphs use green curves, light axes, muted numeric labels without opaque halos, and transparent backgrounds so they blend with their containing block.
 - Marker highlights: one yellow ink. Use `<mark>text</mark>`; use `class="math-marker"` around an entire inline mathematical expression. Tall fractions receive a full-height marker. The starter includes math-highlighting examples.
 - Optional hints, solutions, derivations, references: inline disclosures; Escape closes the focused disclosure.
 
