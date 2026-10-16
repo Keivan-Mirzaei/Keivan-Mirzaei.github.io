@@ -130,7 +130,7 @@ $$0/0$$ is not an answer. It means direct substitution is inconclusive, not that
 
 Sometimes we restrict where the input comes from. A **left-hand limit**, written $$\lim_{x\to a^-}f(x)$$, uses only inputs smaller than $$a$$. A **right-hand limit**, written $$\lim_{x\to a^+}f(x)$$, uses only inputs larger than $$a$$.
 
-The ordinary limit we started with is also called a **two-sided limit**. It exists exactly when both one-sided limits exist and agree on the same finite value.
+The ordinary limit we started with is also called a **two-sided limit**. A *finite* two-sided limit exists exactly when both one-sided limits exist and agree on the same finite value. Infinite limits describe a different kind of behavior, introduced later in this module.
 
 <section class="worked" markdown="1">
 <p class="element-label">Example 3</p>

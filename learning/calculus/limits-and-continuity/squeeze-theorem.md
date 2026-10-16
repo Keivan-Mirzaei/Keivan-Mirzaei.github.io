@@ -44,7 +44,7 @@ An exact formula is not always the easiest route to a limit. The **squeeze theor
 <p class="element-label">Theorem</p>
 <h3>Squeeze theorem</h3>
 
-Suppose, for all inputs sufficiently close to $$a$$ with possibly $$x\ne a$$,
+Suppose, for all inputs sufficiently close to $$a$$ except possibly $$a$$ itself,
 
 $$\ell(x)\le f(x)\le u(x).$$
 

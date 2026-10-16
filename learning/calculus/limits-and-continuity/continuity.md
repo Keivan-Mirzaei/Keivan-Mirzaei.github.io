@@ -30,8 +30,8 @@ exercises:
     options: ['At every real number', 'At every point except \(2\)', 'Only at \(2\)', 'Nowhere']
     correct: 1
     why: 'A rational function is continuous wherever its denominator is nonzero. Here \(x=2\) is outside the domain.'
-  - text: 'Why can we find \(\lim_{x\to2}(x^2+1)\) by substituting \(x=2\)?'
-    options: ['Substitution works for every function', 'The polynomial is continuous at \(2\)', 'The answer is nonzero']
+  - text: 'Why can we find \(\lim_{x\to4}\sqrt{x+5}\) by substituting \(x=4\)?'
+    options: ['Substitution works for every function', 'The square-root expression is continuous at \(4\)', 'The answer is nonzero']
     correct: 1
     why: 'Continuity guarantees that the limit equals the function value at that input.'
 
@@ -106,6 +106,18 @@ $$
 
 So, for a polynomial, we can substitute the approaching input. For a rational function, we can do this wherever its denominator is nonzero. <mark>Substitution is justified by continuity; it is not a rule that applies to every function.</mark>
 
+<section class="theorem" markdown="1">
+<p class="element-label">Rules</p>
+<h3>Building continuous functions</h3>
+
+Polynomials are continuous everywhere. Rational functions are continuous wherever their denominator is nonzero. The square-root function is continuous on its domain, with a right-hand limit at its endpoint. Sine and cosine are continuous everywhere.
+
+Sums, differences, and products of continuous functions are continuous. Quotients are continuous where the denominator is nonzero. A composition $$f(g(x))$$ is continuous at $$a$$ when $$g$$ is continuous at $$a$$ and $$f$$ is continuous at $$g(a)$$, using inputs within the relevant domains.
+
+These rules follow from the limit laws; continuity of sine and cosine follows from the trigonometric limits and angle-addition identities. For a piecewise definition, the rules apply within each piece; the joins still need checking.
+
+</section>
+
 ## Checking continuity
 
 When continuity is not already known, find the function value and the limit *separately*, then compare them. For a piecewise function, check the two sides at each joining point.
@@ -114,13 +126,13 @@ When continuity is not already known, find the function value and the limit *sep
 <p class="element-label">Example 1</p>
 <h3 class="worked-title">A value that already fits</h3>
 
-For $$p(x)=x^2+1$$ at $$x=2$$,
+For $$p(x)=x^3-2x+1$$ at $$x=-1$$,
 
 $$
-p(2)=5,\qquad \lim_{x\to2}p(x)=5.
+p(-1)=2,\qquad \lim_{x\to-1}p(x)=2.
 $$
 
-Because polynomials are continuous, substitution gives the limit directly: $$\lim_{x\to2}p(x)=p(2)=5$$. We do not need a separate limit calculation.
+Because polynomials are continuous, substitution gives the limit directly: $$\lim_{x\to-1}p(x)=p(-1)=2$$. We do not need a separate limit calculation.
 
 </section>
 
@@ -131,27 +143,27 @@ Because polynomials are continuous, substitution gives the limit directly: $$\li
 Choose $$k$$ so that
 
 $$
-h(x)=\begin{cases}\dfrac{x^2-4}{x-2},&x\ne2,\\k,&x=2\end{cases}
+h(x)=\begin{cases}\dfrac{x^2+x-6}{x-2},&x\ne2,\\k,&x=2\end{cases}
 $$
 
 is continuous at $$2$$. For nearby inputs,
 
 $$
-\frac{x^2-4}{x-2}=x+2,\qquad x\ne2.
+\frac{x^2+x-6}{x-2}=x+3,\qquad x\ne2.
 $$
 
 Taking the limit,
 
-$$\lim_{x\to2}h(x)=\lim_{x\to2}(x+2)=4.$$
+$$\lim_{x\to2}h(x)=\lim_{x\to2}(x+3)=5.$$
 
-Since $$h(2)=k$$, continuity requires *$$k=4$$*. The same principle applies in the widget when both approached heights are set to $$4$$.
+Since $$h(2)=k$$, continuity requires *$$k=5$$*.
 
 </section>
 
 <aside class="warning" markdown="1">
 <p class="element-label">Warning</p>
 
-Cancelling a factor does not define the original quotient at the missing point. The quotient $$\frac{x^2-4}{x-2}$$ is still undefined at $$2$$; assigning the value $$4$$ creates a continuous extension.
+Cancelling a factor does not define the original quotient at the missing point. The quotient $$\frac{x^2+x-6}{x-2}$$ is still undefined at $$2$$; assigning the value $$5$$ creates a continuous extension.
 
 </aside>
 
@@ -162,16 +174,16 @@ Cancelling a factor does not define the original quotient at the missing point. 
 For
 
 $$
-g(x)=\begin{cases}1,&x<0,\\3,&x\ge0,\end{cases}
+g(x)=\begin{cases}x^2,&x<1,\\x+2,&x\ge1,\end{cases}
 $$
 
-we have $$g(0)=3$$, but
+we have $$g(1)=3$$, but
 
 $$
-\lim_{x\to0^-}g(x)=1,\qquad \lim_{x\to0^+}g(x)=3.
+\lim_{x\to1^-}g(x)=1,\qquad \lim_{x\to1^+}g(x)=3.
 $$
 
-The limit does not exist, so $$g$$ is not continuous at $$0$$. Changing $$g(0)$$ cannot make the two approached heights agree.
+The limit does not exist, so $$g$$ is not continuous at $$1$$. Changing $$g(1)$$ cannot make the two approached heights agree.
 
 </section>
 

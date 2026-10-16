@@ -18,10 +18,10 @@ exercises:
     options: ['Exactly one zero in \((1,4)\)', 'At least one zero in \((1,4)\)', 'A zero at \(x=0\)']
     correct: 1
     why: 'The endpoint values straddle zero, so the theorem guarantees at least one input between them where the output is zero. It does not give uniqueness.'
-  - text: 'Which interval proves that \(p(x)=x^3+x-1\) has a zero by the Intermediate Value Theorem?'
+  - text: 'Which interval proves that \(p(x)=x^3-2x-2\) has a zero by the Intermediate Value Theorem?'
     options: ['\([0,1]\)', '\([1,2]\)', '\([2,3]\)']
-    correct: 0
-    why: 'The polynomial is continuous, and \(p(0)=-1\), while \(p(1)=1\). These values have opposite signs.'
+    correct: 1
+    why: 'The polynomial is continuous, with \(p(1)=-3\) and \(p(2)=2\). These endpoint values have opposite signs.'
   - text: 'Two functions \(f\) and \(g\) are continuous on \([0,2]\), with \(f(0)<g(0)\) and \(f(2)>g(2)\). What is guaranteed?'
     options: ['Their graphs intersect somewhere in \((0,2)\)', 'Their graphs intersect at \(x=1\)', 'Their graphs intersect exactly once']
     correct: 0
@@ -30,10 +30,10 @@ exercises:
     options: ['Yes: positive endpoint values guarantee a zero', 'No: they do not bracket zero, although zeros may exist', 'No: positive endpoint values rule out zeros']
     correct: 1
     why: 'A sign change is sufficient, not necessary. In fact, this function has zeros at \(-1\) and \(1\), despite equal positive endpoint values.'
-  - text: 'A temperature changes continuously from \(20\) to \(80\) degrees. What must happen in between?'
-    options: ['It reaches \(50\) degrees at least once', 'It reaches \(50\) degrees exactly once', 'It changes at a constant rate']
+  - text: 'A continuous function on \([0,4]\) has \(f(0)=2\) and \(f(4)=6\). Which output is guaranteed at an input strictly between the endpoints?'
+    options: ['\(4\)', '\(0\)', '\(8\)']
     correct: 0
-    why: 'Every intermediate temperature is attained. Continuity does not require a constant rate or forbid revisiting a temperature.'
+    why: 'The output \(4\) lies strictly between the endpoint heights \(2\) and \(6\). The other two outputs lie outside that range, so the theorem does not guarantee them.'
 ---
 
 ## The idea
@@ -121,7 +121,7 @@ For $$f(x)=1/x$$, the endpoint values satisfy
 
 $$f(-1)=-1<0<1=f(1).$$
 
-But $$f$$ is undefined at $$0$$, so it is not continuous on $$[-1,1]$$. The theorem does not apply. Indeed, $$1/x=0$$ has no solution.
+But $$f$$ is undefined at $$0$$, so it is not continuous on $$[-1,1]$$. The theorem does not apply: $$x=0$$ is a vertical asymptote, not a zero. Indeed, $$1/x=0$$ has no solution.
 
 <figure class="topic-figure"><img src="{{ '/assets/figures/learning/ivt-reciprocal.svg' | relative_url }}" alt="The reciprocal has opposite signs on either side of zero, but neither branch meets the x-axis." width="640" height="360"></figure>
 
