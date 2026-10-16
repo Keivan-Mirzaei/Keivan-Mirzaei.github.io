@@ -89,6 +89,7 @@ The slope depends on *both coordinates*. At $$(1,\sqrt3)$$ it is $$-1/\sqrt3$$; 
 <circle id="implicit-focus" class="graph-focus-ring" r="13" fill="none" stroke="#285b46" stroke-width="1.5"/><circle id="implicit-hit" r="24" fill="transparent"/><circle id="implicit-dot" r="7" fill="#285b46" stroke="#fcfcf9" stroke-width="2"/>
 </g>
 <g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text x="150" y="236" text-anchor="middle">−2</text><text x="490" y="236" text-anchor="middle">2</text><text x="302" y="48" text-anchor="end">2</text><text x="302" y="383" text-anchor="end">−2</text></g>
+<path class="axis-ticks" d="M150 207V213M490 207V213M317 40H323M317 380H323" fill="none" stroke="#9eac96" stroke-width="1"/>
 </svg>
 <span class="implicit-axis implicit-axis-x">\(x\)</span><span class="implicit-axis implicit-axis-y">\(y\)</span>
 </div>

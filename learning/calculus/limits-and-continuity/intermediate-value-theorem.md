@@ -67,7 +67,7 @@ The target $$k$$ is a *height*; the theorem guarantees an *input* $$c$$ that rea
 </g>
 <g id="ivt-intersections" fill="#285b46" stroke="#fcfcf9" stroke-width="2" pointer-events="none"></g>
 </svg>
-<span class="graph-axis graph-axis-x">\(x\)</span><span class="graph-axis graph-axis-y">\(f(x)\)</span>
+<span class="graph-axis graph-axis-x">\(x\)</span><span class="graph-axis graph-axis-y">\(y\)</span>
 <span class="ivt-label ivt-label-a">\(a\)</span><span class="ivt-label ivt-label-b">\(b\)</span>
 <span id="ivt-c-0" class="ivt-label ivt-c" hidden><span class="ivt-c-single">\(c\)</span><span class="ivt-c-multiple">\(c_1\)</span></span>
 <span id="ivt-c-1" class="ivt-label ivt-c" hidden><span class="ivt-c-single">\(c\)</span><span class="ivt-c-multiple">\(c_2\)</span></span>

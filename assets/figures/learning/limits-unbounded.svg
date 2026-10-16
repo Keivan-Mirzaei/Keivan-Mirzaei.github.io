@@ -5,4 +5,5 @@
 
 
 <g class="label"><text x="310" y="327">0</text><text x="435" y="327">1</text><text x="190" y="327">−1</text></g>
-<g class="axis-name"><text x="603" y="306">x</text><text x="335" y="30">y</text></g></svg>
+<g class="axis-name"><text x="603" y="306">x</text><text x="335" y="30">y</text></g><path class="axis-ticks" d="M200 297V303M440 297V303" fill="none" stroke="#9eac96" stroke-width="1"/>
+</svg>

@@ -80,8 +80,6 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 /* Examples are visible grey blocks; graphs and widgets stay transparent. */
 .worked { display: flow-root; margin: 24px 0; padding: 18px 24px; background: #f1f2ef; border-radius: 6px; }
 .worked > p:last-child { margin-bottom: 0; }
-.limits-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 16px; }
-.limits-readouts output { font-variant-numeric: tabular-nums; }
 .limits-widget { margin: 25px 0 35px; }
 @media(max-width:600px) { .worked { padding: 18px; } }
 
@@ -205,3 +203,21 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .algebra-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .comparison-name { text-align: center; margin: 0 0 12px; font-size: 16px; }
 @media(max-width:600px) { .algebra-comparison { grid-template-columns: 1fr; gap: 28px; } }
+
+.squeeze-widget { margin: 28px 0 36px; }
+.squeeze-legend, .squeeze-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; font-size: 15px; }
+.squeeze-legend > :first-child { color: #285b46; }
+.squeeze-legend > :last-child { color: #a67936; }
+.squeeze-readouts output { font-variant-numeric: tabular-nums; }
+
+@media(max-width:600px) { .squeeze-widget svg text { font-size: 20px; } }
+
+.graph-legend { position: absolute; right: 10%; bottom: 15%; display: flex; align-items: center; gap: 9px; width: fit-content; padding: 8px 11px; border-radius: 4px; background: #edf1e9; color: var(--muted); font: 12px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; pointer-events: none; }
+.legend-curve { display: inline-block; width: 18px; height: 2px; background: #285b46; }
+
+.graph-feedback { position: absolute; width: 108px; min-height: 54px; max-width: calc(100% - 16px); padding: 6px 9px; border-radius: 4px; background: #edf1e9; color: var(--ink); font-size: 12px; line-height: 1.7; pointer-events: none; }
+.graph-feedback > span { display: block; white-space: nowrap; }
+.graph-feedback output { font-variant-numeric: tabular-nums; }
+@media(max-width:600px) { .graph-feedback { width: 88px; min-height: 46px; padding: 4px 7px; font-size: 11px; } }
+
+.inverse-legend, .squeeze-legend { width: fit-content; max-width: 100%; padding: 8px 11px; border-radius: 4px; background: #edf1e9; }

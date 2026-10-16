@@ -73,6 +73,7 @@ $$\bigl(f^{-1}\bigr)^{\prime}(b)=\frac{1}{f^{\prime}(a)}=\frac{1}{f^{\prime}(f^{
 <circle id="inverse-inverse-focus" class="graph-focus-ring" r="13" fill="none" stroke="#a67936" stroke-width="1.5"/><circle id="inverse-inverse-hit" r="22" fill="transparent"/><circle id="inverse-inverse-dot" r="7" fill="#a67936" stroke="#fcfcf9" stroke-width="2"/>
 </g>
 <g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text x="220" y="416" text-anchor="middle">1</text><text x="310" y="416" text-anchor="middle">2</text><text x="400" y="416" text-anchor="middle">3</text><text x="490" y="416" text-anchor="middle">4</text><text x="112" y="305" text-anchor="end">1</text><text x="112" y="215" text-anchor="end">2</text><text x="112" y="125" text-anchor="end">3</text><text x="112" y="35" text-anchor="end">4</text></g>
+<path class="axis-ticks" d="M220 387V393M310 387V393M400 387V393M490 387V393M127 300H133M127 210H133M127 120H133M127 30H133" fill="none" stroke="#9eac96" stroke-width="1"/>
 </svg>
 <span class="inverse-axis inverse-axis-x">\(x\)</span><span class="inverse-axis inverse-axis-y">\(y\)</span><span class="inverse-axis inverse-mirror">\(y=x\)</span>
 </div>

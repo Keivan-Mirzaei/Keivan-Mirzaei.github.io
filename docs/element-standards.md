@@ -14,6 +14,10 @@ Use hints, alternative solutions, extensions, data, and code only when they add 
 
 Give cited figures and equations stable anchors and concise names. Number equations only when referred to later. Use one reference convention within each article; separate article reference labels from labels inside a diagram. Captions explain how to read the visual; the surrounding argument interprets it.
 
+## Graph axes
+
+Use barely-there axes (style A), giving each numbered axis value a fine tick and omitting unnecessary additional ticks. Axis labels identify coordinates or measured quantities, with units where appropriate. Identify functions through curve legends or direct labels; for a standard function graph, use horizontal `x` and vertical `y`, with the curve named separately.
+
 ## Content artwork
 
 Use one identifying mark per exploration or puzzle. Depict its distinctive mathematical object, formula, or playable configuration; omit decorative labels and unnecessary detail. Use the site's paper, ink, and green palette, matching typography and fine lines. SVGs should be self-contained and legible at their displayed size. Exploration and puzzle thumbnails use a `440 × 410` canvas.
@@ -40,6 +44,8 @@ Search opens in a native modal with `/`, `⌘K`, or `Ctrl+K`. Support arrows, En
 Group active gadget state and its reveal chevron in one bordered control. Keep Pause/Resume and Stop distinct; expose sound playback and volume separately. The panel starts closed, stays open during outside interaction, and closes through its trigger, close button, or Escape without shifting the page.
 
 ## Activity layout and inputs
+
+Range sliders share the O3 style: an inset rectangular track and a light raised handle, defined in `assets/css/sliders.css` and loaded by the main and learning layouts. Keep native keyboard behavior and a visible focus indicator. Show numeric values only when they help the task; omit incidental values such as a zoom multiplier.
 
 Give the mathematical activity the most attention. Include only controls, labels, feedback, and explanation that it needs. Avoid duplicated help, decorative badges, empty slots, unnecessary statistics, and handles that obscure important content. Use one interface font; mathematical expressions use appropriate math typography.
 

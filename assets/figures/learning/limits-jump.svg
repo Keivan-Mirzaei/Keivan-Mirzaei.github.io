@@ -3,4 +3,5 @@
 <path class="curve" d="M75 230H320"/><path class="curve" d="M320 90H565"/>
 <circle cx="320" cy="230" r="7" fill="#fcfcf9" stroke="#285b46" stroke-width="2.5"/><circle class="point" cx="320" cy="90" r="6"/>
 <g class="label"><text x="292" y="217">1</text><text x="292" y="77">3</text><text x="310" y="327">0</text><text x="170" y="327">−1</text><text x="450" y="327">1</text></g>
-<g class="axis-name"><text x="603" y="306">x</text><text x="335" y="32">y</text></g></svg>
+<g class="axis-name"><text x="603" y="306">x</text><text x="335" y="32">y</text></g><path class="axis-ticks" d="M175 297V303M455 297V303M317 230H323M317 90H323" fill="none" stroke="#9eac96" stroke-width="1"/>
+</svg>

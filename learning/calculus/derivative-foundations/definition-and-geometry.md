@@ -75,13 +75,14 @@ provided this limit exists as a finite number. Then $$f$$ is **differentiable** 
 <circle id="derivative-dot" cx="476" cy="126.4" r="7" fill="#285b46" stroke="#fcfcf9" stroke-width="2"/>
 </g>
 <text x="260" y="344" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" fill="#686e66">1</text>
+<path class="axis-ticks" d="M260 317V323" fill="none" stroke="#9eac96" stroke-width="1"/>
 </svg>
 <span id="derivative-run-label" class="derivative-change derivative-run">\(h\)</span>
 <span id="derivative-rise-label" class="derivative-change derivative-rise">\(f(1+h)-f(1)\)</span>
-<span class="graph-axis graph-axis-x">\(x\)</span><span class="graph-axis graph-axis-y">\(f(x)=x^2\)</span>
+<span class="graph-axis graph-axis-x">\(x\)</span><span class="graph-axis graph-axis-y">\(y\)</span>
 </div>
 <div class="derivative-readouts"><span>\(h=\) <output id="derivative-h">1.20</output></span><span>\(\frac{f(1+h)-f(1)}{h}=\) <output id="derivative-slope">3.20</output></span><span>\(f^{\prime}(1)=2\)</span></div>
-<p class="widget-instruction">Drag the moving point toward the fixed point from either side. The green secant approaches the dashed amber tangent. At \(h=0\), only the tangent is shown; the secant quotient is undefined.</p>
+<p class="widget-instruction">For \(f(x)=x^2\), drag the moving point toward the fixed point from either side. The green secant approaches the dashed amber tangent. At \(h=0\), only the tangent is shown; the secant quotient is undefined.</p>
 </div>
 
 ## Slope, rate, and units

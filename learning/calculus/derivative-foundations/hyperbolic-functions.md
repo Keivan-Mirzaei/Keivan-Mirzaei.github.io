@@ -117,6 +117,7 @@ The important sign difference is that $$\cosh x$$ differentiates to *positive* $
 <circle id="hyperbolic-focus" class="graph-focus-ring" r="13" fill="none" stroke="#285b46" stroke-width="1.5"/><circle id="hyperbolic-hit" r="24" fill="transparent"/><circle id="hyperbolic-dot" r="7" fill="#285b46" stroke="#fcfcf9" stroke-width="2"/>
 </g>
 <g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text x="80" y="224" text-anchor="middle">−2</text><text x="200" y="224" text-anchor="middle">−1</text><text x="440" y="224" text-anchor="middle">1</text><text x="560" y="224" text-anchor="middle">2</text><text x="53" y="164" text-anchor="end">1</text><text x="53" y="84" text-anchor="end">3</text><text x="53" y="324" text-anchor="end">−3</text></g>
+<path class="axis-ticks" d="M80 197V203M200 197V203M440 197V203M560 197V203M317 160H323M317 80H323M317 320H323" fill="none" stroke="#9eac96" stroke-width="1"/>
 </svg>
 <span class="hyperbolic-axis hyperbolic-axis-x">\(x\)</span><span class="hyperbolic-axis hyperbolic-axis-y">\(y\)</span>
 </div>

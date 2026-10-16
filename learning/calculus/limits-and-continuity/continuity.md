@@ -87,8 +87,9 @@ A limit alone is not enough. <mark>The value at the point must meet the approach
 <circle id="continuity-point-dot" cx="290" cy="290" r="7" fill="currentColor" stroke="#fcfcf9" stroke-width="2"/>
 </g>
 <text x="283" y="361" fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14">2</text>
+<path class="axis-ticks" d="M290 337V343" fill="none" stroke="#9eac96" stroke-width="1"/>
 </svg>
-<span class="graph-axis graph-axis-x">\(x\)</span><span class="graph-axis graph-axis-y">\(f(x)\)</span>
+<span class="graph-axis graph-axis-x">\(x\)</span><span class="graph-axis graph-axis-y">\(y\)</span>
 </div>
 <div class="continuity-readouts"><span>Left: <output id="continuity-left-value">3.0</output></span><span>\(f(2)=\) <output id="continuity-point-value">1.0</output></span><span>Right: <output id="continuity-right-value">4.0</output></span></div>
 <output id="continuity-state" class="sr-only" aria-live="polite">Not continuous</output>

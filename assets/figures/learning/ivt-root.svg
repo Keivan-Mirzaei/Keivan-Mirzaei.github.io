@@ -6,4 +6,5 @@
 <text x="498.57" y="205.00" text-anchor="middle">1</text>
 <text x="126.43" y="247.00" text-anchor="end">−1</text>
 <text x="126.43" y="97.00" text-anchor="end">1</text>
-</g><g class="axis-name"><text x="603" y="186.00">x</text><text x="156.43" y="32">y</text></g></svg>
+</g><g class="axis-name"><text x="603" y="186.00">x</text><text x="156.43" y="32">y</text></g><path class="axis-ticks" d="M498.57 177V183M138.43 255H144.43M138.43 105H144.43" fill="none" stroke="#9eac96" stroke-width="1"/>
+</svg>

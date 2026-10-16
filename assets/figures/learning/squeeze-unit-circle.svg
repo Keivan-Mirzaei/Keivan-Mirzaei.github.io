@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc"><title id="title">A sector squeezed between two triangles</title><desc id="desc">O is the origin, A is one unit to its right, B lies on the unit circle at acute angle t, and C is where ray OB meets the vertical tangent through A. Triangle OAB is inside sector OAB, inside triangle OAC.</desc><style>.axis{fill:none;stroke:#c9d1c6;stroke-width:1}.curve{fill:none;stroke:#285b46;stroke-width:2.4;stroke-linejoin:round}.bound{fill:none;stroke:#a67936;stroke-width:1.7}.guide{fill:none;stroke:#c4cebf;stroke-dasharray:4 5}.number{font:14px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;fill:#686e66}.name{font:italic 17px Georgia,serif;fill:#282e29}</style>
+<path d="M165 302L390 302V104.65972252816235Z" fill="#faf1dd"/>
+<path d="M165 302L390 302A225 225 0 0 0 334.1562890567014 153.63844880641855Z" fill="#edf1f8"/>
+<path d="M165 302L390 302L334.1562890567014 153.63844880641855Z" fill="#e0ead9"/>
+<path class="axis" d="M130 302H480M165 325V55"/>
+<path class="bound" d="M165 302L390 302V104.65972252816235Z"/>
+<path class="curve" d="M390 302A225 225 0 0 0 334.1562890567014 153.63844880641855"/>
+<path class="curve" d="M165 302L334.1562890567014 153.63844880641855L390 302"/>
+<path class="axis" d="M378 302V290H390"/>
+<path class="bound" d="M207 302A42 42 0 0 0 196.5758406239176 274.3058437771981"/>
+<path class="guide" d="M334.16 153.64V302"/><path class="axis" d="M334.16 292H344.16V302"/>
+<g class="name"><text x="331" y="326">D</text><text x="145" y="323">O</text><text x="390" y="326">A</text><text x="322.1562890567014" y="141.63844880641855">B</text><text x="400" y="108.65972252816235">C</text><text x="212" y="286">t</text><text x="493" y="308">x</text><text x="150" y="48">y</text></g>
+<g class="number"><text x="272" y="325">1</text></g></svg>

@@ -47,17 +47,20 @@ Imagine moving along a graph toward a chosen input. Watch the *height of the gra
 <path id="limit-guides" d="M170 340V190H50" fill="none" stroke="#82947b" stroke-dasharray="4 5"/>
 <circle cx="290" cy="140" r="7" fill="#fcfcf9" stroke="#285b46" stroke-width="2"/>
 <circle cx="290" cy="290" r="5" fill="#285b46"/>
-<g id="limit-handle" role="slider" tabindex="0" style="outline: none" aria-label="Graph input x" aria-valuemin="0" aria-valuemax="4" aria-valuenow="1" aria-description="Drag horizontally or use Left and Right arrow keys. Hold Shift for smaller steps.">
+<g id="limit-handle" role="slider" tabindex="0" style="outline: none" aria-label="Graph input x" aria-valuemin="0" aria-valuemax="4" aria-valuenow="1" aria-description="Drag horizontally or use Left and Right arrow keys. The point snaps to x equals 2 nearby. Hold Shift for fine movement without snapping.">
 <circle id="limit-focus-ring" cx="170" cy="190" r="13" fill="none" stroke="#285b46" stroke-width="1.5"/>
 <circle id="limit-hit-target" cx="170" cy="190" r="22" fill="transparent"/>
 <circle id="limit-moving-point" cx="170" cy="190" r="7" fill="#285b46" stroke="#fcfcf9" stroke-width="2"/>
 </g>
+<path d="M290 337V343M47 140H53M47 290H53" fill="none" stroke="#9eac96" stroke-width="1"/>
 <g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text x="283" y="361">2</text><text x="27" y="145">4</text><text x="27" y="295">1</text></g>
 </svg>
-<span class="graph-axis graph-axis-x">\(x\)</span><span class="graph-axis graph-axis-y">\(f(x)\)</span>
+<div id="limit-legend" class="graph-legend" aria-label="Graph legend"><span class="legend-curve" aria-hidden="true"></span>\(f\)</div>
+<div class="graph-feedback" id="limit-feedback"><span>\(x=\) <output id="limit-x">1.000</output></span><span>\(f(x)=\) <output id="limit-y">3.000</output></span></div>
+<span class="graph-axis graph-axis-x">\(x\)</span><span class="graph-axis graph-axis-y">\(y\)</span>
 </div>
-<div class="limits-readouts"><span>\(x=\) <output id="limit-x">1.000</output></span><span>\(f(x)=\) <output id="limit-y">3.000</output></span><span>Limit: \(4\)</span></div>
-<p class="widget-instruction">Drag the point toward \(x=2\) from either side. Watch \(f(x)\) approach \(4\), although \(f(2)=1\).</p>
+
+<p class="widget-instruction">Drag toward \(x=2\): nearby values approach \(4\), but the point snaps to \(f(2)=1\).</p>
 </div>
 
 <aside class="definition" markdown="1">

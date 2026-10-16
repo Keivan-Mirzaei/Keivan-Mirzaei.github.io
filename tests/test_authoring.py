@@ -219,7 +219,7 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             topics = [topic for module in course["modules"] for topic in module["topics"]]
             for i, topic in enumerate(topics):
                 html = (destination / topic["url"].strip("/") / "index.html").read_text()
-                if topic['slug'] in {'limits', 'limit-laws', 'continuity', 'intermediate-value-theorem', 'definition-and-geometry', 'differentiation-rules', 'trigonometric-derivatives', 'inverse-function-derivatives', 'hyperbolic-functions', 'implicit-differentiation', 'logarithmic-differentiation'}:
+                if topic['slug'] in {'limits', 'limit-laws', 'squeeze-theorem', 'continuity', 'intermediate-value-theorem', 'definition-and-geometry', 'differentiation-rules', 'trigonometric-derivatives', 'inverse-function-derivatives', 'hyperbolic-functions', 'implicit-differentiation', 'logarithmic-differentiation'}:
                     self.assertIn('id="practice"', html)
                 else:
                     self.assertNotIn('id="practice"', html)

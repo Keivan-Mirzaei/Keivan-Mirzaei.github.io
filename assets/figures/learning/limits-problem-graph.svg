@@ -5,4 +5,5 @@
 <circle cx="395" cy="95" r="7" fill="#f1f2ef" stroke="#285b46" stroke-width="2"/>
 <circle cx="245" cy="95" r="6" fill="#285b46"/>
 <circle cx="395" cy="315" r="6" fill="#285b46"/>
-<g class="label"><text x="245" y="286" text-anchor="middle">−1</text><text x="395" y="286" text-anchor="middle">1</text><text x="302" y="210" text-anchor="end">1</text><text x="302" y="100" text-anchor="end">3</text><text x="302" y="320" text-anchor="end">−1</text></g><g class="axis-name"><text x="595" y="266">x</text><text x="335" y="35">y</text></g></svg>
+<g class="label"><text x="245" y="286" text-anchor="middle">−1</text><text x="395" y="286" text-anchor="middle">1</text><text x="302" y="210" text-anchor="end">1</text><text x="302" y="100" text-anchor="end">3</text><text x="302" y="320" text-anchor="end">−1</text></g><g class="axis-name"><text x="595" y="266">x</text><text x="335" y="35">y</text></g><path class="axis-ticks" d="M245 257V263M395 257V263M317 205H323M317 95H323M317 315H323" fill="none" stroke="#9eac96" stroke-width="1"/>
+</svg>
