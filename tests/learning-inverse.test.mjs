@@ -1,0 +1,68 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
+
+const source = readFileSync(new URL('../assets/js/learning-inverse.js', import.meta.url), 'utf8');
+function explorer() {
+  const elements = new Map();
+  const get = id => {
+    if (!elements.has(id)) elements.set(id, {
+      value: '', textContent: '', dataset: {}, style: {}, attrs: {}, handlers: {}, captured: null,
+      setAttribute(name, value) { this.attrs[name] = value; },
+      removeAttribute(name) { delete this.attrs[name]; },
+      addEventListener(name, handler) { this.handlers[name] = handler; },
+      setPointerCapture(id) { this.captured = id; },
+      hasPointerCapture(id) { return this.captured === id; },
+      releasePointerCapture() { this.captured = null; }, focus() {},
+    });
+    return elements.get(id);
+  };
+  const svg = get('svg');
+  svg.getScreenCTM = () => ({ inverse: () => ({}) });
+  svg.createSVGPoint = () => ({ x: 0, y: 0, matrixTransform() { return { x: (this.x - 10) * 2 }; } });
+  vm.runInNewContext(source, { document: { getElementById: get, querySelector: () => svg } });
+  return { get, event: (clientX, pointerId = 1) => ({ clientY: 100, clientX, pointerId, button: 0, preventDefault() {} }) };
+}
+
+test('corresponding points swap coordinates and the two tangent slopes are reciprocal', () => {
+  const { get } = explorer();
+  assert.equal(get('inverse-a').value, '1.30');
+  assert.equal(get('inverse-original-dot').attrs.cx, 247);
+  assert.ok(Math.abs(get('inverse-inverse-dot').attrs.cy - 273) < 1e-10);
+  const key = (part, key) => get(`inverse-${part}-handle`).handlers.keydown({ key, preventDefault() {} });
+  key('original', 'End');
+  assert.equal(get('inverse-slope').value, '4.00');
+  assert.equal(get('inverse-reciprocal').value, '0.25');
+  assert.equal(get('inverse-inverse-handle').attrs['aria-valuenow'], 4);
+  key('inverse', 'Home');
+  assert.equal(get('inverse-a').value, '0.50');
+  assert.equal(get('inverse-slope').value, '1.00');
+  assert.equal(get('inverse-reciprocal').value, '1.00');
+});
+
+test('the inverse point converts its horizontal position back to the original input', () => {
+  const { get, event } = explorer();
+  const handle = get('inverse-inverse-handle');
+  handle.handlers.pointerdown(event(151.05));
+  handle.handlers.pointermove(event(255, 2));
+  assert.equal(get('inverse-a').value, '1.30');
+  handle.handlers.pointermove(event(255));
+  assert.equal(get('inverse-a').value, '2.00');
+  handle.handlers.pointercancel(event(255));
+  handle.handlers.pointermove(event(100));
+  assert.equal(get('inverse-a').value, '2.00');
+});
+
+test('tangent segments have equal lengths and are exact reflections', () => {
+  const { get } = explorer();
+  const endpoints = key => get(`inverse-${key}-tangent`).attrs.d.slice(1).split(/[ L]/).map(Number);
+  const original = endpoints('original');
+  const inverse = endpoints('inverse');
+  const length = points => Math.hypot(points[2] - points[0], points[3] - points[1]);
+  assert.ok(Math.abs(length(original) - length(inverse)) < 1e-9);
+  for (let i = 0; i < 4; i += 2) {
+    assert.ok(Math.abs(inverse[i] - (520 - original[i + 1])) < 1e-9);
+    assert.ok(Math.abs(inverse[i + 1] - (520 - original[i])) < 1e-9);
+  }
+});

@@ -157,9 +157,9 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .limits-plot:has(svg[data-intersections="1"]) .ivt-c-single { display: inline; }
 .limits-plot:has(svg[data-intersections="1"]) .ivt-c-multiple { display: none; }
 .ivt-label-k { left: 89%; transform: translateY(-50%); color: #80612a; }
-.derivative-widget, .rules-widget, .trig-widget { margin: 25px 0 35px; }
-.derivative-readouts, .rules-readouts, .trig-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 14px; }
-.derivative-readouts output, .rules-readouts output, .trig-readouts output { font-variant-numeric: tabular-nums; }
+.derivative-widget, .rules-widget, .trig-widget, .inverse-widget { margin: 25px 0 35px; }
+.derivative-readouts, .rules-readouts, .trig-readouts, .inverse-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 14px; }
+.derivative-readouts output, .rules-readouts output, .trig-readouts output, .inverse-readouts output { font-variant-numeric: tabular-nums; }
 .derivative-change { position: absolute; font-size: 12px; color: #686e66; pointer-events: none; }
 .derivative-change[hidden] { display: none; }
 .derivative-run { transform: translateX(-50%); }
@@ -177,3 +177,10 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .trig-pi { left: 50%; transform: translateX(-50%); }
 .trig-two-pi { left: 89.0625%; transform: translateX(-50%); }
 .trig-x { left: 94%; }
+.inverse-axis { position: absolute; font-size: 13px; pointer-events: none; }
+.inverse-axis-x { left: 82%; top: 85%; }
+.inverse-axis-y { left: 18%; top: 1%; }
+.inverse-mirror { left: 79%; top: 5%; color: var(--muted); }
+.inverse-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 25px; margin: 0 0 18px; font-size: 13px; }
+.inverse-legend > :first-child { color: var(--green); }
+.inverse-legend > :last-child { color: #80612a; }
