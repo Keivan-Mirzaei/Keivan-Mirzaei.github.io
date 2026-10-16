@@ -227,3 +227,17 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 
 .widget-readouts { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 32px; width: 100%; margin-top: 12px; padding: 12px 16px; border-radius: 5px; background: #edf1e9; text-align: center; }
 .widget-readouts output { font-variant-numeric: tabular-nums; }
+
+.infinite-widget { margin: 28px 0 36px; }
+.infinite-widget .scenario-choices { margin-bottom: 18px; }
+.infinite-plot, .slant-plot { position: relative; }
+.infinite-plot > svg { display: block; width: 100%; }
+.infinite-widget .graph-legend, .slant-figure .graph-legend { display: grid; gap: 6px; }
+.infinite-widget .graph-legend > span, .slant-figure .graph-legend > span { display: flex; align-items: center; gap: 9px; }
+.asymptote-key { display: inline-block; width: 18px; border-top: 2px dashed #a67936; }
+.infinite-widget .pole-legend { bottom: 8%; }
+.infinite-widget .tails-legend { bottom: 25%; }
+.slant-figure .graph-legend { bottom: 4%; right: 7%; }
+@media(max-width:600px) { .infinite-widget svg text { font-size: 18px; } .infinite-widget .graph-legend { font-size: 11px; gap: 3px; padding: 6px 8px; } }
+
+.initial-view-key { display: inline-block; width: 18px; height: 10px; background: #dbe3ee; }
