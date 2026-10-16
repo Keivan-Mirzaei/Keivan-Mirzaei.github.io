@@ -22,10 +22,10 @@ exercises:
     options: ['\(2\)', '\(1\)', '\(0\)', '\(1/2\)']
     correct: 2
     why: 'The quotient rule gives \([2\cdot2-4\cdot1]/2^2=0\). The ratio has zero instantaneous rate here; dividing the derivatives would give the wrong answer.'
-  - text: 'Let \(H(x)=f(g(x))\). You know \(g(2)=3\), \(g^{\prime}(2)=-2\), \(f^{\prime}(2)=9\), and \(f^{\prime}(3)=4\). Find \(H^{\prime}(2)\).'
-    options: ['\(-18\)', '\(-8\)', '\(4\)', '\(8\)']
+  - text: 'A rectangular panel has width \(w(t)\) and height \(h(t)\). At one instant they are \(4\,\mathrm{m}\) and \(3\,\mathrm{m}\), with rates \(0.2\,\mathrm{m/s}\) and \(-0.1\,\mathrm{m/s}\). How fast is its area changing?'
+    options: ['\(-0.02\,\mathrm{m^2/s}\)', '\(0.2\,\mathrm{m^2/s}\)', '\(0.5\,\mathrm{m^2/s}\)', '\(-0.2\,\mathrm{m^2/s}\)']
     correct: 1
-    why: 'Evaluate the outer derivative at the inner output: \(H^{\prime}(2)=f^{\prime}(g(2))g^{\prime}(2)=f^{\prime}(3)(-2)=-8\). The value \(f^{\prime}(2)\) is not used.'
+    why: 'Since \(A=wh\), the product rule gives \(A^{\prime}=w^{\prime}h+wh^{\prime}=(0.2)(3)+4(-0.1)=0.2\,\mathrm{m^2/s}\). The growing width outweighs the shrinking height.'
   - text: 'For \(x\ne0\), let \(q(x)=x/x\). Which statement is correct?'
     options: ['\(q^{\prime}(x)=1\) wherever it is defined', '\(q^{\prime}(x)=0\) for \(x\ne0\), but the original function is undefined at \(0\)', '\(q^{\prime}(0)=0\), because the factors cancel']
     correct: 1
@@ -42,7 +42,7 @@ exercises:
 
 ## The idea
 
-The limit definition tells us what a derivative means. Differentiation rules let us calculate it efficiently. <mark>Choose a rule from how the function is built</mark>: a sum, product, quotient, or composition.
+The limit definition tells us what a derivative means. Differentiation rules let us calculate it efficiently. <mark>Choose a rule from how the function is built</mark>: a sum, product, or quotient. Compositions will be handled in the next submodule.
 
 ## Constants, powers, and sums
 
@@ -50,11 +50,13 @@ The limit definition tells us what a derivative means. Differentiation rules let
 <p class="element-label">Rules</p>
 <h3>Differentiate term by term</h3>
 
-For constants $$c$$ and $$n$$,
+For a constant $$c$$ and a constant exponent $$n$$,
 
 $$\frac{d}{dx}c=0,\qquad \frac{d}{dx}x^n=nx^{n-1}.$$
 
-The power rule holds wherever the real power and its derivative are defined. In particular, negative powers exclude $$0$$, and fractional powers require care with their domains.
+For any real exponent $$n$$, the power formula holds for $$x>0$$. For positive integer exponents it also holds at zero and at negative inputs; for negative integer exponents it holds at every $$x\ne0$$. The case $$n=0$$ is the constant rule, with derivative zero.
+
+For rational exponents with an odd denominator in lowest terms, the same power formula also holds at negative inputs. At zero, check whether a finite derivative exists. For other fractional exponents, check the real domain and its endpoint separately. For example, $$\sqrt{x}$$ has derivative $$1/(2\sqrt{x})$$ for $$x>0$$, but no finite right-hand derivative at zero. A formula valid at positive inputs must not be used to assign a derivative at an excluded or singular input.
 
 If $$f$$ and $$g$$ are differentiable, then
 
@@ -62,7 +64,15 @@ $$\frac{d}{dx}\bigl(cf(x)\bigr)=cf^{\prime}(x),\qquad \frac{d}{dx}\bigl(f(x)\pm 
 
 </section>
 
-The symbol $$d/dx$$ means “differentiate with respect to $$x$$.” Multiplying a graph by a constant scales its slopes; adding a constant shifts the graph without changing its slopes.
+As in the definition lesson, $$d/dx$$ means “differentiate with respect to $$x$$.” Multiplying a graph by a constant scales its slopes; adding a constant shifts the graph without changing its slopes.
+
+<aside class="prerequisite" markdown="1">
+<p class="element-label">Prerequisite</p>
+<h3>Rewrite reciprocals and roots as powers</h3>
+
+For a positive integer $$m$$, $$x^{-m}=1/x^m$$ when $$x\ne0$$. Also $$\sqrt{x}=x^{1/2}$$ for $$x\ge0$$.
+
+</aside>
 
 <section class="worked" markdown="1">
 <p class="element-label">Example 1</p>
@@ -152,37 +162,27 @@ The square on the denominator belongs to the rule. The original function and thi
 
 </section>
 
-## Compositions: follow the inside change
-
-A **composition** feeds one function's output into another. In $$f(g(x))$$, $$g$$ is the inner function and $$f$$ is the outer function.
-
-<section class="theorem" markdown="1">
-<p class="element-label">Rule</p>
-<h3>Chain rule</h3>
-
-If $$g$$ is differentiable at $$x$$ and $$f$$ is differentiable at $$g(x)$$, then
-
-$$\frac{d}{dx}f(g(x))=f^{\prime}(g(x))g^{\prime}(x).$$
-
-</section>
-
-Differentiate the outer function *at the inner output*, then multiply by the inner derivative. A small input change is first scaled by the inner rate, then by the outer rate.
+## Choose a useful form
 
 <section class="worked" markdown="1">
 <p class="element-label">Example 3</p>
-<h3>A power of an expression</h3>
+<h3>A product with two changing factors</h3>
 
-For $$r(x)=(1-3x^2)^4$$, the inner function is $$g(x)=1-3x^2$$ and the outer function is $$f(u)=u^4$$. Thus
+For $$r(x)=(x^2+2)(x^3-1)$$, both factors change with $$x$$. The product rule gives
 
-$$r^{\prime}(x)=4(1-3x^2)^3(-6x)=-24x(1-3x^2)^3.$$
+$$r^{\prime}(x)=2x(x^3-1)+(x^2+2)3x^2.$$
 
-The factor $$-6x$$ accounts for how the inside changes. Dropping it would differentiate with respect to the inside variable instead of $$x$$.
+Expanding first gives $$r(x)=x^5+2x^3-x^2-2$$, so term-by-term differentiation gives
+
+$$r^{\prime}(x)=5x^4+6x^2-2x.$$
+
+Expanding the product-rule answer produces the same expression. Both methods work; choose the form that makes the calculation clearer.
 
 </section>
 
 <aside class="warning" markdown="1">
 <p class="element-label">Warning</p>
 
-Products and quotients do not differentiate factor by factor: in general, $$(uv)^{\prime}\ne u^{\prime}v^{\prime}$$ and $$(u/v)^{\prime}\ne u^{\prime}/v^{\prime}$$. Check the domain before using a rule, and keep the inner derivative when using the chain rule.
+Products and quotients do not differentiate factor by factor: in general, $$(uv)^{\prime}\ne u^{\prime}v^{\prime}$$ and $$(u/v)^{\prime}\ne u^{\prime}/v^{\prime}$$. Check the domain before using a rule, and distinguish a product from a power of a whole expression. The next submodule introduces the chain rule for differentiating such powers directly.
 
 </aside>

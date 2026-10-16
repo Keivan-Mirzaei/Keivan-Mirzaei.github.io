@@ -49,7 +49,11 @@ At an interior point $$a$$ of the domain, the derivative of $$f$$ is
 
 $$f^{\prime}(a)=\lim_{h\to0}\frac{f(a+h)-f(a)}{h},$$
 
-provided this limit exists as a finite number. Then $$f$$ is **differentiable** at $$a$$. The increment $$h$$ can be positive or negative, but is nonzero in the quotient.
+provided this limit exists as a finite number. Then $$f$$ is **differentiable** at $$a$$. The increment $$h$$ can be positive or negative, but is nonzero in the quotient. Equivalently, put $$x=a+h$$:
+
+$$f^{\prime}(a)=\lim_{x\to a}\frac{f(x)-f(a)}{x-a}.$$
+
+Both definitions compare nearby points with the fixed point at $$a$$.
 
 </aside>
 
@@ -64,8 +68,8 @@ provided this limit exists as a finite number. Then $$f$$ is **differentiable** 
 <path d="M65 320H580M80 320V25" fill="none" stroke="#c9d1c6"/>
 <g clip-path="url(#derivative-clip)">
 <path id="derivative-curve" fill="none" stroke="#285b46" stroke-width="2.6"/>
-<path id="derivative-tangent" d="M80 360L530 160" fill="none" stroke="#a67936" stroke-width="2" stroke-dasharray="5 5"/>
-<path id="derivative-secant" fill="none" stroke="#285b46" stroke-width="2"/>
+<path id="derivative-tangent" d="M80 360L530 160" fill="none" stroke="#a67936" stroke-width="2"/>
+<path id="derivative-secant" fill="none" stroke="#617a9a" stroke-width="2"/>
 <path id="derivative-triangle" fill="none" stroke="#aab6a3" stroke-dasharray="3 5"/>
 </g>
 <circle cx="260" cy="280" r="6" fill="#285b46" stroke="#fcfcf9" stroke-width="2"/>
@@ -77,13 +81,20 @@ provided this limit exists as a finite number. Then $$f$$ is **differentiable** 
 <text x="260" y="344" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" fill="#686e66">1</text>
 <path class="axis-ticks" d="M260 317V323" fill="none" stroke="#9eac96" stroke-width="1"/>
 </svg>
+<div class="graph-legend derivative-legend" aria-label="Graph legend"><span><i class="legend-curve" aria-hidden="true"></i>\(f\)</span><span><i class="derivative-secant-key" aria-hidden="true"></i>Secant</span><span><i class="derivative-tangent-key" aria-hidden="true"></i>Tangent</span></div>
 <span id="derivative-run-label" class="derivative-change derivative-run">\(h\)</span>
 <span id="derivative-rise-label" class="derivative-change derivative-rise">\(f(1+h)-f(1)\)</span>
 <span class="graph-axis graph-axis-x">\(x\)</span><span class="graph-axis graph-axis-y">\(y\)</span>
 </div>
 <div class="derivative-readouts widget-readouts"><span>\(h=\) <output id="derivative-h">1.20</output></span><span>\(\frac{f(1+h)-f(1)}{h}=\) <output id="derivative-slope">3.20</output></span><span>\(f^{\prime}(1)=2\)</span></div>
-<p class="widget-instruction">For \(f(x)=x^2\), drag the moving point toward the fixed point from either side. The green secant approaches the dashed amber tangent. At \(h=0\), only the tangent is shown; the secant quotient is undefined.</p>
+<p class="widget-instruction">For \(f(x)=x^2\), drag the moving point toward the fixed point from either side. The blue secant approaches the amber tangent. At \(h=0\), only the tangent is shown; the secant quotient is undefined.</p>
 </div>
+
+## Notation and the derivative function
+
+The number $$f^{\prime}(a)$$ is a rate at one input. Allowing the input to vary gives the **derivative function** $$f^{\prime}(x)$$. Its domain consists of the inputs where the derivative exists as a finite number; it can be smaller than the domain of $$f$$.
+
+For $$y=f(x)$$, the notations $$f^{\prime}(x)$$, $$y^{\prime}$$, $$dy/dx$$, and $$\frac{d}{dx}f(x)$$ describe the same derivative. In $$dy/dx$$, the denominator names the variable with respect to which we differentiate; this notation is not a quotient of two function values.
 
 ## Slope, rate, and units
 
@@ -113,7 +124,7 @@ Now take the limit:
 
 $$f^{\prime}(a)=\lim_{h\to0}\frac{(a+h)^2-a^2}{h}=\lim_{h\to0}(2a+h)=2a.$$
 
-At $$a=1$$, the tangent has slope $$2$$ and equation
+Thus the derivative function is $$f^{\prime}(x)=2x$$ for every real $$x$$. At $$a=1$$, the tangent has slope $$2$$ and equation
 
 $$y=1+2(x-1)=2x-1.$$
 
@@ -151,6 +162,8 @@ The negative derivative means cooling. It does not mean a negative temperature, 
 
 ## When a derivative fails to exist
 
+Continuity rules out breaks, but a continuous graph can still fail to have a finite tangent slope.
+
 For $$f(x)=\lvert x\rvert$$ at $$0$$, the difference quotient is
 
 $$\frac{\lvert h\rvert-0}{h}=\begin{cases}-1,&h<0,\\1,&h>0.\end{cases}$$
@@ -162,6 +175,18 @@ $$\lim_{h\to0^-}\frac{\lvert h\rvert}{h}=-1,\qquad \lim_{h\to0^+}\frac{\lvert h\
 The left and right slopes disagree, so the graph has a **corner** and no derivative there, even though it is continuous.
 
 <figure class="topic-figure"><img src="{{ '/assets/figures/learning/derivative-corner.svg' | relative_url }}" alt="The absolute value graph has two straight branches meeting at a corner at the origin." width="640" height="360"><figcaption>The left-hand slope is \(-1\); the right-hand slope is \(1\). There is no single tangent slope at the corner.</figcaption></figure>
+
+A different failure occurs for $$g(x)=\sqrt[3]{x}$$ at $$0$$. For $$h\ne0$$,
+
+$$\frac{g(h)-g(0)}h=\frac{\sqrt[3]{h}}h=\frac1{(\sqrt[3]{h})^2}.$$
+
+The denominator approaches zero through positive values, so
+
+$$\lim_{h\to0}\frac{g(h)-g(0)}h=+\infty.$$
+
+There is a **vertical tangent**, the line $$x=0$$, but no finite derivative. This differs from a corner: the secants become vertical rather than approaching two different finite slopes.
+
+<figure class="topic-figure"><img src="{{ '/assets/figures/learning/derivative-vertical-tangent.svg' | relative_url }}" alt="The continuous cube-root curve becomes vertical at the origin; the amber vertical tangent is x equals zero." width="640" height="360"><figcaption>For \(g(x)=\sqrt[3]{x}\), the secant slopes tend to \(+\infty\) from both sides of \(0\).</figcaption></figure>
 
 <section class="theorem" markdown="1">
 <p class="element-label">Theorem</p>
