@@ -60,8 +60,10 @@
       const label = result === 'pending' ? (answer.selected === null ? 'not answered' : 'not checked') : result;
       return `<button data-go-question="${index}" data-result="${result}"
         aria-label="Question ${index + 1}: ${label}" ${index === active ? 'aria-current="step"' : ''}>
-        <span aria-hidden="true"></span></button>`;
+        <span aria-hidden="true">${index + 1}</span></button>`;
     }).join('');
+    $('previous-question').disabled = active === 0;
+    $('next-question').disabled = active === questions.length - 1;
   }
 
   function renderQuestion() {
@@ -86,17 +88,13 @@
     renderQuestion();
     $('question-area').querySelector('input').focus();
   });
-  if ($('check-current')) $('check-current').onclick = () => {
-    if (answers[active].selected === null) {
-      $('quiz-status').textContent = 'Choose an answer first.';
-      $(`feedback-${active}`).textContent = 'Choose an answer first.';
-      return;
-    }
-    answers[active].checked = true;
-    updateAnswerVisuals();
-    renderProgress();
-    $('quiz-status').textContent = answers[active].selected === questions[active].correct
-      ? 'This answer is correct.' : 'This answer is incorrect.';
+  if ($('previous-question')) $('previous-question').onclick = () => {
+    if (active === 0) return;
+    active -= 1; renderQuestion();
+  };
+  if ($('next-question')) $('next-question').onclick = () => {
+    if (active === questions.length - 1) return;
+    active += 1; renderQuestion();
   };
   if ($('check-answers')) $('check-answers').onclick = () => {
     answers.forEach(answer => { answer.checked = answer.selected !== null; });
@@ -131,7 +129,7 @@
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
     const disclosure = event.target.closest('details[open]');
-    if (disclosure) {
+    if (disclosure && !disclosure.matches('.problem-card > .disclosure')) {
       disclosure.open = false;
       disclosure.querySelector('summary').focus();
     }

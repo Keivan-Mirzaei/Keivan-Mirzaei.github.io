@@ -1,7 +1,6 @@
-import { enableCardSwipe } from './lib/card-swipe.mjs';
 const root = document.getElementById('module-problems');
 const cards = [...root.querySelectorAll(':scope > section.worked')];
-const statuses = { '': 'To try', revisit: 'Revisit', confident: 'Confident', skip: 'Skip for now' };
+const statuses = { '': 'To try', revisit: 'Revisit', confident: 'Confident' };
 const key = `learning-problems:${location.pathname}:v1`;
 let saved = {};
 try {
@@ -16,7 +15,6 @@ if (cards.length) {
   const deck = document.createElement('div');
   deck.className = 'problems-deck';
   root.append(deck);
-  deck.addEventListener('dragstart', e => { if (e.target.closest('img')) e.preventDefault(); });
   const entries = cards.map((card, i) => {
     const title = card.querySelector(':scope > h3');
     const label = card.querySelector(':scope > .element-label');
@@ -48,7 +46,7 @@ if (cards.length) {
     menu.append(options); header.append(name, menu); card.prepend(header);
     const disclosures = [...card.querySelectorAll(':scope > details.disclosure')];
     const help = document.createElement('button');
-    help.type = 'button'; help.className = 'problem-help'; help.textContent = 'Help';
+    help.type = 'button'; help.className = 'problem-help'; help.textContent = 'Hint';
     help.addEventListener('click', () => {
       const next = disclosures.find(d => !d.open);
       if (next) { next.open = true; }
@@ -59,15 +57,15 @@ if (cards.length) {
     });
     help.hidden = !disclosures.length;
     card.append(help); deck.append(card);
-    const entry = { card, id, menu, summary, options, status: Object.hasOwn(statuses, saved[id]) ? saved[id] : '' };
+    const entry = { card, menu, summary, options, disclosures, help, status: Object.hasOwn(statuses, saved[id]) ? saved[id] : '' };
     return entry;
   });
-  const nav = document.createElement('nav'); nav.className = 'problem-card-nav'; nav.setAttribute('aria-label', 'Problem navigation');
+  const nav = document.createElement('nav'); nav.className = 'number-navigation'; nav.setAttribute('aria-label', 'Problem navigation');
   const previous = document.createElement('button'); previous.type = 'button'; previous.innerHTML = arrow('previous'); previous.setAttribute('aria-label', 'Previous problem');
   const next = document.createElement('button'); next.type = 'button'; next.innerHTML = arrow('next'); next.setAttribute('aria-label', 'Next problem');
-  const squares = document.createElement('div'); squares.className = 'problem-squares';
+  const squares = document.createElement('div'); squares.className = 'number-strip';
   const dots = entries.map((entry, i) => {
-    const button = document.createElement('button'); button.type = 'button'; button.innerHTML = '<span aria-hidden="true"></span>';
+    const button = document.createElement('button'); button.type = 'button'; button.innerHTML = `<span aria-hidden="true">${i + 1}</span>`;
     button.addEventListener('click', () => { show(i); button.focus({ preventScroll: true }); }); squares.append(button); return button;
   });
   nav.append(previous, squares, next);
@@ -90,13 +88,17 @@ if (cards.length) {
   function show(index) {
     const old = entries[active].card.getBoundingClientRect();
     entries[active].menu.open = false;
+    if (index !== active) {
+      entries[active].disclosures.forEach(d => { d.open = false; });
+      entries[active].help.hidden = !entries[active].disclosures.length;
+      entries[active].help.textContent = 'Hint';
+    }
     active = index; update();
     announce.textContent = `Problem ${active + 1} of ${entries.length}: ${entries[active].card.querySelector('h3').textContent}`;
     if (old.top < 0) entries[active].card.scrollIntoView({ block: 'start' });
   }
   previous.addEventListener('click', () => { show(active - 1); (previous.disabled ? next : previous).focus({ preventScroll: true }); });
   next.addEventListener('click', () => { show(active + 1); (next.disabled ? previous : next).focus({ preventScroll: true }); });
-  enableCardSwipe(deck, { selector: '.problem-card', canStep: step => active + step >= 0 && active + step < entries.length, onStep: step => show(active + step) });
   document.addEventListener('pointerdown', e => entries.forEach(entry => { if (!entry.menu.contains(e.target)) entry.menu.open = false; }));
   update();
 } else {

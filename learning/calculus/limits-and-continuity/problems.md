@@ -11,8 +11,6 @@ math: true
 sitemap: false
 ---
 
-Choose a method and justify your reasoning. Swipe between problems or use the arrows below. Help reveals hints first, then the solution.
-
 ## Read and construct graphs
 
 <section class="worked" markdown="1">

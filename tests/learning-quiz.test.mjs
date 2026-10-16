@@ -34,16 +34,7 @@ function quiz() {
   };
 }
 
-test('Check this question leaves saved answers in other questions unchecked', () => {
-  const q = quiz();
-  q.select(0); q.go(1); q.select(0); q.go(0);
-  q.get('check-current').onclick();
-  assert.equal(q.state(0), 'correct');
-  assert.equal(q.state(1), 'pending');
-  assert.equal(q.state(2), 'pending');
-});
-
-test('Check all grades saved answers together and leaves unanswered questions grey', () => {
+test('the single Check solution button grades saved answers together and leaves unanswered questions grey', () => {
   const q = quiz();
   q.select(0); q.go(1); q.select(0);
   q.get('check-answers').onclick();
@@ -60,7 +51,18 @@ test('editing clears only that result; rechecking grades the new answer', () => 
   assert.equal(q.state(1), 'pending');
   assert.equal(q.get('feedback-1').textContent, '');
   assert.equal(q.state(0), 'correct');
-  q.get('check-current').onclick();
+  q.get('check-answers').onclick();
   assert.equal(q.state(1), 'correct');
   assert.equal(q.state(2), 'pending');
+});
+
+test('previous and next navigation stop at quiz boundaries', () => {
+  const q = quiz();
+  assert.equal(q.get('previous-question').disabled, true);
+  q.get('next-question').onclick(); q.get('next-question').onclick();
+  assert.equal(q.get('next-question').disabled, true);
+  q.get('next-question').onclick();
+  assert.match(q.get('question-area').innerHTML, /Third/);
+  q.get('previous-question').onclick();
+  assert.match(q.get('question-area').innerHTML, /Second/);
 });

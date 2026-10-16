@@ -114,18 +114,11 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .note { display: flow-root; margin: 30px 0; padding: 18px 22px; border-radius: 5px; background: #f1f2ef; }
 .note > p:not(.element-label) { font: 17px/1.8 Georgia, serif; margin: 0; }
 
-#question-dots { display: flex; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-#question-dots button { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; background: transparent; }
-#question-dots button > span { display: grid; place-items: center; width: 13px; height: 13px; border-radius: 50%; background: #d5d8d3; color: #62665f; font: 9px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-#question-dots [data-result=correct] > span { background: #dcebd5; color: #29513a; }
-#question-dots [data-result=incorrect] > span { background: #f1dcd7; color: #843f35; }
-#question-dots [aria-current] > span { outline: 1px solid #858b81; outline-offset: 3px; }
+
 .quiz-status, .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 .quiz-actions { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 .quiz-actions .question-check { margin: 0; }
-.check-current { padding: 9px 0; background: transparent; color: var(--muted); font-size: 12px; }
-.check-current:hover { background: transparent; color: var(--green); }
 .continuity-widget { margin: 25px 0 35px; }
 .continuity-readouts { font-size: 16px; }
 .graph-handle { cursor: grab; touch-action: none; -webkit-tap-highlight-color: transparent; }
