@@ -157,9 +157,9 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .limits-plot:has(svg[data-intersections="1"]) .ivt-c-single { display: inline; }
 .limits-plot:has(svg[data-intersections="1"]) .ivt-c-multiple { display: none; }
 .ivt-label-k { left: 89%; transform: translateY(-50%); color: #80612a; }
-.derivative-widget, .rules-widget, .trig-widget, .inverse-widget, .hyperbolic-widget { margin: 25px 0 35px; }
-.derivative-readouts, .rules-readouts, .trig-readouts, .inverse-readouts, .hyperbolic-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 14px; }
-.derivative-readouts output, .rules-readouts output, .trig-readouts output, .inverse-readouts output, .hyperbolic-readouts output { font-variant-numeric: tabular-nums; }
+.derivative-widget, .rules-widget, .trig-widget, .inverse-widget, .hyperbolic-widget, .implicit-widget { margin: 25px 0 35px; }
+.derivative-readouts, .rules-readouts, .trig-readouts, .inverse-readouts, .hyperbolic-readouts, .implicit-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 14px; }
+.derivative-readouts output, .rules-readouts output, .trig-readouts output, .inverse-readouts output, .hyperbolic-readouts output, .implicit-readouts output { font-variant-numeric: tabular-nums; }
 .derivative-change { position: absolute; font-size: 12px; color: #686e66; pointer-events: none; }
 .derivative-change[hidden] { display: none; }
 .derivative-run { transform: translateX(-50%); }
@@ -187,3 +187,7 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .hyperbolic-axis { position: absolute; font-size: 13px; pointer-events: none; }
 .hyperbolic-axis-x { left: 94%; top: 47%; }
 .hyperbolic-axis-y { left: 52%; top: 1%; }
+.implicit-equation { text-align: center; font-size: 14px; margin: 0; }
+.implicit-axis { position: absolute; font-size: 13px; pointer-events: none; }
+.implicit-axis-x { left: 88%; top: 48%; }
+.implicit-axis-y { left: 52%; top: 1%; }

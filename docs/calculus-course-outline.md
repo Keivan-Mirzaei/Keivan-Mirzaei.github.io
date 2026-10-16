@@ -2,7 +2,7 @@
 
 Course title verified against the [UCalgary calendar](https://calendar.ucalgary.ca/courses/1627841). Topic coverage follows the supplied tentative schedule; weeks, dates, homework, tests, reading week, and review/catch-up are omitted. This is a subject-based outline, not an official course schedule.
 
-The source of truth for the eight modules and their 28 submodules is `_data/learning_courses.json`. Limits, Continuity, the Intermediate Value Theorem, Definition and Geometry of the Derivative, Differentiation Rules, Derivatives of Trigonometric Functions, Derivatives of Inverse Functions, and Hyperbolic Functions and Their Derivatives are authored submodules using the standard topic template. The other 20 submodule bodies remain empty.
+The source of truth for the eight modules and their 28 submodules is `_data/learning_courses.json`. Limits, Continuity, the Intermediate Value Theorem, Definition and Geometry of the Derivative, Differentiation Rules, Derivatives of Trigonometric Functions, Derivatives of Inverse Functions, Hyperbolic Functions and Their Derivatives, and Implicit Differentiation are authored submodules using the standard topic template. The other 19 submodule bodies remain empty.
 
 ## Organization notes
 
