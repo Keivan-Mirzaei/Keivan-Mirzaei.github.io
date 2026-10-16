@@ -50,7 +50,7 @@ $$f(c)=k.$$
 
 </section>
 
-The target $$k$$ is a **height**; the theorem guarantees an **input** $$c$$ that reaches it. It does not tell us the exact input or promise that there is only one.
+The target $$k$$ is a *height*; the theorem guarantees an *input* $$c$$ that reaches it. It does not tell us the exact input or promise that there is only one.
 
 <div class="topic-widget ivt-widget" id="ivt-explorer">
 <div class="limits-plot">
@@ -130,6 +130,6 @@ But $$f$$ is undefined at $$0$$, so it is not continuous on $$[-1,1]$$. The theo
 <aside class="warning" markdown="1">
 <p class="element-label">Warning</p>
 
-A sign change guarantees a root only when continuity holds across the interval. The theorem guarantees **at least one** solution, not exactly one. If its hypotheses are not met, it makes no conclusion; a solution may still exist.
+A sign change guarantees a root only when continuity holds across the interval. The theorem guarantees *at least one* solution, not exactly one. If its hypotheses are not met, it makes no conclusion; a solution may still exist.
 
 </aside>

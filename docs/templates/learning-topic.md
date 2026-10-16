@@ -18,7 +18,7 @@ exercises:
 
 ## The idea
 
-Write a compact explanation. Use <mark>yellow emphasis sparingly</mark>.
+Introduce a **new term** in bold. Use *italics* for emphasis. Reserve <mark>yellow highlights for especially useful takeaways</mark>, sparingly and outside warnings.
 
 <aside class="definition" markdown="1">
 <p class="element-label">Definition</p>

@@ -70,7 +70,7 @@ Solving gives
 
 $$y^{\prime}=-\frac{x}{y},\qquad y\ne0.$$
 
-The slope depends on **both coordinates**. At $$(1,\sqrt3)$$ it is $$-1/\sqrt3$$; at $$(1,-\sqrt3)$$ it is $$1/\sqrt3$$. The same input can lie on two branches with different slopes.
+The slope depends on *both coordinates*. At $$(1,\sqrt3)$$ it is $$-1/\sqrt3$$; at $$(1,-\sqrt3)$$ it is $$1/\sqrt3$$. The same input can lie on two branches with different slopes.
 
 </section>
 

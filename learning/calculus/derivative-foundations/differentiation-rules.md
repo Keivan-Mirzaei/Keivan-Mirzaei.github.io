@@ -166,7 +166,7 @@ $$\frac{d}{dx}f(g(x))=f^{\prime}(g(x))g^{\prime}(x).$$
 
 </section>
 
-Differentiate the outer function **at the inner output**, then multiply by the inner derivative. A small input change is first scaled by the inner rate, then by the outer rate.
+Differentiate the outer function *at the inner output*, then multiply by the inner derivative. A small input change is first scaled by the inner rate, then by the outer rate.
 
 <section class="worked" markdown="1">
 <p class="element-label">Example 3</p>

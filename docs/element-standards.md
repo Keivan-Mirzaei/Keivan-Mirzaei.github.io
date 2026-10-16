@@ -4,6 +4,8 @@ These are the conventions for maintained content and reusable components. [Writi
 
 ## Writing
 
+Use **bold** when first introducing or defining a term or concept, *italics* for emphasis, and marker highlights sparingly for especially useful takeaways. Avoid using bold as general emphasis. In learning topics, keep highlights out of warnings.
+
 State straightforward questions and assumptions directly. Explain the key insight and every non-obvious inference; remove repetition and routine detail that does not help the reader. Briefly introduce unusual prerequisites where needed. Let the topic determine length and structure.
 
 An exploration develops significant observations, attempts, obstacles, and arguments. Each example, experiment, and return to an earlier example should add something. Include a failed attempt when it motivates the next approach. Distinguish conjectures, numerical evidence, informal explanations, and proofs. Keep the essential argument readable without operating a widget.

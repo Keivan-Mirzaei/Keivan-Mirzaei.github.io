@@ -46,7 +46,7 @@ Sine rises, flattens, falls, and repeats. Its tangent slope follows the same rep
 
 $$\frac{d}{dx}\sin x=\cos x,\qquad \frac{d}{dx}\cos x=-\sin x.$$
 
-Both rules hold for every real input, with the angle in **radians**.
+Both rules hold for every real input, with the angle in *radians*.
 
 </section>
 
@@ -79,7 +79,7 @@ Both rules hold for every real input, with the angle in **radians**.
 <p class="widget-instruction">Drag either point. The amber tangent's slope in the upper graph is the height of the point in the lower graph.</p>
 </div>
 
-At $$x=\pi/2$$, sine is at a crest and its slope is $$0$$. At $$x=\pi$$, it crosses zero while falling, and its slope is $$-1$$. The derivative tracks **change**, not height.
+At $$x=\pi/2$$, sine is at a crest and its slope is $$0$$. At $$x=\pi$$, it crosses zero while falling, and its slope is $$-1$$. The derivative tracks *change*, not height.
 
 ## The other four functions
 
@@ -148,6 +148,6 @@ The coefficient $$2$$ is the **amplitude**: maximum displacement from the centre
 <aside class="warning" markdown="1">
 <p class="element-label">Warning</p>
 
-The derivative of $$\cos x$$ is **$$-\sin x$$**, not $$\sin x$$. Keep that minus sign, and multiply by the inner derivative when the angle is a function of the input.
+The derivative of $$\cos x$$ is *$$-\sin x$$*, not $$\sin x$$. Keep that minus sign, and multiply by the inner derivative when the angle is a function of the input.
 
 </aside>

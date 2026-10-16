@@ -5,15 +5,21 @@
 .topic-lead { font: 21px/1.6 Georgia, serif; color: var(--muted); margin-bottom: 38px; }
 .topic-wrap > p:not(.eyebrow):not(.topic-lead), .topic-wrap section > p { font: 18px/1.85 Georgia, serif; }
 .topic-section { margin: 40px 0; }
-.topic-wrap .element-label { display: block; font: 10px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-transform: uppercase; letter-spacing: 1.4px; color: var(--green); margin: 0 0 10px; }
-.definition, .theorem { padding: 22px 25px; border-radius: 5px; margin: 25px 0; }
+.topic-wrap .element-label { display: table; width: fit-content; max-width: 100%; padding: 4px 9px; border-radius: 3px; background: #285b4610; font: 10px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-transform: uppercase; letter-spacing: 1.4px; color: var(--green); margin: 0 0 10px; }
+.topic-wrap :is(.definition, .theorem, .worked, .prerequisite, .note, .attention, .warning, .caution):has(> :is(h2, h3, .block-title)) > .element-label { float: right; margin-left: 16px; }
+.definition, .theorem { display: flow-root; padding: 22px 25px; border-radius: 5px; margin: 25px 0; }
 .definition { background: #edf3e7; }
 .theorem { background: #edf1f8; }
 .theorem > .element-label { color: #4e6385; }
-.definition h3, .topic-wrap .theorem h2, .theorem h3 { font: 500 16px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0 0 14px; }
+/* Short underlines distinguish titles; soft tags identify block types. */
+.topic-wrap :is(.definition, .theorem, .worked, .prerequisite, .note, .attention, .warning, .caution) > :is(h2, h3),
+.topic-wrap .block-title { font: 600 16px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--ink); margin: 0 0 16px; padding: 0; }
+.topic-wrap :is(.definition, .theorem, .worked, .prerequisite, .note, .attention, .warning, .caution) > :is(h2, h3)::after,
+.topic-wrap .block-title::after { content: ''; display: block; width: 28px; height: 2px; background: #285b4680; margin-top: 8px; }
+
 .definition p:not(.element-label), .theorem > p:not(.element-label), .disclosure p, .attention p:not(.element-label), .caution p:not(.element-label), .warning p:not(.element-label) { font: 17px/1.85 Georgia, serif; }
 .definition p:last-child, .attention p:last-child, .caution p:last-child, .warning p:last-child { margin-bottom: 0; }
-.attention, .caution, .warning { background: #faf1dd; border-radius: 5px; padding: 18px 20px; margin: 28px 0; }
+.attention, .caution, .warning { display: flow-root; background: #faf1dd; border-radius: 5px; padding: 18px 20px; margin: 28px 0; }
 .attention > .element-label, .caution > .element-label, .warning > .element-label { color: #80612a; }
 .disclosure { margin-top: 16px; }
 .disclosure summary { padding: 12px 0; font-size: 13px; color: var(--green); }
@@ -26,7 +32,6 @@
 .highlight-equation { display: flex; justify-content: center; max-width: 100%; overflow-x: auto; margin: 22px 0 30px; padding: 10px 0; font-size: 25px; }
 .highlight-equation .math-marker { flex-shrink: 0; padding: .18em .4em; }
 .worked-examples { display: grid; grid-template-columns: 1fr; gap: 20px; }
-.worked-title { font: 500 16px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0 0 16px; padding: 0; }
 
 .topic-figure { margin: 25px 0; }
 .topic-figure img, .topic-figure svg, .topic-widget > svg { display: block; width: 100%; }
@@ -73,7 +78,7 @@ section[id], figure[id] { scroll-margin-top: 24px; }
   .display-math { font-size: 20px; }
 }
 /* Examples are visible grey blocks; graphs and widgets stay transparent. */
-.worked { margin: 24px 0; padding: 18px 24px; background: #f1f2ef; border-radius: 6px; }
+.worked { display: flow-root; margin: 24px 0; padding: 18px 24px; background: #f1f2ef; border-radius: 6px; }
 .worked > p:last-child { margin-bottom: 0; }
 .limits-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 16px; }
 .limits-readouts output { font-variant-numeric: tabular-nums; }
@@ -108,7 +113,7 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .limit-album:has(input[value=unbounded]:checked) .scenario-unbounded,
 .limit-album:has(input[value=oscillation]:checked) .scenario-oscillation { display: block; }
 .scenario-panel .topic-figure { margin: 12px 0 18px; }
-.note { margin: 30px 0; padding: 18px 22px; border-radius: 5px; background: #f1f2ef; }
+.note { display: flow-root; margin: 30px 0; padding: 18px 22px; border-radius: 5px; background: #f1f2ef; }
 .note > p:not(.element-label) { font: 17px/1.8 Georgia, serif; margin: 0; }
 
 #question-dots { display: flex; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
@@ -192,8 +197,11 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .implicit-axis-x { left: 88%; top: 48%; }
 .implicit-axis-y { left: 52%; top: 1%; }
 
-.prerequisite { background: #f7ece7; border-radius: 5px; padding: 18px 20px; margin: 25px 0; }
+.prerequisite { display: flow-root; background: #f7ece7; border-radius: 5px; padding: 18px 20px; margin: 25px 0; }
 .prerequisite > .element-label { color: #895d4e; }
-.prerequisite h3 { font: 500 16px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0 0 14px; }
 .prerequisite p:not(.element-label) { font: 17px/1.85 Georgia, serif; }
 .prerequisite p:last-child { margin-bottom: 0; }
+
+.algebra-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.comparison-name { text-align: center; margin: 0 0 12px; font-size: 16px; }
+@media(max-width:600px) { .algebra-comparison { grid-template-columns: 1fr; gap: 28px; } }

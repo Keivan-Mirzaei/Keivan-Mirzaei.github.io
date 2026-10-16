@@ -35,7 +35,7 @@ exercises:
 
 ## The idea
 
-Imagine moving along a graph toward a chosen input. Watch the **height of the graph** as you get closer. If the height settles toward one number, that number is the limit—even if the graph has a hole or a different value at the chosen input.
+Imagine moving along a graph toward a chosen input. Watch the *height of the graph* as you get closer. If the height settles toward one number, that number is the limit—even if the graph has a hole or a different value at the chosen input.
 
 <div class="topic-widget limits-widget" id="limits-explorer">
 <div class="limits-plot">
@@ -78,7 +78,7 @@ The key distinction is <mark>approaching a point is different from evaluating at
 
 ## A practical starting point
 
-For a polynomial, substitute the approaching value. For a quotient of polynomials, this also works **when the denominator is nonzero there**. If substitution fails, investigate; it is not automatically a failed limit.
+For a polynomial, substitute the approaching value. For a quotient of polynomials, this also works *when the denominator is nonzero there*. If substitution fails, investigate; it is not automatically a failed limit.
 
 ## Worked examples
 
@@ -112,7 +112,7 @@ $$
 \lim_{x\to 2}\frac{x^2-4}{x-2}=\lim_{x\to 2}(x+2)=4.
 $$
 
-Cancellation is valid here because a limit uses nearby points, where $$x-2\ne 0$$. It does **not** define the original quotient at $$2$$.
+Cancellation is valid here because a limit uses nearby points, where $$x-2\ne 0$$. It does *not* define the original quotient at $$2$$.
 
 </section>
 
@@ -147,7 +147,7 @@ $$
 \lim_{x\to 0^+}g(x)=3.
 $$
 
-The one-sided limits disagree, so **the two-sided limit does not exist**. The fact that $$g(0)=3$$ cannot repair the jump.
+The one-sided limits disagree, so *the two-sided limit does not exist*. The fact that $$g(0)=3$$ cannot repair the jump.
 
 </section>
 

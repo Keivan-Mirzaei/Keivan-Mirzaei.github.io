@@ -95,7 +95,7 @@ $$\frac{d}{dx}\tanh x=\frac{\cosh^2x-\sinh^2x}{\cosh^2x}=\frac1{\cosh^2x}.$$
 </details>
 </section>
 
-The important sign difference is that $$\cosh x$$ differentiates to **positive** $$\sinh x$$; the circular cosine differentiates to $$-\sin x$$.
+The important sign difference is that $$\cosh x$$ differentiates to *positive* $$\sinh x$$; the circular cosine differentiates to $$-\sin x$$.
 
 <div class="topic-widget hyperbolic-widget" id="hyperbolic-explorer">
 <fieldset class="scenario-choices"><legend>Choose a function</legend>

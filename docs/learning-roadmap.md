@@ -14,9 +14,16 @@ Use [the starter](templates/learning-topic.md) to fill an existing empty topic i
 
 Question data supports plain text and LaTeX delimited by `\(` and `\)`. The Quiz shows one question at a time. Bottom dots switch questions. The primary Check all action checks every selected answer together; a quieter Check this question action checks only the active question, revealing sage correct or rose incorrect states and explanations. Unanswered questions stay grey. Changing the choice clears feedback. Answers persist while browsing the current page. There are no visible counters; an accessible status announces the result after checking. Correct and incorrect answers use green/red feedback; unchecked choices remain neutral. Editing a checked answer clears its result until it is checked again. There is no persistent tracking. The no-JavaScript fallback lists questions and explanations.
 
+## Text styling
+
+- Use **bold** for a term or concept when first introducing or defining it, not for ordinary emphasis or repeated mentions.
+- Use *italics* for emphasis.
+- Use yellow marker highlights sparingly for especially useful takeaways or reusable insights. Do not highlight routine details or entire paragraphs, and keep highlights out of warnings.
+- Keep block titles and type labels styled by the shared components; they do not change the meaning of bold in body text.
+
 ## Visual vocabulary
 
-- Block labels identify the type. Optional example, definition, and theorem names use small interface type, leaving large serif headings for sections.
+- Block-type labels use compact soft-background tags (chosen style I): top right alongside a title, top left when the block has no title. Optional block titles use semibold interface type and a short underline (chosen style J), distinct from serif body text; large serif headings remain reserved for sections.
 - Definition: pale sage (`definition`).
 - Theorem: pale blue (`theorem`) with a closed `disclosure` labelled “Proof (optional)” when a proof is useful.
 - Prerequisite reminders: soft peach (class prerequisite), with an explicit label; place recalled definitions and identities here.

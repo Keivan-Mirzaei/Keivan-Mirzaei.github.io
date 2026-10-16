@@ -86,7 +86,7 @@ provided this limit exists as a finite number. Then $$f$$ is **differentiable** 
 
 ## Slope, rate, and units
 
-The derivative has units of **output per unit input**. If $$s(t)$$ is position in metres and time is in seconds, $$s^{\prime}(t)$$ is **instantaneous velocity** in metres per second. If $$T(t)$$ is temperature, $$T^{\prime}(t)$$ tells us how quickly it is heating or cooling.
+The derivative has units of *output per unit input*. If $$s(t)$$ is position in metres and time is in seconds, $$s^{\prime}(t)$$ is **instantaneous velocity** in metres per second. If $$T(t)$$ is temperature, $$T^{\prime}(t)$$ tells us how quickly it is heating or cooling.
 
 When the derivative exists, the tangent line at $$a$$ is
 

@@ -44,7 +44,7 @@ exercises:
 
 ## The idea
 
-In Limits, we separated the value a function **approaches** from the value it **has**. Continuity asks them to agree. At a continuous point, nearby inputs give outputs near the actual value there.
+In Limits, we separated the value a function *approaches* from the value it *has*. Continuity asks them to agree. At a continuous point, nearby inputs give outputs near the actual value there.
 
 <aside class="definition" markdown="1">
 <p class="element-label">Definition</p>
@@ -103,11 +103,11 @@ $$
 \lim_{x\to a}f(x)=f(a).
 $$
 
-So, for a polynomial, we can substitute the approaching input. For a rational function, we can do this wherever its denominator is nonzero. **Substitution is justified by continuity; it is not a rule that applies to every function.**
+So, for a polynomial, we can substitute the approaching input. For a rational function, we can do this wherever its denominator is nonzero. <mark>Substitution is justified by continuity; it is not a rule that applies to every function.</mark>
 
 ## Checking continuity
 
-When continuity is not already known, find the function value and the limit **separately**, then compare them. For a piecewise function, check the two sides at each joining point.
+When continuity is not already known, find the function value and the limit *separately*, then compare them. For a piecewise function, check the two sides at each joining point.
 
 <section class="worked" markdown="1">
 <p class="element-label">Example 1</p>
@@ -143,7 +143,7 @@ Taking the limit,
 
 $$\lim_{x\to2}h(x)=\lim_{x\to2}(x+2)=4.$$
 
-Since $$h(2)=k$$, continuity requires **$$k=4$$**. The same principle applies in the widget when both approached heights are set to $$4$$.
+Since $$h(2)=k$$, continuity requires *$$k=4$$*. The same principle applies in the widget when both approached heights are set to $$4$$.
 
 </section>
 
@@ -216,6 +216,6 @@ Only a removable discontinuity can be repaired by changing a single function val
 <aside class="note" markdown="1">
 <p class="element-label">Note</p>
 
-A function is continuous on an interval when it is continuous at each point there. At an included endpoint, use the limit from **within the interval**; for example, the right-hand limit at a left endpoint.
+A function is continuous on an interval when it is continuous at each point there. At an included endpoint, use the limit from *within the interval*; for example, the right-hand limit at a left endpoint.
 
 </aside>

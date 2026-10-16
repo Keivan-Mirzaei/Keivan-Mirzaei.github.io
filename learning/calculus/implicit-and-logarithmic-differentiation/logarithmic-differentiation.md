@@ -37,7 +37,7 @@ exercises:
 
 ## The idea
 
-Products, quotients, and powers can become easier to differentiate after taking a logarithm. This is especially useful when **both the base and the exponent depend on the input**, as in $$x^x$$.
+Products, quotients, and powers can become easier to differentiate after taking a logarithm. This is especially useful when *both the base and the exponent depend on the input*, as in $$x^x$$.
 
 The method combines logarithm laws with implicit differentiation.
 

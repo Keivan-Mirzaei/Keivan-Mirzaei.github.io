@@ -63,7 +63,7 @@ Thus $$\lim_{x\to1}(x-1)f(x)=0$$. A product can have a limit even when one facto
 <p class="element-label">Problem 2</p>
 <h3>Three crossings, the same endpoint data</h3>
 
-Sketch a continuous function on $$[-2,2]$$ with $$f(-2)=-1$$, $$f(2)=1$$, and **exactly three zeros**. Then find a polynomial formula that fits your sketch.
+Sketch a continuous function on $$[-2,2]$$ with $$f(-2)=-1$$, $$f(2)=1$$, and *exactly three zeros*. Then find a polynomial formula that fits your sketch.
 
 What does your construction tell you about the number of solutions guaranteed by the Intermediate Value Theorem?
 
@@ -84,7 +84,7 @@ It has exactly the zeros $$-1,0,1$$, is continuous, and satisfies $$f(-2)=-1$$ a
 
 <figure class="topic-figure"><img src="{{ '/assets/figures/learning/limits-three-zeros.svg' | relative_url }}" alt="A continuous cubic goes from minus two, minus one to two, one, crossing the x-axis at minus one, zero, and one." width="640" height="360"></figure>
 
-The theorem guarantees **at least one** zero between endpoints of opposite signs. It does not guarantee uniqueness.
+The theorem guarantees *at least one* zero between endpoints of opposite signs. It does not guarantee uniqueness.
 
 </details>
 </section>
@@ -214,7 +214,7 @@ Evaluate
 
 $$\lim_{x\to+\infty}\left(\sqrt{4x^2+x}-2x\right).$$
 
-Here $$x\to+\infty$$ means that the **input** grows without bound. The question is whether the difference approaches a finite output.
+Here $$x\to+\infty$$ means that the *input* grows without bound. The question is whether the difference approaches a finite output.
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
@@ -365,7 +365,7 @@ Squares of side $$x$$ centimetres are cut from the corners of a $$20\,\mathrm{cm
 
 $$V(x)=x(20-2x)(30-2x),\qquad 0<x<10.$$
 
-Prove that **at least two different cuts** give volume $$900\,\mathrm{cm^3}$$, without solving the cubic equation.
+Prove that *at least two different cuts* give volume $$900\,\mathrm{cm^3}$$, without solving the cubic equation.
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
