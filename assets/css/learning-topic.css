@@ -41,7 +41,8 @@
 .widget-controls input { display: block; width: 100%; min-height: 44px; margin: 0; accent-color: var(--green); }
 .widget-controls button { background: #e7ece1; font-size: 12px; }
 .widget-result { font-size: 13px; color: var(--green); margin: 16px 0 0; }
-.practice { margin: 45px 0 30px; background: #f2edf7; padding: 25px; border-radius: 8px; }
+.practice { margin: 45px 0 30px; }
+.quiz-card { background: #f2edf7; padding: 25px; border-radius: 8px; }
 .practice h2 { color: #645078; }
 fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 legend { font-size: 16px; line-height: 1.6; padding: 0; margin-bottom: 15px; }
@@ -58,7 +59,7 @@ legend { font-size: 16px; line-height: 1.6; padding: 0; margin-bottom: 15px; }
 .answer[data-result=correct], .answer[data-result=correct]:has(input:checked), .feedback[data-result=correct] { background: #e0eedb; color: #29513a; }
 .answer[data-result=incorrect], .answer[data-result=incorrect]:has(input:checked), .feedback[data-result=incorrect] { background: #f6e3df; color: #843f35; }
 .feedback[data-result] { padding: 12px 14px; border-radius: 5px; }
-.question-number { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+.topic-wrap .question-number { margin-bottom: 20px; }
 .table-scroll { overflow-x: auto; }
 .topic-wrap table { border-collapse: collapse; width: 100%; font-size: 13px; }
 .topic-wrap caption { text-align: left; font-size: 11px; color: var(--muted); margin-bottom: 10px; }
@@ -74,7 +75,7 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 @media(max-width:600px) {
   .topic-wrap { margin-top: 30px; }
   .topic-wrap h1 { font-size: 37px; }
-  .practice, .definition, .theorem { padding: 18px; }
+  .quiz-card, .definition, .theorem { padding: 18px; }
   .display-math { font-size: 20px; }
 }
 /* Examples are visible grey blocks; graphs and widgets stay transparent. */

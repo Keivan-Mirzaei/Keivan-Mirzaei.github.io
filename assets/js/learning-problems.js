@@ -18,15 +18,15 @@ if (cards.length) {
   const entries = cards.map((card, i) => {
     const title = card.querySelector(':scope > h3');
     const label = card.querySelector(':scope > .element-label');
-    const id = title.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const id = card.dataset.problemId || title?.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `problem-${i + 1}`;
     card.id = `problem-${i + 1}`;
     card.classList.add('problem-card');
     const header = document.createElement('div');
     header.className = 'problem-card-header';
     const name = document.createElement('div');
     name.className = 'problem-card-name';
-    label.className = 'problem-card-number';
-    name.append(label, title);
+    name.append(label);
+    if (title) name.append(title);
     const menu = document.createElement('details');
     menu.className = 'problem-status-menu';
     const summary = document.createElement('summary');
@@ -94,7 +94,8 @@ if (cards.length) {
       entries[active].help.textContent = 'Hint';
     }
     active = index; update();
-    announce.textContent = `Problem ${active + 1} of ${entries.length}: ${entries[active].card.querySelector('h3').textContent}`;
+    const title = entries[active].card.querySelector('h3')?.textContent;
+    announce.textContent = `Problem ${active + 1} of ${entries.length}${title ? `: ${title}` : ''}`;
     if (old.top < 0) entries[active].card.scrollIntoView({ block: 'start' });
   }
   previous.addEventListener('click', () => { show(active - 1); (previous.disabled ? next : previous).focus({ preventScroll: true }); });

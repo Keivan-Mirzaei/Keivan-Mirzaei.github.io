@@ -22,7 +22,7 @@
         ${escapeHtml(option)}
       </label>`).join('');
     return `<div class="question-card"><fieldset>
-      <legend><span class="question-number">Question ${index + 1}</span>${escapeHtml(question.text)}</legend>
+      <legend><span class="element-label question-number">Question ${index + 1}</span>${escapeHtml(question.text)}</legend>
       <div class="answers">${options}</div>
       </fieldset><p class="feedback" id="feedback-${index}" role="status"></p></div>`;
   }

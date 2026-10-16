@@ -13,9 +13,8 @@ sitemap: false
 
 ## Read and construct graphs
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="a-hole-a-jump-and-a-product" markdown="1">
 <p class="element-label">Problem 1</p>
-<h3>A hole, a jump, and a product</h3>
 
 Use the graph of $$f$$ below.
 
@@ -48,9 +47,8 @@ Thus $$\lim_{x\to1}(x-1)f(x)=0$$. A product can have a limit even when one facto
 </details>
 </section>
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="three-crossings-the-same-endpoint-data" markdown="1">
 <p class="element-label">Problem 2</p>
-<h3>Three crossings, the same endpoint data</h3>
 
 Sketch a continuous function on $$[-2,2]$$ with $$f(-2)=-1$$, $$f(2)=1$$, and *exactly three zeros*. Then find a polynomial formula that fits your sketch.
 
@@ -80,9 +78,8 @@ The theorem guarantees *at least one* zero between endpoints of opposite signs. 
 
 ## Limit laws and algebraic methods
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="recover-the-hidden-limits" markdown="1">
 <p class="element-label">Problem 3</p>
-<h3>Recover the hidden limits</h3>
 
 Two functions satisfy
 
@@ -120,9 +117,8 @@ $$\lim_{x\to a}\frac{f(x)}{g(x)}=\frac31=3.$$
 </details>
 </section>
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="rationalise-and-factor" markdown="1">
 <p class="element-label">Problem 4</p>
-<h3>Rationalise and factor</h3>
 
 Evaluate
 
@@ -152,9 +148,8 @@ $$\lim_{x\to4}\frac{\sqrt{x+5}-3}{x^2-16}
 </details>
 </section>
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="a-square-root-that-hides-two-sides" markdown="1">
 <p class="element-label">Problem 5</p>
-<h3>A square root that hides two sides</h3>
 
 Find both one-sided limits, then decide whether the two-sided limit exists:
 
@@ -195,9 +190,8 @@ The two-sided limit does not exist.
 </details>
 </section>
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="a-small-difference-between-large-quantities" markdown="1">
 <p class="element-label">Problem 6</p>
-<h3>A small difference between large quantities</h3>
 
 Evaluate
 
@@ -231,9 +225,8 @@ Both original terms grow without bound, but their difference approaches a finite
 </details>
 </section>
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="oscillation-far-from-the-origin" markdown="1">
 <p class="element-label">Problem 7</p>
-<h3>Oscillation far from the origin</h3>
 
 The numerator keeps changing sign. Determine the horizontal asymptote at each end:
 
@@ -267,9 +260,8 @@ Thus $$y=0$$ is a horizontal asymptote at both ends, even though the graph cross
 
 ## Infinite limits and asymptotes
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="a-vanishing-denominator-three-outcomes" markdown="1">
 <p class="element-label">Problem 8</p>
-<h3>A vanishing denominator, three outcomes</h3>
 
 For each function, determine both one-sided limits at $$x=3$$ and decide whether a two-sided infinite limit exists:
 
@@ -312,9 +304,8 @@ Both one-sided limits are $$1$$. There is a removable hole, repaired by assignin
 </details>
 </section>
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="a-hole-and-three-asymptotes" markdown="1">
 <p class="element-label">Problem 9</p>
-<h3>A hole and three asymptotes</h3>
 
 Find every vertical and slant asymptote of
 
@@ -356,9 +347,8 @@ The slant asymptote is $$y=2x+5$$ at both ends. There is no horizontal asymptote
 
 ## Trigonometric limits and applications
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="height-lost-on-a-circular-track" markdown="1">
 <p class="element-label">Problem 10</p>
-<h3>Height lost on a circular track</h3>
 
 A point on a circle of radius $$r>0$$ moves through a small angle $$\theta$$ from the top. Its horizontal displacement is $$d=r\sin\theta$$ and its vertical drop is $$h=r(1-\cos\theta)$$. Find
 
@@ -390,9 +380,8 @@ Thus $$h$$ is approximately $$d^2/(2r)$$ for small displacements. Doubling a ver
 </details>
 </section>
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="a-mixture-with-a-limiting-concentration" markdown="1">
 <p class="element-label">Problem 11</p>
-<h3>A mixture with a limiting concentration</h3>
 
 A tank initially contains $$20\,\mathrm{L}$$ of solution with $$4\,\mathrm{g}$$ of dissolved salt. Solution containing $$3\,\mathrm{g/L}$$ is added at $$2\,\mathrm{L/min}$$, with no outflow and enough tank capacity. Assume the contents are well mixed.
 
@@ -422,9 +411,8 @@ The remainder is negative for every finite $$t\ge0$$. The concentration approach
 
 ## Continuity and models
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="build-a-continuous-bridge" markdown="1">
 <p class="element-label">Problem 12</p>
-<h3>Build a continuous bridge</h3>
 
 Choose $$a,b$$ so that the following function is continuous everywhere:
 
@@ -460,9 +448,8 @@ The middle formula then has the same values as the adjacent limits at both joins
 </details>
 </section>
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="the-area-of-a-thin-ring" markdown="1">
 <p class="element-label">Problem 13</p>
-<h3>The area of a thin ring</h3>
 
 A circular plate has radius $$10\,\mathrm{cm}$$. A narrow ring extends its radius by $$h>0$$ centimetres. Let $$A(h)$$ be the area of the added ring.
 
@@ -498,9 +485,8 @@ Area divided by radial thickness has units $$\mathrm{cm^2}/\mathrm{cm}=\mathrm{c
 </details>
 </section>
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="two-boxes-with-the-same-volume" markdown="1">
 <p class="element-label">Problem 14</p>
-<h3>Two boxes with the same volume</h3>
 
 Squares of side $$x$$ centimetres are cut from the corners of a $$20\,\mathrm{cm}$$ by $$30\,\mathrm{cm}$$ sheet. Folding the sides makes an open box with volume
 
@@ -530,9 +516,8 @@ These open intervals do not overlap, so the cuts are distinct. This argument est
 
 ## Challenges
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="two-radicals-one-cancellation" markdown="1">
 <p class="element-label">Problem 15 · Challenge</p>
-<h3>Two radicals, one cancellation</h3>
 
 Evaluate
 
@@ -574,9 +559,8 @@ $$\begin{aligned}
 </details>
 </section>
 
-<section class="worked" markdown="1">
+<section class="worked" data-problem-id="two-points-half-an-interval-apart" markdown="1">
 <p class="element-label">Problem 16 · Challenge</p>
-<h3>Two points half an interval apart</h3>
 
 Suppose $$f$$ is continuous on $$[0,1]$$ and $$f(0)=f(1)$$. Prove that there is some $$c\in[0,1/2]$$ such that
 
