@@ -16,6 +16,8 @@ Give cited figures and equations stable anchors and concise names. Number equati
 
 ## Graph axes
 
+Interactive information displayed below a graph belongs in a soft strip with centered, wrapping values. Keep point-local feedback near its point when that placement is useful.
+
 Use barely-there axes (style A), giving each numbered axis value a fine tick and omitting unnecessary additional ticks. Axis labels identify coordinates or measured quantities, with units where appropriate. Identify functions through curve legends or direct labels; for a standard function graph, use horizontal `x` and vertical `y`, with the curve named separately.
 
 ## Content artwork

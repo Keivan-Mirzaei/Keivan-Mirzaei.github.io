@@ -116,7 +116,7 @@ Each term accounts for the change in one factor while using the current value of
 <span class="rules-label rules-base">\(u(0)=2\)</span><span class="rules-label rules-side">\(v(0)=3\)</span>
 <span id="rules-top-label" class="rules-label">\(4h\)</span><span id="rules-right-label" class="rules-label">\(3h\)</span><span id="rules-corner-label" class="rules-label">\(2h^2\)</span>
 </div>
-<div class="rules-readouts"><span>\(h=\) <output id="rules-h">0.70</output></span><span>\(\frac{\Delta A}{h}=\) <output id="rules-rate">8.40</output></span><span>\(A^{\prime}(0)=7\)</span></div>
+<div class="rules-readouts widget-readouts"><span>\(h=\) <output id="rules-h">0.70</output></span><span>\(\frac{\Delta A}{h}=\) <output id="rules-rate">8.40</output></span><span>\(A^{\prime}(0)=7\)</span></div>
 <p class="widget-instruction">Drag the corner toward the original rectangle. The blue strips give the two product-rule terms; the amber corner contributes less and less after dividing by \(h\). At \(h=0\), the quotient is undefined.</p>
 </div>
 

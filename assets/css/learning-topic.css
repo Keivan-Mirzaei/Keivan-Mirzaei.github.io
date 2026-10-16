@@ -127,8 +127,7 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .check-current { padding: 9px 0; background: transparent; color: var(--muted); font-size: 12px; }
 .check-current:hover { background: transparent; color: var(--green); }
 .continuity-widget { margin: 25px 0 35px; }
-.continuity-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 16px; }
-.continuity-readouts output { font-variant-numeric: tabular-nums; }
+.continuity-readouts { font-size: 16px; }
 .graph-handle { cursor: grab; touch-action: none; -webkit-tap-highlight-color: transparent; }
 .graph-handle[data-dragging] { cursor: grabbing; }
 .graph-handle:focus, .graph-handle:focus-visible { outline: none; }
@@ -147,8 +146,7 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .continuity-album:has(input[value=unbounded]:checked) .continuity-unbounded,
 .continuity-album:has(input[value=oscillation]:checked) .continuity-oscillation { display: block; }
 .ivt-widget { margin: 25px 0 35px; }
-.ivt-readouts { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
-.ivt-readouts output { font-variant-numeric: tabular-nums; }
+.ivt-readouts { font-size: 14px; }
 .ivt-label { position: absolute; font-size: 13px; pointer-events: none; }
 .ivt-label-a { left: 12.5%; top: 90%; }
 .ivt-label-b { left: 85%; top: 90%; }
@@ -161,8 +159,7 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .limits-plot:has(svg[data-intersections="1"]) .ivt-c-multiple { display: none; }
 .ivt-label-k { left: 89%; transform: translateY(-50%); color: #80612a; }
 .derivative-widget, .rules-widget, .trig-widget, .inverse-widget, .hyperbolic-widget, .implicit-widget { margin: 25px 0 35px; }
-.derivative-readouts, .rules-readouts, .trig-readouts, .inverse-readouts, .hyperbolic-readouts, .implicit-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 14px; }
-.derivative-readouts output, .rules-readouts output, .trig-readouts output, .inverse-readouts output, .hyperbolic-readouts output, .implicit-readouts output { font-variant-numeric: tabular-nums; }
+.derivative-readouts, .rules-readouts, .trig-readouts, .inverse-readouts, .hyperbolic-readouts, .implicit-readouts { font-size: 14px; }
 .derivative-change { position: absolute; font-size: 12px; color: #686e66; pointer-events: none; }
 .derivative-change[hidden] { display: none; }
 .derivative-run { transform: translateX(-50%); }
@@ -201,14 +198,11 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .prerequisite p:last-child { margin-bottom: 0; }
 
 .algebra-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-.comparison-name { text-align: center; margin: 0 0 12px; font-size: 16px; }
+.comparison-plot { position: relative; }
 @media(max-width:600px) { .algebra-comparison { grid-template-columns: 1fr; gap: 28px; } }
 
 .squeeze-widget { margin: 28px 0 36px; }
-.squeeze-legend, .squeeze-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; font-size: 15px; }
-.squeeze-legend > :first-child { color: #285b46; }
-.squeeze-legend > :last-child { color: #a67936; }
-.squeeze-readouts output { font-variant-numeric: tabular-nums; }
+.squeeze-readouts { font-size: 15px; }
 
 @media(max-width:600px) { .squeeze-widget svg text { font-size: 20px; } }
 
@@ -220,4 +214,16 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .graph-feedback output { font-variant-numeric: tabular-nums; }
 @media(max-width:600px) { .graph-feedback { width: 88px; min-height: 46px; padding: 4px 7px; font-size: 11px; } }
 
-.inverse-legend, .squeeze-legend { width: fit-content; max-width: 100%; padding: 8px 11px; border-radius: 4px; background: #edf1e9; }
+.inverse-legend { width: fit-content; max-width: 100%; padding: 8px 11px; border-radius: 4px; background: #edf1e9; }
+
+.squeeze-plot { position: relative; }
+.squeeze-plot > svg { display: block; width: 100%; }
+.squeeze-plot .squeeze-legend { display: grid; left: auto; top: auto; right: 10%; bottom: 29%; gap: 3px; padding: 6px; line-height: 1.4; }
+.squeeze-legend > span { display: flex; align-items: center; gap: 5px; }
+.squeeze-legend i { display: inline-block; flex: 0 0 12px; width: 12px; }
+.legend-upper { border-top: 2px solid #a67936; }
+.legend-lower { border-top: 2px solid #617a9a; }
+@media(max-width:600px) { .squeeze-plot .squeeze-legend { left: calc(50% + 20px); top: 4px; right: auto; bottom: auto; padding: 5px; gap: 2px; font-size: 10.5px; line-height: 1.2; } }
+
+.widget-readouts { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 32px; width: 100%; margin-top: 12px; padding: 12px 16px; border-radius: 5px; background: #edf1e9; text-align: center; }
+.widget-readouts output { font-variant-numeric: tabular-nums; }

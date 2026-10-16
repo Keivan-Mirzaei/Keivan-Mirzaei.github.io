@@ -40,8 +40,9 @@ Question data supports plain text and LaTeX delimited by `\(` and `\)`. The Quiz
 - Use familiar contexts and explain scientific terms only when they help the mathematical idea. Quiz questions should test distinct reasoning rather than repeat worked examples.
 - Sliders use the shared O3 inset track and light rectangular handle. Show values only when useful to the learner; a zoom control does not need a multiplier.
 - Use snapping only where a special point is useful to select, such as an isolated function value. Keep the snap zone small and consistent in screen pixels, with a slightly wider release zone to prevent jitter. Preserve precise keyboard control and Shift-drag to inspect nearby values.
+- When interactive information belongs below a widget, put it in a centered soft strip using `widget-readouts`; wrap values neatly on smaller screens.
 - Live graph values use compact labels beside the moving point (feedback style C). Place them responsively to avoid curves, important points, axes and legends; keep them non-interactive so they cannot intercept dragging.
-- Add in-plot soft-panel legends (style B) only when they identify something the learner needs. Include only necessary entries; a single curve may need just its function name.
+- Add in-plot soft-panel legends (style B) only when they identify something the learner needs. Prefer the bottom right when it leaves the curves, points and labels unobstructed. Include only necessary entries; a single curve may need just its function name.
 - Axes use barely-there lines (style A), with a fine tick for each numbered axis value; omit unnecessary additional ticks. Label axes with the coordinate or measured quantity (and units when relevant); function names identify curves in legends or direct labels, not axes.
 - Graphs use green curves, light axes, muted numeric labels without opaque halos, and transparent backgrounds so they blend with their containing block.
 - Marker highlights: one yellow ink. Use `<mark>text</mark>`; use `class="math-marker"` around an entire inline mathematical expression. Tall fractions receive a full-height marker. The starter includes math-highlighting examples.

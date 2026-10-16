@@ -76,7 +76,7 @@ Angles are in *radians*. Recall $$\lvert\sin t\rvert\le1$$, $$\sin^2t+\cos^2t=1$
 <p class="element-label">Example 1</p>
 <h3>Oscillation inside a shrinking envelope</h3>
 
-For $$x\ne0$$, the sine bound gives
+Let $$f(x)=x^2\sin(1/x)$$ for $$x\ne0$$. The sine bound gives
 
 $$-x^2\le x^2\sin(1/x)\le x^2.$$
 
@@ -89,21 +89,27 @@ We do not use a product law with $$\sin(1/x)$$: that factor has no limit at zero
 </section>
 
 <div class="topic-widget squeeze-widget" id="squeeze-explorer">
-<div class="squeeze-legend"><span>\(f(x)=x^2\sin(1/x)\)</span><span>\(y=\pm x^2\)</span></div>
+<div class="squeeze-plot">
 <svg viewBox="0 0 640 380" role="img" aria-labelledby="squeeze-title squeeze-desc">
 <title id="squeeze-title">Zoom toward the squeezing point</title>
-<desc id="squeeze-desc">The green oscillating function stays between amber square-function bounds. Zooming narrows the input range; the vertical scale adjusts to keep the oscillations visible as the output bounds shrink.</desc>
+<desc id="squeeze-desc">The green oscillating function stays between an amber upper square-function bound and a blue lower bound. Zooming narrows the input range; the vertical scale adjusts to keep the oscillations visible as the output bounds shrink.</desc>
 <defs><clipPath id="squeeze-clip"><rect x="60" y="35" width="520" height="300"/></clipPath></defs>
 <path d="M60 185H590M320 335V25" fill="none" stroke="#c9d1c6"/>
-<g clip-path="url(#squeeze-clip)"><path id="squeeze-upper" fill="none" stroke="#a67936" stroke-width="1.7"/><path id="squeeze-lower" fill="none" stroke="#a67936" stroke-width="1.7"/><path id="squeeze-middle" fill="none" stroke="#285b46" stroke-width="2.4" stroke-linejoin="round"/></g>
+<g clip-path="url(#squeeze-clip)"><path id="squeeze-upper" fill="none" stroke="#a67936" stroke-width="1.7"/><path id="squeeze-lower" fill="none" stroke="#617a9a" stroke-width="1.7"/><path id="squeeze-middle" fill="none" stroke="#285b46" stroke-width="2.4" stroke-linejoin="round"/></g>
 <path class="axis-ticks" d="M70 182V188M570 182V188M317 55H323M317 315H323" fill="none" stroke="#9eac96" stroke-width="1"/>
 <g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text id="squeeze-left" x="70" y="208" text-anchor="middle">−1</text><text id="squeeze-right" x="570" y="208" text-anchor="middle">1</text><text id="squeeze-top" x="305" y="60" text-anchor="end">1</text><text id="squeeze-bottom" x="305" y="320" text-anchor="end">−1</text><text x="306" y="207" text-anchor="end">0</text></g>
 <g fill="#282e29" font-family="Georgia,serif" font-style="italic" font-size="17"><text x="603" y="190">x</text><text x="331" y="25">y</text></g>
 </svg>
-<div class="squeeze-readouts"><span>\(\lvert x\rvert\le\) <output id="squeeze-radius">1</output></span><span>\(\lvert f(x)\rvert\le\) <output id="squeeze-bound">1</output></span></div>
+<div class="graph-legend squeeze-legend" aria-label="Graph legend">
+<span><i class="legend-curve" aria-hidden="true"></i>\(f\)</span>
+<span><i class="legend-upper" aria-hidden="true"></i>\(x^2\)</span>
+<span><i class="legend-lower" aria-hidden="true"></i>\(-x^2\)</span>
+</div>
+</div>
+<div class="squeeze-readouts widget-readouts"><span>\(\lvert x\rvert\le\) <output id="squeeze-radius">1</output></span><span>\(\lvert f(x)\rvert\le\) <output id="squeeze-bound">1</output></span></div>
 <div class="widget-controls"><label for="squeeze-zoom">Zoom<input id="squeeze-zoom" type="range" min="0" max="100" value="0" aria-label="Zoom toward zero"></label></div>
 <p class="widget-instruction">Zoom toward \(0\). Read the shrinking axis values: the vertical scale adjusts to keep the oscillations visible.</p>
-<noscript><figure class="topic-figure"><img src="{{ '/assets/figures/learning/squeeze-envelope.svg' | relative_url }}" alt="The green oscillating curve stays between the amber bounds y equals plus or minus x squared, which approach zero." width="640" height="340"></figure></noscript>
+<noscript><figure class="topic-figure"><img src="{{ '/assets/figures/learning/squeeze-envelope.svg' | relative_url }}" alt="The green oscillating curve stays between the amber upper bound x squared and the blue lower bound negative x squared, which approach zero." width="640" height="340"></figure></noscript>
 </div>
 
 ## Two useful trigonometric limits

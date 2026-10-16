@@ -91,7 +91,7 @@ A limit alone is not enough. <mark>The value at the point must meet the approach
 </svg>
 <span class="graph-axis graph-axis-x">\(x\)</span><span class="graph-axis graph-axis-y">\(y\)</span>
 </div>
-<div class="continuity-readouts"><span>Left: <output id="continuity-left-value">3.0</output></span><span>\(f(2)=\) <output id="continuity-point-value">1.0</output></span><span>Right: <output id="continuity-right-value">4.0</output></span></div>
+<div class="continuity-readouts widget-readouts"><span>Left: <output id="continuity-left-value">3.0</output></span><span>\(f(2)=\) <output id="continuity-point-value">1.0</output></span><span>Right: <output id="continuity-right-value">4.0</output></span></div>
 <output id="continuity-state" class="sr-only" aria-live="polite">Not continuous</output>
 <p class="widget-instruction">Drag either curve up or down, and move the point at \(x=2\). They turn green when all three heights agree.</p>
 </div>

@@ -78,7 +78,7 @@ $$\bigl(f^{-1}\bigr)^{\prime}(b)=\frac{1}{f^{\prime}(a)}=\frac{1}{f^{\prime}(f^{
 <span class="inverse-axis inverse-axis-x">\(x\)</span><span class="inverse-axis inverse-axis-y">\(y\)</span><span class="inverse-axis inverse-mirror">\(y=x\)</span>
 </div>
 <div class="inverse-legend"><span>\(f(x)=x^2,\quad x\ge0\)</span><span>\(f^{-1}(x)=\sqrt{x}\)</span></div>
-<div class="inverse-readouts"><span>\(a=\) <output id="inverse-a">1.30</output></span><span>\(f^{\prime}(a)=\) <output id="inverse-slope">2.60</output></span><span>\((f^{-1})^{\prime}(a^2)=\) <output id="inverse-reciprocal">0.38</output></span></div>
+<div class="inverse-readouts widget-readouts"><span>\(a=\) <output id="inverse-a">1.30</output></span><span>\(f^{\prime}(a)=\) <output id="inverse-slope">2.60</output></span><span>\((f^{-1})^{\prime}(a^2)=\) <output id="inverse-reciprocal">0.38</output></span></div>
 <p class="widget-instruction">Drag either point. The dotted connector joins \((a,a^2)\) to \((a^2,a)\); the tangents reflect across the dashed line and their slopes multiply to \(1\).</p>
 </div>
 

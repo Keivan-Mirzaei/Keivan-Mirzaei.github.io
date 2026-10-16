@@ -76,7 +76,7 @@ Both rules hold for every real input, with the angle in *radians*.
 <span class="trig-label trig-zero trig-upper">\(0\)</span><span class="trig-label trig-pi trig-upper">\(\pi\)</span><span class="trig-label trig-two-pi trig-upper">\(2\pi\)</span><span class="trig-label trig-x trig-upper">\(x\)</span>
 <span class="trig-label trig-zero trig-lower">\(0\)</span><span class="trig-label trig-pi trig-lower">\(\pi\)</span><span class="trig-label trig-two-pi trig-lower">\(2\pi\)</span><span class="trig-label trig-x trig-lower">\(x\)</span>
 </div>
-<div class="trig-readouts"><span>\(x=\) <output id="trig-x">0.79</output> rad</span><span>\(f(x)=\) <output id="trig-value">0.71</output></span><span>\(f^{\prime}(x)=\) <output id="trig-slope">0.71</output></span></div>
+<div class="trig-readouts widget-readouts"><span>\(x=\) <output id="trig-x">0.79</output> rad</span><span>\(f(x)=\) <output id="trig-value">0.71</output></span><span>\(f^{\prime}(x)=\) <output id="trig-slope">0.71</output></span></div>
 <p class="widget-instruction">Drag either point. The amber tangent's slope in the upper graph is the height of the point in the lower graph.</p>
 </div>
 

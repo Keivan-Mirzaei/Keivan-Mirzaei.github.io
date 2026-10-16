@@ -93,7 +93,7 @@ The slope depends on *both coordinates*. At $$(1,\sqrt3)$$ it is $$-1/\sqrt3$$; 
 </svg>
 <span class="implicit-axis implicit-axis-x">\(x\)</span><span class="implicit-axis implicit-axis-y">\(y\)</span>
 </div>
-<div class="implicit-readouts"><span>\(x=\) <output id="implicit-x">1.41</output></span><span>\(y=\) <output id="implicit-y">1.41</output></span><span>\(\frac{dy}{dx}=\) <output id="implicit-slope">−1.00</output></span></div>
+<div class="implicit-readouts widget-readouts"><span>\(x=\) <output id="implicit-x">1.41</output></span><span>\(y=\) <output id="implicit-y">1.41</output></span><span>\(\frac{dy}{dx}=\) <output id="implicit-slope">−1.00</output></span></div>
 <p class="widget-instruction">Drag the point around the circle. Compare the two branches, and watch the tangent turn vertical when \(y=0\).</p>
 </div>
 

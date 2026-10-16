@@ -75,7 +75,7 @@ The target $$k$$ is a *height*; the theorem guarantees an *input* $$c$$ that rea
 <span id="ivt-k" class="ivt-label ivt-label-k" style="top:50%">\(k\)</span>
 <span class="ivt-label ivt-label-low">\(f(a)\)</span><span class="ivt-label ivt-label-high">\(f(b)\)</span>
 </div>
-<div class="ivt-readouts"><span>\(k=\) <output id="ivt-height">0.0</output></span><output id="ivt-count" aria-live="polite">3 intersections</output></div>
+<div class="ivt-readouts widget-readouts"><span>\(k=\) <output id="ivt-height">0.0</output></span><output id="ivt-count" aria-live="polite">3 intersections</output></div>
 <p class="widget-instruction">Drag the amber line up or down. Every height between \(f(a)\) and \(f(b)\) meets the curve; each marked input \(c\) satisfies \(f(c)=k\).</p>
 </div>
 

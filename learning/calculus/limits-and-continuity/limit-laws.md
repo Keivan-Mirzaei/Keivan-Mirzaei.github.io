@@ -88,8 +88,7 @@ $$q(x)=\frac{x^3-8}{x-2}=x^2+2x+4=p(x),\qquad x\ne2.$$
 
 <figure class="topic-figure">
 <div class="algebra-comparison">
-<div>
-<p class="comparison-name">\(q(x)=\frac{x^3-8}{x-2}\)</p>
+<div class="comparison-plot">
 <svg viewBox="0 0 320 290" role="img" aria-label="Quotient graph with a hole at (2,12)">
 <path d="M45 250H300M45 250V25" fill="none" stroke="#c9d1c6"/>
 <path class="axis-ticks" d="M185 247V253M42 142H48" fill="none" stroke="#9eac96" stroke-width="1"/>
@@ -99,9 +98,9 @@ $$q(x)=\frac{x^3-8}{x-2}=x^2+2x+4=p(x),\qquad x\ne2.$$
 <g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text x="185" y="273" text-anchor="middle">2</text><text x="33" y="147" text-anchor="end">12</text></g>
 <g fill="#282e29" font-family="Georgia,serif" font-size="17" font-style="italic"><text x="304" y="255">x</text><text x="29" y="23">y</text></g>
 </svg>
+<div class="graph-legend" aria-label="Graph legend"><span class="legend-curve" aria-hidden="true"></span>\(q\)</div>
 </div>
-<div>
-<p class="comparison-name">\(p(x)=x^2+2x+4\)</p>
+<div class="comparison-plot">
 <svg viewBox="0 0 320 290" role="img" aria-label="Polynomial graph including the point (2,12)">
 <path d="M45 250H300M45 250V25" fill="none" stroke="#c9d1c6"/>
 <path class="axis-ticks" d="M185 247V253M42 142H48" fill="none" stroke="#9eac96" stroke-width="1"/>
@@ -111,6 +110,7 @@ $$q(x)=\frac{x^3-8}{x-2}=x^2+2x+4=p(x),\qquad x\ne2.$$
 <g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text x="185" y="273" text-anchor="middle">2</text><text x="33" y="147" text-anchor="end">12</text></g>
 <g fill="#282e29" font-family="Georgia,serif" font-size="17" font-style="italic"><text x="304" y="255">x</text><text x="29" y="23">y</text></g>
 </svg>
+<div class="graph-legend" aria-label="Graph legend"><span class="legend-curve" aria-hidden="true"></span>\(p\)</div>
 </div>
 </div>
 <figcaption>The graphs agree at every input except \(x=2\), where \(q\) is undefined and \(p(2)=12\). Both limits as \(x\to2\) equal \(12\).</figcaption>

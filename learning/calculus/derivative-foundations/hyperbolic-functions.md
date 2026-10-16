@@ -121,7 +121,7 @@ The important sign difference is that $$\cosh x$$ differentiates to *positive* $
 </svg>
 <span class="hyperbolic-axis hyperbolic-axis-x">\(x\)</span><span class="hyperbolic-axis hyperbolic-axis-y">\(y\)</span>
 </div>
-<div class="hyperbolic-readouts"><span>\(x=\) <output id="hyperbolic-x">0.75</output></span><span>\(f(x)=\) <output id="hyperbolic-value">1.29</output></span><span>\(f^{\prime}(x)=\) <output id="hyperbolic-slope">0.82</output></span></div>
+<div class="hyperbolic-readouts widget-readouts"><span>\(x=\) <output id="hyperbolic-x">0.75</output></span><span>\(f(x)=\) <output id="hyperbolic-value">1.29</output></span><span>\(f^{\prime}(x)=\) <output id="hyperbolic-slope">0.82</output></span></div>
 <p class="widget-instruction">Drag the point to compare height and tangent slope. Switch functions to see which curves flatten, steepen, or turn.</p>
 </div>
 

@@ -81,7 +81,7 @@ provided this limit exists as a finite number. Then $$f$$ is **differentiable** 
 <span id="derivative-rise-label" class="derivative-change derivative-rise">\(f(1+h)-f(1)\)</span>
 <span class="graph-axis graph-axis-x">\(x\)</span><span class="graph-axis graph-axis-y">\(y\)</span>
 </div>
-<div class="derivative-readouts"><span>\(h=\) <output id="derivative-h">1.20</output></span><span>\(\frac{f(1+h)-f(1)}{h}=\) <output id="derivative-slope">3.20</output></span><span>\(f^{\prime}(1)=2\)</span></div>
+<div class="derivative-readouts widget-readouts"><span>\(h=\) <output id="derivative-h">1.20</output></span><span>\(\frac{f(1+h)-f(1)}{h}=\) <output id="derivative-slope">3.20</output></span><span>\(f^{\prime}(1)=2\)</span></div>
 <p class="widget-instruction">For \(f(x)=x^2\), drag the moving point toward the fixed point from either side. The green secant approaches the dashed amber tangent. At \(h=0\), only the tangent is shown; the secant quotient is undefined.</p>
 </div>
 
