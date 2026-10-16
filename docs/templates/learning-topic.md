@@ -44,9 +44,15 @@ Give the proof here.
 </details>
 </section>
 
-## Worked example
+## Worked examples
 
-Keep the example and its solution visible. Add a figure only if it helps.
+<section class="worked" markdown="1">
+<p class="element-label">Example 1</p>
+<h3 class="worked-title">Optional short name</h3>
+
+Keep the example and its solution visible. Omit the name if it adds nothing.
+
+</section>
 
 <aside class="attention" markdown="1">
 <p class="element-label">Attention</p>

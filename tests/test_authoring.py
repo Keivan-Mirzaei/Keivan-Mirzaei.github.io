@@ -219,7 +219,10 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             topics = [topic for module in course["modules"] for topic in module["topics"]]
             for i, topic in enumerate(topics):
                 html = (destination / topic["url"].strip("/") / "index.html").read_text()
-                self.assertNotIn('id="practice"', html)
+                if topic['slug'] == 'limits':
+                    self.assertIn('id="practice"', html)
+                else:
+                    self.assertNotIn('id="practice"', html)
                 self.assertNotIn("learning-slope", html)
                 if i:
                     self.assertIn(f'href="{topics[i-1]["url"]}" aria-label="Previous topic"', html)

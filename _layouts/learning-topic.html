@@ -46,12 +46,14 @@ layout: null
       {{ content }}
       {% if page.exercises.size > 0 %}
       <section id="practice" class="practice" aria-labelledby="practice-title">
-        <div class="section-heading"><h2 id="practice-title">Try it yourself</h2><span>{{ page.exercises.size }} questions</span></div>
-        <p class="practice-intro">One question at a time. Choose an answer, then check it.</p>
+        <h2 id="practice-title">Quiz</h2>
         <div id="question-area"></div>
-        <div id="question-controls">
-          <button id="question-back">← Previous</button><span id="question-position"></span><button id="question-next">Next →</button>
+        <div class="quiz-actions">
+          <button class="check-current" id="check-current">Check this question</button>
+          <button class="question-check" id="check-answers">Check all</button>
         </div>
+        <nav id="question-dots" aria-label="Quiz questions"></nav>
+        <p class="quiz-status" id="quiz-status" role="status"></p>
         <script type="application/json" id="exercise-data">{{ page.exercises | jsonify | replace: '<', '\u003c' }}</script>
         <noscript>
           <p>Enable JavaScript for interactive answer checking.</p>
@@ -64,9 +66,9 @@ layout: null
       </section>
       {% endif %}
       <nav id="reading-dock" aria-label="Course navigation">
-        {% if previous_topic %}<a href="{{ previous_topic | relative_url }}" aria-label="Previous topic">←</a>{% endif %}
+        {% if previous_topic %}<a href="{{ previous_topic | relative_url }}" aria-label="Previous topic">{% include learning/arrow.html direction='left' %}</a>{% endif %}
         <button id="topic-contents" aria-haspopup="dialog" aria-expanded="false">Course contents{% if page.position %} <span>{{ page.position }}</span>{% endif %}</button>
-        {% if next_topic %}<a href="{{ next_topic | relative_url }}" aria-label="Next topic">→</a>{% endif %}
+        {% if next_topic %}<a href="{{ next_topic | relative_url }}" aria-label="Next topic">{% include learning/arrow.html %}</a>{% endif %}
       </nav>
     </article>
   </main>

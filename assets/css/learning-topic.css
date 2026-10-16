@@ -3,22 +3,21 @@
 .topic-wrap h1 { font-size: 46px; }
 .topic-wrap h2 { font-size: 28px; margin: 0 0 18px; }
 .topic-lead { font: 21px/1.6 Georgia, serif; color: var(--muted); margin-bottom: 38px; }
-.topic-wrap section > p { font: 18px/1.85 Georgia, serif; }
+.topic-wrap > p:not(.eyebrow):not(.topic-lead), .topic-wrap section > p { font: 18px/1.85 Georgia, serif; }
 .topic-section { margin: 40px 0; }
-.element-label { display: block; font: 10px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-transform: uppercase; letter-spacing: 1.4px; color: var(--green); margin: 0 0 10px; }
+.topic-wrap .element-label { display: block; font: 10px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-transform: uppercase; letter-spacing: 1.4px; color: var(--green); margin: 0 0 10px; }
 .definition, .theorem { padding: 22px 25px; border-radius: 5px; margin: 25px 0; }
 .definition { background: #edf3e7; }
 .theorem { background: #edf1f8; }
 .theorem > .element-label { color: #4e6385; }
-.definition h3 { font-size: 23px; margin: 0 0 14px; }
-.definition p:not(.element-label), .theorem > p:not(.element-label), .disclosure p, .remark, .attention p:not(.element-label), .caution p:not(.element-label) { font: 17px/1.85 Georgia, serif; }
+.definition h3, .topic-wrap .theorem h2, .theorem h3 { font: 500 16px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0 0 14px; }
+.definition p:not(.element-label), .theorem > p:not(.element-label), .disclosure p, .attention p:not(.element-label), .caution p:not(.element-label) { font: 17px/1.85 Georgia, serif; }
 .definition p:last-child, .attention p:last-child, .caution p:last-child { margin-bottom: 0; }
 .attention, .caution { background: #faf1dd; border-radius: 5px; padding: 18px 20px; margin: 28px 0; }
 .attention > .element-label, .caution > .element-label { color: #80612a; }
 .disclosure { margin-top: 16px; }
 .disclosure summary { padding: 12px 0; font-size: 13px; color: var(--green); }
 .disclosure p { margin-top: 10px; }
-.remark { margin-top: 25px; color: var(--muted); }
 .display-math { padding: 14px 0; overflow-x: auto; font-size: 22px; }
 .display-math math { margin: 0; }
 .topic-wrap mark { color: inherit; background: linear-gradient(transparent 32%, #f3df8cb3 32%, #f3df8cb3 91%, transparent 91%); padding: .06em .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; border-radius: .15em; }
@@ -26,12 +25,9 @@
 .math-marker math { font-size: 1.05em; }
 .highlight-equation { display: flex; justify-content: center; max-width: 100%; overflow-x: auto; margin: 22px 0 30px; padding: 10px 0; font-size: 25px; }
 .highlight-equation .math-marker { flex-shrink: 0; padding: .18em .4em; }
-.section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
-.section-heading > span { font-size: 11px; color: var(--muted); }
 .worked-examples { display: grid; grid-template-columns: 1fr; gap: 20px; }
-.worked-title { font: 16px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 14px 0; }
-.worked-title > span { font-size: 10px; color: var(--muted); margin-right: 10px; }
-.worked-body p { font-size: 15px; margin-bottom: 14px; }
+.worked-title { font: 500 16px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0 0 16px; padding: 0; }
+
 .topic-figure { margin: 25px 0; }
 .topic-figure img, .topic-figure svg, .topic-widget > svg { display: block; width: 100%; }
 .widget-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 16px 24px; padding-top: 20px; }
@@ -41,8 +37,7 @@
 .widget-controls button { background: #e7ece1; font-size: 12px; }
 .widget-result { font-size: 13px; color: var(--green); margin: 16px 0 0; }
 .practice { margin: 45px 0 30px; background: #f2edf7; padding: 25px; border-radius: 8px; }
-.practice .section-heading h2 { color: #645078; }
-.topic-wrap .practice-intro { font: 13px/1.7 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--muted); }
+.practice h2 { color: #645078; }
 fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 legend { font-size: 16px; line-height: 1.6; padding: 0; margin-bottom: 15px; }
 .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -58,9 +53,6 @@ input[type=radio] { accent-color: var(--green); width: 16px; height: 16px; margi
 .answer[data-result=incorrect], .answer[data-result=incorrect]:has(input:checked), .feedback[data-result=incorrect] { background: #f6e3df; color: #843f35; }
 .feedback[data-result] { padding: 12px 14px; border-radius: 5px; }
 .question-number { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
-#question-controls { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; gap: 10px; }
-#question-controls button { font-size: 12px; background: #e7ece1; }
-#question-position { font-size: 11px; color: var(--muted); }
 .table-scroll { overflow-x: auto; }
 .topic-wrap table { border-collapse: collapse; width: 100%; font-size: 13px; }
 .topic-wrap caption { text-align: left; font-size: 11px; color: var(--muted); margin-bottom: 10px; }
@@ -77,7 +69,56 @@ section[id], figure[id] { scroll-margin-top: 24px; }
   .topic-wrap { margin-top: 30px; }
   .topic-wrap h1 { font-size: 37px; }
   .practice, .definition, .theorem { padding: 18px; }
-  .section-heading { align-items: start; }
-  .section-heading > span { max-width: 100px; text-align: right; }
   .display-math { font-size: 20px; }
 }
+/* Examples are visible grey blocks; graphs and widgets stay transparent. */
+.worked { margin: 24px 0; padding: 18px 24px; background: #f1f2ef; border-radius: 6px; }
+.worked > p:last-child { margin-bottom: 0; }
+.limits-readouts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 16px; }
+.limits-readouts output { font-variant-numeric: tabular-nums; }
+.limits-widget { margin: 25px 0 35px; }
+@media(max-width:600px) { .worked { padding: 18px; } }
+
+.topic-widget { user-select: none; -webkit-user-select: none; }
+.topic-widget img, .topic-widget svg { -webkit-user-drag: none; }
+.widget-instruction, .topic-figure figcaption { font: 12px/1.7 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--muted); margin: 16px 0 0; text-align: center; }
+#limit-handle { cursor: grab; touch-action: none; }
+#limit-handle[data-dragging] { cursor: grabbing; }
+#limit-handle:focus-visible #limit-moving-point { stroke: #285b46; stroke-width: 3; }
+
+.limits-plot { position: relative; }
+.limits-plot > svg { display: block; width: 100%; }
+.graph-axis { position: absolute; font-size: 15px; pointer-events: none; }
+.graph-axis-x { left: 93%; top: 89%; }
+.graph-axis-y { left: 3%; top: 1%; }
+#limit-handle, #limit-handle:focus, #limit-handle:focus-visible { outline: none; -webkit-tap-highlight-color: transparent; }
+#limit-focus-ring { visibility: hidden; pointer-events: none; }
+#limit-handle:focus-visible #limit-focus-ring { visibility: visible; }
+.limit-album { margin: 24px 0 35px; }
+.scenario-choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.scenario-choices legend { font: 11px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--muted); margin-bottom: 10px; }
+.scenario-choices label { position: relative; cursor: pointer; }
+.scenario-choices input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.scenario-choices span { display: flex; align-items: center; min-height: 44px; padding: 9px 14px; border-radius: 5px; font-size: 12px; background: #f1f2ef; color: var(--ink); }
+.scenario-choices input:checked + span { background: var(--tint); color: var(--green); }
+.scenario-choices input:focus-visible + span { outline: 2px solid var(--green); outline-offset: 3px; }
+.scenario-panel { display: none; }
+.limit-album:has(input[value=jump]:checked) .scenario-jump,
+.limit-album:has(input[value=unbounded]:checked) .scenario-unbounded,
+.limit-album:has(input[value=oscillation]:checked) .scenario-oscillation { display: block; }
+.scenario-panel .topic-figure { margin: 12px 0 18px; }
+.note { margin: 30px 0; padding: 18px 22px; border-radius: 5px; background: #f1f2ef; }
+.note > p:not(.element-label) { font: 17px/1.8 Georgia, serif; margin: 0; }
+
+#question-dots { display: flex; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+#question-dots button { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; background: transparent; }
+#question-dots button > span { display: grid; place-items: center; width: 13px; height: 13px; border-radius: 50%; background: #d5d8d3; color: #62665f; font: 9px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+#question-dots [data-result=correct] > span { background: #dcebd5; color: #29513a; }
+#question-dots [data-result=incorrect] > span { background: #f1dcd7; color: #843f35; }
+#question-dots [aria-current] > span { outline: 1px solid #858b81; outline-offset: 3px; }
+.quiz-status { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.quiz-actions { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.quiz-actions .question-check { margin: 0; }
+.check-current { padding: 9px 0; background: transparent; color: var(--muted); font-size: 12px; }
+.check-current:hover { background: transparent; color: var(--green); }
