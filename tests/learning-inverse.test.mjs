@@ -36,9 +36,9 @@ test('corresponding points swap coordinates and the two tangent slopes are recip
   assert.equal(get('inverse-reciprocal').value, '0.25');
   assert.equal(get('inverse-inverse-handle').attrs['aria-valuenow'], 4);
   key('inverse', 'Home');
-  assert.equal(get('inverse-a').value, '0.50');
-  assert.equal(get('inverse-slope').value, '1.00');
-  assert.equal(get('inverse-reciprocal').value, '1.00');
+  assert.equal(get('inverse-a').value, '0.25');
+  assert.equal(get('inverse-slope').value, '0.50');
+  assert.equal(get('inverse-reciprocal').value, '2.00');
 });
 
 test('the inverse point converts its horizontal position back to the original input', () => {
@@ -65,4 +65,15 @@ test('tangent segments have equal lengths and are exact reflections', () => {
     assert.ok(Math.abs(inverse[i] - (520 - original[i + 1])) < 1e-9);
     assert.ok(Math.abs(inverse[i + 1] - (520 - original[i])) < 1e-9);
   }
+});
+
+test('the tangent triangles exchange their runs and rises', () => {
+  const { get } = explorer();
+  const numbers = id => get(id).attrs.d.match(/-?\d+(?:\.\d+)?/g).map(Number);
+  const original = numbers('inverse-original-triangle'), inverse = numbers('inverse-inverse-triangle');
+  const originalRun = original[2] - original[0], originalRise = original[1] - original[3];
+  const inverseRun = inverse[3] - inverse[0], inverseRise = inverse[1] - inverse[2];
+  assert.ok(Math.abs(originalRun - inverseRise) < 1e-9);
+  assert.ok(Math.abs(originalRise - inverseRun) < 1e-9);
+  assert.equal(get('inverse-b').value, '1.69');
 });

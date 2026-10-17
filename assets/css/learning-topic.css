@@ -153,7 +153,7 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .limits-plot:has(svg[data-intersections="1"]) .ivt-c-multiple { display: none; }
 .ivt-label-k { left: 89%; transform: translateY(-50%); color: #80612a; }
 .derivative-widget, .rules-widget, .trig-widget, .inverse-widget, .hyperbolic-widget, .implicit-widget { margin: 25px 0 35px; }
-.derivative-readouts, .rules-readouts, .trig-readouts, .inverse-readouts, .hyperbolic-readouts, .implicit-readouts { font-size: 14px; }
+.derivative-readouts, .rules-readouts, .trig-readouts, .inverse-readouts, .implicit-readouts { font-size: 14px; }
 .derivative-change { position: absolute; font-size: 12px; color: #686e66; pointer-events: none; }
 .derivative-change[hidden] { display: none; }
 .derivative-run { transform: translateX(-50%); }
@@ -163,8 +163,6 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .rules-base { left: 42.1875%; top: 87%; }
 .rules-side { left: 20%; top: 58%; }
 .trig-label { position: absolute; font-size: 13px; pointer-events: none; }
-.trig-sine-title { left: 11%; top: 1%; color: var(--green); }
-.trig-cosine-title { left: 11%; top: 49%; color: #80612a; }
 .trig-upper { top: 32%; }
 .trig-lower { top: 79%; }
 .trig-zero { left: 10.9375%; transform: translateX(-50%); }
@@ -174,14 +172,6 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .inverse-axis { position: absolute; font-size: 13px; pointer-events: none; }
 .inverse-axis-x { left: 82%; top: 85%; }
 .inverse-axis-y { left: 18%; top: 1%; }
-.inverse-mirror { left: 79%; top: 5%; color: var(--muted); }
-.inverse-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 25px; margin: 0 0 18px; font-size: 13px; }
-.inverse-legend > :first-child { color: var(--green); }
-.inverse-legend > :last-child { color: #80612a; }
-.hyperbolic-axis { position: absolute; font-size: 13px; pointer-events: none; }
-.hyperbolic-axis-x { left: 94%; top: 47%; }
-.hyperbolic-axis-y { left: 52%; top: 1%; }
-.implicit-equation { text-align: center; font-size: 14px; margin: 0; }
 .implicit-axis { position: absolute; font-size: 13px; pointer-events: none; }
 .implicit-axis-x { left: 88%; top: 48%; }
 .implicit-axis-y { left: 52%; top: 1%; }
@@ -208,7 +198,6 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .graph-feedback output { font-variant-numeric: tabular-nums; }
 @media(max-width:600px) { .graph-feedback { width: 88px; min-height: 46px; padding: 4px 7px; font-size: 11px; } }
 
-.inverse-legend { width: fit-content; max-width: 100%; padding: 8px 11px; border-radius: 4px; background: #edf1e9; }
 
 .squeeze-plot { position: relative; }
 .squeeze-plot > svg { display: block; width: 100%; }
@@ -268,3 +257,25 @@ section[id], figure[id] { scroll-margin-top: 24px; }
   @keyframes pencil-ink { 0%,8% { stroke-dashoffset: 225; opacity: 1; } 78%,90% { stroke-dashoffset: 0; opacity: 1; } 98%,100% { stroke-dashoffset: 0; opacity: 0; } }
   @keyframes pencil-oops { 0%,45%,65%,100% { opacity: 0; } 49%,59% { opacity: 1; } }
 }
+
+.graph-legend.inverse-legend { display: grid; right: 20%; bottom: 15%; gap: 3px; padding: 6px 8px; font-size: 11px; }
+.inverse-legend > span,.hyperbola-legend > span { display: flex; align-items: center; gap: 6px; }
+.inverse-key { display: inline-block; width: 18px; border-top: 2px solid #a67936; }
+.inverse-mirror-key { display: inline-block; width: 18px; border-top: 1px dashed #aab6a3; }
+.graph-legend.hyperbola-legend { display: grid; gap: 5px; right: 10%; bottom: 10%; font-size: 12px; }
+@media(max-width:600px) { .graph-legend.inverse-legend { font-size: 9px; padding: 4px 6px; } .graph-legend.hyperbola-legend { font-size: 10px; } }
+
+.graph-legend.trig-sine-legend { top: 10%; bottom: auto; right: 10%; padding: 5px 7px; }
+.graph-legend.trig-cosine-legend { top: 57%; bottom: auto; right: 10%; padding: 5px 7px; }
+.implicit-legend > span { display: flex; align-items: center; gap: 6px; }
+.graph-legend.implicit-legend { display: grid; right: 16%; bottom: 8%; gap: 3px; font-size: 11px; padding: 5px 7px; }
+
+.hyperbolic-album { margin: 24px 0 35px; }
+.hyperbolic-album:has(input[value=sinh]:checked) .hyperbolic-sinh,
+.hyperbolic-album:has(input[value=cosh]:checked) .hyperbolic-cosh,
+.hyperbolic-album:has(input[value=tanh]:checked) .hyperbolic-tanh { display: block; }
+
+.graph-album > .scenario-choices { justify-content: center; gap: 6px 18px; margin-top: 14px; }
+.graph-album > .scenario-choices legend { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.graph-album > .scenario-choices span { padding: 5px 9px; border-radius: 0; background: transparent; color: var(--muted); font-size: 13px; }
+.graph-album > .scenario-choices input:checked + span { background: transparent; color: var(--green); box-shadow: inset 0 -2px var(--green); }

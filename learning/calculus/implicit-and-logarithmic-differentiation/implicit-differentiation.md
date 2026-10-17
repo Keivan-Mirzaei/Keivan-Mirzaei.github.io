@@ -34,6 +34,11 @@ exercises:
     options: ['About \(-0.01\)', 'About \(0.01\)', 'About \(-0.16\)', 'Exactly \(-0.01\)']
     correct: 0
     why: 'Differentiating gives \(3x^2+3y^2y^{\prime}=0\). At \((1,2)\), the slope is \(-1/4\), so \(\Delta y\approx(-1/4)(0.04)=-0.01\). This is a local approximation, not an exact finite change.'
+  - text: 'On the curve \(y^3+xy=2\), the point \((1,1)\) has slope \(y^{\prime}=-1/4\). What is \(y^{\prime\prime}\) there?'
+    options: ['\(-1/32\)', '\(1/32\)', '\(0\)', '\(1/4\)']
+    correct: 1
+    why: 'First, \((3y^2+x)y^{\prime}=-y\). Differentiate again: \((3y^2+x)y^{\prime\prime}+(6yy^{\prime}+1)y^{\prime}=-y^{\prime}\). At the point this gives \(4y^{\prime\prime}=1/2-6/16=1/8\), hence \(y^{\prime\prime}=1/32\).'
+
 ---
 
 ## The idea
@@ -75,7 +80,7 @@ The slope depends on *both coordinates*. At $$(1,\sqrt3)$$ it is $$-1/\sqrt3$$; 
 </section>
 
 <div class="topic-widget implicit-widget" id="implicit-explorer">
-<p class="implicit-equation">\(x^2+y^2=4\)</p>
+
 <div class="limits-plot">
 <svg viewBox="0 0 640 420" role="group" aria-labelledby="implicit-title implicit-desc">
 <title id="implicit-title">Move a point around the circle and inspect its tangent</title>
@@ -88,9 +93,10 @@ The slope depends on *both coordinates*. At $$(1,\sqrt3)$$ it is $$-1/\sqrt3$$; 
 <g id="implicit-handle" class="graph-handle" role="slider" tabindex="0" aria-label="Point around the circle" aria-valuemin="0" aria-valuemax="6.283185307179586" aria-valuenow="0.7853981633974483">
 <circle id="implicit-focus" class="graph-focus-ring" r="13" fill="none" stroke="#285b46" stroke-width="1.5"/><circle id="implicit-hit" r="24" fill="transparent"/><circle id="implicit-dot" r="7" fill="#285b46" stroke="#fcfcf9" stroke-width="2"/>
 </g>
-<g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text x="150" y="236" text-anchor="middle">−2</text><text x="490" y="236" text-anchor="middle">2</text><text x="302" y="48" text-anchor="end">2</text><text x="302" y="383" text-anchor="end">−2</text></g>
-<path class="axis-ticks" d="M150 207V213M490 207V213M317 40H323M317 380H323" fill="none" stroke="#9eac96" stroke-width="1"/>
+<g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text x="170" y="236" text-anchor="middle">−2</text><text x="470" y="236" text-anchor="middle">2</text><text x="302" y="65" text-anchor="end">2</text><text x="302" y="365" text-anchor="end">−2</text></g>
+<path class="axis-ticks" d="M170 207V213M470 207V213M317 60H323M317 360H323" fill="none" stroke="#9eac96" stroke-width="1"/>
 </svg>
+<div class="graph-legend implicit-legend"><span><i class="legend-curve" aria-hidden="true"></i>\(x^2+y^2=4\)</span><span><i class="derivative-tangent-key" aria-hidden="true"></i>Tangent</span></div>
 <span class="implicit-axis implicit-axis-x">\(x\)</span><span class="implicit-axis implicit-axis-y">\(y\)</span>
 </div>
 <div class="implicit-readouts widget-readouts"><span>\(x=\) <output id="implicit-x">1.41</output></span><span>\(y=\) <output id="implicit-y">1.41</output></span><span>\(\frac{dy}{dx}=\) <output id="implicit-slope">−1.00</output></span></div>
@@ -130,6 +136,24 @@ Thus
 $$(\cos(y)+x)y^{\prime}=1-y,\qquad y^{\prime}=\frac{1-y}{\cos(y)+x},\qquad \cos(y)+x\ne0.$$
 
 At $$(0,0)$$, the relation holds and the slope is $$1$$. Notice the two different rules: the chain rule supplies $$y^{\prime}$$ in the sine term, while the product rule supplies both terms from $$xy$$.
+
+</section>
+
+## Differentiate again
+
+<section class="worked" markdown="1">
+<p class="element-label">Example 4</p>
+<h3>A second derivative along the curve</h3>
+
+On the circle $$x^2+y^2=4$$, we already found $$x+yy^{\prime}=0$$. The factor $$y^{\prime}$$ is itself a function of $$x$$. Differentiating the product gives
+
+$$1+(y^{\prime})^2+yy^{\prime\prime}=0.$$
+
+For $$y\ne0$$, substitute $$y^{\prime}=-x/y$$:
+
+$$y^{\prime\prime}=-\frac{1+x^2/y^2}{y}=-\frac{x^2+y^2}{y^3}=-\frac4{y^3}.$$
+
+At $$(0,2)$$, $$y^{\prime}=0$$ while $$y^{\prime\prime}=-1/2$$: the tangent is horizontal, but its slope changes as we move along the upper branch. At the vertical tangents, these derivatives with respect to $$x$$ are not finite.
 
 </section>
 

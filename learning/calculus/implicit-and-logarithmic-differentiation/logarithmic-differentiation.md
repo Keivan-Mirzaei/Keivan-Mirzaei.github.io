@@ -41,43 +41,17 @@ Products, quotients, and powers can become easier to differentiate after taking 
 
 The method combines logarithm laws with implicit differentiation.
 
-## The logarithm rule we need
-
 <aside class="prerequisite" markdown="1">
 <p class="element-label">Prerequisite</p>
-<h3>Natural logarithms</h3>
+<h3>The logarithm rule</h3>
 
-The natural logarithm, $$\ln x$$, is the inverse of $$e^x$$, so $$e^{\ln x}=x$$ for $$x>0$$.
-
-For positive $$u,v$$, the logarithm laws are
-
-$$\ln(uv)=\ln u+\ln v,\qquad \ln(u/v)=\ln u-\ln v,\qquad \ln(u^r)=r\ln u.$$
-
-A real logarithm needs a positive argument. A sum inside a logarithm cannot be split by these laws.
-
-</aside>
-
-<section class="theorem" markdown="1">
-<p class="element-label">Rule</p>
-<h3>Derivative of a logarithm</h3>
-
-For differentiable $$u(x)>0$$,
+For differentiable $$u(x)>0$$, the previous exponential and logarithmic lesson established
 
 $$\frac{d}{dx}\ln(u(x))=\frac{u^{\prime}(x)}{u(x)}.$$
 
-<details class="disclosure" markdown="1">
-<summary>Derivation (optional)</summary>
+Use the product, quotient, and power laws of logarithms to rewrite positive factors before differentiating. A sum inside a logarithm stays intact.
 
-The inverse derivative rule and the previously introduced exponential derivative give
-
-$$\frac{d}{dx}\ln x=\frac{1}{e^{\ln x}}=\frac1x,\qquad x>0.$$
-
-Apply the chain rule to the composition $$\ln(u(x))$$:
-
-$$\frac{d}{dx}\ln(u(x))=\frac{1}{u(x)}\cdot u^{\prime}(x).$$
-
-</details>
-</section>
+</aside>
 
 <aside class="definition" markdown="1">
 <p class="element-label">Method</p>

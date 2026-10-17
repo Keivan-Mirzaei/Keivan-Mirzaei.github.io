@@ -2,61 +2,40 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
-
 const source = readFileSync(new URL('../assets/js/learning-hyperbolic.js', import.meta.url), 'utf8');
 function explorer() {
   const elements = new Map();
   const get = id => {
-    if (!elements.has(id)) elements.set(id, {
-      value: '', textContent: '', dataset: {}, style: {}, attrs: {}, handlers: {}, captured: null,
-      setAttribute(name, value) { this.attrs[name] = value; },
-      removeAttribute(name) { delete this.attrs[name]; },
-      addEventListener(name, handler) { this.handlers[name] = handler; },
-      setPointerCapture(id) { this.captured = id; },
-      hasPointerCapture(id) { return this.captured === id; },
-      releasePointerCapture() { this.captured = null; }, focus() {},
+    if (!elements.has(id)) elements.set(id, { value: '', attrs: {}, handlers: {}, captured: null,
+      setAttribute(k, v) { this.attrs[k] = v; }, removeAttribute(k) { delete this.attrs[k]; },
+      addEventListener(k, fn) { this.handlers[k] = fn; }, focus() {},
+      setPointerCapture(id) { this.captured = id; }, hasPointerCapture(id) { return this.captured === id; }, releasePointerCapture() { this.captured = null; },
     });
     return elements.get(id);
   };
-  const svg = get('svg');
-  svg.getScreenCTM = () => ({ inverse: () => ({}) });
-  svg.createSVGPoint = () => ({ x: 0, y: 0, matrixTransform() { return { x: (this.x - 10) * 2 }; } });
-  const radios = ['sinh', 'cosh', 'tanh'].map(name => { const radio = get(name); radio.value = name; return radio; });
-  vm.runInNewContext(source, { document: { getElementById: get, querySelector: () => svg, querySelectorAll: () => radios } });
-  return { get, event: (clientX, pointerId = 1) => ({ clientY: 100, clientX, pointerId, button: 0, preventDefault() {} }) };
+  const svg = get('svg'); svg.getScreenCTM = () => ({ inverse: () => ({}) });
+  svg.createSVGPoint = () => ({ x: 0, y: 0, matrixTransform() { return { y: (this.y - 10) * 2 }; } });
+  vm.runInNewContext(source, { document: { getElementById: get, querySelector: () => svg } });
+  return { get: id => get(`hyperbolic-${id}`), event: (clientY, pointerId = 1) => ({ clientX: 100, clientY, pointerId, button: 0, preventDefault() {} }) };
 }
-
-test('switching functions keeps the input but changes the value and derivative together', () => {
-  const { get } = explorer();
-  const handle = get('hyperbolic-handle');
-  for (let i = 0; i < 15; i++) handle.handlers.keydown({ key: 'ArrowLeft', preventDefault() {} });
-  assert.equal(get('hyperbolic-x').value, '0.00');
-  assert.equal(get('hyperbolic-value').value, '1.00');
-  assert.equal(get('hyperbolic-slope').value, '0.00');
-  const select = name => { const radio = get(name); radio.checked = true; radio.handlers.change(); };
-  select('sinh');
-  assert.equal(get('hyperbolic-value').value, '0.00');
-  assert.equal(get('hyperbolic-slope').value, '1.00');
-  select('tanh');
-  handle.handlers.keydown({ key: 'End', preventDefault() {} });
-  assert.equal(get('hyperbolic-value').value, '0.96');
-  assert.equal(get('hyperbolic-slope').value, '0.07');
-  handle.handlers.keydown({ key: 'ArrowRight', preventDefault() {} });
-  assert.equal(get('hyperbolic-x').value, '2.00');
-  handle.handlers.keydown({ key: 'Home', preventDefault() {} });
-  assert.equal(get('hyperbolic-value').value, '-0.96');
-  assert.equal(get('hyperbolic-slope').value, '0.07');
+test('the coordinates trace the right branch of the unit hyperbola', () => {
+  const { get } = explorer(), key = key => get('handle').handlers.keydown({ key, preventDefault() {} });
+  assert.equal(get('x').value, '1.29'); assert.equal(get('y').value, '0.82');
+  key('Home'); const X = get('dot').attrs.cx, lower = get('dot').attrs.cy;
+  key('End'); assert.equal(get('dot').attrs.cx, X); assert.ok(Math.abs(lower + get('dot').attrs.cy - 400) < 1e-9);
+  for (let i = 0; i < 32; i++) key('ArrowLeft');
+  assert.equal(get('t').value, '0.00'); assert.equal(get('x').value, '1.00'); assert.equal(get('y').value, '0.00');
+  const curve = get('curve').attrs.d.match(/-?\d+(?:\.\d+)?/g).map(Number);
+  for (let i = 0; i < curve.length; i += 2) {
+    const x = (curve[i] - 100) / 70, y = (200 - curve[i + 1]) / 70;
+    assert.ok(x >= 1); assert.ok(Math.abs(x * x - y * y - 1) < .0001);
+  }
 });
-
-test('direct dragging respects scale, pointer identity, and cancellation', () => {
-  const { get, event } = explorer();
-  const handle = get('hyperbolic-handle');
-  handle.handlers.pointerdown(event(215));
-  handle.handlers.pointermove(event(170, 2));
-  assert.equal(get('hyperbolic-x').value, '0.75');
-  handle.handlers.pointermove(event(170));
-  assert.equal(get('hyperbolic-x').value, '0.00');
-  handle.handlers.pointercancel(event(170));
-  handle.handlers.pointermove(event(200));
-  assert.equal(get('hyperbolic-x').value, '0.00');
+test('vertical dragging converts the branch height back to its parameter', () => {
+  const { get, event } = explorer(), handle = get('handle');
+  const initialY = (200 - 70 * Math.sinh(.75)) / 2 + 10;
+  handle.handlers.pointerdown(event(initialY));
+  handle.handlers.pointermove(event(110, 2)); assert.equal(get('t').value, '0.75');
+  handle.handlers.pointermove(event(110)); assert.equal(get('t').value, '0.00');
+  handle.handlers.pointercancel(event(110)); handle.handlers.pointermove(event(90)); assert.equal(get('t').value, '0.00');
 });

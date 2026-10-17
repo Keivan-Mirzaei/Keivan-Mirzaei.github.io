@@ -40,6 +40,13 @@ exercises:
 
 An **inverse function** reverses a function: if $$f(a)=b$$, then $$f^{-1}(b)=a$$. It can do this only when each output identifies one input—a **one-to-one** function, possibly after restricting its domain.
 
+<aside class="prerequisite" markdown="1">
+<p class="element-label">Prerequisite</p>
+
+The notation $$f^{-1}$$ means the inverse function, not the reciprocal $$1/f$$. To reverse a function with repeated outputs, first restrict it to a one-to-one branch.
+
+</aside>
+
 Swapping the coordinates reflects a graph across $$y=x$$. A nonzero tangent slope becomes its reciprocal, because the horizontal and vertical changes exchange roles. <mark>Use the slope at the corresponding original input, not at the same numerical input.</mark>
 
 <section class="theorem" markdown="1">
@@ -52,7 +59,9 @@ $$\bigl(f^{-1}\bigr)^{\prime}(b)=\frac{1}{f^{\prime}(a)}=\frac{1}{f^{\prime}(f^{
 
 </section>
 
-**Strictly monotone** means always increasing or always decreasing on the interval; this ensures that the function is one-to-one. The nonzero derivative condition lets us take the reciprocal.
+**Strictly monotone** means $$f(x_1)<f(x_2)$$ whenever $$x_1<x_2$$, or the reverse inequality throughout the interval; this ensures that the function is one-to-one. The nonzero derivative condition lets us take the reciprocal.
+
+For the widget, use $$f(x)=x^2$$ on $$x\ge0$$ and $$f^{-1}(x)=\sqrt{x}$$. The small right triangles lie on the *tangent lines*: reflection swaps their horizontal and vertical changes. These are not secant triangles between two points of the curves.
 
 <div class="topic-widget inverse-widget" id="inverse-explorer">
 <div class="limits-plot">
@@ -62,24 +71,25 @@ $$\bigl(f^{-1}\bigr)^{\prime}(b)=\frac{1}{f^{\prime}(a)}=\frac{1}{f^{\prime}(f^{
 <defs><clipPath id="inverse-clip"><rect x="125" y="25" width="370" height="370"/></clipPath></defs>
 <path d="M125 390H515M130 395V20" fill="none" stroke="#c9d1c6"/>
 <path d="M130 390L490 30" fill="none" stroke="#c4cebf" stroke-dasharray="4 5"/>
-<path id="inverse-pair-guide" fill="none" stroke="#c4cebf" stroke-dasharray="3 5"/>
 <path id="inverse-original-curve" fill="none" stroke="#285b46" stroke-width="2.6"/>
 <path id="inverse-inverse-curve" fill="none" stroke="#a67936" stroke-width="2.6"/>
-<g clip-path="url(#inverse-clip)"><path id="inverse-original-tangent" fill="none" stroke="#285b46" stroke-width="2"/><path id="inverse-inverse-tangent" fill="none" stroke="#a67936" stroke-width="2"/></g>
-<g id="inverse-original-handle" class="graph-handle" role="slider" tabindex="0" aria-label="Original curve input" aria-orientation="horizontal" aria-valuemin="0.5" aria-valuemax="2" aria-valuenow="1.3">
+<g clip-path="url(#inverse-clip)"><path id="inverse-original-triangle" fill="none" stroke="#93a18c" stroke-width="1.5" stroke-dasharray="3 4"/><path id="inverse-inverse-triangle" fill="none" stroke="#93a18c" stroke-width="1.5" stroke-dasharray="3 4"/><path id="inverse-original-tangent" fill="none" stroke="#285b46" stroke-width="2"/><path id="inverse-inverse-tangent" fill="none" stroke="#a67936" stroke-width="2"/></g>
+<g id="inverse-original-handle" class="graph-handle" role="slider" tabindex="0" aria-label="Original curve input" aria-orientation="horizontal" aria-valuemin="0.25" aria-valuemax="2" aria-valuenow="1.3">
 <circle id="inverse-original-focus" class="graph-focus-ring" r="13" fill="none" stroke="#285b46" stroke-width="1.5"/><circle id="inverse-original-hit" r="22" fill="transparent"/><circle id="inverse-original-dot" r="7" fill="#285b46" stroke="#fcfcf9" stroke-width="2"/>
 </g>
-<g id="inverse-inverse-handle" class="graph-handle" role="slider" tabindex="0" aria-label="Inverse curve input" aria-orientation="horizontal" aria-valuemin="0.25" aria-valuemax="4" aria-valuenow="1.69">
+<g id="inverse-inverse-handle" class="graph-handle" role="slider" tabindex="0" aria-label="Inverse curve input" aria-orientation="horizontal" aria-valuemin="0.0625" aria-valuemax="4" aria-valuenow="1.69">
 <circle id="inverse-inverse-focus" class="graph-focus-ring" r="13" fill="none" stroke="#a67936" stroke-width="1.5"/><circle id="inverse-inverse-hit" r="22" fill="transparent"/><circle id="inverse-inverse-dot" r="7" fill="#a67936" stroke="#fcfcf9" stroke-width="2"/>
 </g>
 <g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text x="220" y="416" text-anchor="middle">1</text><text x="310" y="416" text-anchor="middle">2</text><text x="400" y="416" text-anchor="middle">3</text><text x="490" y="416" text-anchor="middle">4</text><text x="112" y="305" text-anchor="end">1</text><text x="112" y="215" text-anchor="end">2</text><text x="112" y="125" text-anchor="end">3</text><text x="112" y="35" text-anchor="end">4</text></g>
 <path class="axis-ticks" d="M220 387V393M310 387V393M400 387V393M490 387V393M127 300H133M127 210H133M127 120H133M127 30H133" fill="none" stroke="#9eac96" stroke-width="1"/>
 </svg>
-<span class="inverse-axis inverse-axis-x">\(x\)</span><span class="inverse-axis inverse-axis-y">\(y\)</span><span class="inverse-axis inverse-mirror">\(y=x\)</span>
+<div class="graph-legend inverse-legend"><span><i class="legend-curve" aria-hidden="true"></i>\(f(x)=x^2\)</span><span><i class="inverse-key" aria-hidden="true"></i>\(f^{-1}(x)=\sqrt{x}\)</span><span><i class="inverse-mirror-key" aria-hidden="true"></i>\(y=x\)</span></div>
+<span class="inverse-axis inverse-axis-x">\(x\)</span><span class="inverse-axis inverse-axis-y">\(y\)</span>
 </div>
-<div class="inverse-legend"><span>\(f(x)=x^2,\quad x\ge0\)</span><span>\(f^{-1}(x)=\sqrt{x}\)</span></div>
-<div class="inverse-readouts widget-readouts"><span>\(a=\) <output id="inverse-a">1.30</output></span><span>\(f^{\prime}(a)=\) <output id="inverse-slope">2.60</output></span><span>\((f^{-1})^{\prime}(a^2)=\) <output id="inverse-reciprocal">0.38</output></span></div>
-<p class="widget-instruction">Drag either point. The dotted connector joins \((a,a^2)\) to \((a^2,a)\); the tangents reflect across the dashed line and their slopes multiply to \(1\).</p>
+
+<div class="inverse-readouts widget-readouts"><span>\((a,b)=(\)<output id="inverse-a">1.30</output>, <output id="inverse-b">1.69</output>\()\)</span><span>\((b,a)=(\)<output id="inverse-b-copy">1.69</output>, <output id="inverse-a-copy">1.30</output>\()\)</span></div>
+<div class="widget-readouts"><span>\(f^{\prime}(a)=\frac{\Delta y}{\Delta x}=\)<output id="inverse-slope">2.60</output></span><span>\((f^{-1})^{\prime}(b)=\frac{\Delta x}{\Delta y}=\)<output id="inverse-reciprocal">0.38</output></span></div>
+<p class="widget-instruction">Drag either point. The tangent triangles reflect across \(y=x\): the rise becomes the run. Try a point near the origin, then move away—the steeper tangent swaps sides. The slopes multiply to \(1\).</p>
 </div>
 
 <section class="worked" markdown="1">

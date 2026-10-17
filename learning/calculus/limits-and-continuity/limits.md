@@ -158,12 +158,8 @@ The one-sided limits disagree, so *the two-sided limit does not exist*. The fact
 
 For a finite limit, the graph must settle toward one height. A disagreement between sides is only one way this can fail: even a single side may never settle.
 
-<div class="limit-album topic-widget">
-<fieldset class="scenario-choices"><legend>Choose a scenario</legend>
-<label><input type="radio" name="limit-scenario" value="jump" checked><span>A jump</span></label>
-<label><input type="radio" name="limit-scenario" value="unbounded"><span>Unbounded growth</span></label>
-<label><input type="radio" name="limit-scenario" value="oscillation"><span>Oscillation</span></label>
-</fieldset>
+<div class="limit-album graph-album topic-widget">
+
 <div class="scenario-panel scenario-jump">
 <figure class="topic-figure"><img src="{{ '/assets/figures/learning/limits-jump.svg' | relative_url }}" alt="Different approached heights on the two sides of zero." width="640" height="360"><figcaption>For \(g(x)=1\) when \(x<0\) and \(g(x)=3\) otherwise, the two sides approach different heights. The two-sided limit does not exist.</figcaption></figure>
 </div>
@@ -173,6 +169,11 @@ For a finite limit, the graph must settle toward one height. A disagreement betw
 <div class="scenario-panel scenario-oscillation">
 <figure class="topic-figure"><img src="{{ '/assets/figures/learning/limits-oscillation.svg' | relative_url }}" alt="Sine of one over x oscillates between minus one and one on both sides of zero." width="640" height="360"><figcaption>For \(f(x)=\sin(1/x)\), inputs approaching zero from either side still give the full oscillation between \(-1\) and \(1\). Even a one-sided limit does not exist.</figcaption></figure>
 </div>
+<fieldset class="scenario-choices"><legend>Choose a scenario</legend>
+<label><input type="radio" name="limit-scenario" value="jump" checked><span>A jump</span></label>
+<label><input type="radio" name="limit-scenario" value="unbounded"><span>Unbounded growth</span></label>
+<label><input type="radio" name="limit-scenario" value="oscillation"><span>Oscillation</span></label>
+</fieldset>
 </div>
 
 <aside class="note"><p class="element-label">Note</p><p>Graphs suggest a pattern; an algebraic or logical argument establishes the limit. A missing function value alone does not prevent a limit.</p></aside>

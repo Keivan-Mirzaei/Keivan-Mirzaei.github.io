@@ -40,6 +40,18 @@ exercises:
 
 Sine rises, flattens, falls, and repeats. Its tangent slope follows the same repeating pattern as cosine. The paired graphs below connect a function’s height with its rate of change.
 
+<aside class="prerequisite" markdown="1">
+<p class="element-label">Prerequisite</p>
+<h3>Angle addition</h3>
+
+$$\sin(x+h)=\sin x\cos h+\cos x\sin h,$$
+
+$$\cos(x+h)=\cos x\cos h-\sin x\sin h.$$
+
+Also, $$\sin^2x+\cos^2x=1$$. These identities connect the difference quotients to the trigonometric limits from the limits module.
+
+</aside>
+
 <section class="theorem" markdown="1">
 <p class="element-label">Rules</p>
 <h3>Sine and cosine</h3>
@@ -48,6 +60,33 @@ $$\frac{d}{dx}\sin x=\cos x,\qquad \frac{d}{dx}\cos x=-\sin x.$$
 
 Both rules hold for every real input, with the angle in *radians*.
 
+<details class="disclosure" markdown="1">
+<summary>Derivations (optional)</summary>
+
+Use the angle-addition identities and the earlier limits
+
+$$\lim_{h\to0}\frac{\sin h}{h}=1,\qquad
+\lim_{h\to0}\frac{\cos h-1}{h}=0.$$
+
+The second follows from $$\frac{\cos h-1}{h}=-h\frac{1-\cos h}{h^2}$$ and the previously established cosine limit. Then
+
+$$\begin{aligned}
+\frac{d}{dx}\sin x
+&=\lim_{h\to0}\frac{\sin(x+h)-\sin x}{h}\\
+&=\lim_{h\to0}\left[\sin x\frac{\cos h-1}{h}+\cos x\frac{\sin h}{h}\right]\\
+&=\sin x\cdot0+\cos x\cdot1=\cos x.
+\end{aligned}$$
+
+Similarly,
+
+$$\begin{aligned}
+\frac{d}{dx}\cos x
+&=\lim_{h\to0}\frac{\cos(x+h)-\cos x}{h}\\
+&=\lim_{h\to0}\left[\cos x\frac{\cos h-1}{h}-\sin x\frac{\sin h}{h}\right]\\
+&=\cos x\cdot0-\sin x\cdot1=-\sin x.
+\end{aligned}$$
+
+</details>
 </section>
 
 <div class="topic-widget trig-widget" id="trig-explorer">
@@ -72,7 +111,7 @@ Both rules hold for every real input, with the angle in *radians*.
 <g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" text-anchor="end"><text x="53" y="75">1</text><text x="53" y="185">−1</text><text x="53" y="280">1</text><text x="53" y="390">−1</text></g>
 <path class="axis-ticks" d="M70 122V128M70 327V333M320 122V128M320 327V333M570 122V128M570 327V333M67 70H73M67 180H73M67 275H73M67 385H73" fill="none" stroke="#9eac96" stroke-width="1"/>
 </svg>
-<span class="trig-label trig-sine-title">\(f(x)=\sin x\)</span><span class="trig-label trig-cosine-title">\(f^{\prime}(x)=\cos x\)</span>
+<div class="graph-legend trig-sine-legend"><i class="legend-curve" aria-hidden="true"></i>\(f(x)=\sin x\)</div><div class="graph-legend trig-cosine-legend"><i class="derivative-tangent-key" aria-hidden="true"></i>\(f^{\prime}(x)=\cos x\)</div>
 <span class="trig-label trig-zero trig-upper">\(0\)</span><span class="trig-label trig-pi trig-upper">\(\pi\)</span><span class="trig-label trig-two-pi trig-upper">\(2\pi\)</span><span class="trig-label trig-x trig-upper">\(x\)</span>
 <span class="trig-label trig-zero trig-lower">\(0\)</span><span class="trig-label trig-pi trig-lower">\(\pi\)</span><span class="trig-label trig-two-pi trig-lower">\(2\pi\)</span><span class="trig-label trig-x trig-lower">\(x\)</span>
 </div>
@@ -84,7 +123,14 @@ At $$x=\pi/2$$, sine is at a crest and its slope is $$0$$. At $$x=\pi$$, it cros
 
 ## The other four functions
 
-Recall $$\tan x=\sin x/\cos x$$, $$\cot x=\cos x/\sin x$$, $$\sec x=1/\cos x$$, and $$\csc x=1/\sin x$$. Their derivatives follow from the quotient rule.
+<aside class="prerequisite" markdown="1">
+<p class="element-label">Prerequisite</p>
+
+$$\tan x=\frac{\sin x}{\cos x},\quad\cot x=\frac{\cos x}{\sin x},\quad\sec x=\frac1{\cos x},\quad\csc x=\frac1{\sin x}.$$
+
+</aside>
+
+Their derivatives follow from the quotient rule.
 
 <section class="theorem" markdown="1">
 <p class="element-label">Rules</p>

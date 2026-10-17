@@ -14,7 +14,7 @@
   let a = 1.3;
   let drag = null;
   function update(next) {
-    a = Math.round(Math.max(0.5, Math.min(2, next)) * 100) / 100;
+    a = Math.round(Math.max(0.25, Math.min(2, next)) * 100) / 100;
     for (const key of keys) {
       const x = key === 'original' ? a : a * a;
       const y = key === 'original' ? a * a : a;
@@ -24,14 +24,21 @@
         circle.setAttribute('cx', screenX(x));
         circle.setAttribute('cy', screenY(y));
       }
-      const halfRun = 0.65 / Math.hypot(1, slope);
+      const originalRun = Math.min(.65 / Math.hypot(1, 2 * a), .45 * a, .9 * (4.05 - a * a) / (2 * a));
+      const halfRun = key === 'original' ? originalRun : 2 * a * originalRun;
       document.getElementById(`inverse-${key}-tangent`).setAttribute('d', `M${screenX(x - halfRun)} ${screenY(y - slope * halfRun)}L${screenX(x + halfRun)} ${screenY(y + slope * halfRun)}`);
+      const leftX = screenX(x - halfRun), leftY = screenY(y - slope * halfRun);
+      const rightX = screenX(x + halfRun), rightY = screenY(y + slope * halfRun);
+      const triangle = key === 'original' ? `M${leftX} ${leftY}H${rightX}V${rightY}` : `M${leftX} ${leftY}V${rightY}H${rightX}`;
+      document.getElementById(`inverse-${key}-triangle`).setAttribute('d', triangle);
       const handle = document.getElementById(`inverse-${key}-handle`);
       handle.setAttribute('aria-valuenow', x);
       handle.setAttribute('aria-valuetext', `Input ${x.toFixed(2)}; output ${y.toFixed(2)}; slope ${slope.toFixed(2)}`);
     }
-    document.getElementById('inverse-pair-guide').setAttribute('d', `M${screenX(a)} ${screenY(a * a)}L${screenX(a * a)} ${screenY(a)}`);
     document.getElementById('inverse-a').value = a.toFixed(2);
+    document.getElementById('inverse-b').value = (a * a).toFixed(2);
+    document.getElementById('inverse-b-copy').value = (a * a).toFixed(2);
+    document.getElementById('inverse-a-copy').value = a.toFixed(2);
     document.getElementById('inverse-slope').value = (2 * a).toFixed(2);
     document.getElementById('inverse-reciprocal').value = (1 / (2 * a)).toFixed(2);
   }
@@ -66,7 +73,7 @@
     for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) handle.addEventListener(name, release);
     handle.addEventListener('keydown', event => {
       const current = key === 'original' ? a : a * a;
-      const next = { ArrowLeft: current - 0.05, ArrowDown: current - 0.05, ArrowRight: current + 0.05, ArrowUp: current + 0.05, Home: key === 'original' ? 0.5 : 0.25, End: key === 'original' ? 2 : 4 };
+      const next = { ArrowLeft: current - 0.05, ArrowDown: current - 0.05, ArrowRight: current + 0.05, ArrowUp: current + 0.05, Home: key === 'original' ? 0.25 : 0.0625, End: key === 'original' ? 2 : 4 };
       if (!(event.key in next)) return;
       event.preventDefault();
       update(key === 'original' ? next[event.key] : Math.sqrt(Math.max(0, next[event.key])));
