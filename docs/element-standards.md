@@ -24,16 +24,16 @@ Use barely-there axes (style A), giving each numbered axis value a fine tick and
 
 Use one identifying mark per exploration or puzzle. Depict its distinctive mathematical object, formula, or playable configuration; omit decorative labels and unnecessary detail. Use the site's paper, ink, and green palette, matching typography and fine lines. SVGs should be self-contained and legible at their displayed size. Exploration and puzzle thumbnails use a `440 × 410` canvas.
 
-Problems reuse the four marks in `_data/problem_logos.json`:
+Problems reuse the four difficulty levels in `_data/problem_logos.json`:
 
-| Internal `difficulty` | Shared artwork |
-| --- | --- |
-| 1 | One diamond-shaped loop |
-| 2 | Two overlapping angular loops |
-| 3 | Three overlapping angular loops |
-| 4 | Four overlapping angular loops |
+| Internal `difficulty` | Large artwork | Small artwork |
+| --- | --- | --- |
+| 1 | Circle | Triangle |
+| 2 | Three-lobed woven knot | Square |
+| 3 | Five-lobed woven knot | Pentagon |
+| 4 | Seven-lobed woven knot | Hexagon |
 
-Choose for the expected reader's reasoning difficulty, not just length. Course Problems cards show an 18-pixel angular mark beside the problem number, with an accessible Easy, Medium, Hard, or Expert label. Order a set by the reasoning required, reserving Expert for substantially deeper investigations. Standalone problem posts show neutral shape descriptions, without ratings, difficulty attributes, or decoding tooltips. The About page explains the progression. Do not give each problem a separate image.
+Choose for the expected reader's reasoning difficulty, not just length. Use `image` for large artwork and `small_image` for small controls. Course Problems cards show an 18-pixel polygon outline beside the problem number, with an accessible Easy, Medium, Hard, or Expert label. Order a set by the reasoning required, reserving Expert for substantially deeper investigations. Standalone problem posts show neutral shape descriptions, without ratings, difficulty attributes, or decoding tooltips. The About page explains the progression. Do not give each problem a separate image.
 
 Explorations put `image` and `image_alt` in front matter; puzzles put them in `_data/puzzles.yml`. `_includes/content-logo.html` renders marks consistently in headings and lists. Repeated marks beside a title are decorative (`alt="" aria-hidden="true"`); an informative image needs a useful description. Preserve existing image paths when changing the artwork.
 

@@ -1,22 +1,22 @@
 {
   "1": {
     "image": "/assets/images/problem-logos/circle.svg",
-    "image_alt": "A green diamond-shaped loop.",
-    "loops": 1
+    "image_alt": "A green circle.",
+    "small_image": "/assets/images/problem-logos/triangle.svg"
   },
   "2": {
     "image": "/assets/images/problem-logos/woven-3.svg",
-    "image_alt": "2 overlapping green angular loops.",
-    "loops": 2
+    "image_alt": "A green loop woven into a three-lobed knot.",
+    "small_image": "/assets/images/problem-logos/square.svg"
   },
   "3": {
     "image": "/assets/images/problem-logos/woven-5.svg",
-    "image_alt": "3 overlapping green angular loops.",
-    "loops": 3
+    "image_alt": "A green loop woven into a five-lobed knot.",
+    "small_image": "/assets/images/problem-logos/pentagon.svg"
   },
   "4": {
     "image": "/assets/images/problem-logos/woven-7.svg",
-    "image_alt": "4 overlapping green angular loops.",
-    "loops": 4
+    "image_alt": "A green loop woven into a seven-lobed knot.",
+    "small_image": "/assets/images/problem-logos/hexagon.svg"
   }
 }

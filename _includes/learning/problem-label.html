@@ -6,4 +6,4 @@
   {%- when '3' -%}{%- assign difficulty_name = 'Hard' -%}
   {%- when '4' -%}{%- assign difficulty_name = 'Expert' -%}
 {%- endcase -%}
-<p class="element-label problem-difficulty-label">Problem {{ include.number }}<img src="{{ difficulty_logo.image | relative_url }}" alt="{{ difficulty_name }}" width="18" height="18" title="{{ difficulty_name }}"></p>
+<p class="element-label problem-difficulty-label">Problem {{ include.number }}<img src="{{ difficulty_logo.small_image | default: difficulty_logo.image | relative_url }}" alt="{{ difficulty_name }}" width="18" height="18" title="{{ difficulty_name }}"></p>
