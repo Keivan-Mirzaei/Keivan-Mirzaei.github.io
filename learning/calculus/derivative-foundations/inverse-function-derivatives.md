@@ -71,8 +71,8 @@ For the widget, use $$f(x)=x^2$$ on $$x\ge0$$ and $$f^{-1}(x)=\sqrt{x}$$. A near
 <defs><clipPath id="inverse-clip"><rect x="125" y="25" width="370" height="370"/></clipPath></defs>
 <path d="M125 390H515M130 395V20" fill="none" stroke="#c9d1c6"/>
 <path d="M130 390L490 30" fill="none" stroke="#c4cebf" stroke-dasharray="4 5"/>
-<path id="inverse-original-curve" fill="none" stroke="#285b46" stroke-width="2.6" stroke-opacity="0.75"/>
-<path id="inverse-inverse-curve" fill="none" stroke="#a67936" stroke-width="2.6" stroke-opacity="0.75"/>
+<path id="inverse-original-curve" fill="none" stroke="#285b46" stroke-width="2.6" stroke-opacity="0.5"/>
+<path id="inverse-inverse-curve" fill="none" stroke="#a67936" stroke-width="2.6" stroke-opacity="0.5"/>
 <g clip-path="url(#inverse-clip)"><circle id="inverse-original-nearby" r="3" fill="#285b46"/><circle id="inverse-inverse-nearby" r="3" fill="#a67936"/><path id="inverse-original-triangle" fill="none" stroke="#93a18c" stroke-width="1.5" stroke-dasharray="3 4"/><path id="inverse-inverse-triangle" fill="none" stroke="#93a18c" stroke-width="1.5" stroke-dasharray="3 4"/><path id="inverse-original-tangent" fill="none" stroke="#285b46" stroke-width="2"/><path id="inverse-inverse-tangent" fill="none" stroke="#a67936" stroke-width="2"/></g>
 <g id="inverse-original-handle" class="graph-handle" role="slider" tabindex="0" aria-label="Original curve input" aria-orientation="horizontal" aria-valuemin="0.25" aria-valuemax="2" aria-valuenow="1.3">
 <circle id="inverse-original-focus" class="graph-focus-ring" r="13" fill="none" stroke="#285b46" stroke-width="1.5"/><circle id="inverse-original-hit" r="22" fill="transparent"/><circle id="inverse-original-dot" r="7" fill="#285b46" stroke="#fcfcf9" stroke-width="2"/>

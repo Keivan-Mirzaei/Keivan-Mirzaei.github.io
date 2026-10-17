@@ -87,7 +87,7 @@ The slope depends on *both coordinates*. At $$(1,\sqrt3)$$ it is $$-1/\sqrt3$$; 
 <desc id="implicit-desc">Drag the point around the whole circle. The tangent can be horizontal, sloping, or vertical. The derivative with respect to x is undefined at the two vertical tangents.</desc>
 <defs><clipPath id="implicit-clip"><rect x="90" y="20" width="460" height="380"/></clipPath></defs>
 <path d="M90 210H550M320 395V20" fill="none" stroke="#c9d1c6"/>
-<circle cx="320" cy="210" r="150" fill="none" stroke="#285b46" stroke-width="2.6"/>
+<circle cx="320" cy="210" r="150" fill="none" stroke="#285b46" stroke-width="2.6" stroke-opacity="0.5"/>
 <path id="implicit-guide" fill="none" stroke="#c4cebf" stroke-dasharray="3 5"/>
 <path id="implicit-tangent" fill="none" stroke="#a67936" stroke-width="2" clip-path="url(#implicit-clip)"/>
 <g id="implicit-handle" class="graph-handle" role="slider" tabindex="0" aria-label="Point around the circle" aria-valuemin="0" aria-valuemax="6.283185307179586" aria-valuenow="0.7853981633974483">
