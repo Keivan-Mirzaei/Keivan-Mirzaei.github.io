@@ -28,12 +28,12 @@ Problems reuse the four marks in `_data/problem_logos.json`:
 
 | Internal `difficulty` | Shared artwork |
 | --- | --- |
-| 1 | Circle |
-| 2 | Woven loop with three crossings |
-| 3 | Woven loop with five crossings |
-| 4 | Woven loop with seven crossings |
+| 1 | One diamond-shaped loop |
+| 2 | Two overlapping angular loops |
+| 3 | Three overlapping angular loops |
+| 4 | Four overlapping angular loops |
 
-Choose for the expected reader's reasoning difficulty, not just length. Individual problems show neutral shape descriptions, without ratings, difficulty attributes, or decoding tooltips. The About page explains the progression. Do not give each problem a separate image.
+Choose for the expected reader's reasoning difficulty, not just length. Course Problems cards show an 18-pixel angular mark beside the problem number, with an accessible Easy, Medium, Hard, or Expert label. Order a set by the reasoning required, reserving Expert for substantially deeper investigations. Standalone problem posts show neutral shape descriptions, without ratings, difficulty attributes, or decoding tooltips. The About page explains the progression. Do not give each problem a separate image.
 
 Explorations put `image` and `image_alt` in front matter; puzzles put them in `_data/puzzles.yml`. `_includes/content-logo.html` renders marks consistently in headings and lists. Repeated marks beside a title are decorative (`alt="" aria-hidden="true"`); an informative image needs a useful description. Preserve existing image paths when changing the artwork.
 

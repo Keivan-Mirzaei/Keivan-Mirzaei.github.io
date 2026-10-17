@@ -24,3 +24,8 @@
 .problem-status-options button { display: block; width: 100%; text-align: left; padding: 11px 12px; color: var(--muted); font-size: 12px; border-radius: 3px; }
 .problem-status-options [aria-pressed=true] { background: #e9eee4; }
 @media(max-width:600px) { .topic-wrap .problem-card { padding: 20px; } .problem-card-header { flex-wrap: wrap; gap: 8px; } .problem-status-menu { margin-left: auto; } }
+
+.topic-wrap .element-label.problem-difficulty-label { display: inline-flex; align-items: center; gap: 8px; }
+.problem-difficulty-label img { display: block; width: 18px; height: 18px; filter: drop-shadow(.25px 0 0 #285b46) drop-shadow(-.25px 0 0 #285b46); }
+
+.lamp-sketch .diagram-label { position: absolute; transform: translate(-50%, -50%); font-size: 14px; }

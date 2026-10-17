@@ -517,7 +517,7 @@ These open intervals do not overlap, so the cuts are distinct. This argument est
 ## Challenges
 
 <section class="worked" data-problem-id="two-radicals-one-cancellation" markdown="1">
-<p class="element-label">Problem 15 · Challenge</p>
+{% include learning/problem-label.html number=15 difficulty=4 %}
 
 Evaluate
 
@@ -560,7 +560,7 @@ $$\begin{aligned}
 </section>
 
 <section class="worked" data-problem-id="two-points-half-an-interval-apart" markdown="1">
-<p class="element-label">Problem 16 · Challenge</p>
+{% include learning/problem-label.html number=16 difficulty=4 %}
 
 Suppose $$f$$ is continuous on $$[0,1]$$ and $$f(0)=f(1)$$. Prove that there is some $$c\in[0,1/2]$$ such that
 

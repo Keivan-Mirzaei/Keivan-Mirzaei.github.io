@@ -1,0 +1,9 @@
+{%- assign difficulty_key = include.difficulty | append: '' -%}
+{%- assign difficulty_logo = site.data.problem_logos[difficulty_key] -%}
+{%- case difficulty_key -%}
+  {%- when '1' -%}{%- assign difficulty_name = 'Easy' -%}
+  {%- when '2' -%}{%- assign difficulty_name = 'Medium' -%}
+  {%- when '3' -%}{%- assign difficulty_name = 'Hard' -%}
+  {%- when '4' -%}{%- assign difficulty_name = 'Expert' -%}
+{%- endcase -%}
+<p class="element-label problem-difficulty-label">Problem {{ include.number }}<img src="{{ difficulty_logo.image | relative_url }}" alt="{{ difficulty_name }}" width="18" height="18" title="{{ difficulty_name }}"></p>

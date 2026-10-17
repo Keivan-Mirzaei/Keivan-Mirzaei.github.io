@@ -374,9 +374,9 @@ These measurements alone do not fix the exact derivative, even among polynomials
 </section>
 
 <section class="worked" data-problem-id="challenge-all-common-tangents" markdown="1">
-<p class="element-label">Problem 13</p>
+{% include learning/problem-label.html number=13 difficulty=4 %}
 
-**Challenge.** Find every line tangent to the graph of $$f(x)=x^4-2x^2$$ at two distinct points. Give the line and both points of tangency, and prove that your list is complete.
+Find every line tangent to the graph of $$f(x)=x^4-2x^2$$ at two distinct points. Give the line and both points of tangency, and prove that your list is complete.
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
@@ -418,9 +418,9 @@ This contradicts distinctness. Hence there are no other common tangents. Symmetr
 </section>
 
 <section class="worked" data-problem-id="challenge-minimum-degree-camera-motion" markdown="1">
-<p class="element-label">Problem 14</p>
+{% include learning/problem-label.html number=14 difficulty=4 %}
 
-**Challenge.** Design a polynomial position model $$p(t)$$ for a camera slider, measured in metres, during $$0\le t\le1$$ second. It must satisfy
+Design a polynomial position model $$p(t)$$ for a camera slider, measured in metres, during $$0\le t\le1$$ second. It must satisfy
 
 $$\begin{aligned}
 p(0)&=0,&p(1)&=1,\\
