@@ -1,36 +1,23 @@
 ---
-layout: null
+layout: default
 ---
 {% assign learning_course = site.data.learning_courses[page.course_key] %}
 {% assign learning_module = learning_course.modules | where: 'slug', page.module_key | first %}
-<!doctype html>
-<html lang="{{ site.lang | default: 'en' }}">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{{ page.title | escape }} · {{ site.title | escape }}</title>
-  <link rel="stylesheet" href="{{ '/assets/css/learning.css' | relative_url }}">
-  <link rel="stylesheet" href="{{ '/assets/css/learning-topic.css' | relative_url }}">
-  <link rel="stylesheet" href="{{ '/assets/css/sliders.css' | relative_url }}">
+  <link data-page-style rel="stylesheet" href="{{ '/assets/css/learning.css' | relative_url }}">
+  <link data-page-style rel="stylesheet" href="{{ '/assets/css/learning-topic.css' | relative_url }}">
   {% if page.problem_set or page.exercises.size > 0 %}
-  <link rel="stylesheet" href="{{ '/assets/css/learning-number-navigation.css' | relative_url }}">
+  <link data-page-style rel="stylesheet" href="{{ '/assets/css/learning-number-navigation.css' | relative_url }}">
   <script type="module" src="{{ '/assets/js/learning-number-navigation.js' | relative_url }}"></script>
   {% endif %}
   {% if page.problem_set %}
-  <link rel="stylesheet" href="{{ '/assets/css/learning-problems.css' | relative_url }}">
+  <link data-page-style rel="stylesheet" href="{{ '/assets/css/learning-problems.css' | relative_url }}">
   <script type="module" src="{{ '/assets/js/learning-problems.js' | relative_url }}"></script>
   {% endif %}
   <script defer src="{{ '/assets/js/learning-topic.js' | relative_url }}"></script>
   <script type="module" src="{{ '/assets/js/learning-topic-navigation.js' | relative_url }}"></script>
   {% if page.topic_script %}<script defer src="{{ page.topic_script | relative_url }}"></script>{% endif %}
-</head>
-<body data-topic-math="{{ page.math | default: false }}">
-  <a class="skip" href="#main">Skip to content</a>
-  <header class="masthead">
-    <a class="brand" href="{{ '/' | relative_url }}">{{ site.title | escape }}<span>Mathematics &amp; other curiosities</span></a>
-    <a href="{{ '/learning/' | relative_url }}">Learning</a>
-  </header>
-  <main id="main">
+
+<div class="learning-page">
     <article class="topic-wrap">
       {% unless page.problem_set %}<p class="eyebrow">{{ learning_course.title | escape }}{% if learning_module.title != page.title %} / {{ learning_module.title | escape }}{% endif %}</p>{% endunless %}
       <h1>{{ page.title | escape }}</h1>
@@ -72,8 +59,6 @@ layout: null
         <button id="topic-contents" aria-haspopup="dialog" aria-expanded="false">Course contents</button>
       </nav>
     </article>
-  </main>
-  <footer>{{ site.title }}<span>A notebook, always in progress.</span></footer>
   <dialog id="topic-map" aria-labelledby="contents-title">
     <div class="dialog-heading"><h2 id="contents-title" tabindex="-1">{{ learning_course.title | escape }}</h2><button id="close-course-map" aria-label="Close course contents"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
     <nav class="topic-contents-list" aria-label="Course contents">
@@ -90,5 +75,4 @@ layout: null
       {% endfor %}
     </nav>
   </dialog>
-</body>
-</html>
+</div>

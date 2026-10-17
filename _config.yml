@@ -32,6 +32,10 @@ plugins:
 
 defaults:
   - scope:
+      path: "learning"
+    values:
+      section: learning
+  - scope:
       path: ""
     values:
       layout: page

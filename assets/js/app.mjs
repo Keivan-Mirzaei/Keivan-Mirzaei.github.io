@@ -34,6 +34,7 @@ function enter(root) {
   }
 }
 function preserveSession() {
+  if (document.body.dataset.pageReload === 'true') return false;
   if (gadgetPromise && !gadgetService) return true;
   const state = gadgetService?.getState();
   return Boolean(state?.sound?.playing || state?.sound?.loading || state?.timer?.status === 'running');

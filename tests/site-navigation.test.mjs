@@ -17,8 +17,8 @@ function setup({ autoStyles = true, initialCSS = [], preserveSession = () => tru
   document.createElement = () => { const link = { dataset: {}, media: '', remove() { const index = styles.indexOf(this); if (index >= 0) styles.splice(index, 1); } }; return link; };
   document.head = { append(link) { styles.push(link); if (autoStyles) queueMicrotask(() => { if (styles.includes(link)) link.onload?.(); }); } };
   document.importNode = node => node.id ? content(node.id) : { ...node };
-  function incoming(id, { shell = true, css = [] } = {}) {
-    return { title: `${id} · Notebook`, body: { hasAttribute: () => shell, dataset: { siteShell: '', pageMath: 'true' }, className: id === 'puzzle' ? 'puzzle-page' : '' },
+  function incoming(id, { shell = true, css = [], reload = false } = {}) {
+    return { title: `${id} · Notebook`, body: { hasAttribute: () => shell, dataset: { siteShell: '', pageMath: 'true', ...(reload ? { pageReload: 'true' } : {}) }, className: id === 'puzzle' ? 'puzzle-page' : '' },
       querySelector: selector => ({ '[data-page-content]': content(id), '.topbar-title': { innerHTML: id }, '.nav-list': { innerHTML: `${id} nav` } })[selector] || null,
       querySelectorAll: selector => selector === 'link[data-page-style]' ? css.map(href => ({ getAttribute: name => name === 'href' ? href : null })) : [] };
   }
@@ -312,4 +312,16 @@ test('prefetch respects reduced-data connections and a hidden page, even after s
     const app = prefetchFixture(options); app.dispatch('pointerdown', '/research/'); app.dispatch('focusin', '/about/'); app.flush(); assert.deepEqual(app.prepared, []);
   }
   const app = prefetchFixture(); app.dispatch('pointerover', '/research/'); app.document.hidden = true; app.flush(); assert.deepEqual(app.prepared, []);
+});
+
+
+test('course pages retain the shared shell but use a full visit to initialize lesson scripts', async () => {
+  const app = setup();
+  const visit = app.navigate('/learning/calculus/limits/');
+  app.requests[0].resolve(app.incoming('lesson', { reload: true }));
+  await visit;
+  assert.deepEqual(app.browser.location.assigned, ['https://example.test/learning/calculus/limits/']);
+  assert.deepEqual(app.entered, []);
+  assert.deepEqual(app.left, []);
+  assert.equal(app.main.busy, false);
 });

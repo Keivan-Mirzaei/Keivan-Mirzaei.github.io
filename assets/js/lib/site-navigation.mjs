@@ -139,7 +139,7 @@ export function initializeSiteNavigation({ leave, enter, preserveSession = () =>
       const page = await pages.load(url.href, controller.signal);
       if (controller.signal.aborted || visit !== sequence) return;
       const incoming = new DOMParser().parseFromString(page.html, 'text/html');
-      if (!incoming.body.hasAttribute('data-site-shell') || !incoming.querySelector('[data-page-content]')) throw new Error('Different layout');
+      if (!incoming.body.hasAttribute('data-site-shell') || incoming.body.dataset.pageReload === 'true' || !incoming.querySelector('[data-page-content]')) throw new Error('Different layout');
       const nextStyles = [...incoming.querySelectorAll('link[data-page-style]')];
       const wanted = new Set(nextStyles.map(style => new URL(style.getAttribute('href'), page.url).href));
       const existing = [...document.querySelectorAll('link[rel="stylesheet"]')];
