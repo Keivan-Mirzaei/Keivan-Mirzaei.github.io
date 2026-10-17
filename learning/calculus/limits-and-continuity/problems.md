@@ -11,10 +11,8 @@ math: true
 sitemap: false
 ---
 
-## Read and construct graphs
-
 <section class="worked" data-problem-id="a-hole-a-jump-and-a-product" markdown="1">
-<p class="element-label">Problem 1</p>
+{% include learning/problem-label.html number=1 difficulty=1 %}
 
 Use the graph of $$f$$ below.
 
@@ -47,39 +45,41 @@ Thus $$\lim_{x\to1}(x-1)f(x)=0$$. A product can have a limit even when one facto
 </details>
 </section>
 
-<section class="worked" data-problem-id="three-crossings-the-same-endpoint-data" markdown="1">
-<p class="element-label">Problem 2</p>
+<section class="worked" data-problem-id="a-mixture-with-a-limiting-concentration" markdown="1">
+{% include learning/problem-label.html number=2 difficulty=1 %}
 
-Sketch a continuous function on $$[-2,2]$$ with $$f(-2)=-1$$, $$f(2)=1$$, and *exactly three zeros*. Then find a polynomial formula that fits your sketch.
+A tank initially contains $$20\,\mathrm{L}$$ of solution with $$4\,\mathrm{g}$$ of dissolved salt. Solution containing $$3\,\mathrm{g/L}$$ is added at $$2\,\mathrm{L/min}$$, with no outflow and enough tank capacity. Assume the contents are well mixed.
 
-What does your construction tell you about the number of solutions guaranteed by the Intermediate Value Theorem?
+Find the salt concentration $$C(t)$$ after $$t\ge0$$ minutes, its long-term limit, and whether it ever reaches that limit at a finite time. Find exactly which times make its concentration differ from the limit by less than $$0.1\,\mathrm{g/L}$$.
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
 
-Choose three zeros first, write a product with those factors, and multiply by a constant to fit the endpoints.
+Track salt mass and total volume separately. Then rewrite concentration as its limiting value plus a remainder.
 
 </details>
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-One choice is
+The added salt mass is $$6t\,\mathrm{g}$$ and the added volume is $$2t\,\mathrm{L}$$, so
 
-$$f(x)=\frac{x(x-1)(x+1)}6=\frac{x^3-x}{6}.$$
+$$C(t)=\frac{4+6t}{20+2t}=3-\frac{56}{20+2t}\quad\mathrm{g/L}.$$
 
-It has exactly the zeros $$-1,0,1$$, is continuous, and satisfies $$f(-2)=-1$$ and $$f(2)=1$$.
+Therefore,
 
-<figure class="topic-figure"><img src="{{ '/assets/figures/learning/limits-three-zeros.svg' | relative_url }}" alt="A continuous cubic goes from minus two, minus one to two, one, crossing the x-axis at minus one, zero, and one." width="640" height="360"></figure>
+$$\lim_{t\to+\infty}C(t)=3\quad\mathrm{g/L}.$$
 
-The theorem guarantees *at least one* zero between endpoints of opposite signs. It does not guarantee uniqueness.
+The remainder is negative for every finite $$t\ge0$$. The concentration approaches the incoming concentration from below but never equals it at a finite time. To be within $$0.1\,\mathrm{g/L}$$, we need
+
+$$\frac{56}{20+2t}<0.1\quad\Longleftrightarrow\quad t>270\text{ minutes}.$$
+
+At exactly $$270$$ minutes the difference is $$0.1$$; it is strictly smaller at every later time. There is no first time satisfying the strict inequality: $$270$$ is its boundary. Approaching an asymptote does not mean reaching it, but a prescribed accuracy is achieved after a finite wait.
 
 </details>
 </section>
 
-## Limit laws and algebraic methods
-
 <section class="worked" data-problem-id="recover-the-hidden-limits" markdown="1">
-<p class="element-label">Problem 3</p>
+{% include learning/problem-label.html number=3 difficulty=2 %}
 
 Two functions satisfy
 
@@ -117,39 +117,41 @@ $$\lim_{x\to a}\frac{f(x)}{g(x)}=\frac31=3.$$
 </details>
 </section>
 
-<section class="worked" data-problem-id="rationalise-and-factor" markdown="1">
-<p class="element-label">Problem 4</p>
+<section class="worked" data-problem-id="two-radicals-two-different-changes" markdown="1">
+{% include learning/problem-label.html number=4 difficulty=2 %}
 
-Evaluate
+Two measurements are
 
-$$\lim_{x\to4}\frac{\sqrt{x+5}-3}{x^2-16}.$$
+$$A(h)=\sqrt{9+h}-3,\qquad B(h)=\sqrt{4+h}-2.$$
+
+Both tend to zero as $$h\to0$$. Find $$\displaystyle\lim_{h\to0}A(h)/B(h)$$. Does “both changes vanish” mean that they become equal in relative size?
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
 
-Use the conjugate on the numerator and the difference-of-squares identity on the denominator. Cancel only after the common factor is visible.
+Rationalise each change separately before forming the ratio. Keep the common factor $$h$$ until it cancels.
 
 </details>
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-For nearby $$x\ne4$$,
+For nearby $$h\ne0$$,
 
-$$\frac{\sqrt{x+5}-3}{x^2-16}
-=\frac{x-4}{(x-4)(x+4)(\sqrt{x+5}+3)}
-=\frac1{(x+4)(\sqrt{x+5}+3)}.$$
+$$A(h)=\frac{h}{\sqrt{9+h}+3},\qquad B(h)=\frac{h}{\sqrt{4+h}+2}.$$
 
-Therefore,
+Thus
 
-$$\lim_{x\to4}\frac{\sqrt{x+5}-3}{x^2-16}
-=\lim_{x\to4}\frac1{(x+4)(\sqrt{x+5}+3)}
-=\frac1{8\cdot6}=\frac1{48}.$$
+$$\lim_{h\to0}\frac{A(h)}{B(h)}
+=\lim_{h\to0}\frac{\sqrt{4+h}+2}{\sqrt{9+h}+3}
+=\frac46=\frac23.$$
+
+Both changes vanish, but one is approximately two-thirds of the other for small nonzero $$h$$. Their separate zero limits do not determine the ratio; the algebra does.
 
 </details>
 </section>
 
 <section class="worked" data-problem-id="a-square-root-that-hides-two-sides" markdown="1">
-<p class="element-label">Problem 5</p>
+{% include learning/problem-label.html number=5 difficulty=2 %}
 
 Find both one-sided limits, then decide whether the two-sided limit exists:
 
@@ -190,43 +192,39 @@ The two-sided limit does not exist.
 </details>
 </section>
 
-<section class="worked" data-problem-id="a-small-difference-between-large-quantities" markdown="1">
-<p class="element-label">Problem 6</p>
+<section class="worked" data-problem-id="zeros-without-sign-changes" markdown="1">
+{% include learning/problem-label.html number=6 difficulty=2 %}
 
-Evaluate
+Construct a polynomial on $$[-2,2]$$ satisfying $$f(-2)=-1$$ and $$f(2)=1$$, with exactly three zeros: $$-1,0,1$$. Require the graph to *touch* the axis without crossing at $$-1$$ and $$1$$.
 
-$$\lim_{x\to+\infty}\left(\sqrt{4x^2+x}-2x\right).$$
-
-Find the finite separation that remains between these two unbounded quantities.
+Sketch your construction. Which zero can be detected by opposite signs on its two sides? What does this reveal about a sign-change test?
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
 
-Rationalise the difference, then divide the numerator and denominator by $$x$$. Since the input is positive here, $$\sqrt{x^2}=x$$.
+A squared factor stays nonnegative on both sides of its zero. Choose factors first, then scale the endpoint values.
 
 </details>
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-For $$x>0$$,
+One construction is
 
-$$\sqrt{4x^2+x}-2x
-=\frac{x}{\sqrt{4x^2+x}+2x}
-=\frac1{\sqrt{4+1/x}+2}.$$
+$$f(x)=\frac{x(x-1)^2(x+1)^2}{18}.$$
 
-Since $$1/x\to0$$ as $$x\to+\infty$$,
+At $$x=2$$ the numerator is $$18$$; at $$x=-2$$ it is $$-18$$. These are its only three zeros.
 
-$$\lim_{x\to+\infty}\left(\sqrt{4x^2+x}-2x\right)
-=\lim_{x\to+\infty}\frac1{\sqrt{4+1/x}+2}
-=\frac14.$$
+Away from the zeros, the squared factors are positive, so the sign is the sign of $$x$$. The graph crosses at $$0$$ but only touches at $$-1$$ and $$1$$.
 
-Both original terms grow without bound, but their difference approaches a finite number. Subtracting the symbol $$\infty$$ from itself would not determine that number.
+<figure class="topic-figure"><img src="{{ '/assets/figures/learning/limits-three-zeros.svg' | relative_url }}" alt="A continuous graph touches the x-axis at minus one and one, and crosses it at zero. Its endpoint heights are minus one and one. A closer view makes the touches and crossing visible." width="640" height="480"></figure>
+
+Opposite signs guarantee a zero for a continuous function. They are *not necessary*: a zero at which the sign stays the same can escape that test.
 
 </details>
 </section>
 
 <section class="worked" data-problem-id="oscillation-far-from-the-origin" markdown="1">
-<p class="element-label">Problem 7</p>
+{% include learning/problem-label.html number=7 difficulty=2 %}
 
 The numerator keeps changing sign. Determine the horizontal asymptote at each end:
 
@@ -258,101 +256,51 @@ Thus $$y=0$$ is a horizontal asymptote at both ends, even though the graph cross
 </details>
 </section>
 
-## Infinite limits and asymptotes
+<section class="worked" data-problem-id="how-many-factors-survive" markdown="1">
+{% include learning/problem-label.html number=8 difficulty=2 %}
 
-<section class="worked" data-problem-id="a-vanishing-denominator-three-outcomes" markdown="1">
-<p class="element-label">Problem 8</p>
+For each positive integer $$n$$, consider
 
-For each function, determine both one-sided limits at $$x=3$$ and decide whether a two-sided infinite limit exists:
+$$F_n(x)=\frac{x^2-9}{(x-3)^n},\qquad x\ne3.$$
 
-$$\begin{aligned}
-A(x)&=\frac{x-4}{(x-3)^2},\\
-B(x)&=\frac{x-4}{x-3},\\
-C(x)&=\frac{\sin(x-3)}{x-3}.
-\end{aligned}$$
-
-Which graphs have a vertical asymptote there?
+Classify the behaviour at $$3$$ for $$n=1,2,3$$: a removable hole or a vertical asymptote? Give both one-sided limits. Then state the pattern for all $$n\ge2$$.
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
 
-Near $$3$$ the numerator $$x-4$$ is negative. A squared denominator stays positive. For $$C$$, recognise a basic trigonometric limit.
+Factor the numerator before looking at signs. After cancellation, how many factors of $$x-3$$ remain below the line?
 
 </details>
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-For $$A$$, the numerator approaches $$-1$$ and the denominator approaches zero through positive values:
+For $$x\ne3$$,
 
-$$\lim_{x\to3^-}A(x)=\lim_{x\to3^+}A(x)=-\infty.$$
+$$F_n(x)=\frac{x+3}{(x-3)^{n-1}}.$$
 
-Hence $$\lim_{x\to3}A(x)=-\infty$$, and $$x=3$$ is a vertical asymptote.
+The numerator approaches the positive number $$6$$. Therefore:
 
-For $$B$$, the denominator changes sign:
+| $$n$$ | Left-hand limit | Right-hand limit | Behaviour |
+| --- | --- | --- | --- |
+| $$1$$ | $$6$$ | $$6$$ | Hole, repaired by assigning $$F_1(3)=6$$ |
+| $$2$$ | $$-\infty$$ | $$+\infty$$ | Vertical asymptote |
+| $$3$$ | $$+\infty$$ | $$+\infty$$ | Vertical asymptote |
 
-$$\lim_{x\to3^-}B(x)=+\infty,\qquad
-\lim_{x\to3^+}B(x)=-\infty.$$
+For every $$n\ge2$$ there is a vertical asymptote. If $$n$$ is odd, the remaining exponent $$n-1$$ is even and both limits are $$+\infty$$. If $$n$$ is even, the left-hand limit is $$-\infty$$ and the right-hand limit is $$+\infty$$.
 
-There is a vertical asymptote, but no two-sided infinite limit.
-
-For $$C$$, set $$t=x-3$$. The basic sine limit gives
-
-$$\lim_{x\to3}C(x)=\lim_{t\to0}\frac{\sin t}{t}=1.$$
-
-Both one-sided limits are $$1$$. There is a removable hole, repaired by assigning the value $$1$$, and no vertical asymptote. A zero denominator alone does not tell us which behavior occurs.
+The original numerator and denominator both vanish at $$3$$ in every case. It is the *remaining* denominator after cancellation that distinguishes the outcomes.
 
 </details>
 </section>
-
-<section class="worked" data-problem-id="a-hole-and-three-asymptotes" markdown="1">
-<p class="element-label">Problem 9</p>
-
-Find every vertical and slant asymptote of
-
-$$R(x)=\frac{(x^2-4)(2x^2+x+1)}{(x-2)(x^2-1)}.$$
-
-Locate any removable discontinuity and state the value that would repair it. Does this function have a horizontal asymptote?
-
-<details class="disclosure" markdown="1">
-<summary>Hint</summary>
-
-Factor before classifying the excluded inputs. After cancellation, polynomial division separates a line from a remainder that tends to zero.
-
-</details>
-<details class="disclosure" markdown="1">
-<summary>Solution</summary>
-
-For $$x\ne2,1,-1$$,
-
-$$\begin{aligned}
-R(x)&=\frac{(x+2)(2x^2+x+1)}{x^2-1}\\
-&=2x+5+\frac{6x+7}{x^2-1}.
-\end{aligned}$$
-
-The cancelled factor leaves a finite limit at $$2$$:
-
-$$\lim_{x\to2}R(x)=\frac{(2+2)(8+2+1)}{4-1}=\frac{44}{3}.$$
-
-Defining $$R(2)=44/3$$ repairs the hole. At $$1$$ and $$-1$$, the simplified numerator is nonzero while the denominator tends to zero and changes sign. Thus $$x=1$$ and $$x=-1$$ are vertical asymptotes.
-
-Finally,
-
-$$\lim_{x\to\pm\infty}\bigl(R(x)-(2x+5)\bigr)
-=\lim_{x\to\pm\infty}\frac{6x+7}{x^2-1}=0.$$
-
-The slant asymptote is $$y=2x+5$$ at both ends. There is no horizontal asymptote, since the function grows without bound in magnitude.
-
-</details>
-</section>
-
-## Trigonometric limits and applications
 
 <section class="worked" data-problem-id="height-lost-on-a-circular-track" markdown="1">
-<p class="element-label">Problem 10</p>
+{% include learning/problem-label.html number=9 difficulty=2 %}
 
 A point on a circle of radius $$r>0$$ moves through a small angle $$\theta$$ from the top. Its horizontal displacement is $$d=r\sin\theta$$ and its vertical drop is $$h=r(1-\cos\theta)$$. Find
 
 $$\lim_{\theta\to0}\frac{h}{d^2}.$$
+
+<figure class="topic-figure"><img src="{{ '/assets/figures/learning/limits-circle-drop.svg' | relative_url }}" alt="A point moves from the top of a circle. A horizontal segment marks displacement d, and a vertical segment marks the drop h from the original height." width="640" height="360"></figure>
 
 What does this suggest about how the drop changes when a very small horizontal displacement doubles?
 
@@ -380,113 +328,8 @@ Thus $$h$$ is approximately $$d^2/(2r)$$ for small displacements. Doubling a ver
 </details>
 </section>
 
-<section class="worked" data-problem-id="a-mixture-with-a-limiting-concentration" markdown="1">
-<p class="element-label">Problem 11</p>
-
-A tank initially contains $$20\,\mathrm{L}$$ of solution with $$4\,\mathrm{g}$$ of dissolved salt. Solution containing $$3\,\mathrm{g/L}$$ is added at $$2\,\mathrm{L/min}$$, with no outflow and enough tank capacity. Assume the contents are well mixed.
-
-Find the salt concentration $$C(t)$$ after $$t\ge0$$ minutes, its long-term limit, and whether it ever reaches that limit at a finite time.
-
-<details class="disclosure" markdown="1">
-<summary>Hint</summary>
-
-Track salt mass and total volume separately. Then rewrite concentration as its limiting value plus a remainder.
-
-</details>
-<details class="disclosure" markdown="1">
-<summary>Solution</summary>
-
-The added salt mass is $$6t\,\mathrm{g}$$ and the added volume is $$2t\,\mathrm{L}$$, so
-
-$$C(t)=\frac{4+6t}{20+2t}=3-\frac{56}{20+2t}\quad\mathrm{g/L}.$$
-
-Therefore,
-
-$$\lim_{t\to+\infty}C(t)=3\quad\mathrm{g/L}.$$
-
-The remainder is negative for every finite $$t\ge0$$. The concentration approaches the incoming concentration from below but never equals it at a finite time. The horizontal asymptote is $$C=3$$; the model is only used for nonnegative time.
-
-</details>
-</section>
-
-## Continuity and models
-
-<section class="worked" data-problem-id="build-a-continuous-bridge" markdown="1">
-<p class="element-label">Problem 12</p>
-
-Choose $$a,b$$ so that the following function is continuous everywhere:
-
-$$f(x)=
-\begin{cases}
-\dfrac{x^2-1}{x-1},&x<1,\\
-ax+b,&1\le x\le2,\\
-\sqrt{x+7}+2,&x>2.
-\end{cases}$$
-
-<details class="disclosure" markdown="1">
-<summary>Hint</summary>
-
-The separate formulas are continuous within their pieces. Match the two approached heights at each joining point.
-
-</details>
-<details class="disclosure" markdown="1">
-<summary>Solution</summary>
-
-At the first join,
-
-$$\lim_{x\to1^-}\frac{x^2-1}{x-1}
-=\lim_{x\to1^-}(x+1)=2,$$
-
-so $$a+b=2$$. At the second join,
-
-$$\lim_{x\to2^+}(\sqrt{x+7}+2)=5,$$
-
-so $$2a+b=5$$. Solving gives $$a=3$$ and $$b=-1$$.
-
-The middle formula then has the same values as the adjacent limits at both joins. Each individual piece is continuous on its own interval, so the assembled function is continuous everywhere.
-
-</details>
-</section>
-
-<section class="worked" data-problem-id="the-area-of-a-thin-ring" markdown="1">
-<p class="element-label">Problem 13</p>
-
-A circular plate has radius $$10\,\mathrm{cm}$$. A narrow ring extends its radius by $$h>0$$ centimetres. Let $$A(h)$$ be the area of the added ring.
-
-<aside class="prerequisite" markdown="1">
-<p class="element-label">Prerequisite</p>
-
-A circle of radius $$r$$ has area $$\pi r^2$$.
-
-</aside>
-
-Find $$\lim_{h\to0^+}A(h)/h$$, include its units, and explain its relation to the original circumference.
-
-<details class="disclosure" markdown="1">
-<summary>Hint</summary>
-
-Subtract the inner disk's area from the outer disk's area, then expand before dividing by $$h$$.
-
-</details>
-<details class="disclosure" markdown="1">
-<summary>Solution</summary>
-
-The added area is
-
-$$A(h)=\pi\bigl((10+h)^2-10^2\bigr)=20\pi h+\pi h^2.$$
-
-Consequently,
-
-$$\lim_{h\to0^+}\frac{A(h)}h
-=\lim_{h\to0^+}(20\pi+\pi h)=20\pi\,\mathrm{cm}.$$
-
-Area divided by radial thickness has units $$\mathrm{cm^2}/\mathrm{cm}=\mathrm{cm}$$. The limit equals the original circumference: for a sufficiently thin ring, its area divided by its thickness is close to the length around the plate.
-
-</details>
-</section>
-
 <section class="worked" data-problem-id="two-boxes-with-the-same-volume" markdown="1">
-<p class="element-label">Problem 14</p>
+{% include learning/problem-label.html number=10 difficulty=2 %}
 
 Squares of side $$x$$ centimetres are cut from the corners of a $$20\,\mathrm{cm}$$ by $$30\,\mathrm{cm}$$ sheet. Folding the sides makes an open box with volume
 
@@ -514,84 +357,245 @@ These open intervals do not overlap, so the cuts are distinct. This argument est
 </details>
 </section>
 
-## Challenges
+<section class="worked" data-problem-id="one-curve-two-slant-asymptotes" markdown="1">
+{% include learning/problem-label.html number=11 difficulty=3 %}
 
-<section class="worked" data-problem-id="two-radicals-one-cancellation" markdown="1">
-{% include learning/problem-label.html number=15 difficulty=4 %}
+Find the slant asymptote at each end of
 
-Evaluate
+$$F(x)=\sqrt{4x^2+x}.$$
 
-$$\lim_{x\to0}\frac{\sqrt{1+x}+\sqrt{1-x}-2}{x^2}.$$
+A student replaces $$\sqrt{4x^2}$$ by $$2x$$ at both ends and predicts the same line. Correct the sign error, and find the constant vertical offset at each end.
 
 <details class="disclosure" markdown="1">
-<summary>Hint 1</summary>
+<summary>Hint</summary>
 
-Call the sum of the two radicals $$S$$. Multiply $$S-2$$ by its conjugate $$S+2$$.
-
-</details>
-<details class="disclosure" markdown="1">
-<summary>Hint 2</summary>
-
-After squaring $$S$$, a new radical remains: $$\sqrt{1-x^2}-1$$. Rationalise that difference too.
+At the negative end, $$\sqrt{x^2}=|x|=-x$$. Rationalise $$F(x)-2x$$ on the right and $$F(x)+2x$$ on the left.
 
 </details>
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-For $$0<\lvert x\rvert<1$$, put $$S=\sqrt{1+x}+\sqrt{1-x}$$. Then
-
-$$S^2=2+2\sqrt{1-x^2}.$$
-
-Therefore,
-
-$$S-2=\frac{S^2-4}{S+2}
-=\frac{2(\sqrt{1-x^2}-1)}{S+2}
-=-\frac{2x^2}{(S+2)(\sqrt{1-x^2}+1)}.$$
-
-Cancel the nonzero factor $$x^2$$ before taking the limit:
+At the positive end,
 
 $$\begin{aligned}
-\lim_{x\to0}\frac{S-2}{x^2}
-&=\lim_{x\to0}\frac{-2}{(S+2)(\sqrt{1-x^2}+1)}\\
-&=\frac{-2}{(2+2)(1+1)}=-\frac14.
+\lim_{x\to+\infty}(F(x)-2x)
+&=\lim_{x\to+\infty}\frac{x}{\sqrt{4x^2+x}+2x}\\
+&=\lim_{x\to+\infty}\frac1{\sqrt{4+1/x}+2}=\frac14.
 \end{aligned}$$
+
+Hence $$\lim_{x\to+\infty}\bigl(F(x)-(2x+1/4)\bigr)=0$$.
+
+At the negative end, $$F(x)=(-x)\sqrt{4+1/x}$$. Thus
+
+$$\begin{aligned}
+\lim_{x\to-\infty}(F(x)+2x)
+&=\lim_{x\to-\infty}\frac{x}{\sqrt{4x^2+x}-2x}\\
+&=\lim_{x\to-\infty}\frac{-1}{\sqrt{4+1/x}+2}=-\frac14.
+\end{aligned}$$
+
+The asymptotes are therefore
+
+$$y=2x+\frac14\quad\text{at }+\infty,\qquad
+ y=-2x-\frac14\quad\text{at }-\infty.$$
+
+Keeping only the largest squared term reveals the size but loses the sign of $$x$$ and the constant offset.
 
 </details>
 </section>
 
-<section class="worked" data-problem-id="two-points-half-an-interval-apart" markdown="1">
-{% include learning/problem-label.html number=16 difficulty=4 %}
+<section class="worked" data-problem-id="a-hole-and-three-asymptotes" markdown="1">
+{% include learning/problem-label.html number=12 difficulty=3 %}
 
-Suppose $$f$$ is continuous on $$[0,1]$$ and $$f(0)=f(1)$$. Prove that there is some $$c\in[0,1/2]$$ such that
+Find every vertical and slant asymptote of
 
-$$f(c)=f(c+1/2).$$
+$$R(x)=\frac{(x^2-4)(2x^2+x+1)}{(x-2)(x^2-1)}.$$
 
-In a sketch, this means that two points on the graph, separated horizontally by $$1/2$$, have the same height. No symmetry is assumed.
+Locate any removable discontinuity and state the value that would repair it. Does this function have a horizontal asymptote?
 
 <details class="disclosure" markdown="1">
-<summary>Hint 1</summary>
+<summary>Hint</summary>
 
-Turn “the same height” into a zero of a new function.
-
-</details>
-<details class="disclosure" markdown="1">
-<summary>Hint 2</summary>
-
-Consider $$g(x)=f(x+1/2)-f(x)$$ on $$[0,1/2]$$. How are $$g(0)$$ and $$g(1/2)$$ related?
+Factor before classifying the excluded inputs. After cancellation, polynomial division separates a line from a remainder that tends to zero.
 
 </details>
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-Define $$g(x)=f(x+1/2)-f(x)$$. It is continuous on $$[0,1/2]$$ because it is a difference of continuous functions. The endpoint condition gives
+For $$x\ne2,1,-1$$,
 
-$$g(0)=f(1/2)-f(0),$$
+$$\begin{aligned}
+R(x)&=\frac{(x+2)(2x^2+x+1)}{x^2-1}\\
+&=2x+5+\frac{5x+7}{x^2-1}.
+\end{aligned}$$
 
-$$g(1/2)=f(1)-f(1/2)=f(0)-f(1/2)=-g(0).$$
+The cancelled factor leaves a finite limit at $$2$$:
 
-If $$g(0)=0$$, choose $$c=0$$. Otherwise, the endpoint values have opposite signs, so the Intermediate Value Theorem gives a zero $$c\in(0,1/2)$$.
+$$\lim_{x\to2}R(x)=\frac{(2+2)(8+2+1)}{4-1}=\frac{44}{3}.$$
 
-In either case, $$g(c)=0$$ means $$f(c+1/2)=f(c)$$.
+Defining $$R(2)=44/3$$ repairs the hole. At $$1$$ and $$-1$$, the simplified numerator is nonzero while the denominator tends to zero and changes sign. Thus $$x=1$$ and $$x=-1$$ are vertical asymptotes.
+
+Finally,
+
+$$\lim_{x\to\pm\infty}\bigl(R(x)-(2x+5)\bigr)
+=\lim_{x\to\pm\infty}\frac{5x+7}{x^2-1}=0.$$
+
+The slant asymptote is $$y=2x+5$$ at both ends. There is no horizontal asymptote, since the function grows without bound in magnitude.
+
+</details>
+</section>
+
+<section class="worked" data-problem-id="tune-the-first-cancellation" markdown="1">
+{% include learning/problem-label.html number=13 difficulty=3 %}
+
+Find every real $$c$$ for which the following limit is finite, and evaluate it:
+
+$$\lim_{x\to0}\frac{\sqrt{1+x}-\sqrt{1-x}-cx}{x^3}.$$
+
+For the other values of $$c$$, decide whether there is a two-sided infinite limit. Use algebra and the limit laws only.
+
+<details class="disclosure" markdown="1">
+<summary>Hint 1</summary>
+
+Put $$S=\sqrt{1+x}+\sqrt{1-x}$$. The difference of the roots equals $$2x/S$$. Which value of $$c$$ can cancel the leading term?
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Hint 2</summary>
+
+For the remaining case, use $$S^2=2+2\sqrt{1-x^2}$$, then rationalise $$1-\sqrt{1-x^2}$$ as well.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Solution</summary>
+
+For $$0<|x|<1$$, define $$S=\sqrt{1+x}+\sqrt{1-x}$$. Then
+
+$$\frac{\sqrt{1+x}-\sqrt{1-x}-cx}{x^3}
+=\frac{2/S-c}{x^2}.$$
+
+Since $$S\to2$$, the numerator tends to $$1-c$$. If $$c<1$$ the quotient tends to $$+\infty$$; if $$c>1$$ it tends to $$-\infty$$. Only $$c=1$$ can give a finite limit.
+
+For that value, rationalise the sum:
+
+$$\begin{aligned}
+S^2&=2+2\sqrt{1-x^2},\\
+2-S&=\frac{4-S^2}{2+S}
+=\frac{2(1-\sqrt{1-x^2})}{2+S}\\
+&=\frac{2x^2}{(2+S)(1+\sqrt{1-x^2})}.
+\end{aligned}$$
+
+Consequently,
+
+$$\lim_{x\to0}\frac{2/S-1}{x^2}
+=\lim_{x\to0}\frac{2}{S(2+S)(1+\sqrt{1-x^2})}
+=\frac18.$$
+
+The linear correction removes the first change; a smaller, cubic-sized difference remains.
+
+</details>
+</section>
+
+<section class="worked" data-problem-id="equal-heights-and-the-distance-between-them" markdown="1">
+{% include learning/problem-label.html number=14 difficulty=4 %}
+
+Suppose $$f$$ is continuous on $$[0,1]$$ and $$f(0)=f(1)$$.
+
+1. Prove that for every integer $$n\ge2$$ there are two points on its graph, separated horizontally by $$1/n$$, with the same height.
+2. Must there also be such a pair separated by $$2/3$$? Either prove it or construct a continuous counterexample with a sketch.
+
+<details class="disclosure" markdown="1">
+<summary>Hint 1</summary>
+
+For the first part, consider $$g(x)=f(x+1/n)-f(x)$$. Add its values at $$x=0,1/n,\ldots,(n-1)/n$$.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Hint 2</summary>
+
+For the second part, make the first and last thirds parallel, with different heights at the corresponding inputs. Connect them continuously through the middle third.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Solution</summary>
+
+For $$0\le x\le1-1/n$$, the function
+
+$$g(x)=f(x+1/n)-f(x)$$
+
+is continuous. The sum of its $$n$$ equally spaced values cancels:
+
+$$g(0)+g(1/n)+\cdots+g((n-1)/n)=f(1)-f(0)=0.$$
+
+If any summand is zero, we have the required pair. Otherwise, the summands cannot all have the same sign. Between two sampled inputs with opposite signs, the Intermediate Value Theorem gives a zero of $$g$$. At that input, $$f(x+1/n)=f(x)$$.
+
+The second claim is false. Join the points
+
+$$(0,0),\quad(1/3,1),\quad(2/3,-1),\quad(1,0)$$
+
+with straight segments. A formula is
+
+$$f(x)=\begin{cases}
+3x,&0\le x\le1/3,\\
+3-6x,&1/3\le x\le2/3,\\
+3x-3,&2/3\le x\le1.
+\end{cases}$$
+
+<figure class="topic-figure"><img src="{{ '/assets/figures/learning/limits-chord-counterexample.svg' | relative_url }}" alt="Three connected line segments pass through zero zero, one third one, two thirds minus one, and one zero. The first and last segments have the same slope, with heights differing by one at horizontal separation two thirds." width="640" height="360"></figure>
+
+Every possible starting input for a separation of $$2/3$$ lies in $$[0,1/3]$$. There,
+
+$$f(x+2/3)-f(x)=(3x-1)-3x=-1.$$
+
+So no such pair exists. The equal subdivisions in the first part are essential to the cancellation argument.
+
+</details>
+</section>
+
+<section class="worked" data-problem-id="a-local-limit-determines-the-whole-function" markdown="1">
+{% include learning/problem-label.html number=15 difficulty=4 %}
+
+A function $$f:\mathbb R\to\mathbb R$$ is continuous at $$0$$ and satisfies
+
+$$f(x)+f(2x)=x\qquad\text{for every real }x.$$
+
+Determine $$f(x)$$ for every real input and prove that no other function continuous at zero can satisfy the identity. You are not told that $$f$$ is continuous anywhere else.
+
+<details class="disclosure" markdown="1">
+<summary>Hint 1</summary>
+
+First try a linear function. Subtract that candidate from $$f$$ to obtain a new function whose value changes sign when its input is halved.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Hint 2</summary>
+
+For a fixed input $$x$$, show that $$|g(x)|=|g(x/2^n)|$$ for every positive integer $$n$$. Then use continuity only at zero.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Solution</summary>
+
+A linear candidate $$f(x)=kx$$ must satisfy $$3kx=x$$, so $$k=1/3$$. This gives one solution.
+
+To prove uniqueness, let
+
+$$g(x)=f(x)-\frac{x}{3}.$$
+
+Putting $$x=0$$ in the original equation gives $$f(0)=0$$. Hence $$g$$ is continuous at zero with $$g(0)=0$$, and
+
+$$g(x)+g(2x)=0.$$
+
+Apply this identity at $$x/2$$, then at $$x/4$$, and keep halving. For every positive integer $$n$$,
+
+$$g(x)=(-1)^n g(x/2^n),\qquad |g(x)|=|g(x/2^n)|.$$
+
+Fix any real $$x$$. As $$n\to\infty$$, the inputs $$x/2^n\to0$$. Continuity at zero makes the right-hand side tend to zero. The left-hand side is a fixed number, so it must equal zero.
+
+Thus $$g(x)=0$$ for every $$x$$, and
+
+$$f(x)=\frac{x}{3}.$$
+
+Here one limit at a single point, together with the identity linking different inputs, determines the function everywhere.
 
 </details>
 </section>

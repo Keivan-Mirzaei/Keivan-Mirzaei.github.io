@@ -11,72 +11,66 @@ math: true
 sitemap: false
 ---
 
-<section class="worked" data-problem-id="read-a-function-and-its-slopes" markdown="1">
-<p class="element-label">Problem 1</p>
+<section class="worked" data-problem-id="a-chain-rule-that-cannot-be-used" markdown="1">
+{% include learning/problem-label.html number=1 difficulty=1 %}
 
-The graph consists of the line segment from $$(-2,-1)$$ to $$(0,1)$$, followed by the parabola $$y=1+x^2$$ for $$0\le x\le2$$.
+Let $$u(x)=x^3$$ and $$v(u)=\sqrt[3]{u}$$, using the real cube root for negative inputs too.
 
-<figure class="topic-figure"><img src="{{ '/assets/figures/learning/derivative-problems-graph.svg' | relative_url }}" alt="A line of slope one joins a rising parabola at zero, one. The line and parabola meet continuously, with different slopes." width="640" height="360"><figcaption>Sketch the derivative on the interior of the displayed interval.</figcaption></figure>
-
-1. Sketch $$f^{\prime}$$ on $$(-2,2)$$, showing any excluded input with an open circle.
-2. Where does $$f^{\prime\prime}$$ exist, and what are its values?
-3. Could changing only $$f(0)$$ make $$f$$ differentiable at zero?
+Find the derivative of $$v(u(x))$$ at zero directly from the definition. Why is substituting $$x=0$$ into $$v^{\prime}(u(x))u^{\prime}(x)$$ not a valid way to obtain that answer?
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
 
-A height on the derivative graph represents a slope on this graph. Check the two limiting slopes at the join.
+Simplify the composition before differentiating. Check whether the outer function has a finite derivative at its input.
 
 </details>
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-The line has slope $$1$$, while the parabola has derivative $$2x$$. Hence
+The composition is $$\sqrt[3]{x^3}=x$$ for every real $$x$$. Therefore,
 
-$$f^{\prime}(x)=\begin{cases}1,&-2<x<0,\\2x,&0<x<2.\end{cases}$$
+$$\left.\frac{d}{dx}v(u(x))\right|_{x=0}
+=\lim_{h\to0}\frac{h-0}{h}=1.$$
 
-Sketch a horizontal segment at height $$1$$ to the left, with an open endpoint at $$(0,1)$$; to the right sketch $$y=2x$$, with an open endpoint at $$(0,0)$$. No value is assigned at zero.
+But the outer derivative at zero would require
 
-<figure class="topic-figure"><img src="{{ '/assets/figures/learning/derivative-problems-slope-graph.svg' | relative_url }}" alt="The derivative is one for negative inputs and twice x for positive inputs. Open circles at zero, one and zero, zero show that the derivative is undefined at zero." width="640" height="360"><figcaption>The two open circles record different limiting slopes. Neither is a value of \(f^{\prime}(0)\).</figcaption></figure>
+$$v^{\prime}(0)=\lim_{k\to0}\frac{\sqrt[3]{k}}{k}
+=\lim_{k\to0}\frac1{|k|^{2/3}},$$
 
-Differentiating these branches gives
-
-$$f^{\prime\prime}(x)=\begin{cases}0,&-2<x<0,\\2,&0<x<2.\end{cases}$$
-
-The left and right slopes of $$f$$ at zero are $$1$$ and $$0$$. Changing the value at the join cannot reconcile them. In fact, differentiability would require continuity, which already forces $$f(0)=1$$.
+which is not finite. The chain rule's hypothesis fails at this input. An undefined factor multiplied by zero is not a derivative calculation—even though the composition itself is as simple as a straight line.
 
 </details>
 </section>
 
-<section class="worked" data-problem-id="a-derivative-through-a-conjugate" markdown="1">
-<p class="element-label">Problem 2</p>
+<section class="worked" data-problem-id="sampled-values-do-not-fix-a-slope" markdown="1">
+{% include learning/problem-label.html number=2 difficulty=1 %}
 
-Use the limit definition, rather than a differentiation rule, to find the tangent to $$f(x)=\sqrt{4+x}$$ at $$x=0$$. Then use that tangent to estimate $$\sqrt{4.08}$$. Is the estimate exact?
+A sensor reports $$F(-1)=F(0)=F(1)=0$$. Someone concludes that $$F^{\prime}(0)=0$$.
+
+Construct a polynomial satisfying all three measurements but with $$F^{\prime}(0)=5$$. Then construct one with any prescribed slope $$m$$ at zero. What do these examples say about recovering an exact instantaneous rate from finitely many values?
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
 
-Rationalise the difference quotient before taking its limit.
+A multiple of $$x(x-1)(x+1)$$ preserves all three measured zeros. Choose the multiplier to set the derivative.
 
 </details>
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-For $$h\ne0$$ near zero,
+Take $$F(x)=-5x(x^2-1)=5x-5x^3$$. It vanishes at all three measured inputs, but
 
-$$\frac{\sqrt{4+h}-2}{h}=\frac{(4+h)-4}{h(\sqrt{4+h}+2)}=\frac1{\sqrt{4+h}+2}.$$
+$$F^{\prime}(x)=5-15x^2,\qquad F^{\prime}(0)=5.$$
 
-Thus
+For any real $$m$$, use $$F_m(x)=mx-mx^3$$. Then $$F_m^{\prime}(0)=m$$ while the three sampled values remain zero.
 
-$$f^{\prime}(0)=\lim_{h\to0}\frac{\sqrt{4+h}-2}{h}=\frac14.$$
-
-The tangent is $$y=2+x/4$$, giving $$\sqrt{4.08}\approx2.02$$. This is not exact: $$2.02^2=4.0804$$, rather than $$4.08$$.
+These measurements alone do not fix the exact derivative, even among polynomials. Estimating a derivative from samples needs additional assumptions about behavior between measurements.
 
 </details>
 </section>
 
 <section class="worked" data-problem-id="recognise-the-definition-in-disguise" markdown="1">
-<p class="element-label">Problem 3</p>
+{% include learning/problem-label.html number=3 difficulty=2 %}
 
 Suppose $$f$$ is differentiable at $$2$$, with $$f^{\prime}(2)=-3$$. Find
 
@@ -112,10 +106,54 @@ The two inputs differ by $$2h$$, not $$h$$. Dividing by $$2h$$ instead would giv
 </details>
 </section>
 
-<section class="worked" data-problem-id="a-tangent-through-a-prescribed-point" markdown="1">
-<p class="element-label">Problem 4</p>
+<section class="worked" data-problem-id="read-a-function-and-its-slopes" markdown="1">
+{% include learning/problem-label.html number=4 difficulty=2 %}
 
-Find every tangent to $$y=x^3+2$$ that passes through the origin. Give both the point of tangency and the line.
+The graph consists of the line segment from $$(-2,-1)$$ to $$(0,1)$$, followed by the parabola $$y=1+x^2$$ for $$0\le x\le2$$.
+
+<figure class="topic-figure"><img src="{{ '/assets/figures/learning/derivative-problems-graph.svg' | relative_url }}" alt="A line of slope one joins a rising parabola at zero, one. The line and parabola meet continuously, with different slopes." width="640" height="360"><figcaption>Sketch the derivative on the interior of the displayed interval.</figcaption></figure>
+
+1. Sketch $$f^{\prime}$$ on $$(-2,2)$$, showing any excluded input with an open circle.
+2. Where does $$f^{\prime\prime}$$ exist, and what are its values?
+3. Changing only $$f(0)$$ cannot repair the corner. Instead, find $$k$$ such that $$g(x)=f(x)+k|x|$$ is differentiable at zero. Does this also make $$g$$ twice differentiable there?
+
+<details class="disclosure" markdown="1">
+<summary>Hint</summary>
+
+A height on the derivative graph represents a slope on this graph. Check the two limiting slopes at the join.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Solution</summary>
+
+The line has slope $$1$$, while the parabola has derivative $$2x$$. Hence
+
+$$f^{\prime}(x)=\begin{cases}1,&-2<x<0,\\2x,&0<x<2.\end{cases}$$
+
+Sketch a horizontal segment at height $$1$$ to the left, with an open endpoint at $$(0,1)$$; to the right sketch $$y=2x$$, with an open endpoint at $$(0,0)$$. No value is assigned at zero.
+
+<figure class="topic-figure"><img src="{{ '/assets/figures/learning/derivative-problems-slope-graph.svg' | relative_url }}" alt="The derivative is one for negative inputs and twice x for positive inputs. Open circles at zero, one and zero, zero show that the derivative is undefined at zero." width="640" height="360"><figcaption>The two open circles record different limiting slopes. Neither is a value of \(f^{\prime}(0)\).</figcaption></figure>
+
+Differentiating these branches gives
+
+$$f^{\prime\prime}(x)=\begin{cases}0,&-2<x<0,\\2,&0<x<2.\end{cases}$$
+
+The left and right slopes of $$f$$ at zero are $$1$$ and $$0$$. Changing the value at the join cannot reconcile them. In fact, differentiability would require continuity, which already forces $$f(0)=1$$.
+
+For the proposed correction, the left slope is $$1-k$$ and the right slope is $$k$$. They match only when $$k=1/2$$. Directly,
+
+$$\lim_{h\to0^-}\frac{g(h)-g(0)}h=\frac12,\qquad
+\lim_{h\to0^+}\frac{g(h)-g(0)}h=\lim_{h\to0^+}(h+1/2)=\frac12.$$
+
+The repaired first derivative is $$1/2$$ on the left and $$2x+1/2$$ on the right, including value $$1/2$$ at zero. Its left and right difference quotients at zero tend to $$0$$ and $$2$$, respectively. Thus the correction repairs the first derivative but not the second.
+
+</details>
+</section>
+
+<section class="worked" data-problem-id="a-tangent-through-a-prescribed-point" markdown="1">
+{% include learning/problem-label.html number=5 difficulty=2 %}
+
+Find every tangent to $$y=x^3+2$$ that passes through the origin. Give both the point of tangency and the line. Does it meet the curve at any other point?
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
@@ -130,48 +168,21 @@ At $$a$$, the slope is $$3a^2$$. The tangent is
 
 $$y=a^3+2+3a^2(x-a)=3a^2x+2-2a^3.$$
 
-Passing through the origin requires $$2-2a^3=0$$, so $$a=1$$. The only such tangent is $$y=3x$$, touching at $$(1,3)$$. Its passage through another point does not make that point the point of tangency.
+Passing through the origin requires $$2-2a^3=0$$, so $$a=1$$. The only such tangent is $$y=3x$$, touching at $$(1,3)$$. To find other intersections, solve
 
-</details>
-</section>
+$$x^3+2=3x\quad\Longleftrightarrow\quad (x-1)^2(x+2)=0.$$
 
-<section class="worked" data-problem-id="join-value-slope-and-second-derivative" markdown="1">
-<p class="element-label">Problem 5</p>
+It also crosses the curve at $$(-2,-6)$$. At that input the curve's slope is $$12$$, not $$3$$, so this second intersection is not another point of tangency.
 
-Choose $$a,b$$ so that
+<figure class="topic-figure"><img src="{{ '/assets/figures/learning/derivative-problems-tangent-crossing.svg' | relative_url }}" alt="The line y equals three x crosses the cubic y equals x cubed plus two at minus two minus six and is tangent at one three. The origin lies on the line, not on the cubic." width="640" height="360"></figure>
 
-$$f(x)=\begin{cases}2x^2+ax+b,&x\le0,\\\dfrac1{1+x},&x>0\end{cases}$$
-
-is differentiable at zero. For your choice, does $$f^{\prime\prime}(0)$$ exist? Justify your answer using one-sided limits.
-
-<details class="disclosure" markdown="1">
-<summary>Hint</summary>
-
-First match the heights. Then match the slopes. Finally apply the derivative definition to the resulting first derivative at zero.
-
-</details>
-<details class="disclosure" markdown="1">
-<summary>Solution</summary>
-
-Continuity requires $$b=1$$. With this value, the left difference quotient is $$2h+a$$, whose limit is $$a$$. On the right,
-
-$$\frac{1/(1+h)-1}{h}=-\frac1{1+h}\longrightarrow-1.$$
-
-Thus $$a=-1$$. The first derivative is
-
-$$f^{\prime}(x)=\begin{cases}4x-1,&x<0,\\-1,&x=0,\\-(1+x)^{-2},&x>0.\end{cases}$$
-
-The left quotient for the second derivative is $$4$$. The right quotient is
-
-$$\frac{-(1+h)^{-2}+1}{h}=\frac{2+h}{(1+h)^2}\longrightarrow2.$$
-
-These limits disagree, so the second derivative at zero does not exist.
+A tangent can meet its curve elsewhere. Passing through a point and being tangent there are different conditions.
 
 </details>
 </section>
 
 <section class="worked" data-problem-id="simplify-without-losing-the-domain" markdown="1">
-<p class="element-label">Problem 6</p>
+{% include learning/problem-label.html number=6 difficulty=2 %}
 
 For $$Q(x)=(x^2-1)^2/(x-1)$$, find $$Q^{\prime}(x)$$ efficiently and state its domain. Can $$Q$$ be extended to a differentiable function at $$1$$? If so, give the added value and the new tangent slope there.
 
@@ -197,41 +208,10 @@ The polynomial extension $$\widetilde Q(x)=(x-1)(x+1)^2$$ is differentiable ever
 </details>
 </section>
 
-<section class="worked" data-problem-id="combine-rules-without-formulas" markdown="1">
-<p class="element-label">Problem 7</p>
-
-Let $$R(x)=f(g(x))/g(x)$$. Both functions are differentiable at the inputs needed, and
-
-$$g(1)=2,\quad g^{\prime}(1)=-3,\quad f(2)=5,\quad f^{\prime}(2)=4.$$
-
-Find $$R^{\prime}(1)$$ without finding formulas for $$f$$ or $$g$$.
-
-<details class="disclosure" markdown="1">
-<summary>Hint</summary>
-
-The numerator is a composition. Differentiate it before applying the quotient rule.
-
-</details>
-<details class="disclosure" markdown="1">
-<summary>Solution</summary>
-
-The chain and quotient rules give
-
-$$R^{\prime}(x)=\frac{f^{\prime}(g(x))g^{\prime}(x)g(x)-f(g(x))g^{\prime}(x)}{g(x)^2}.$$
-
-Therefore,
-
-$$R^{\prime}(1)=\frac{4(-3)(2)-5(-3)}{2^2}=-\frac94.$$
-
-The denominator is nonzero at the input, so the quotient rule applies there.
-
-</details>
-</section>
-
 <section class="worked" data-problem-id="a-light-moving-away" markdown="1">
-<p class="element-label">Problem 8</p>
+{% include learning/problem-label.html number=7 difficulty=2 %}
 
-A small light source moves away from a sensor. Its distance is $$r(t)=2+t^2$$ metres, for $$t\ge0$$. The sensor model is $$I=120/r^2$$, with $$I$$ in sensor units.
+A small light source moves away from a sensor. Its distance is $$r(t)=2+t^2$$ metres, with $$t\ge0$$ measured in seconds. The sensor model is $$I=120/r^2$$, with $$I$$ in sensor units.
 
 1. Find $$dI/dt$$ at $$t=1$$, including units.
 2. A student uses only $$dI/dr=-240/r^3$$. What rate has the student actually calculated?
@@ -256,39 +236,8 @@ The student has calculated the change in the reading *per metre of distance*, no
 </details>
 </section>
 
-<section class="worked" data-problem-id="second-derivative-of-a-composition" markdown="1">
-<p class="element-label">Problem 9</p>
-
-Let $$H(x)=f(g(x))$$. Derive a formula for $$H^{\prime\prime}(x)$$ using only the product and chain rules. Then evaluate it at $$a$$ given
-
-$$g(a)=1,\quad g^{\prime}(a)=2,\quad g^{\prime\prime}(a)=-1,\quad f^{\prime}(1)=3,\quad f^{\prime\prime}(1)=-2.$$
-
-Assume both functions have the second derivatives needed.
-
-<details class="disclosure" markdown="1">
-<summary>Hint</summary>
-
-Start with $$H^{\prime}(x)=f^{\prime}(g(x))g^{\prime}(x)$$. Both factors now depend on $$x$$.
-
-</details>
-<details class="disclosure" markdown="1">
-<summary>Solution</summary>
-
-Differentiating the product,
-
-$$H^{\prime\prime}(x)=f^{\prime\prime}(g(x))\bigl(g^{\prime}(x)\bigr)^2+f^{\prime}(g(x))g^{\prime\prime}(x).$$
-
-The first term differentiates the outer derivative through its inner input. The second term accounts for the changing inner rate. Thus
-
-$$H^{\prime\prime}(a)=(-2)(2^2)+3(-1)=-11.$$
-
-Squaring only the first-derivative formula would miss this structure.
-
-</details>
-</section>
-
 <section class="worked" data-problem-id="a-round-trip-without-integrals" markdown="1">
-<p class="element-label">Problem 10</p>
+{% include learning/problem-label.html number=8 difficulty=2 %}
 
 A robot moves along a straight line with position $$s(t)=t^3-3t^2$$ metres for $$0\le t\le3$$ seconds.
 
@@ -319,7 +268,7 @@ At $$t=1$$, velocity is $$-3\,\mathrm{m/s}$$ while acceleration is zero. Zero ac
 </section>
 
 <section class="worked" data-problem-id="concentration-while-material-is-lost" markdown="1">
-<p class="element-label">Problem 11</p>
+{% include learning/problem-label.html number=9 difficulty=2 %}
 
 A solution has dissolved mass $$M(t)$$ grams and volume $$V(t)$$ litres. Its concentration is $$C=M/V$$. At one instant,
 
@@ -346,35 +295,103 @@ The concentration is rising. The loss of volume concentrates what remains strong
 </details>
 </section>
 
-<section class="worked" data-problem-id="sampled-values-do-not-fix-a-slope" markdown="1">
-<p class="element-label">Problem 12</p>
+<section class="worked" data-problem-id="the-order-of-two-changes" markdown="1">
+{% include learning/problem-label.html number=10 difficulty=3 %}
 
-A sensor reports $$F(-1)=F(0)=F(1)=0$$. Someone concludes that $$F^{\prime}(0)=0$$.
+Two twice differentiable functions satisfy
 
-Construct a polynomial satisfying all three measurements but with $$F^{\prime}(0)=5$$. Then construct one with any prescribed slope $$m$$ at zero. What do these examples say about recovering an exact instantaneous rate from finitely many values?
+$$\begin{aligned}
+f(1)&=g(1)=1,\\
+f^{\prime}(1)&=2,&g^{\prime}(1)&=3,\\
+f^{\prime\prime}(1)&=-1,&g^{\prime\prime}(1)&=4.
+\end{aligned}$$
+
+Let $$A(x)=f(g(x))$$ and $$B(x)=g(f(x))$$. Show that they have the same value and tangent at $$1$$, but different second derivatives there. Find both second derivatives and explain which step in the calculation prevents the two compositions from being interchangeable.
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
 
-A multiple of $$x(x-1)(x+1)$$ preserves all three measured zeros. Choose the multiplier to set the derivative.
+Differentiate a composition twice. The second differentiation acts on both factors of $$f^{\prime}(g(x))g^{\prime}(x)$$.
 
 </details>
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-Take $$F(x)=-5x(x^2-1)=5x-5x^3$$. It vanishes at all three measured inputs, but
+Both values equal $$1$$. The first derivatives at the common input are
 
-$$F^{\prime}(x)=5-15x^2,\qquad F^{\prime}(0)=5.$$
+$$A^{\prime}(1)=2\cdot3=6,\qquad B^{\prime}(1)=3\cdot2=6.$$
 
-For any real $$m$$, use $$F_m(x)=mx-mx^3$$. Then $$F_m^{\prime}(0)=m$$ while the three sampled values remain zero.
+Thus both tangents are $$y-1=6(x-1)$$.
 
-These measurements alone do not fix the exact derivative, even among polynomials. Estimating a derivative from samples needs additional assumptions about behavior between measurements.
+Applying the product and chain rules to the first derivative gives
+
+$$A^{\prime\prime}(x)=f^{\prime\prime}(g(x))(g^{\prime}(x))^2
++f^{\prime}(g(x))g^{\prime\prime}(x).$$
+
+Consequently,
+
+$$A^{\prime\prime}(1)=(-1)3^2+2\cdot4=-1.$$
+
+Swapping the functions gives
+
+$$B^{\prime\prime}(1)=4\cdot2^2+3(-1)=13.$$
+
+The squared inner rate and the inner second derivative play different roles. Equal values and equal first derivatives at one input do not determine how the slopes change nearby.
+
+</details>
+</section>
+
+<section class="worked" data-problem-id="match-two-derivatives-not-three" markdown="1">
+{% include learning/problem-label.html number=11 difficulty=3 %}
+
+Choose $$a,b,c$$ so that
+
+$$f(x)=\begin{cases}
+ax^2+bx+c,&x\le0,\\
+\dfrac1{1+x},&x>0
+\end{cases}$$
+
+has both a first and a second derivative at zero. For your choice, does the third derivative at zero exist? Use the limit definition at the join, rather than assigning values by substituting into formulas valid only away from zero.
+
+<details class="disclosure" markdown="1">
+<summary>Hint</summary>
+
+Match the values, then the first difference quotients. Next do the same for the first derivative, and finally for the second derivative.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Solution</summary>
+
+Continuity forces $$c=1$$. On the two sides, the first difference quotients give
+
+$$\lim_{h\to0^-}\frac{f(h)-1}{h}=\lim_{h\to0^-}(ah+b)=b,$$
+
+$$\lim_{h\to0^+}\frac{f(h)-1}{h}
+=\lim_{h\to0^+}\frac{-1}{1+h}=-1.$$
+
+Thus $$b=-1$$ and $$f^{\prime}(0)=-1$$. The left branch of $$f^{\prime}$$ is $$2ax-1$$, and the right branch is $$-(1+x)^{-2}$$. Their difference quotients at zero satisfy
+
+$$\lim_{h\to0^-}\frac{f^{\prime}(h)+1}{h}=2a,$$
+
+$$\lim_{h\to0^+}\frac{f^{\prime}(h)+1}{h}
+=\lim_{h\to0^+}\frac{2+h}{(1+h)^2}=2.$$
+
+Therefore $$a=1$$ and $$f^{\prime\prime}(0)=2$$. The second derivative equals $$2$$ on the left and $$2/(1+x)^3$$ on the right. Finally,
+
+$$\lim_{h\to0^-}\frac{f^{\prime\prime}(h)-2}{h}=0,$$
+
+$$\begin{aligned}
+\lim_{h\to0^+}\frac{f^{\prime\prime}(h)-2}{h}
+&=\lim_{h\to0^+}\frac{-2(3+3h+h^2)}{(1+h)^3}=-6.
+\end{aligned}$$
+
+The third derivative does not exist. Matching two levels of derivatives does not automatically match the next.
 
 </details>
 </section>
 
 <section class="worked" data-problem-id="challenge-all-common-tangents" markdown="1">
-{% include learning/problem-label.html number=13 difficulty=4 %}
+{% include learning/problem-label.html number=12 difficulty=3 %}
 
 Find every line tangent to the graph of $$f(x)=x^4-2x^2$$ at two distinct points. Give the line and both points of tangency, and prove that your list is complete.
 
@@ -412,7 +429,71 @@ Otherwise, the intercept condition forces $$a^2+b^2=2/3$$. The slope condition t
 
 $$(a-b)^2=a^2+b^2-2ab=\frac23-\frac23=0.$$
 
-This contradicts distinctness. Hence there are no other common tangents. Symmetry suggests the answer, but the two conditions are what establish completeness.
+This contradicts distinctness. <figure class="topic-figure"><img src="{{ '/assets/figures/learning/derivative-problems-double-tangent.svg' | relative_url }}" alt="The quartic x to the fourth minus two x squared meets the horizontal line y equals minus one tangentially at minus one minus one and one minus one." width="640" height="360"></figure>
+
+Hence there are no other common tangents. Symmetry suggests the answer, but the two conditions are what establish completeness.
+
+</details>
+</section>
+
+<section class="worked" data-problem-id="a-flat-tangent-with-nearby-steep-slopes" markdown="1">
+{% include learning/problem-label.html number=13 difficulty=4 %}
+
+Define
+
+$$f(x)=\begin{cases}x^2\sin(1/x),&x\ne0,\\0,&x=0.\end{cases}$$
+
+1. Prove from the definition that $$f^{\prime}(0)=0$$.
+2. For every positive integer $$n$$, put $$a=1/(n\pi)$$. Use the derivative definition to show that $$f^{\prime}(a)=(-1)^{n+1}$$.
+3. Can the tangent slopes at nearby inputs be forced close to the slope at zero just because the derivative exists at zero?
+
+Do not assume a formula for the derivative of sine. Use the trigonometric limits from Module 1.
+
+<aside class="prerequisite" markdown="1">
+<p class="element-label">Prerequisite</p>
+
+The sine addition identity gives $$\sin(n\pi+u)=(-1)^n\sin u$$ for an integer $$n$$.
+
+</aside>
+
+<details class="disclosure" markdown="1">
+<summary>Hint 1</summary>
+
+At zero, bound the difference quotient by $$|h|$$. At $$a=1/(n\pi)$$, write $$1/(a+h)=n\pi+u$$ and compute $$u/h$$ exactly.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Hint 2</summary>
+
+Substitute $$\sin(n\pi+u)=(-1)^n\sin u$$, then insert the factor $$\sin u/u$$. The remaining factors have ordinary finite limits.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Solution</summary>
+
+At zero,
+
+$$f^{\prime}(0)=\lim_{h\to0}\frac{h^2\sin(1/h)}h
+=\lim_{h\to0}h\sin(1/h)=0,$$
+
+by the squeeze theorem, since $$|h\sin(1/h)|\le|h|$$.
+
+For $$a=1/(n\pi)$$, we have $$f(a)=0$$. Write
+
+$$u=\frac1{a+h}-\frac1a=-\frac{h}{a(a+h)}.$$
+
+As $$h\to0$$, $$u\to0$$. The addition identity then gives
+
+$$\begin{aligned}
+f^{\prime}(a)
+&=\lim_{h\to0}\frac{(a+h)^2\sin(n\pi+u)}h\\
+&=(-1)^n\lim_{h\to0}(a+h)^2\frac{\sin u}{u}\frac{-1}{a(a+h)}\\
+&=(-1)^{n+1}.
+\end{aligned}$$
+
+The inputs $$1/(n\pi)$$ can be made arbitrarily close to zero, yet their tangent slopes alternate between $$1$$ and $$-1$$, rather than approaching $$f^{\prime}(0)=0$$.
+
+A derivative at a point measures secants anchored at that point. It does not, by itself, force nearby tangent slopes to be close to it.
 
 </details>
 </section>
@@ -430,7 +511,7 @@ p^{\prime\prime}(0)&=0,&p^{\prime\prime}(1)&=0.
 
 The camera must also be at position $$1/3$$ at $$t=1/2$$, and must never move backwards.
 
-Find a polynomial of the **smallest possible degree** that meets *all* these conditions. Prove both that it works and that no lower degree can work. You may use the fact that a polynomial with a double zero at $$a$$ has a factor $$(t-a)^2$$.
+Find a polynomial of the *smallest possible degree* that meets *all* these conditions. Prove both that it works and that no lower degree can work. You may use the fact that a polynomial with a double zero at $$a$$ has a factor $$(t-a)^2$$.
 
 <details class="disclosure" markdown="1">
 <summary>Hint 1</summary>
@@ -447,7 +528,7 @@ A correction preserving the value, first derivative, and second derivative at bo
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-**First establish a lower bound.** The velocity has double zeros at $$0$$ and $$1$$, so it contains $$t^2(1-t)^2$$ as a factor. It is not identically zero, since the endpoint positions differ. Its degree is at least four; therefore the position degree is at least five.
+*First establish a lower bound.* The velocity has double zeros at $$0$$ and $$1$$, so it contains $$t^2(1-t)^2$$ as a factor. It is not identically zero, since the endpoint positions differ. Its degree is at least four; therefore the position degree is at least five.
 
 A polynomial of degree at most five with the initial three conditions has the form $$At^3+Bt^4+Ct^5$$. The final three conditions give
 
@@ -463,7 +544,7 @@ $$p_5(t)=10t^3-15t^4+6t^5.$$
 
 But $$p_5(1/2)=1/2$$, so degree five cannot meet the midpoint requirement.
 
-**Rule out degree six.** The difference between any other candidate and $$p_5$$ must have its value and first two derivatives zero at each endpoint. For a polynomial, vanishing value and first two derivatives force the constant, linear, and quadratic coefficients in powers of the displacement from that endpoint to vanish. Each endpoint therefore contributes a triple factor, so the difference is divisible by $$t^3(1-t)^3$$. For degree at most six, every candidate has the form
+*Rule out degree six.* The difference between any other candidate and $$p_5$$ must have its value and first two derivatives zero at each endpoint. For a polynomial, vanishing value and first two derivatives force the constant, linear, and quadratic coefficients in powers of the displacement from that endpoint to vanish. Each endpoint therefore contributes a triple factor, so the difference is divisible by $$t^3(1-t)^3$$. For degree at most six, every candidate has the form
 
 $$p_6(t)=p_5(t)+c\,t^3(1-t)^3.$$
 
@@ -473,7 +554,7 @@ $$p_6^{\prime}(t)=t^2(1-t)^2(64t-2),$$
 
 which is negative for $$0<t<1/32$$. It initially moves backwards. Thus no polynomial of degree at most six can satisfy all the requirements.
 
-**Construct a degree-seven solution.** Write
+*Construct a degree-seven solution.* Write
 
 $$p(t)=p_5(t)+t^3(1-t)^3(a+bt).$$
 

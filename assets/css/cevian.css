@@ -9,7 +9,7 @@
 .cv-point { fill: var(--green); stroke: var(--paper); stroke-width: 2; }
 .cv-point:focus-visible { outline: none; stroke: #bc8e46; stroke-width: 4; }
 .cv-contact { fill: var(--green); stroke: var(--paper); stroke-width: 1; }
-.cv-label { fill: var(--ink); font: 15px var(--sans); paint-order: stroke; stroke: #f7f8f3; stroke-width: 3px; stroke-linejoin: round; }
+.cv-label { fill: var(--ink); font: 15px var(--sans); }
 .cv-small { font-size: 12px; stroke-width: 2px; }
 .cv-corner { stroke: none; fill-opacity: .5; }
 .cv-corner-a { fill: var(--cv-gold); }

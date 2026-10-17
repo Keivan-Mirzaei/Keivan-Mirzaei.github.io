@@ -29,7 +29,7 @@
     return roots;
   }
   function update(next) {
-    height = Math.round(Math.max(-4.5, Math.min(4.5, next)) * 10) / 10;
+    height = Math.round(Math.max(-5.5, Math.min(5.5, next)) * 10) / 10;
     const y = screenY(height);
     document.getElementById('ivt-k').style.top = `${y / 360 * 100}%`;
     for (const part of ['line', 'hit']) document.getElementById(`ivt-target-${part}`).setAttribute('d', `M75 ${y}H560`);
@@ -53,6 +53,7 @@
       for (const [key, value] of Object.entries({ cx: screenX(x), cy: y, r: 6 })) dot.setAttribute(key, value);
       return dot;
     }));
+    document.getElementById('ivt-guarantee').value = height > curve(-2.25) && height < curve(2.25) ? 'IVT guarantees an intersection' : 'Outside the endpoint heights: no IVT guarantee';
     document.getElementById('ivt-count').value = `${roots.length} intersection${roots.length === 1 ? '' : 's'}`;
   }
   function graphY(event) {
@@ -81,7 +82,7 @@
   }
   for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) handle.addEventListener(name, release);
   handle.addEventListener('keydown', event => {
-    const next = { ArrowUp: height + 0.1, ArrowRight: height + 0.1, ArrowDown: height - 0.1, ArrowLeft: height - 0.1, Home: -4.5, End: 4.5 };
+    const next = { ArrowUp: height + 0.1, ArrowRight: height + 0.1, ArrowDown: height - 0.1, ArrowLeft: height - 0.1, Home: -5.5, End: 5.5 };
     if (!(event.key in next)) return;
     event.preventDefault();
     update(next[event.key]);

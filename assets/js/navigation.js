@@ -19,12 +19,15 @@ export function initializeNavigation() {
     const open = mobile.matches ? mobileOpen : !desktopCollapsed;
     root.classList.toggle('sidebar-collapsed', !mobile.matches && desktopCollapsed);
     root.classList.toggle('sidebar-open', mobile.matches && mobileOpen);
+    root.classList.remove('sidebar-start-collapsed');
     sidebar.inert = !open;
     sidebar.setAttribute('aria-hidden', String(!open));
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Hide navigation' : 'Show navigation');
     toggle.title = open ? 'Hide navigation' : 'Show navigation';
-    backdrop.hidden = !(mobile.matches && mobileOpen);
+    // Keep it rendered so its fade can finish before visibility switches off.
+    backdrop.hidden = false;
+    backdrop.setAttribute('aria-hidden', String(!(mobile.matches && mobileOpen)));
     main.inert = footer.inert = search.inert = mobile.matches && mobileOpen;
     document.querySelector('[data-gadget-dock]').inert = document.querySelector('[data-gadget-controls]').inert = mobile.matches && mobileOpen;
   }
@@ -72,9 +75,20 @@ export function initializeNavigation() {
     }
   });
 
-  document.addEventListener('site:page', () => { mobileOpen = false; render(); });
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let titleAnimation = null;
+  document.addEventListener('site:page', () => {
+    mobileOpen = false; render();
+    titleAnimation?.cancel();
+    if (!reducedMotion.matches) titleAnimation = document.querySelector('.topbar-title').animate?.(
+      [{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'translateY(0)' }],
+      { duration: 260, easing: 'cubic-bezier(.22, 1, .36, 1)' }
+    );
+  });
   root.classList.add('js');
   toggle.hidden = false;
   render();
+  // Animate user actions only after the restored layout has painted.
+  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('navigation-ready')));
   mountScrollHeader();
 }

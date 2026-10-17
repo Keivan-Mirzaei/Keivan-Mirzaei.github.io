@@ -61,7 +61,7 @@ The target $$k$$ is a *height*; the theorem guarantees an *input* $$c$$ that rea
 <g id="ivt-projections" fill="none" stroke="#285b46" stroke-dasharray="3 5" stroke-opacity=".45" pointer-events="none"></g>
 <path id="ivt-curve" fill="none" stroke="#285b46" stroke-width="2.5"/>
 <g fill="#285b46"><circle cx="85" cy="296.016" r="4"/><circle cx="550" cy="63.984" r="4"/></g>
-<g id="ivt-target" class="graph-handle" role="slider" tabindex="0" aria-label="Target height" aria-valuemin="-4.5" aria-valuemax="4.5" aria-valuenow="0" aria-orientation="vertical">
+<g id="ivt-target" class="graph-handle" role="slider" tabindex="0" aria-label="Target height" aria-valuemin="-5.5" aria-valuemax="5.5" aria-valuenow="0" aria-orientation="vertical">
 <path id="ivt-target-line" d="M75 180H560" fill="none" stroke="#a67936" stroke-width="2"/>
 <path id="ivt-target-hit" d="M75 180H560" fill="none" stroke="transparent" stroke-width="28" pointer-events="stroke"/>
 </g>
@@ -75,8 +75,8 @@ The target $$k$$ is a *height*; the theorem guarantees an *input* $$c$$ that rea
 <span id="ivt-k" class="ivt-label ivt-label-k" style="top:50%">\(k\)</span>
 <span class="ivt-label ivt-label-low">\(f(a)\)</span><span class="ivt-label ivt-label-high">\(f(b)\)</span>
 </div>
-<div class="ivt-readouts widget-readouts"><span>\(k=\) <output id="ivt-height">0.0</output></span><output id="ivt-count" aria-live="polite">3 intersections</output></div>
-<p class="widget-instruction">Drag the amber line up or down. Every height between \(f(a)\) and \(f(b)\) meets the curve; each marked input \(c\) satisfies \(f(c)=k\).</p>
+<div class="ivt-readouts widget-readouts"><span>\(k=\) <output id="ivt-height">0.0</output></span><output id="ivt-count" aria-live="polite">3 intersections</output><output id="ivt-guarantee">IVT guarantees an intersection</output></div>
+<p class="widget-instruction">Drag the amber line up or down, including beyond the endpoint heights. Every height between \(f(a)\) and \(f(b)\) meets the curve; each marked input \(c\) satisfies \(f(c)=k\). Outside those heights, the theorem makes no promise.</p>
 </div>
 
 ## Proving a solution exists

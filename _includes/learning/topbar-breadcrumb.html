@@ -19,8 +19,6 @@
   {% if navigation_module %}
   <a href="{{ '/learning/' | append: navigation_course.slug | append: '/' | relative_url }}">{{ navigation_course.title | escape }}</a>
   {% include icon.html name='chevron-right' %}
-  <a href="{{ '/learning/' | append: navigation_course.slug | append: '/#' | append: navigation_module.slug | relative_url }}">{{ navigation_module_number }} {{ navigation_module.title | escape }}</a>
-  {% include icon.html name='chevron-right' %}
   <span aria-current="page">{% if navigation_topic_number %}{{ navigation_topic_number }} {% endif %}{{ page.title | escape }}</span>
   {% else %}
   <span aria-current="page">{{ navigation_course.title | escape }}</span>

@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="440" height="410" viewBox="0 0 440 410" role="img" aria-labelledby="title description"><title id="title">Floor tiling</title><desc id="description">A floor grid with three missing squares beside four coloured tiles.</desc><rect width="440" height="410" fill="#fcfcf9"/><g transform="translate(11 34) scale(.95)">
-  
-  
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="410" viewBox="0 0 440 410" role="img" aria-labelledby="title description"><title id="title">Floor tiling</title><desc id="description">A floor grid with three missing squares beside four coloured tiles.</desc><g transform="translate(11 34) scale(.95)">
+
+
   <defs><pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V8" stroke="#d9ded3" stroke-width="2"/></pattern></defs>
   <rect width="440" height="360" fill="#fcfcf9"/>
   <rect x="24" y="63" width="236" height="236" rx="8" fill="#eef0e8" stroke="#e0e4dc"/>

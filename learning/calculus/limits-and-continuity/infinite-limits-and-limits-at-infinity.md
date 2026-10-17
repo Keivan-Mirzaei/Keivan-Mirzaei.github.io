@@ -76,7 +76,7 @@ For $$f(x)=1/x$$, a small negative input gives a large negative output; a small 
 <path d="M320 35V325" fill="none" stroke="#a67936" stroke-width="1.4" stroke-dasharray="4 5"/>
 <g clip-path="url(#pole-clip)"><path id="pole-curve" fill="none" stroke="#285b46" stroke-width="2.5"/></g>
 <path d="M200 177V183M440 177V183M317 55H323M317 305H323" fill="none" stroke="#9eac96"/>
-<g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" stroke="#fcfcf8" stroke-width="5" paint-order="stroke"><text x="200" y="204" text-anchor="middle">−1</text><text x="440" y="204" text-anchor="middle">1</text><text x="306" y="203" text-anchor="end">0</text><text id="pole-unit-positive" x="305" text-anchor="end">1</text><text id="pole-unit-negative" x="305" text-anchor="end">−1</text><text id="pole-top" x="305" y="60" text-anchor="end">3</text><text id="pole-bottom" x="305" y="310" text-anchor="end">−3</text></g>
+<g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text x="200" y="204" text-anchor="middle">−1</text><text x="440" y="204" text-anchor="middle">1</text><text x="306" y="203" text-anchor="end">0</text><text id="pole-unit-positive" x="305" text-anchor="end">1</text><text id="pole-unit-negative" x="305" text-anchor="end">−1</text><text id="pole-top" x="305" y="60" text-anchor="end">3</text><text id="pole-bottom" x="305" y="310" text-anchor="end">−3</text></g>
 <g fill="#282e29" font-family="Georgia,serif" font-style="italic" font-size="17"><text x="598" y="186">x</text><text x="332" y="25">y</text></g>
 </svg>
 <div class="graph-legend pole-legend" aria-label="Graph legend"><span><i class="legend-curve" aria-hidden="true"></i>\(f\)</span><span><i class="asymptote-key" aria-hidden="true"></i>\(x=0\)</span><span><i class="initial-view-key" aria-hidden="true"></i>Initial view</span></div>
@@ -128,7 +128,7 @@ For the next graph, let $$g(x)=\frac{2x^2+x}{x^2+1}$$. Dividing by $$x^2$$ shows
 <path d="M65 145H575" fill="none" stroke="#a67936" stroke-width="1.4" stroke-dasharray="4 5"/>
 <g clip-path="url(#tails-clip)"><path id="tails-curve" fill="none" stroke="#285b46" stroke-width="2.5"/></g>
 <path d="M80 282V288M560 282V288M317 145H323" fill="none" stroke="#9eac96"/>
-<g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" stroke="#fcfcf8" stroke-width="5" paint-order="stroke"><text id="tails-left" x="80" y="310" text-anchor="middle">−4</text><text id="tails-right" x="560" y="310" text-anchor="middle">4</text><text x="306" y="308" text-anchor="end">0</text><text x="305" y="150" text-anchor="end">2</text></g>
+<g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14"><text id="tails-left" x="80" y="310" text-anchor="middle">−4</text><text id="tails-right" x="560" y="310" text-anchor="middle">4</text><text x="306" y="308" text-anchor="end">0</text><text x="305" y="150" text-anchor="end">2</text></g>
 <g fill="#282e29" font-family="Georgia,serif" font-style="italic" font-size="17"><text x="598" y="291">x</text><text x="332" y="25">y</text></g>
 </svg>
 <div class="graph-legend tails-legend" aria-label="Graph legend"><span><i class="legend-curve" aria-hidden="true"></i>\(g\)</span><span><i class="asymptote-key" aria-hidden="true"></i>\(y=2\)</span><span><i class="initial-view-key" aria-hidden="true"></i>Initial view</span></div>

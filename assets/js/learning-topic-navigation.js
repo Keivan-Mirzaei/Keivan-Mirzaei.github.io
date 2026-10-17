@@ -1,4 +1,4 @@
-import { alignCoursePath } from './lib/path-rails.mjs';
+import { alignCoursePath, alignTopicTrack } from './lib/path-rails.mjs';
 import { enableProblemNumberStrip } from './lib/problem-number-strip.mjs';
 
 // Remember the reading position so the course path can identify its current stop.
@@ -17,6 +17,7 @@ try {
 
 for (const chain of document.querySelectorAll('.topic-chain')) {
   const current = chain.querySelector('[aria-current]');
+  if (chain.closest('#reading-dock')) alignTopicTrack(chain);
   const links = [...chain.querySelectorAll('.topic-chain-link')];
   const activeIndex = links.indexOf(current);
   if (activeIndex >= 0) links.forEach((link, index) => {

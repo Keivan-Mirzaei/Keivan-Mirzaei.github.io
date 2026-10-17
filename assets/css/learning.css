@@ -1,4 +1,4 @@
-.learning-page { --path-colour: #4e6e83; --path-line: #dde2e7; --path-node: #b6c3ca; --path-text: #8b9fac; --selected-path-line: #b18a50; }
+.learning-page { --path-colour: #4e6e83; --path-line: #dde2e7; --path-node: #b6c3ca; --path-text: #8b9fac; }
 :where(.learning-page) { max-width: 1180px; margin: auto; padding: 0 40px 45px; color: var(--ink); font: 15px/1.7 var(--sans); }
 .learning-page * {box-sizing:border-box}
 :where(.learning-page) button, :where(.learning-page) input, :where(.learning-page) select {font:inherit;color:inherit}
@@ -63,7 +63,7 @@
 .learning-page .course-outline-module h2::before { content: ''; position: absolute; top: 14px; left: -6px; width: 11px; height: 11px; border-radius: 50%; background: var(--path-node); box-shadow: 0 0 0 4px var(--paper); }
 .learning-page .course-outline-module h2 span { position: absolute; top: 10px; left: -42px; width: 28px; text-align: center; color: var(--path-text); background: transparent; font: 11px/20px var(--sans); }
 .learning-page .course-outline-module[data-current] h2 { color: var(--path-colour); }
-.learning-page .course-outline-module[data-current] h2 span { color: var(--path-colour); font-weight: 700; }
+.learning-page .course-outline-module[data-current] h2 span { color: var(--path-colour); }
 .learning-page.course-outline .topic-chain { margin-top: 14px; margin-left: 0; padding-left: 38px; }
 @media(max-width:600px) {
   .learning-page .course-outline-module { margin-left: 29px; }
@@ -76,19 +76,18 @@
 /* Continuous rails keep the spotlight and all marker centres aligned. */
 .learning-page.course-outline { position: relative; }
 .learning-page.course-outline::before { content: ''; position: absolute; left: var(--spine-x); top: var(--spine-start); height: var(--spine-length); width: 1px; transform: translateX(-50%); background: radial-gradient(ellipse 3px 190px at 50% var(--spine-spot),#a66e24,var(--path-line)); }
-.learning-page.course-outline .topic-chain-link::after { display: none; }
+.learning-page .path-track .topic-chain-link::after { display: none; }
 .learning-page.course-outline .topic-chain { mask-image: linear-gradient(to right,var(--fade-left,#000),#000 30px,#000 calc(100% - 30px),var(--fade-right,transparent)); -webkit-mask-image: linear-gradient(to right,var(--fade-left,#000),#000 30px,#000 calc(100% - 30px),var(--fade-right,transparent)); }
-.learning-page.course-outline .topic-chain::before { content: ''; position: absolute; left: 0; top: var(--rail-y); width: var(--rail-width); height: 1px; transform: translateY(-50%); background: var(--path-line); }
-.learning-page.course-outline .course-outline-module[data-current] .topic-chain::before { background: radial-gradient(ellipse 190px 3px at var(--rail-spot) 50%,#a66e24,var(--path-line)); }
+.learning-page .path-track::before { content: ''; position: absolute; left: var(--rail-start,0px); top: var(--rail-y); width: var(--rail-width); height: 1px; transform: translateY(-50%); background: var(--path-line); }
+.learning-page .path-track:has([aria-current])::before { background: radial-gradient(ellipse 190px 3px at var(--rail-spot) 50%,#a66e24,var(--path-line)); }
 .learning-page.course-outline .course-outline-module h2 { opacity: var(--chapter-focus,1); }
-.learning-page.course-outline .course-outline-module[data-current] h2 { font-weight: 600; }
-.learning-page.course-outline .topic-chain-link { opacity: 1; }
-.learning-page.course-outline .topic-chain-title,
-.learning-page.course-outline .topic-chain-number { opacity: var(--topic-focus,1); }
-.learning-page.course-outline .topic-chain-link[aria-current] { font-weight: 700; }
-.learning-page.course-outline .topic-chain-link[aria-current] .topic-chain-dot,
-.learning-page.course-outline .course-outline-module[data-current] h2::before { transform: rotate(45deg); background: #a66e24; box-shadow: 0 0 0 4px var(--paper),0 0 0 6px #a66e24; }
-.learning-page #reading-dock .topic-chain:has([aria-current]) .topic-chain-link::after { background: var(--selected-path-line); }
+.learning-page .path-track .topic-chain-link { opacity: 1; }
+.learning-page .path-track .topic-chain-title,
+.learning-page .path-track .topic-chain-number { opacity: var(--topic-focus,1); }
+.learning-page .path-track .topic-chain-link[aria-current] { font-weight: 700; }
+.learning-page .path-track .topic-chain-link[aria-current] .topic-chain-dot,
+.learning-page.course-outline .course-outline-module[data-current] h2::before { border-radius: 0; transform: rotate(45deg); background: #a66e24; box-shadow: 0 0 0 4px var(--paper),0 0 0 6px #a66e24; }
+.learning-page #reading-dock .path-track { mask-image: linear-gradient(to right,var(--fade-left,#000),#000 30px,#000 calc(100% - 30px),var(--fade-right,transparent)); -webkit-mask-image: linear-gradient(to right,var(--fade-left,#000),#000 30px,#000 calc(100% - 30px),var(--fade-right,transparent)); }
 @media(prefers-reduced-motion:no-preference) {
   .learning-page.course-outline .topic-chain-title, .learning-page.course-outline .topic-chain-number { transition: opacity .25s ease; }
 }

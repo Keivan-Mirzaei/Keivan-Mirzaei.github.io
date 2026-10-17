@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+<title id="title">Horizontal displacement and vertical drop</title><desc id="desc">From the top of a circle of radius r, a point moves through angle theta. Its horizontal displacement is d and its vertical drop is h.</desc>
+<style>.axis{fill:none;stroke:#c9d1c6;stroke-width:1}.ticks{fill:none;stroke:#9eac96;stroke-width:1}.curve{fill:none;stroke:#285b46;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}.label{font:14px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;fill:#686e66}.math{font:italic 17px Georgia,serif;fill:#282e29}</style>
+<path d="M60 240A160 160 0 0 1 380 240" class="curve"/>
+<path d="M220 240V80M220 240L333.137 126.863" class="axis"/>
+<path d="M220 80H333.137" fill="none" stroke="#537ca4" stroke-width="2"/>
+<path d="M333.137 80V126.863" fill="none" stroke="#aa7a35" stroke-width="2"/>
+<path d="M220 205A35 35 0 0 1 244.749 215.251" class="axis"/>
+<path d="M323.137 80V90H333.137" class="axis"/>
+<circle cx="220" cy="80" r="4" fill="#285b46"/><circle cx="333.137" cy="126.863" r="5" fill="#285b46"/>
+<g class="math"><text x="275" y="66">d</text><text x="345" y="108">h</text><text x="235" y="198">θ</text><text x="205" y="166">r</text></g>
+</svg>

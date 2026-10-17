@@ -2,7 +2,7 @@
   <title id="title">Tiling</title>
   <desc id="description">A floor with three missing squares and four colourful tiles to fit into its empty spaces.</desc>
   <defs><pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V8" stroke="#d9ded3" stroke-width="2"/></pattern></defs>
-  <rect width="440" height="360" fill="#fcfcf9"/>
+
   <rect x="24" y="63" width="236" height="236" rx="8" fill="#eef0e8" stroke="#e0e4dc"/>
   <g fill="#fcfcf9" stroke="#d8ddd1" stroke-width="1">
     <rect x="36" y="75" width="50" height="50" rx="3"/><rect x="90" y="75" width="50" height="50" rx="3"/><rect x="144" y="75" width="50" height="50" rx="3"/>

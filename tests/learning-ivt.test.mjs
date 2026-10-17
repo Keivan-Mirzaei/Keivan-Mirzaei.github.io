@@ -42,12 +42,13 @@ test('the moving target finds one, two tangent, or three intersections on the cu
   const x = (dots()[0].attrs.cx - 85) * 4.5 / 465 - 2.25;
   assert.ok(Math.abs(x ** 3 - 3 * x - 2.1) < 1e-9);
   key('End'); key('ArrowUp');
-  assert.equal(get('ivt-height').value, '4.5');
-  assert.equal(dots().length, 1);
-  assert.equal(get('ivt-c-1').hidden, true);
+  assert.equal(get('ivt-height').value, '5.5');
+  assert.equal(dots().length, 0);
+  assert.equal(get('ivt-c-0').hidden, true);
+  assert.match(get('ivt-guarantee').value, /no IVT guarantee/);
   key('Home'); key('ArrowDown');
-  assert.equal(get('ivt-height').value, '-4.5');
-  assert.equal(dots().length, 1);
+  assert.equal(get('ivt-height').value, '-5.5');
+  assert.equal(dots().length, 0);
   assert.equal(get('ivt-c-1').hidden, true);
 });
 

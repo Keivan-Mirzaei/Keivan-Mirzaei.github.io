@@ -12,12 +12,11 @@
 .fr-line-hit { fill: none; stroke: transparent; stroke-width: 28; pointer-events: stroke; cursor: grab; touch-action: none; }
 .fr-point { fill: var(--region-color); stroke: var(--paper); stroke-width: 1.7; }
 .fr-point-boundary { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
-.fr-region-label { fill: var(--muted); font: 500 13px var(--sans); text-anchor: middle; dominant-baseline: middle; paint-order: stroke; stroke: #f7f8f3; stroke-width: 6px; stroke-linejoin: round; }
+.fr-region-label { fill: var(--muted); font: 500 13px var(--sans); text-anchor: middle; dominant-baseline: middle; }
 .fr-crossing { position: absolute; width: 44px; height: 44px; transform: translate(-50%, -50%); padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: grab; touch-action: none; }
 .fr-stage.is-dragging, .fr-stage.is-dragging .fr-crossing, .fr-stage.is-dragging .fr-line-hit { cursor: grabbing; }
 .fr-game.is-solved .fr-stage { background: #e1f2e5; border-color: #469562; box-shadow: inset 0 0 0 1px #469562; }
 .fr-game.is-solved .fr-area { opacity: 0; }
-.fr-game.is-solved .fr-region-label { stroke: #e1f2e5; }
 .fr-rotations { display: grid; gap: 6px; margin: 14px 0 8px; }
 .fr-rotations label::before { content: ''; display: inline-block; width: 18px; height: 0; margin: 0 7px 3px 0; border-top: 1.6px solid var(--green); }
 .fr-game:has([data-fr-independent]:not([hidden])) [data-fr-rotation-b-name]::before { border-top-style: dashed; }

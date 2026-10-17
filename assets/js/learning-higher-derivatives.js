@@ -42,7 +42,7 @@
   const plots = models.map(model => {
     const svg = document.getElementById(`higher-${model.id}`);
     const y = value => 145 - (value - model.min) * 125 / (model.max - model.min);
-    const text = (tx, ty, value, anchor = 'middle') => node('text', { x: tx, y: ty, 'text-anchor': anchor, fill: '#686e66', 'font-size': 12, 'font-family': '-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif', stroke: '#fcfcf9', 'stroke-width': 4, 'paint-order': 'stroke' }, svg, value);
+    const text = (tx, ty, value, anchor = 'middle') => node('text', { x: tx, y: ty, 'text-anchor': anchor, fill: '#686e66', 'font-size': 12, 'font-family': '-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif' }, svg, value);
     const defs = node('defs', {}, svg), clip = node('clipPath', { id: `higher-${model.id}-clip` }, defs);
     node('rect', { x: 59, y: 18, width: 433, height: 130 }, clip);
     const axisY = y(0);

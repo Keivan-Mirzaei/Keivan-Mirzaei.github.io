@@ -237,9 +237,9 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
                 self.assertIn('class="topbar-title learning-breadcrumb"', html)
                 breadcrumb = html.partition('<nav class="topbar-title learning-breadcrumb"')[2].partition('</nav>')[0]
                 module_number, topic_number, module_slug = positions[topic["url"]]
-                self.assertEqual(breadcrumb.count('<a '), 4)
+                self.assertEqual(breadcrumb.count('<a '), 3)
                 self.assertIn(f'<span aria-current="page">{module_number}.{topic_number} ', breadcrumb)
-                self.assertIn(f'/learning/calculus/#{module_slug}', breadcrumb)
+                self.assertNotIn(f'/learning/calculus/#{module_slug}', breadcrumb)
                 self.assertIn('href="/learning/" aria-current="true"', html)
                 if topic['slug'] in {'limits', 'limit-laws', 'squeeze-theorem', 'infinite-limits-and-limits-at-infinity', 'continuity', 'intermediate-value-theorem', 'definition-and-geometry', 'differentiation-rules', 'chain-rule', 'higher-derivatives', 'trigonometric-derivatives', 'inverse-function-derivatives', 'hyperbolic-functions', 'implicit-differentiation', 'logarithmic-differentiation'}:
                     self.assertIn('id="practice"', html)
@@ -260,7 +260,7 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
                 self.assertEqual(module["topics"][-1]["slug"], "problems")
             module_problems = (destination / "learning/calculus/limits-and-continuity/problems/index.html").read_text()
             problem_disclosures = ProblemRows(module_problems)
-            self.assertEqual(problem_disclosures.labels.count("Solution"), 16)
+            self.assertEqual(problem_disclosures.labels.count("Solution"), 15)
             self.assertTrue(all(not row[2] for row in problem_disclosures.rows if row[0] == "disclosure"))
             self.assertNotIn('id="practice"', module_problems)
             topic_fixture = (destination / "learning/fixture-topic/index.html").read_text()
