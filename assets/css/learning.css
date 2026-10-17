@@ -1,25 +1,23 @@
-.learning-page {--paper:#fcfcf9;--ink:#282e29;--muted:#686e66;--line:#dfe3da;--green:#285b46;--tint:#e5ece2;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink);background:var(--paper)}
+:where(.learning-page) { max-width: 1180px; margin: auto; padding: 0 40px 45px; color: var(--ink); font: 15px/1.7 var(--sans); }
 .learning-page * {box-sizing:border-box}
-.learning-page {margin:0;font-size:15px;line-height:1.7}
-.learning-page button, .learning-page input, .learning-page select {font:inherit;color:inherit}
-.learning-page button, .learning-page summary, .learning-page select {cursor:pointer}
-.learning-page button, .learning-page a, .learning-page summary, .learning-page select {min-height:44px}
-.learning-page button {border:0;background:transparent;border-radius:5px;padding:9px 14px}
-.learning-page button:hover, .learning-page a:hover {color:var(--green);background:var(--tint)}
-.learning-page button:disabled {opacity:.4;cursor:default}
-.learning-page a {color:inherit;text-underline-offset:4px}
-.learning-page :focus-visible {outline:2px solid var(--green);outline-offset:4px}
-.learning-page [hidden] {display:none!important}
-.learning-page {max-width:1180px;margin:auto;padding:0 40px;min-height:80vh}
-.learning-page h1, .learning-page h2, .learning-page h3 {font-family:Georgia,serif;font-weight:400;line-height:1.16}
-.learning-page h1 {font-size:54px;letter-spacing:-1.8px;margin:18px 0 23px}
-.learning-page h2 {font-size:27px}
-.learning-page p {margin:0 0 22px}
+:where(.learning-page) button, :where(.learning-page) input, :where(.learning-page) select {font:inherit;color:inherit}
+:where(.learning-page) button, :where(.learning-page) summary, :where(.learning-page) select {cursor:pointer}
+:where(.learning-page) button, :where(.learning-page) a, :where(.learning-page) summary, :where(.learning-page) select {min-height:44px}
+:where(.learning-page) button {border:0;background:transparent;border-radius:5px;padding:9px 14px}
+:where(.learning-page) button:hover, :where(.learning-page) a:hover {color:var(--green);background:var(--tint)}
+:where(.learning-page) button:disabled {opacity:.4;cursor:default}
+:where(.learning-page) a {color:inherit;text-underline-offset:4px}
+:where(.learning-page) :focus-visible {outline:2px solid var(--green);outline-offset:4px}
+:where(.learning-page) [hidden] {display:none!important}
+:where(.learning-page) h1, :where(.learning-page) h2, :where(.learning-page) h3 {font-family:var(--serif);font-weight:400;line-height:1.16}
+:where(.learning-page) h1 {font-size:var(--page-title-size);letter-spacing:-1.6px;margin:0 0 22px}
+:where(.learning-page) h2 {font-size:27px}
+:where(.learning-page) p {margin:0 0 22px}
 .learning-page .axis {fill:none;stroke:#c4cebf;stroke-width:1}
 .learning-page .curve {fill:none;stroke:var(--green);stroke-width:2.5}
-.learning-page figcaption {font-size:11px;color:var(--muted);text-align:center}
-.learning-page label {font-size:11px;color:var(--muted)}
-.learning-page select {display:block;width:100%;border:1px solid var(--line);background:var(--paper);padding:10px;border-radius:5px;margin-top:5px}
+:where(.learning-page) figcaption {font-size:11px;color:var(--muted);text-align:center}
+:where(.learning-page) label {font-size:11px;color:var(--muted)}
+:where(.learning-page) select {display:block;width:100%;border:1px solid var(--line);background:var(--paper);padding:10px;border-radius:5px;margin-top:5px}
 .learning-page #reading-dock { width: 100%; margin: 44px auto; text-align: center; }
 .learning-page .topic-chain { position: relative; display: flex; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x pan-y pinch-zoom; user-select: none; padding: 12px 30px 18px; mask-image: linear-gradient(to right,transparent,#000 30px,#000 calc(100% - 30px),transparent); -webkit-mask-image: linear-gradient(to right,transparent,#000 30px,#000 calc(100% - 30px),transparent); }
 .learning-page .topic-chain::-webkit-scrollbar { display: none; }
@@ -44,19 +42,7 @@
 .learning-page #close-course-map {display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;padding:0;border:0;border-radius:5px;background:#edf1e9;color:var(--muted)}
 .learning-page #close-course-map:hover {color:var(--green);background:var(--tint)}
 .learning-page .topic-contents-list {display:flex;flex-direction:column;margin-top:20px}
-.learning-page .learning-intro {padding:60px 0 35px}
-.learning-page .learning-intro>p:last-child {color:var(--muted)}
-.learning-page .courses {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-bottom:60px}
-.learning-page .course {background:#f1f3ec;border-radius:8px;overflow:hidden;align-self:start}
-.learning-page .thumbnail {height:170px;background:#e9eee2;display:grid;place-items:center}
-.learning-page .thumbnail svg {width:210px;height:135px;fill:none;stroke:var(--green);stroke-width:1.5}
-.learning-page .course-body {padding:23px}
-.learning-page .course h2 {font-size:27px;margin:0;text-align:center}
-@media(max-width:800px) {.learning-page .courses {grid-template-columns:1fr}
-}
-@media(max-width:600px) {.learning-page {padding:0 20px}
-.learning-page h1 {font-size:40px}
-.learning-page .learning-intro {padding-top:35px}
+@media(max-width:600px) {:where(.learning-page):not(.page-wrap) {padding:0 23px 35px}
 .learning-page dialog {padding:20px 20px max(28px,env(safe-area-inset-bottom))}
 .learning-page .dialog-heading h2 {font-size:25px}
 }
@@ -65,13 +51,9 @@
 }
 .learning-page .course-module {margin:0 0 12px}
 .learning-page .course-module summary {padding:12px 0;font-size:14px;color:var(--green)}
-.learning-page .course h2 {font-size:25px;line-height:1.25}
 .learning-page .learning-arrow {display:inline-block;flex-shrink:0;vertical-align:middle}
 .learning-page .learning-arrow-left {transform:rotate(180deg)}
 .learning-page .topic-contents-list .course-module .topic-chain-link { padding: 8px 14px 0; margin: 0; font-size: 13px; border-radius: 0; }
-.learning-page a.course { display: block; text-decoration: none; }
-.learning-page a.course:hover { background: #f1f3ec; color: inherit; }
-.learning-page.course-outline { padding-top: 44px; padding-bottom: 44px; }
 .learning-page.course-outline h1 { max-width: 760px; }
 .learning-page .course-outline-module { margin: 40px 0 50px; }
 .learning-page .course-outline-module h2 { font: 500 19px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color: var(--green); }

@@ -7,11 +7,24 @@
   }
 
   const questions = JSON.parse($('exercise-data')?.textContent || '[]');
-  const answers = questions.map(() => ({ selected: null, checked: false }));
+  const storageKey = `learning-quiz:${globalThis.location?.pathname || ''}:v1`;
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}') || {}; } catch {}
+  const answers = questions.map(question => {
+    const previous = Array.isArray(saved.answers) && saved.answers.find(answer => answer?.signature === JSON.stringify(question));
+    const selected = Number.isInteger(previous?.selected) && previous.selected >= 0 && previous.selected < question.options.length
+      ? previous.selected : null;
+    return { selected, checked: selected !== null };
+  });
+  function saveProgress() {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify({ active, answers: answers.map((answer, index) => ({ selected: answer.selected, signature: JSON.stringify(questions[index]) })) }));
+    } catch {}
+  }
   const escapeHtml = value => String(value).replace(/[&<>"']/g, character => (
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]
   ));
-  let active = 0;
+  let active = Number.isInteger(saved.active) && saved.active >= 0 && saved.active < questions.length ? saved.active : 0;
 
   function questionMarkup(question, index) {
     const options = question.options.map((option, choice) => `
@@ -64,6 +77,9 @@
     }).join('');
     $('previous-question').disabled = active === 0;
     $('next-question').disabled = active === questions.length - 1;
+    const attempted = answers.filter(answer => answer.checked).length;
+    const correct = answers.filter((answer, index) => answer.checked && answer.selected === questions[index].correct).length;
+    $('quiz-status').textContent = attempted ? `${correct} correct, ${attempted - correct} incorrect, ${questions.length - attempted} unanswered.` : '';
   }
 
   function renderQuestion() {
@@ -76,37 +92,37 @@
   document.addEventListener('change', event => {
     if (!event.target.matches('[data-question]')) return;
     answers[active].selected = Number(event.target.value);
-    answers[active].checked = false;
+    answers[active].checked = true;
+    saveProgress();
     $('quiz-status').textContent = '';
     updateAnswerVisuals();
     renderProgress();
   });
   document.addEventListener('click', event => {
+    if (event.target.matches?.('[data-question]') && answers[active].selected === Number(event.target.value)) {
+      event.preventDefault();
+      answers[active] = { selected: null, checked: false };
+      saveProgress();
+      $('quiz-status').textContent = '';
+      renderQuestion();
+      $('question-area').querySelector(`[value="${event.target.value}"]`).focus();
+      return;
+    }
     const button = event.target.closest('[data-go-question]');
     if (!button) return;
     active = Number(button.dataset.goQuestion);
+    saveProgress();
     renderQuestion();
     $('question-area').querySelector('input').focus();
   });
   if ($('previous-question')) $('previous-question').onclick = () => {
     if (active === 0) return;
-    active -= 1; renderQuestion();
+    active -= 1; saveProgress(); renderQuestion();
   };
   if ($('next-question')) $('next-question').onclick = () => {
     if (active === questions.length - 1) return;
-    active += 1; renderQuestion();
+    active += 1; saveProgress(); renderQuestion();
   };
-  if ($('check-answers')) $('check-answers').onclick = () => {
-    answers.forEach(answer => { answer.checked = answer.selected !== null; });
-    updateAnswerVisuals();
-    renderProgress();
-    const attempted = answers.filter(answer => answer.checked).length;
-    const correct = answers.filter((answer, index) => answer.checked && answer.selected === questions[index].correct).length;
-    $('quiz-status').textContent = attempted
-      ? `${correct} correct, ${attempted - correct} incorrect, ${questions.length - attempted} unanswered.`
-      : 'Choose an answer before checking.';
-  };
-
   const contents = $('topic-map');
   $('topic-contents').onclick = () => {
     contents.showModal();

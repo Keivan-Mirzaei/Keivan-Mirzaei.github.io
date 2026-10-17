@@ -29,9 +29,6 @@ layout: default
         <h2 id="practice-title">Quiz</h2>
         <div class="quiz-card">
           <div id="question-area"></div>
-          <div class="quiz-actions">
-            <button class="question-check" id="check-answers">Check solution</button>
-          </div>
           <nav class="number-navigation" aria-label="Quiz questions"><button id="previous-question" aria-label="Previous question">{% include learning/arrow.html direction='left' %}</button><div id="question-dots" class="number-strip"></div><button id="next-question" aria-label="Next question">{% include learning/arrow.html %}</button></nav>
           <p class="quiz-status" id="quiz-status" role="status"></p>
           <script type="application/json" id="exercise-data">{{ page.exercises | jsonify | replace: '<', '\u003c' }}</script>

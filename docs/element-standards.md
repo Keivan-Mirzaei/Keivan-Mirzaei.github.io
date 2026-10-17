@@ -14,6 +14,14 @@ Use hints, alternative solutions, extensions, data, and code only when they add 
 
 Give cited figures and equations stable anchors and concise names. Number equations only when referred to later. Use one reference convention within each article; separate article reference labels from labels inside a diagram. Captions explain how to read the visual; the surrounding argument interprets it.
 
+## Visual consistency
+
+Catalogue and section pages use the shared `page-wrap`, `page-heading`, and `page-description` styles. Page titles share `--page-title-size`, including its smaller phone size. Keep the home hero and compact activity headings suited to their roles.
+
+Learning control defaults use zero-specificity scoping so button, answer-choice, and widget classes retain their intended colours and typography. Quiz and Problems cards share `--practice-surface`. Figures preserve their natural aspect ratio when resized. Longer lesson explanations retain the established serif reading style; interface text uses the shared sans-serif family.
+
+Quizzes show feedback as soon as an answer is chosen; choosing the same answer again clears it. Do not add a separate check or clear button. Save quiz answers and the current question in this browser, matching saved answers to unchanged question content. Save Problems study labels and the current problem, while leaving hints and solutions closed on a new visit.
+
 ## Graph axes
 
 Interactive information displayed below a graph belongs in a soft strip with centered, wrapping values. Keep point-local feedback near its point when that placement is useful.
@@ -53,7 +61,7 @@ Give the mathematical activity the most attention. Include only controls, labels
 
 Use sliders for numerical quantities, dropdowns for named choices, and switches for on/off settings. Align adjacent control boxes at the same height and bottom edge. On phones, stack them at matching widths and avoid page overflow.
 
-Dropdowns share the warm paper surface, green text, fine border, rounded corners, and selected sage row with a checkmark. Use text choices by default. Reusable difficulty choices may use the existing circle and woven marks. Show a clear label and current selection; retain a native select fallback. Selection closes the menu; Escape dismisses without changing the choice. Keep the value synchronized with history and saved state.
+Dropdowns share the warm paper surface, green text, fine border, rounded corners, and selected sage row with a checkmark. Use text choices by default. Reusable difficulty choices use the small polygon marks; reserve the woven marks for larger artwork. Show a clear label and current selection; retain a native select fallback. Selection closes the menu; Escape dismisses without changing the choice. Keep the value synchronized with history and saved state.
 
 Scope text-selection and native-image-drag protection to draggable boards and plots, including Safari. Capture the pointer, handle cancellation, and preserve selection in article text and editable inputs. Respect reduced motion. Meaningful completion gets restrained colour plus readable confirmation; clear it when the goal is no longer met.
 

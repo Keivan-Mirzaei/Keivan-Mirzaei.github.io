@@ -7,10 +7,10 @@ description: Courses with compact explanations, interactive visuals, worked exam
 search: true
 ---
 <link data-page-style rel="stylesheet" href="{{ '/assets/css/learning-index.css' | relative_url }}">
-<div class="learning-home">
-  <header class="learning-home-intro">
+<div class="page-wrap learning-home">
+  <header class="page-heading learning-home-intro">
     <h1>Learning</h1>
-    <p>Compact explanations, worked examples, and space to practise.</p>
+    <p class="page-description">Compact explanations, worked examples, and space to practise.</p>
   </header>
   <div class="learning-home-courses">
     {% for entry in site.data.learning_courses %}{% assign course = entry[1] %}

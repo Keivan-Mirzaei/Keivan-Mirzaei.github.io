@@ -9,6 +9,8 @@
   --tint: #e5ece2;
   --sidebar-width: 254px;
   --site-header-height: 64px;
+  --page-title-size: 48px;
+  --practice-surface: #f3f0f5;
   --serif: Georgia, 'Times New Roman', serif;
   --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --mono: ui-monospace, 'SFMono-Regular', Consolas, monospace;
@@ -162,7 +164,7 @@ main[aria-busy='true'], main[aria-busy='true'] a { cursor: progress; }
 /* Shared reading pages, article metadata, and native solution disclosures. */
 .page-wrap { max-width: 900px; padding: 57px 52px 70px; margin: 0 auto; }
 .page-heading { margin-bottom: 38px; }
-.page-heading h1 { font: 48px/1.14 var(--serif); letter-spacing: -1.6px; margin-bottom: 22px; overflow-wrap: break-word; }
+.page-heading h1 { font: var(--page-title-size)/1.14 var(--serif); letter-spacing: -1.6px; margin-bottom: 22px; overflow-wrap: break-word; }
 .article-title-row { display: flex; align-items: center; gap: 24px; margin-bottom: 22px; }
 .article-title-row h1 { flex: 1; min-width: 0; margin-bottom: 0; }
 .article-title-row .content-logo { flex: 0 0 140px; width: 140px; }
@@ -361,7 +363,7 @@ mark { color: var(--ink); background: #e1ebbd; border-radius: 2px; }
   .note-row:has(.note-logo) p, .note-row:has(.note-logo) .note-topics { grid-column: 1 / -1; }
   .note-topics { flex-wrap: wrap; }
   .note-arrow { display: none; }
-  .page-heading h1 { font-size: 39px; }
+  :root { --page-title-size: 39px; }
   .article-title-row { gap: 14px; }
   .article-title-row h1 { font-size: clamp(30px, 8vw, 39px); }
   .article-title-row .content-logo { flex-basis: 96px; width: 96px; }

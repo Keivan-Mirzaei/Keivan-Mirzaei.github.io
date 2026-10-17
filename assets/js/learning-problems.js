@@ -7,7 +7,12 @@ try {
   const value = JSON.parse(localStorage.getItem(key) || '{}');
   if (value && typeof value === 'object' && !Array.isArray(value)) saved = value;
 } catch {}
+const positionKey = `${key}:position`;
 let active = 0;
+try {
+  const position = Number(localStorage.getItem(positionKey));
+  if (Number.isInteger(position) && position >= 0 && position < cards.length) active = position;
+} catch {}
 const arrow = direction => `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" ${direction === 'previous' ? 'style="transform:rotate(180deg)"' : ''}><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const bookmark = '<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M6 4h12v16l-6-4-6 4Z" stroke="currentColor" stroke-width="1.5"/></svg>';
 if (cards.length) {
@@ -93,7 +98,9 @@ if (cards.length) {
       entries[active].help.hidden = !entries[active].disclosures.length;
       entries[active].help.textContent = 'Hint';
     }
-    active = index; update();
+    active = index;
+    try { localStorage.setItem(positionKey, String(active)); } catch {}
+    update();
     const title = entries[active].card.querySelector('h3')?.textContent;
     announce.textContent = `Problem ${active + 1} of ${entries.length}${title ? `: ${title}` : ''}`;
     if (old.top < 0) entries[active].card.scrollIntoView({ block: 'start' });

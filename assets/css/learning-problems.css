@@ -1,6 +1,6 @@
 .problems-enhanced > h2 { display: none; }
 .problems-deck { margin: 28px 0; }
-.topic-wrap .problem-card { background: #f3f0f5; padding: 26px; margin: 0; border-radius: 7px; scroll-margin-top: 20px; }
+.topic-wrap .problem-card { background: var(--practice-surface); padding: 26px; margin: 0; border-radius: 7px; scroll-margin-top: 20px; }
 .problem-card[hidden] { display: none; }
 .problem-card-header { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-bottom: 24px; }
 .problem-card-name { min-width: 0; }
