@@ -102,6 +102,4 @@ if (cards.length) {
   next.addEventListener('click', () => { show(active + 1); (next.disabled ? previous : next).focus({ preventScroll: true }); });
   document.addEventListener('pointerdown', e => entries.forEach(entry => { if (!entry.menu.contains(e.target)) entry.menu.open = false; }));
   update();
-} else {
-  const empty = document.createElement('p'); empty.className = 'problems-empty'; empty.textContent = 'Problems for this module are being prepared.'; root.append(empty);
 }

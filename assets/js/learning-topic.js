@@ -110,6 +110,7 @@
   const contents = $('topic-map');
   $('topic-contents').onclick = () => {
     contents.showModal();
+    $('contents-title').focus({ preventScroll: true });
     $('topic-contents').setAttribute('aria-expanded', 'true');
   };
   $('close-course-map').onclick = () => contents.close();

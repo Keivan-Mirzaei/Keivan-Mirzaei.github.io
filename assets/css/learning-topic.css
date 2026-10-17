@@ -254,3 +254,17 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .higher-playback button { font: inherit; font-size: 14px; color: #285b46; background: #edf1e9; border: 0; border-radius: 4px; padding: 9px 22px; min-width: 90px; cursor: pointer; }
 .higher-playback button:hover { background: #e1e9dc; }
 .higher-playback button:focus-visible { outline: 2px solid #285b46; outline-offset: 3px; }
+
+.topic-coming-soon { margin: 40px 0 48px; padding: 22px 12px; text-align: center; }
+.coming-soon-sketch { display: block; max-width: 100%; margin: 0 auto 16px; overflow: visible; }
+.topic-wrap .coming-soon-heading { margin: 0 0 8px; font: 500 20px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color: var(--green); }
+.topic-wrap .coming-soon-caption { margin: 0 auto; max-width: 360px; font: 14px/1.7 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color: var(--muted); }
+.coming-soon-surprise { opacity: 0; }
+@media(prefers-reduced-motion:no-preference) {
+  .coming-soon-pencil { animation: pencil-doodle 5s ease-in-out infinite; transform-origin: 166px 62px; }
+  .coming-soon-line { stroke-dasharray: 225; animation: pencil-ink 5s ease-in-out infinite; }
+  .coming-soon-surprise { animation: pencil-oops 5s ease-in-out infinite; }
+  @keyframes pencil-doodle { 0%,8% { transform: translateX(-124px); } 40% { transform: translate(-55px,0); } 48% { transform: translate(-43px,-12px) rotate(-8deg); } 56% { transform: translate(-28px,12px) rotate(8deg); } 64% { transform: translate(-12px,0); } 78%,86% { transform: translate(27px,0); } 90% { transform: translate(27px,-10px) rotate(-12deg); } 100% { transform: translateX(-124px); } }
+  @keyframes pencil-ink { 0%,8% { stroke-dashoffset: 225; opacity: 1; } 78%,90% { stroke-dashoffset: 0; opacity: 1; } 98%,100% { stroke-dashoffset: 0; opacity: 0; } }
+  @keyframes pencil-oops { 0%,45%,65%,100% { opacity: 0; } 49%,59% { opacity: 1; } }
+}

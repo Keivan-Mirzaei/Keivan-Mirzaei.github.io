@@ -35,7 +35,9 @@ layout: null
       {% unless page.problem_set %}<p class="eyebrow">{{ learning_course.title | escape }}{% if learning_module.title != page.title %} / {{ learning_module.title | escape }}{% endif %}</p>{% endunless %}
       <h1>{{ page.title | escape }}</h1>
       {% if page.description and page.problem_set != true %}<p class="topic-lead">{{ page.description | escape }}</p>{% endif %}
-      {% if page.problem_set %}<div id="module-problems">{{ content }}</div>{% else %}{{ content }}{% endif %}
+      {% assign topic_body = content | strip %}
+      {% capture rendered_topic_body %}{% if topic_body == '' %}{% unless page.exercises.size > 0 %}{% include learning/coming-soon.html %}{% endunless %}{% else %}{{ content }}{% endif %}{% endcapture %}
+      {% if page.problem_set %}<div id="module-problems">{{ rendered_topic_body }}</div>{% else %}{{ rendered_topic_body }}{% endif %}
       {% if page.exercises.size > 0 %}
       <section id="practice" class="practice" aria-labelledby="practice-title">
         <h2 id="practice-title">Quiz</h2>
@@ -73,7 +75,7 @@ layout: null
   </main>
   <footer>{{ site.title }}<span>A notebook, always in progress.</span></footer>
   <dialog id="topic-map" aria-labelledby="contents-title">
-    <div class="dialog-heading"><h2 id="contents-title">{{ learning_course.title | escape }}</h2><button id="close-course-map" aria-label="Close course contents">×</button></div>
+    <div class="dialog-heading"><h2 id="contents-title" tabindex="-1">{{ learning_course.title | escape }}</h2><button id="close-course-map" aria-label="Close course contents"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
     <nav class="topic-contents-list" aria-label="Course contents">
       {% for module in learning_course.modules %}
       <details class="course-module"{% if module.slug == page.module_key %} open{% endif %}>
