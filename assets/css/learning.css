@@ -15,7 +15,6 @@
 .learning-page h1 {font-size:54px;letter-spacing:-1.8px;margin:18px 0 23px}
 .learning-page h2 {font-size:27px}
 .learning-page p {margin:0 0 22px}
-.learning-page .eyebrow {text-transform:uppercase;letter-spacing:1.7px;font-size:10px;color:var(--green)}
 .learning-page .axis {fill:none;stroke:#c4cebf;stroke-width:1}
 .learning-page .curve {fill:none;stroke:var(--green);stroke-width:2.5}
 .learning-page figcaption {font-size:11px;color:var(--muted);text-align:center}
@@ -64,9 +63,6 @@
 @media(prefers-reduced-motion:no-preference) {.learning-page dialog[open] {animation:sheet-in .18s ease-out}
 @keyframes sheet-in {from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
 }
-.learning-page .module-topics ol {list-style:none;padding:0;margin:32px 0 45px}
-.learning-page .module-topics a {display:block;padding:12px 16px;text-decoration:none;border-radius:5px;font-size:15px}
-.learning-page .module-topics li:nth-child(odd) {background:#f1f3ec;border-radius:5px}
 .learning-page .course-module {margin:0 0 12px}
 .learning-page .course-module summary {padding:12px 0;font-size:14px;color:var(--green)}
 .learning-page .course h2 {font-size:25px;line-height:1.25}
@@ -76,8 +72,10 @@
 .learning-page a.course { display: block; text-decoration: none; }
 .learning-page a.course:hover { background: #f1f3ec; color: inherit; }
 .learning-page.course-outline { padding-top: 44px; padding-bottom: 44px; }
-.learning-page .course-outline h1 { max-width: 760px; }
+.learning-page.course-outline h1 { max-width: 760px; }
 .learning-page .course-outline-module { margin: 40px 0 50px; }
 .learning-page .course-outline-module h2 { font: 500 19px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color: var(--green); }
 .learning-page .course-outline-module h2 span { color: var(--muted); font-size: 13px; margin-right: 12px; }
 .learning-page #contents-title:focus { outline: none; }
+
+.learning-page .course-outline-module { scroll-margin-top: 90px; }

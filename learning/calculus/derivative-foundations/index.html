@@ -1,10 +1,7 @@
 ---
-layout: learning-topic
+layout: redirect
 title: "Derivative foundations"
 permalink: /learning/calculus/derivative-foundations/
-course_key: calculus
-module_key: derivative-foundations
+redirect_to: /learning/calculus/#derivative-foundations
 sitemap: false
 ---
-{% assign current_module = site.data.learning_courses.calculus.modules | where: "slug", page.module_key | first %}
-<nav class="module-topics" aria-label="Submodules"><ol>{% for topic in current_module.topics %}<li><a href="{{ topic.url | relative_url }}">{{ topic.title | escape }}</a></li>{% endfor %}</ol></nav>

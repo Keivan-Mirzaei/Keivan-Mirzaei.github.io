@@ -19,7 +19,6 @@ layout: default
 
 <div class="learning-page">
     <article class="topic-wrap">
-      {% unless page.problem_set %}<p class="eyebrow">{{ learning_course.title | escape }}{% if learning_module.title != page.title %} / {{ learning_module.title | escape }}{% endif %}</p>{% endunless %}
       <h1>{{ page.title | escape }}</h1>
       {% if page.description and page.problem_set != true %}<p class="topic-lead">{{ page.description | escape }}</p>{% endif %}
       {% assign topic_body = content | strip %}

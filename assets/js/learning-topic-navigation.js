@@ -26,3 +26,21 @@ for (const chain of document.querySelectorAll('.topic-chain')) {
     else if (link.offsetLeft + link.offsetWidth > chain.scrollLeft + chain.clientWidth - margin) chain.scrollLeft = link.offsetLeft + link.offsetWidth - chain.clientWidth + margin;
   });
 }
+
+for (const path of document.querySelectorAll('.learning-breadcrumb')) {
+  const current = path.querySelector('[aria-current]');
+  const reveal = enableProblemNumberStrip(path, () => current);
+  path.scrollLeft = path.scrollWidth;
+  reveal();
+  path.addEventListener('keydown', event => {
+    if (event.target !== path || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+    event.preventDefault();
+    path.scrollBy({ left: event.key === 'ArrowRight' ? 180 : -180, behavior: 'smooth' });
+  });
+  path.addEventListener('focusin', event => {
+    if (event.target === path) return;
+    const link = event.target;
+    if (link.offsetLeft < path.scrollLeft + 18) path.scrollLeft = link.offsetLeft - 18;
+    else if (link.offsetLeft + link.offsetWidth > path.scrollLeft + path.clientWidth - 18) path.scrollLeft = link.offsetLeft + link.offsetWidth - path.clientWidth + 18;
+  });
+}

@@ -1,0 +1,28 @@
+{% assign navigation_course = site.data.learning_courses[page.course_key] %}
+{% assign navigation_module = navigation_course.modules | where: 'slug', page.module_key | first %}
+{% assign navigation_module_number = nil %}
+{% assign navigation_topic_number = nil %}
+{% for module in navigation_course.modules %}
+  {% if module.slug == page.module_key %}
+    {% assign navigation_module_number = forloop.index %}
+    {% for topic in module.topics %}
+      {% if topic.url == page.url %}{% assign navigation_topic_number = navigation_module_number | append: '.' | append: forloop.index %}{% break %}{% endif %}
+    {% endfor %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+<nav class="topbar-title learning-breadcrumb" tabindex="0" aria-label="Breadcrumb">
+  <a href="{{ '/' | relative_url }}">Home</a>
+  {% include icon.html name='chevron-right' %}
+  <a href="{{ '/learning/' | relative_url }}">Learning</a>
+  {% include icon.html name='chevron-right' %}
+  {% if navigation_module %}
+  <a href="{{ '/learning/' | append: navigation_course.slug | append: '/' | relative_url }}">{{ navigation_course.title | escape }}</a>
+  {% include icon.html name='chevron-right' %}
+  <a href="{{ '/learning/' | append: navigation_course.slug | append: '/#' | append: navigation_module.slug | relative_url }}">{{ navigation_module_number }} {{ navigation_module.title | escape }}</a>
+  {% include icon.html name='chevron-right' %}
+  <span aria-current="page">{% if navigation_topic_number %}{{ navigation_topic_number }} {% endif %}{{ page.title | escape }}</span>
+  {% else %}
+  <span aria-current="page">{{ navigation_course.title | escape }}</span>
+  {% endif %}
+</nav>

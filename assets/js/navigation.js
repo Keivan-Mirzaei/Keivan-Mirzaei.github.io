@@ -1,3 +1,4 @@
+import { mountScrollHeader } from './lib/scroll-header.mjs';
 /* Navigation is an enhancement: every page and link works without this file. */
 export function initializeNavigation() {
   const root = document.documentElement;
@@ -75,4 +76,5 @@ export function initializeNavigation() {
   root.classList.add('js');
   toggle.hidden = false;
   render();
+  mountScrollHeader();
 }

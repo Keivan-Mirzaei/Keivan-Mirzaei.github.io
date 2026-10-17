@@ -8,9 +8,9 @@ sitemap: false
 {% assign course = site.data.learning_courses[page.course_key] %}
 <link data-page-style rel="stylesheet" href="{{ '/assets/css/learning.css' | relative_url }}">
 <script type="module" src="{{ '/assets/js/learning-topic-navigation.js' | relative_url }}"></script>
-<div class="learning-page course-outline"><p class="eyebrow">Course contents</p><h1>{{ course.title | escape }}</h1>
+<div class="learning-page course-outline"><h1>{{ course.title | escape }}</h1>
 {% for module in course.modules %}{% assign module_number = forloop.index %}
-<section class="course-outline-module"><h2><span>{{ module_number }}</span>{{ module.title | escape }}</h2>
+<section class="course-outline-module" id="{{ module.slug | escape }}"><h2><span>{{ module_number }}</span>{{ module.title | escape }}</h2>
 <nav class="topic-chain" tabindex="0" aria-label="{{ module.title | escape }} topics">
 {% for topic in module.topics %}<a class="topic-chain-link" href="{{ topic.url | relative_url }}"><span class="topic-chain-title">{{ topic.title | escape }}</span><span class="topic-chain-dot" aria-hidden="true"></span><span class="topic-chain-number">{{ module_number }}.{{ forloop.index }}</span></a>{% endfor %}
 </nav></section>{% endfor %}

@@ -222,10 +222,24 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertTrue((destination / "learning/calculus/index.html").is_file())
             course = json.loads((source / "_data/learning_courses.json").read_text())["calculus"]
             topics = [topic for module in course["modules"] for topic in module["topics"]]
+            positions = {topic["url"]: (m, n, module["slug"])
+                         for m, module in enumerate(course["modules"], 1)
+                         for n, topic in enumerate(module["topics"], 1)}
+            outline = (destination / "learning/calculus/index.html").read_text()
+            for module in course["modules"]:
+                self.assertIn(f'id="{module["slug"]}"', outline)
+                redirect = (destination / "learning/calculus" / module["slug"] / "index.html").read_text()
+                self.assertIn(f'/learning/calculus/#{module["slug"]}', redirect)
             for i, topic in enumerate(topics):
                 html = (destination / topic["url"].strip("/") / "index.html").read_text()
                 self.assertIn('id="sidebar"', html)
-                self.assertIn('class="topbar"', html)
+                self.assertIn('class="topbar learning-topbar"', html)
+                self.assertIn('class="topbar-title learning-breadcrumb"', html)
+                breadcrumb = html.partition('<nav class="topbar-title learning-breadcrumb"')[2].partition('</nav>')[0]
+                module_number, topic_number, module_slug = positions[topic["url"]]
+                self.assertEqual(breadcrumb.count('<a '), 4)
+                self.assertIn(f'<span aria-current="page">{module_number}.{topic_number} ', breadcrumb)
+                self.assertIn(f'/learning/calculus/#{module_slug}', breadcrumb)
                 self.assertIn('href="/learning/" aria-current="true"', html)
                 if topic['slug'] in {'limits', 'limit-laws', 'squeeze-theorem', 'infinite-limits-and-limits-at-infinity', 'continuity', 'intermediate-value-theorem', 'definition-and-geometry', 'differentiation-rules', 'chain-rule', 'higher-derivatives', 'trigonometric-derivatives', 'inverse-function-derivatives', 'hyperbolic-functions', 'implicit-differentiation', 'logarithmic-differentiation'}:
                     self.assertIn('id="practice"', html)

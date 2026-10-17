@@ -2,7 +2,7 @@
 layout: default
 ---
 <div class="page-wrap">
-  <header class="page-heading"><p class="eyebrow">Browse by subject</p><h1>{{ page.title }}</h1><p class="page-description">{{ page.description }}</p></header>
+  <header class="page-heading"><h1>{{ page.title }}</h1><p class="page-description">{{ page.description }}</p></header>
   {% assign notes = site.posts | where: 'category', page.category %}
   {% if notes.size > 0 %}
   <div class="section-heading"><h2>{{ page.title }} notes</h2><span class="count-label">{{ notes.size }} {% if notes.size == 1 %}entry{% else %}entries{% endif %}</span></div>

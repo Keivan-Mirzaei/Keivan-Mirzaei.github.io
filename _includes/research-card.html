@@ -3,7 +3,6 @@
   <img class="research-cover" src="{{ include.project.cover | relative_url }}" alt="{{ include.project.cover_alt | escape }}" loading="lazy" decoding="async">
   {% endif %}
   <div class="research-card-body">
-    <p class="eyebrow">{{ include.project.kind | default: 'Research project' }}{% if include.project.year %} / {{ include.project.year }}{% endif %}</p>
     <h{{ include.level | default: 2 }}><a href="{{ include.project.url | relative_url }}">{{ include.project.title }}</a></h{{ include.level | default: 2 }}>
     {% if include.project.authors.size > 0 %}<p class="research-authors">{{ include.project.authors | join: ', ' | escape }}</p>{% endif %}
     <p>{{ include.project.description }}</p>

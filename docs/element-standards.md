@@ -39,7 +39,7 @@ Explorations put `image` and `image_alt` in front matter; puzzles put them in `_
 
 ## Header and search
 
-Keep the header compact: Home, the current page, navigation, search, and active gadgets. Use 44-pixel control targets, visible focus, truncated long titles, and a search icon on phones.
+Keep the header compact: Home, the current page, navigation, search, and active gadgets. Use 44-pixel control targets, visible focus, truncated long titles, and a search icon on phones. Learning uses a parent-only breadcrumb path with module and submodule numbers, horizontal scrolling, fading edges, and no visible scrollbar. Modules are anchored sections of course contents, with old module URLs redirecting to those anchors. The top bar slides away when scrolling down and returns when scrolling up; keep it available near the top, during keyboard focus, and while mobile navigation is open. Omit decorative labels above headings.
 
 Search opens in a native modal with `/`, `⌘K`, or `Ctrl+K`. Support arrows, Enter, Escape, and returning focus. Preserve reading position and active gadgets. Keep the dedicated search page as a fallback.
 
