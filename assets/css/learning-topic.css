@@ -258,15 +258,16 @@ section[id], figure[id] { scroll-margin-top: 24px; }
   @keyframes pencil-oops { 0%,45%,65%,100% { opacity: 0; } 49%,59% { opacity: 1; } }
 }
 
-.graph-legend.inverse-legend { display: grid; right: 20%; bottom: 15%; gap: 3px; padding: 6px 8px; font-size: 11px; }
+.graph-legend.inverse-legend { display: grid; left: auto; right: 20%; top: auto; bottom: 15%; gap: 3px; padding: 6px 8px; font-size: 11px; }
 .inverse-legend > span,.hyperbola-legend > span { display: flex; align-items: center; gap: 6px; }
 .inverse-key { display: inline-block; width: 18px; border-top: 2px solid #a67936; }
 .inverse-mirror-key { display: inline-block; width: 18px; border-top: 1px dashed #aab6a3; }
 .graph-legend.hyperbola-legend { display: grid; gap: 5px; right: 10%; bottom: 10%; font-size: 12px; }
 @media(max-width:600px) { .graph-legend.inverse-legend { font-size: 9px; padding: 4px 6px; } .graph-legend.hyperbola-legend { font-size: 10px; } }
 
-.graph-legend.trig-sine-legend { top: 10%; bottom: auto; right: 10%; padding: 5px 7px; }
-.graph-legend.trig-cosine-legend { top: 57%; bottom: auto; right: 10%; padding: 5px 7px; }
+.graph-legend.trig-shared-legend { display: flex; top: 0; bottom: auto; right: 10%; gap: 18px; padding: 5px 8px; }
+.trig-shared-legend > span { display: flex; align-items: center; gap: 6px; }
+@media (max-width: 600px) { .graph-legend.trig-shared-legend { gap: 10px; font-size: 10px; } }
 .implicit-legend > span { display: flex; align-items: center; gap: 6px; }
 .graph-legend.implicit-legend { display: grid; right: 16%; bottom: 8%; gap: 3px; font-size: 11px; padding: 5px 7px; }
 
@@ -279,3 +280,5 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .graph-album > .scenario-choices legend { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .graph-album > .scenario-choices span { padding: 5px 9px; border-radius: 0; background: transparent; color: var(--muted); font-size: 13px; }
 .graph-album > .scenario-choices input:checked + span { background: transparent; color: var(--green); box-shadow: inset 0 -2px var(--green); }
+
+.inverse-summary { gap: 12px 22px; font-size: 13px; }

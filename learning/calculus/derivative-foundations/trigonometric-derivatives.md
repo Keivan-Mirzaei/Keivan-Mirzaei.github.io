@@ -111,7 +111,7 @@ $$\begin{aligned}
 <g fill="#686e66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" text-anchor="end"><text x="53" y="75">1</text><text x="53" y="185">−1</text><text x="53" y="280">1</text><text x="53" y="390">−1</text></g>
 <path class="axis-ticks" d="M70 122V128M70 327V333M320 122V128M320 327V333M570 122V128M570 327V333M67 70H73M67 180H73M67 275H73M67 385H73" fill="none" stroke="#9eac96" stroke-width="1"/>
 </svg>
-<div class="graph-legend trig-sine-legend"><i class="legend-curve" aria-hidden="true"></i>\(f(x)=\sin x\)</div><div class="graph-legend trig-cosine-legend"><i class="derivative-tangent-key" aria-hidden="true"></i>\(f^{\prime}(x)=\cos x\)</div>
+<div class="graph-legend trig-shared-legend"><span><i class="legend-curve" aria-hidden="true"></i>\(f(x)=\sin x\)</span><span><i class="derivative-tangent-key" aria-hidden="true"></i>\(f^{\prime}(x)=\cos x\)</span></div>
 <span class="trig-label trig-zero trig-upper">\(0\)</span><span class="trig-label trig-pi trig-upper">\(\pi\)</span><span class="trig-label trig-two-pi trig-upper">\(2\pi\)</span><span class="trig-label trig-x trig-upper">\(x\)</span>
 <span class="trig-label trig-zero trig-lower">\(0\)</span><span class="trig-label trig-pi trig-lower">\(\pi\)</span><span class="trig-label trig-two-pi trig-lower">\(2\pi\)</span><span class="trig-label trig-x trig-lower">\(x\)</span>
 </div>

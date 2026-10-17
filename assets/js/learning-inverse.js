@@ -15,6 +15,7 @@
   let drag = null;
   function update(next) {
     a = Math.round(Math.max(0.25, Math.min(2, next)) * 100) / 100;
+    const step = -Math.min(.3, a / 2), nearby = a + step;
     for (const key of keys) {
       const x = key === 'original' ? a : a * a;
       const y = key === 'original' ? a * a : a;
@@ -27,20 +28,19 @@
       const originalRun = Math.min(.65 / Math.hypot(1, 2 * a), .45 * a, .9 * (4.05 - a * a) / (2 * a));
       const halfRun = key === 'original' ? originalRun : 2 * a * originalRun;
       document.getElementById(`inverse-${key}-tangent`).setAttribute('d', `M${screenX(x - halfRun)} ${screenY(y - slope * halfRun)}L${screenX(x + halfRun)} ${screenY(y + slope * halfRun)}`);
-      const leftX = screenX(x - halfRun), leftY = screenY(y - slope * halfRun);
-      const rightX = screenX(x + halfRun), rightY = screenY(y + slope * halfRun);
+      const qx = key === 'original' ? nearby : nearby ** 2;
+      const qy = key === 'original' ? nearby ** 2 : nearby;
+      const leftX = screenX(qx), leftY = screenY(qy), rightX = screenX(x), rightY = screenY(y);
       const triangle = key === 'original' ? `M${leftX} ${leftY}H${rightX}V${rightY}` : `M${leftX} ${leftY}V${rightY}H${rightX}`;
       document.getElementById(`inverse-${key}-triangle`).setAttribute('d', triangle);
+      document.getElementById(`inverse-${key}-nearby`).setAttribute('cx', leftX);
+      document.getElementById(`inverse-${key}-nearby`).setAttribute('cy', leftY);
+      const ratio = key === 'original' ? a + nearby : 1 / (a + nearby);
+      document.getElementById(`inverse-${key}-secant`).value = ratio.toFixed(2);
       const handle = document.getElementById(`inverse-${key}-handle`);
       handle.setAttribute('aria-valuenow', x);
       handle.setAttribute('aria-valuetext', `Input ${x.toFixed(2)}; output ${y.toFixed(2)}; slope ${slope.toFixed(2)}`);
     }
-    document.getElementById('inverse-a').value = a.toFixed(2);
-    document.getElementById('inverse-b').value = (a * a).toFixed(2);
-    document.getElementById('inverse-b-copy').value = (a * a).toFixed(2);
-    document.getElementById('inverse-a-copy').value = a.toFixed(2);
-    document.getElementById('inverse-slope').value = (2 * a).toFixed(2);
-    document.getElementById('inverse-reciprocal').value = (1 / (2 * a)).toFixed(2);
   }
   function graphX(event) {
     const point = svg.createSVGPoint();

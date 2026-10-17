@@ -25,20 +25,16 @@ function explorer() {
   return { get, event: (clientX, pointerId = 1) => ({ clientY: 100, clientX, pointerId, button: 0, preventDefault() {} }) };
 }
 
-test('corresponding points swap coordinates and the two tangent slopes are reciprocal', () => {
+test('corresponding points swap coordinates and respect the inverse input bounds', () => {
   const { get } = explorer();
-  assert.equal(get('inverse-a').value, '1.30');
+  assert.equal(get('inverse-original-handle').attrs['aria-valuenow'], 1.3);
   assert.equal(get('inverse-original-dot').attrs.cx, 247);
   assert.ok(Math.abs(get('inverse-inverse-dot').attrs.cy - 273) < 1e-10);
   const key = (part, key) => get(`inverse-${part}-handle`).handlers.keydown({ key, preventDefault() {} });
   key('original', 'End');
-  assert.equal(get('inverse-slope').value, '4.00');
-  assert.equal(get('inverse-reciprocal').value, '0.25');
   assert.equal(get('inverse-inverse-handle').attrs['aria-valuenow'], 4);
   key('inverse', 'Home');
-  assert.equal(get('inverse-a').value, '0.25');
-  assert.equal(get('inverse-slope').value, '0.50');
-  assert.equal(get('inverse-reciprocal').value, '2.00');
+  assert.equal(get('inverse-original-handle').attrs['aria-valuenow'], .25);
 });
 
 test('the inverse point converts its horizontal position back to the original input', () => {
@@ -46,12 +42,12 @@ test('the inverse point converts its horizontal position back to the original in
   const handle = get('inverse-inverse-handle');
   handle.handlers.pointerdown(event(151.05));
   handle.handlers.pointermove(event(255, 2));
-  assert.equal(get('inverse-a').value, '1.30');
+  assert.equal(get('inverse-original-handle').attrs['aria-valuenow'], 1.3);
   handle.handlers.pointermove(event(255));
-  assert.equal(get('inverse-a').value, '2.00');
+  assert.equal(get('inverse-original-handle').attrs['aria-valuenow'], 2);
   handle.handlers.pointercancel(event(255));
   handle.handlers.pointermove(event(100));
-  assert.equal(get('inverse-a').value, '2.00');
+  assert.equal(get('inverse-original-handle').attrs['aria-valuenow'], 2);
 });
 
 test('tangent segments have equal lengths and are exact reflections', () => {
@@ -67,7 +63,7 @@ test('tangent segments have equal lengths and are exact reflections', () => {
   }
 });
 
-test('the tangent triangles exchange their runs and rises', () => {
+test('the secant triangles swap increments and approximate the true derivatives', () => {
   const { get } = explorer();
   const numbers = id => get(id).attrs.d.match(/-?\d+(?:\.\d+)?/g).map(Number);
   const original = numbers('inverse-original-triangle'), inverse = numbers('inverse-inverse-triangle');
@@ -75,5 +71,6 @@ test('the tangent triangles exchange their runs and rises', () => {
   const inverseRun = inverse[3] - inverse[0], inverseRise = inverse[1] - inverse[2];
   assert.ok(Math.abs(originalRun - inverseRise) < 1e-9);
   assert.ok(Math.abs(originalRise - inverseRun) < 1e-9);
-  assert.equal(get('inverse-b').value, '1.69');
+  assert.equal(get('inverse-original-secant').value, '2.30');
+  assert.equal(get('inverse-inverse-secant').value, '0.43');
 });

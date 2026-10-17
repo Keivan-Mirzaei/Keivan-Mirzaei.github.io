@@ -65,7 +65,7 @@ For positive $$u,v$$ and a real constant $$r$$,
 
 $$\ln(uv)=\ln u+\ln v,\quad\ln(u/v)=\ln u-\ln v,\quad\ln(u^r)=r\ln u.$$
 
-For a constant base $$b>0$$, $$b^x=e^{x\ln b}$$. If also $$b\ne1$$, $$\log_b x=\ln x/\ln b$$ for $$x>0$$. Logarithm laws do not split sums.
+For a constant base $$b>0$$, $$b^x=e^{x\ln b}$$. Logarithm laws do not split sums.
 
 </aside>
 
@@ -79,11 +79,7 @@ For a constant base $$b>0$$,
 
 $$\frac{d}{dx}b^x=b^x\ln b.$$
 
-For $$b>0$$, $$b\ne1$$, and $$x>0$$,
-
-$$\frac{d}{dx}\log_b x=\frac1{x\ln b}.$$
-
-The exponential rules hold for every real input. The base $$b=1$$ gives the constant function with derivative zero, but cannot be used as a logarithm base.
+The exponential rules hold for every real input, including the constant case $$b=1$$.
 
 For a differentiable inner function $$u$$, the chain rule gives
 
@@ -98,11 +94,9 @@ Taking $$\frac{d}{dx}e^x=e^x$$ as the starting rule, the inverse derivative theo
 
 $$\frac{d}{dx}\ln x=\frac1{e^{\ln x}}=\frac1x,\qquad x>0.$$
 
-The change-of-base identities then give
+Rewriting the fixed-base exponential gives
 
 $$\frac{d}{dx}b^x=\frac{d}{dx}e^{x\ln b}=e^{x\ln b}\ln b=b^x\ln b,$$
-
-$$\frac{d}{dx}\log_b x=\frac1{\ln b}\frac{d}{dx}\ln x=\frac1{x\ln b}.$$
 
 The two composition rules follow directly from the chain rule. This derives the other formulas from the natural exponential rule; it does not claim to prove that starting rule.
 
@@ -127,9 +121,9 @@ The exponential factor remains; the inner derivative supplies the factor $$-2t$$
 <p class="element-label">Example 2</p>
 <h3>A logarithm and its domain</h3>
 
-Let $$L(x)=\log_3(4-x^2)$$. A positive logarithm argument requires $$-2<x<2$$. On this interval,
+Let $$L(x)=\ln(4-x^2)$$. A positive logarithm argument requires $$-2<x<2$$. On this interval,
 
-$$L^{\prime}(x)=\frac{-2x}{(4-x^2)\ln3}.$$
+$$L^{\prime}(x)=\frac{-2x}{4-x^2}.$$
 
 The same restriction applies to the derivative; a formula with a nonzero denominator alone does not extend the original domain.
 
@@ -191,8 +185,10 @@ $$\cosh^2x-\sinh^2x=\frac{(e^x+e^{-x})^2-(e^x-e^{-x})^2}{4}=\frac{4e^xe^{-x}}4=1
 <g fill="#686e66" font-size="14" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><g text-anchor="middle"><text x="170" y="244">1</text><text x="240" y="244">2</text><text x="310" y="244">3</text></g><g text-anchor="end"><text x="85" y="65">2</text><text x="85" y="135">1</text><text x="85" y="275">−1</text><text x="85" y="345">−2</text><text x="85" y="225">0</text></g></g>
 <g fill="#282e29" font-family="Georgia,serif" font-style="italic" font-size="17"><text x="590" y="206">x</text><text x="111" y="27">y</text></g>
 </svg>
+
 <div class="graph-legend hyperbola-legend"><span><i class="legend-curve" aria-hidden="true"></i>\(x^2-y^2=1,\ x\ge1\)</span></div>
 </div>
+
 <div class="widget-readouts"><span>\(t=\) <output id="hyperbolic-t">0.75</output></span><span>\(x=\cosh t=\) <output id="hyperbolic-x">1.29</output></span><span>\(y=\sinh t=\) <output id="hyperbolic-y">0.82</output></span></div>
 <p class="widget-instruction">Drag the point along the branch. Its coordinates \((\cosh t,\sinh t)\) always satisfy \(x^2-y^2=1\)—the reason for the name <em>hyperbolic</em>.</p>
 </div>
