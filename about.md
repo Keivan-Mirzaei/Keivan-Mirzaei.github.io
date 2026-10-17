@@ -37,6 +37,7 @@ That is the kind of moment this notebook is about: a little experimentation, the
 - [Posts]({{ '/notes/' | relative_url }}) come in two forms:
   - [Problems]({{ '/problems/' | relative_url }}) begin with a question. When hints or solutions are included, they stay tucked away until you choose to open them.
   - [Explorations]({{ '/explorations/' | relative_url }}) follow an idea through examples, diagrams, code, and experiments.
+- [Learning]({{ '/learning/' | relative_url }}) offers courses built around compact explanations, interactive visuals, worked examples, and practice. Start with Calculus for Engineers and Scientists, then work through the problems at the end of each module.
 - [Puzzles]({{ '/puzzles/' | relative_url }}) give you something to play with, from tiling a floor to finding a winning path in Hex.
 - [Gadgets]({{ '/gadgets/' | relative_url }}) provide practical tools for work and study, including an exam clock, a Pomodoro timer, and ambient sound.
 - [Research]({{ '/research/' | relative_url }}) collects my work in stochastic analysis and mathematical finance.

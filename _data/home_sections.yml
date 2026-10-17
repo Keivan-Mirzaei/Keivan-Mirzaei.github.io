@@ -2,6 +2,10 @@
   url: /notes/
   icon: notebook
   description: Problems to think about and explorations through mathematics, diagrams, code, and experiments.
+- title: Learning
+  url: /learning/
+  icon: learning
+  description: Study calculus through compact explanations, interactive graphs, worked examples, and problems.
 - title: Puzzles
   url: /puzzles/
   icon: puzzle

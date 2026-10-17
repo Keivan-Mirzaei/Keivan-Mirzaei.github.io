@@ -260,8 +260,12 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             homepage = (destination / "index.html").read_text()
             sidebar = homepage.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
             self.assertNotIn('<details', sidebar)
-            self.assertEqual(sidebar.count('class="nav-link'), 6)
+            self.assertEqual(sidebar.count('class="nav-link'), 7)
             self.assertIn('href="/gadgets/"', sidebar)
+            self.assertIn('href="/learning/"', sidebar)
+            self.assertIn('href="/learning/" class="subject-card"', homepage)
+            self.assertIn('href="/learning/" aria-current="page"', catalogue)
+            self.assertIn('href="/learning/"', page("about", ""))
             posts_sidebar = problem.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
             self.assertIn('href="/notes/" aria-current="true"', posts_sidebar)
             for archive in [destination / "notes/index.html", *(destination / "notes/page").glob("*/index.html")]:
@@ -273,7 +277,8 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             index = json.loads((destination / "search.json").read_text())
             self.assertFalse(any("sentinel" in entry["title"].lower() for entry in index))
             self.assertTrue(any(entry["title"] == "Fixture research" for entry in index))
-            self.assertFalse(any(entry["url"].startswith("/learning/")
+            self.assertTrue(any(entry["url"] == "/learning/" for entry in index))
+            self.assertFalse(any((entry["url"].startswith("/learning/") and entry["url"] != "/learning/")
                                  or entry["url"].startswith("/notes/derivatives/") for entry in index))
             self.assertNotIn("Write the solution here.", feed)
 

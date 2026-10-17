@@ -1,0 +1,12 @@
+.learning-home { max-width: 1050px; margin: 0 auto; padding: 55px 40px 70px; }
+.learning-home-intro { margin-bottom: 35px; }
+.learning-home-intro h1 { font: 400 48px/1.16 var(--serif); letter-spacing: -1.5px; margin: 14px 0 20px; }
+.learning-home-intro > p:last-child { color: var(--muted); }
+.learning-home-courses { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; }
+.learning-home .course { display: block; align-self: start; overflow: hidden; background: #f1f3ec; border-radius: 8px; text-decoration: none; }
+.learning-home .course:hover { color: inherit; background: #edf1e7; }
+.learning-home-thumbnail { height: 170px; display: grid; place-items: center; background: #e9eee2; }
+.learning-home-thumbnail svg { width: 210px; height: 135px; fill: none; stroke: var(--green); stroke-width: 1.5; }
+.learning-home .course h2 { padding: 23px; margin: 0; text-align: center; font: 400 25px/1.25 var(--serif); }
+@media(max-width:1000px) { .learning-home-courses { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media(max-width:600px) { .learning-home { padding: 35px 20px 50px; } .learning-home-intro h1 { font-size: 40px; } .learning-home-courses { grid-template-columns: 1fr; } }

@@ -6,6 +6,10 @@
   url: /notes/
   key: notes
   icon: notebook
+- title: Learning
+  url: /learning/
+  key: learning
+  icon: learning
 - title: Puzzles
   url: /puzzles/
   key: puzzles

@@ -1,7 +1,24 @@
 ---
-layout: null
+layout: default
 title: Learning
+section: learning
 permalink: /learning/
-sitemap: false
+description: Courses with compact explanations, interactive visuals, worked examples, and problems to explore.
+search: true
 ---
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Learning · {{ site.title }}</title><link rel="stylesheet" href="{{ '/assets/css/learning.css' | relative_url }}"></head><body><a class="skip" href="#main">Skip to content</a><header class="masthead"><a class="brand" href="{{ '/' | relative_url }}">{{ site.title }}<span>Mathematics &amp; other curiosities</span></a><a href="{{ '/learning/' | relative_url }}" aria-current="page">Learning</a></header><main id="main"><div class="learning-intro"><p class="eyebrow">One idea at a time</p><h1>Learning</h1><p>Compact explanations, worked examples, and space to practise.</p></div><div class="courses">{% for entry in site.data.learning_courses %}{% assign course = entry[1] %}<a class="course" href="{{ '/learning/' | append: course.slug | append: '/' | relative_url }}"><div class="thumbnail">{% include learning/course-thumbnail.html %}</div><div class="course-body"><h2>{{ course.title | escape }}</h2></div></a>{% endfor %}</div></main><footer>{{ site.title }}<span>A notebook, always in progress.</span></footer></body></html>
+<link data-page-style rel="stylesheet" href="{{ '/assets/css/learning-index.css' | relative_url }}">
+<div class="learning-home">
+  <header class="learning-home-intro">
+    <p class="eyebrow">One idea at a time</p>
+    <h1>Learning</h1>
+    <p>Compact explanations, worked examples, and space to practise.</p>
+  </header>
+  <div class="learning-home-courses">
+    {% for entry in site.data.learning_courses %}{% assign course = entry[1] %}
+    <a class="course" href="{{ '/learning/' | append: course.slug | append: '/' | relative_url }}">
+      <div class="learning-home-thumbnail">{% include learning/course-thumbnail.html %}</div>
+      <h2>{{ course.title | escape }}</h2>
+    </a>
+    {% endfor %}
+  </div>
+</div>
