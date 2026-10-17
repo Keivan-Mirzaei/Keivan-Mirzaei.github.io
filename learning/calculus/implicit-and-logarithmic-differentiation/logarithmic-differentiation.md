@@ -3,8 +3,8 @@ layout: learning-topic
 title: "Logarithmic differentiation"
 permalink: /learning/calculus/implicit-and-logarithmic-differentiation/logarithmic-differentiation/
 course_key: calculus
-module_key: implicit-and-logarithmic-differentiation
-position: "4.2"
+module_key: elementary-function-derivatives
+position: "3.5"
 description: Use logarithms to turn products into sums and bring changing exponents down where you can differentiate them.
 math: true
 sitemap: false

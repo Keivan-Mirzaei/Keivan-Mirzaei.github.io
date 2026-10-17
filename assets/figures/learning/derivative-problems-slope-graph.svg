@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+<title id="title">The derivative of the joined line and parabola</title>
+<desc id="desc">On minus two to zero, the derivative is the constant one. On zero to two, it is two x. Both branches are open at zero, where the derivative is undefined. The displayed interval endpoints are also excluded.</desc>
+<path d="M70 280H315M325 280H580M320 315V285M320 275V230M320 220V30" fill="none" stroke="#c9d1c6"/>
+<path d="M100 277V283M210 277V283M430 277V283M540 277V283M317 225H323M317 170H323M317 60H323" fill="none" stroke="#9eac96"/>
+<path d="M105 225H315M323.54 276.46L536.46 63.54" fill="none" stroke="#285b46" stroke-width="2.6"/>
+<g fill="none" stroke="#285b46" stroke-width="2.2"><circle cx="100" cy="225" r="5"/><circle cx="320" cy="225" r="5"/><circle cx="320" cy="280" r="5"/><circle cx="540" cy="60" r="5"/></g>
+<g fill="#686e66" font-size="14" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">
+<g text-anchor="middle"><text x="100" y="304">−2</text><text x="210" y="304">−1</text><text x="430" y="304">1</text><text x="540" y="304">2</text></g>
+<g text-anchor="end"><text x="305" y="230">1</text><text x="305" y="175">2</text><text x="305" y="65">4</text><text x="305" y="304">0</text></g></g>
+<g fill="#282e29" font-family="Georgia,serif" font-style="italic" font-size="17"><text x="591" y="286">x</text><text x="331" y="32">y</text></g>
+<g transform="translate(492 320)"><rect width="68" height="28" rx="4" fill="#edf1e9"/><path d="M10 14H29" stroke="#285b46" stroke-width="2.6"/><text x="42" y="20" font-family="Georgia,serif" font-style="italic" font-size="17" fill="#285b46">f′</text></g>
+</svg>

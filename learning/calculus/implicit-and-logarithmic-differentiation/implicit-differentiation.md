@@ -3,8 +3,8 @@ layout: learning-topic
 title: "Implicit differentiation"
 permalink: /learning/calculus/implicit-and-logarithmic-differentiation/implicit-differentiation/
 course_key: calculus
-module_key: implicit-and-logarithmic-differentiation
-position: "4.1"
+module_key: elementary-function-derivatives
+position: "3.4"
 description: Differentiate a relation without first solving it for one variable.
 math: true
 topic_script: /assets/js/learning-implicit.js

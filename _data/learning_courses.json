@@ -79,7 +79,7 @@
       },
       {
         "slug": "elementary-function-derivatives",
-        "title": "Derivatives of elementary functions",
+        "title": "Elementary functions and differentiation techniques",
         "url": "/learning/calculus/elementary-function-derivatives/",
         "topics": [
           {
@@ -98,18 +98,6 @@
             "url": "/learning/calculus/derivative-foundations/hyperbolic-functions/"
           },
           {
-            "slug": "problems",
-            "title": "Problems",
-            "url": "/learning/calculus/elementary-function-derivatives/problems/"
-          }
-        ]
-      },
-      {
-        "slug": "implicit-and-logarithmic-differentiation",
-        "title": "Implicit and logarithmic differentiation",
-        "url": "/learning/calculus/implicit-and-logarithmic-differentiation/",
-        "topics": [
-          {
             "slug": "implicit-differentiation",
             "title": "Implicit differentiation",
             "url": "/learning/calculus/implicit-and-logarithmic-differentiation/implicit-differentiation/"
@@ -122,7 +110,7 @@
           {
             "slug": "problems",
             "title": "Problems",
-            "url": "/learning/calculus/implicit-and-logarithmic-differentiation/problems/"
+            "url": "/learning/calculus/elementary-function-derivatives/problems/"
           }
         ]
       },

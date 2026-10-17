@@ -4,6 +4,6 @@ title: "Extreme values and critical numbers"
 permalink: /learning/calculus/applications-of-derivatives/extreme-values/
 course_key: calculus
 module_key: applications-of-derivatives
-position: "5.3"
+position: "4.3"
 sitemap: false
 ---

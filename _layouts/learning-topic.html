@@ -3,24 +3,6 @@ layout: null
 ---
 {% assign learning_course = site.data.learning_courses[page.course_key] %}
 {% assign learning_module = learning_course.modules | where: 'slug', page.module_key | first %}
-{% assign previous_topic = nil %}
-{% assign next_topic = nil %}
-{% assign course_topics = '' | split: ',' %}
-{% for module in learning_course.modules %}
-  {% assign course_topics = course_topics | concat: module.topics %}
-{% endfor %}
-{% for topic in course_topics %}
-  {% if topic.url == page.url %}
-    {% unless forloop.first %}
-      {% assign previous_index = forloop.index0 | minus: 1 %}
-      {% assign previous_topic = course_topics[previous_index].url %}
-    {% endunless %}
-    {% unless forloop.last %}
-      {% assign next_index = forloop.index0 | plus: 1 %}
-      {% assign next_topic = course_topics[next_index].url %}
-    {% endunless %}
-  {% endif %}
-{% endfor %}
 <!doctype html>
 <html lang="{{ site.lang | default: 'en' }}">
 <head>
@@ -39,6 +21,7 @@ layout: null
   <script type="module" src="{{ '/assets/js/learning-problems.js' | relative_url }}"></script>
   {% endif %}
   <script defer src="{{ '/assets/js/learning-topic.js' | relative_url }}"></script>
+  <script type="module" src="{{ '/assets/js/learning-topic-navigation.js' | relative_url }}"></script>
   {% if page.topic_script %}<script defer src="{{ page.topic_script | relative_url }}"></script>{% endif %}
 </head>
 <body data-topic-math="{{ page.math | default: false }}">
@@ -76,9 +59,15 @@ layout: null
       </section>
       {% endif %}
       <nav id="reading-dock" aria-label="Course navigation">
-        {% if previous_topic %}<a href="{{ previous_topic | relative_url }}" aria-label="Previous topic">{% include learning/arrow.html direction='left' %}</a>{% endif %}
-        <button id="topic-contents" aria-haspopup="dialog" aria-expanded="false">Course contents{% if page.position %} <span>{{ page.position }}</span>{% endif %}</button>
-        {% if next_topic %}<a href="{{ next_topic | relative_url }}" aria-label="Next topic">{% include learning/arrow.html %}</a>{% endif %}
+        <div class="topic-chain" tabindex="0" aria-label="Scroll through course topics">
+          {% for module in learning_course.modules %}
+          {% assign module_number = forloop.index %}
+          {% for topic in module.topics %}
+          <a class="topic-chain-link" href="{{ topic.url | relative_url }}"{% if topic.url == page.url %} aria-current="page"{% endif %}><span class="topic-chain-title">{{ topic.title | escape }}</span><span class="topic-chain-dot" aria-hidden="true"></span><span class="topic-chain-number">{{ module_number }}.{{ forloop.index }}</span></a>
+          {% endfor %}
+          {% endfor %}
+        </div>
+        <button id="topic-contents" aria-haspopup="dialog" aria-expanded="false">Course contents</button>
       </nav>
     </article>
   </main>
@@ -89,9 +78,12 @@ layout: null
       {% for module in learning_course.modules %}
       <details class="course-module"{% if module.slug == page.module_key %} open{% endif %}>
         <summary>{{ module.title | escape }}</summary>
+        {% assign module_number = forloop.index %}
+        <div class="topic-chain" tabindex="0" aria-label="{{ module.title | escape }} topics">
         {% for topic in module.topics %}
-        <a href="{{ topic.url | relative_url }}"{% if topic.url == page.url %} aria-current="page"{% endif %}>{{ topic.title | escape }}</a>
+        <a class="topic-chain-link" href="{{ topic.url | relative_url }}"{% if topic.url == page.url %} aria-current="page"{% endif %}><span class="topic-chain-title">{{ topic.title | escape }}</span><span class="topic-chain-dot" aria-hidden="true"></span><span class="topic-chain-number">{{ module_number }}.{{ forloop.index }}</span></a>
         {% endfor %}
+        </div>
       </details>
       {% endfor %}
     </nav>

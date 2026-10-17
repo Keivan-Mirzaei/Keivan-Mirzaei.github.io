@@ -213,9 +213,13 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             self.assertFalse((destination / "learning/topic").exists())
             self.assertFalse((destination / "learning/thumbnail-options").exists())
             self.assertFalse((destination / "learning/problem-layout-options").exists())
+            self.assertFalse((destination / "learning/navigation-options").exists())
             catalogue = (destination / "learning/index.html").read_text()
             self.assertIn("Calculus for Engineers and Scientists", catalogue)
             self.assertNotIn("275", catalogue)
+            self.assertIn('class="course" href="/learning/calculus/"', catalogue)
+            self.assertNotIn('<details>', catalogue)
+            self.assertTrue((destination / "learning/calculus/index.html").is_file())
             course = json.loads((source / "_data/learning_courses.json").read_text())["calculus"]
             topics = [topic for module in course["modules"] for topic in module["topics"]]
             for i, topic in enumerate(topics):
@@ -229,15 +233,12 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
                     self.assertIn('learning-problems.css', html)
                     self.assertIn('id="module-problems"', html)
                 self.assertNotIn("learning-slope", html)
-                if i:
-                    self.assertIn(f'href="{topics[i-1]["url"]}" aria-label="Previous topic"', html)
-                else:
-                    self.assertNotIn('aria-label="Previous topic"', html)
-                if i + 1 < len(topics):
-                    self.assertIn(f'href="{topics[i+1]["url"]}" aria-label="Next topic"', html)
-                else:
-                    self.assertNotIn('aria-label="Next topic"', html)
-            self.assertEqual(len(course["modules"]), 10)
+                self.assertIn('class="topic-chain"', html)
+                self.assertIn('learning-topic-navigation.js', html)
+                self.assertIn(f'href="{topic["url"]}" aria-current="page"', html)
+                for neighbour in topics[max(0, i-1):i+2]:
+                    self.assertIn(f'href="{neighbour["url"]}"', html)
+            self.assertEqual(len(course["modules"]), 9)
             for module in course["modules"]:
                 self.assertEqual(module["topics"][-1]["slug"], "problems")
             module_problems = (destination / "learning/calculus/limits-and-continuity/problems/index.html").read_text()

@@ -1,10 +1,7 @@
 ---
-layout: learning-topic
-problem_set: true
+layout: redirect
 title: "Problems"
 permalink: /learning/calculus/implicit-and-logarithmic-differentiation/problems/
-course_key: calculus
-module_key: implicit-and-logarithmic-differentiation
-position: "4.3"
+redirect_to: /learning/calculus/elementary-function-derivatives/problems/
 sitemap: false
 ---
