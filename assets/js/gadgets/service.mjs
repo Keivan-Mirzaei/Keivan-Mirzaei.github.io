@@ -20,6 +20,8 @@ export function createGadgetService(environment = globalThis) {
   audio.onState(value => {
     if (value !== 'running' && alarmKey !== null) { alarmKey = null; audio.cancelCompletion(); }
     if (value === 'running' && canChime()) updateAlarm();
+  });
+  audio.onSoundState(value => {
     if (soundPlaying && value !== 'running') {
       soundPlaying = soundLoading = false; audio.pause(); if (state.sound?.owner === owner) state.sound.playing = false;
       message = 'Sound was interrupted by the browser. Press Play to resume.'; save(); notify();

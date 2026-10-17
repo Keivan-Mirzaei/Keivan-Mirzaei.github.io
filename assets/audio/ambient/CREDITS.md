@@ -2,7 +2,7 @@
 
 These recordings are downloaded only when a visitor chooses Play. The adapted
 MP3 files retain each original recording's license, independently of the site's
-code. Brown noise and soft noise are generated locally and use no recording.
+code. Brown noise and soft noise are original generated loops and use no recording.
 
 | File | Original recording | Author | License |
 | --- | --- | --- | --- |
@@ -13,11 +13,13 @@ code. Brown noise and soft noise are generated locally and use no recording.
 
 Changes: excerpts (jungle 1–47 s, rain and river 20–204 s, wind 3–127 s), mono,
 DC removal, volume balancing with an 0.8 peak ceiling, resampling to 24 kHz,
-and 64 kbps MP3 compression. Playback blends the last four seconds into the
-opening four seconds with an equal-power overlap and omits the reused opening.
-Loop durations are approximately 42 seconds, 3 minutes, 3 minutes, and 2 minutes.
-Noise buffers use 60 seconds of generated samples with a two-second overlap.
+and 64 kbps MP3 compression. Playback uses the browser's native looping audio player. No audio samples are
+generated, copied, or crossfaded by page scripts during playback.
 
-Only the most recently used decoded loop is retained. Stop releases it; Pause
-retains it for an immediate resume. Recordings and license links are also
-credited in the player's Info panel.
+`brown.wav` and `soft.wav` are mono, 24 kHz, 16-bit, 18-second loops generated
+by `scripts/build_ambient_noise.py`. Their filtering and equal-power loop joins
+are baked into the files. These original generated sounds are CC0.
+
+Files load only after Play. Pause retains the browser's playback position; Stop
+unloads the source. Recordings and license links are also credited in the
+player's Info panel.

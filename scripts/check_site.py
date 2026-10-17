@@ -71,7 +71,7 @@ def check_assets(page_paths):
     asset_root = ROOT / "assets"
     assets = {p.resolve() for p in asset_root.rglob("*") if p.is_file()}
     quoted_url = re.compile(
-        r'''["'`]([^"'`<>\r\n]+\.(?:svg|png|jpg|jpeg|webp|gif|ico|mp4|mp3|pdf|py|json|js|mjs|css|woff2?|ttf|otf|vtt|txt|md)(?:\?[^"'`<>\s]*)?(?:\#[^"'`<>\s]*)?)["'`]''',
+        r'''["'`]([^"'`<>\r\n]+\.(?:svg|png|jpg|jpeg|webp|gif|ico|mp4|mp3|wav|pdf|py|json|js|mjs|css|woff2?|ttf|otf|vtt|txt|md)(?:\?[^"'`<>\s]*)?(?:\#[^"'`<>\s]*)?)["'`]''',
         re.IGNORECASE,
     )
     css_url = re.compile(r'''url\(\s*["']?([^\s)"']+)["']?\s*\)''')
@@ -87,7 +87,7 @@ def check_assets(page_paths):
         text = path.read_text()
         urls = quoted_url.findall(text) + css_url.findall(text)
         if path == ROOT / "assets/js/gadgets/sounds.mjs":
-            # audio.mjs builds these URLs from the shared sound registry.
+            # ambient.mjs builds these URLs from the shared sound registry.
             urls += ["../../audio/ambient/" + name for name in re.findall(
                 r'''file:\s*["']([^"']+)["']''', text
             )]

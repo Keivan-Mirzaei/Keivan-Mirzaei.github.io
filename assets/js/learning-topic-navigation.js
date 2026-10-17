@@ -1,4 +1,20 @@
+import { alignCoursePath } from './lib/path-rails.mjs';
 import { enableProblemNumberStrip } from './lib/problem-number-strip.mjs';
+
+// Remember the reading position so the course path can identify its current stop.
+const outline = document.querySelector('.course-outline');
+try {
+  if (outline) {
+    const lastTopic = localStorage.getItem('learning:last-topic');
+    const links = [...outline.querySelectorAll('.topic-chain-link')];
+    const link = links.find(link => new URL(link.href).pathname === lastTopic) || links[0];
+    if (link) {
+      link.setAttribute('aria-current', 'true');
+      link.closest('.course-outline-module').dataset.current = 'true';
+    }
+  } else if (document.querySelector('.topic-wrap')) localStorage.setItem('learning:last-topic', location.pathname);
+} catch {}
+
 for (const chain of document.querySelectorAll('.topic-chain')) {
   const current = chain.querySelector('[aria-current]');
   const links = [...chain.querySelectorAll('.topic-chain-link')];
@@ -43,4 +59,14 @@ for (const path of document.querySelectorAll('.learning-breadcrumb')) {
     if (link.offsetLeft < path.scrollLeft + 18) path.scrollLeft = link.offsetLeft - 18;
     else if (link.offsetLeft + link.offsetWidth > path.scrollLeft + path.clientWidth - 18) path.scrollLeft = link.offsetLeft + link.offsetWidth - path.clientWidth + 18;
   });
+}
+
+if (outline) {
+  const modules = [...outline.querySelectorAll('.course-outline-module')];
+  const selected = modules.findIndex(module => module.hasAttribute('data-current'));
+  modules.forEach((module, index) => {
+    const distance = Math.abs(index - selected);
+    module.style.setProperty('--chapter-focus', .5 + .5 * Math.exp(-.35 * distance * distance));
+  });
+  alignCoursePath(outline);
 }

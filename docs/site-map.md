@@ -51,7 +51,7 @@ An activity usually has matching names in `_includes/widgets/`, `assets/js/widge
 
 Controllers export `mount(root)` and return cleanup for listeners, timers, workers, observers, and renderers. `assets/js/app.mjs` manages page features when navigating between pages. Keep mathematical rules separate from event handling where useful. Shared controls live in `_includes/controls/`; history, panels, and storage helpers live in `assets/js/lib/`.
 
-The persistent site frame lets running timers and sound continue between pages. Ordinary visits use browser navigation; `app.mjs` enables the shared page loader only while a gadget is starting, sound is playing, or a timer is running. Pending visits show loading feedback, repeated clicks keep the same request, and a five-second deadline falls back to browser navigation. `gadgets/service.mjs` owns the active timer and independent sound session; `model.mjs` handles timer calculations; `audio.mjs` owns playback; `ui.mjs` connects the dock and current workspace to that service. Use the existing service for new controls rather than creating another timer or audio player. Search is shared by the header dialog and dedicated page through `site-search.mjs`.
+The persistent site frame lets running timers and sound continue between pages. Ordinary visits use browser navigation; `app.mjs` enables the shared page loader only while a gadget is starting, sound is playing, or a timer is running. Pending visits show loading feedback, repeated clicks keep the same request, and a five-second deadline falls back to browser navigation. `learning-topic-navigation.js` remembers the last topic and mounts the course path; `lib/path-rails.mjs` aligns its continuous spotlight rails after layout changes. `gadgets/service.mjs` owns the active timer and independent sound session; `model.mjs` handles timer calculations; `ambient.mjs` streams ambient files through one native audio player without a Web Audio graph; `audio.mjs` reserves Web Audio for timer alerts; `ui.mjs` connects the dock and current workspace to that service. Use the existing service for new controls rather than creating another timer or audio player. Search is shared by the header dialog and dedicated page through `site-search.mjs`.
 
 The planar-graphs article uses `stereographic-projection` for its Three.js view. Its controller and `stereographic-math.mjs` share exact geometry; `interactive-view.mjs` handles opening, closing, loading feedback, and disposal. Keep heavy imports inside activation and retain the static SVG preview. Ordinary pages do not download Three.js.
 
@@ -63,6 +63,7 @@ Only recurring tools remain in `scripts/`:
 | --- | --- |
 | `new_post.py` | Create content from `docs/templates/` without overwriting saved work |
 | `optimize_build.py` | Add content-based asset versions to the generated site |
+| `build_ambient_noise.py` | Generate the original brown and soft noise loops offline |
 | `check_site.py` | Validate links, headings, images, search, feed, sitemap, exclusions, and unused assets, including imported modules and computed sound URLs |
 | `lights_out_catalogue.mjs` | Rebuild the deterministic Lights Out puzzle catalogue |
 | `tiling_catalogue.mjs` | Rebuild the deterministic tiling puzzle catalogue |
