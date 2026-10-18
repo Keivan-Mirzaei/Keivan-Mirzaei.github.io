@@ -22,7 +22,6 @@ function enter(root) {
   if (descriptors.length) mount(import('./widgets.js'), 'mountWidgets', [root, descriptors]);
   if (data.pageSearch === 'true') mount(import('./search.js'));
   if (data.pageProblem === 'true') mount(import('./problem-disclosures.js'));
-  if (document.body.classList.contains('puzzle-page')) mount(import('./puzzle-layout.mjs'));
   if (data.pageMath === 'true') {
     cleanups.push(() => { clearMath(root); });
     typesetMath(root).then(() => {

@@ -119,8 +119,9 @@ export function initializeDropdowns(root) {
         const row = optionTemplate.content.firstElementChild.cloneNode(true);
         row.id = `${prefix}-option-${index}`; row.dataset.index = index;
         row.querySelector('[data-dropdown-option-label]').textContent = option.label;
-        if (usesMarks && marks[option.value]) {
-          const mark = owner.createElement('img'); mark.className = 'site-dropdown-mark'; mark.src = marks[option.value]; mark.alt = ''; mark.setAttribute('aria-hidden', 'true'); row.prepend(mark);
+        const markSource = marks[option.dataset.dropdownMark || option.value];
+        if (usesMarks && markSource) {
+          const mark = owner.createElement('img'); mark.className = 'site-dropdown-mark'; mark.src = markSource; mark.alt = ''; mark.setAttribute('aria-hidden', 'true'); row.prepend(mark);
         }
         groupContainer.append(row); rows.push(row);
       }
@@ -135,8 +136,9 @@ export function initializeDropdowns(root) {
       trigger.disabled = select.disabled || !options.some((_, index) => enabled(index));
       trigger.setAttribute('aria-disabled', String(trigger.disabled));
       if (triggerMark) {
-        triggerMark.hidden = !marks[current?.value];
-        if (!triggerMark.hidden) triggerMark.src = marks[current.value];
+        const markSource = marks[current?.dataset.dropdownMark || current?.value];
+        triggerMark.hidden = !markSource;
+        if (markSource) triggerMark.src = markSource;
       }
       rows.forEach((row, index) => {
         row.hidden = options[index].hidden;

@@ -1,20 +1,30 @@
-<section class="hex-widget hex-play hex-game-frame{% if include.embedded %} graph-widget{% endif %}" data-hex-game aria-label="Hex game">
-  {% if include.embedded %}<h3 class="hex-game-title">Find your way across</h3>{% endif %}
-  <div class="hex-players" aria-label="Players">
-    <div class="hex-player" data-hex-player="human"><span class="hex-player-dot" data-hex-player-color="1" aria-hidden="true"></span><span class="hex-player-name" data-hex-player-name="human">You</span><span class="hex-player-color" data-hex-player-label="human">Red</span></div>
-    <div class="hex-player" data-hex-player="opponent"><span class="hex-player-dot" data-hex-player-color="2" aria-hidden="true"></span><span class="hex-player-name" data-hex-player-name="opponent">Computer</span><span class="hex-player-color" data-hex-player-label="opponent">Blue</span></div>
+<section class="hex-widget hex-game-frame{% if include.embedded %} graph-widget{% endif %}" data-hex-game aria-label="Hex game">
+  <div class="hex-title-row">
+    {% if include.embedded %}<h3 class="hex-game-title">Find your way across</h3>{% else %}<h1>Hex</h1>{% endif %}
   </div>
-  <p class="hex-status" data-hex-status role="status" aria-live="polite" aria-atomic="true">Enable JavaScript to play Hex.</p>
-  <div class="hex-board-viewport"><div class="hex-board" data-hex-board>
-    <img src="{{ '/assets/images/hex-board.svg' | relative_url }}" width="410" height="600" alt="An empty five by five upright diamond Hex board. Red connects the upper-right and lower-left sides; Blue connects the upper-left and lower-right sides.">
-  </div></div>
-  <p class="hex-goal-caption" data-hex-goal>Connect your two red sides</p>
-  <div class="hex-controls" role="group" aria-label="Game controls">
-    <button class="panel-button" type="button" data-hex-undo data-puzzle-icon aria-label="Undo your turn" disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
-    <button class="panel-button" type="button" data-hex-redo data-puzzle-icon aria-label="Redo your turn" disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
-    <button class="panel-button" type="button" data-hex-reset aria-label="Reset board" disabled>{% include icon.html name='restart' %}<span>Reset</span></button>
-    <button class="panel-button" type="button" data-widget-panel-trigger="settings" aria-expanded="false" disabled>{% include icon.html name='settings' %}<span>Settings</span></button>
-    <button class="panel-button" type="button" data-widget-panel-trigger="info" aria-expanded="false" disabled>{% include icon.html name='info' %}<span>Info</span></button>
+  <div class="hex-table">
+    <div class="hex-players" aria-label="Players">
+      <div class="hex-player" data-hex-player="human"><span class="hex-player-dot" data-hex-player-color="1" aria-hidden="true"></span><span class="hex-player-name" data-hex-player-name="human">You</span><span class="sr-only" data-hex-player-label="human">Red</span></div>
+      <div class="hex-player" data-hex-player="opponent"><span class="hex-player-dot" data-hex-player-color="2" aria-hidden="true"></span><span class="hex-player-name" data-hex-player-name="opponent">Computer</span><span class="sr-only" data-hex-player-label="opponent">Blue</span></div>
+    </div>
+    <div class="hex-board-viewport"><div class="hex-board" data-hex-board>
+      <img src="{{ '/assets/images/hex-board.svg' | relative_url }}" width="410" height="600" alt="An empty five by five upright diamond Hex board. Red connects the upper-right and lower-left sides; Blue connects the upper-left and lower-right sides.">
+    </div></div>
+    <div class="hex-table-footer">
+      <p class="hex-status" data-hex-status role="status" aria-live="polite" aria-atomic="true">Enable JavaScript to play Hex.</p>
+      <p class="sr-only" data-hex-goal>Connect your two red sides</p>
+      <div class="hex-controls" role="group" aria-label="Game controls">
+        <button class="puzzle-icon-button" type="button" data-hex-undo data-puzzle-icon aria-label="Undo your turn" data-tooltip="Undo" disabled>{% include icon.html name='undo' %}</button>
+        <button class="puzzle-icon-button" type="button" data-hex-redo data-puzzle-icon aria-label="Redo your turn" data-tooltip="Redo" disabled>{% include icon.html name='redo' %}</button>
+        <button class="puzzle-icon-button" type="button" data-hex-reset aria-label="Reset board" data-tooltip="Reset" disabled>{% include icon.html name='restart' %}</button>
+        <button class="puzzle-icon-button" type="button" data-widget-panel-trigger="settings" aria-label="Settings" data-tooltip="Settings" aria-expanded="false" disabled>{% include icon.html name='settings' %}</button>
+        <button class="puzzle-icon-button" type="button" data-widget-panel-trigger="info" aria-label="How to play" data-tooltip="How to play" aria-expanded="false" disabled>{% include icon.html name='help' %}</button>
+      </div>
+    </div>
+  </div>
+  <div class="hex-support-panel hex-help-panel" data-widget-panel="info" aria-label="How to play" hidden>
+    <h2>How to play</h2>
+    <p>Red plays first. Take turns placing stones in empty cells; connect your two coloured sides to win.</p>
   </div>
   <div class="hex-support-panel" data-widget-panel="settings" aria-label="Game settings" hidden>
     <div class="hex-size-setting">
@@ -22,17 +32,18 @@
       <input type="range" min="3" max="11" step="1" value="5" data-hex-size disabled>
     </div>
     <label class="hex-switch"><span>Play computer</span><input type="checkbox" role="switch" data-hex-computer checked disabled><span class="hex-switch-track" aria-hidden="true"></span></label>
-    <label class="hex-switch" data-hex-second-setting><span>Play second <small>As Blue; the computer opens</small></span><input type="checkbox" role="switch" data-hex-second disabled><span class="hex-switch-track" aria-hidden="true"></span></label>
+    <div class="hex-difficulty-setting" data-hex-difficulty-setting hidden>
+      <label data-hex-difficulty-name>Difficulty</label>
+      <select aria-label="Difficulty" data-hex-difficulty data-dropdown="difficulty" disabled>
+        <option value="easy" data-dropdown-mark="1">Easy</option>
+        <option value="medium" data-dropdown-mark="2">Medium</option>
+        <option value="hard" data-dropdown-mark="3" selected>Hard</option>
+        <option value="expert" data-dropdown-mark="4">Expert</option>
+      </select>
+    </div>
+    <label class="hex-switch" data-hex-second-setting><span>Play second</span><input type="checkbox" role="switch" data-hex-second disabled><span class="hex-switch-track" aria-hidden="true"></span></label>
     <label class="hex-switch"><span>Save progress</span><input type="checkbox" role="switch" data-puzzle-remember checked disabled><span class="hex-switch-track" aria-hidden="true"></span></label>
-    <p class="hex-caption">Changing board size or players starts a new game and clears Undo history. Reset keeps your settings and can be undone.</p>
-    <p class="hex-caption">Saving applies only to Hex on this device. Other puzzles keep their own preferences.</p>
-    {% include controls/reset-progress.html %}
-  </div>
-  <div class="hex-support-panel" data-widget-panel="info" aria-label="About Hex" hidden>
-    <p data-hex-instruction>Choose an empty cell. Connect the two sides of your colour.</p>
-    <p>Red connects upper-right to lower-left; Blue connects upper-left to lower-right. Neighbouring stones connect when their cells share a side. Red begins, and stones stay put.</p>
-    <p>Undo takes back your move and the computer's reply, or one move when playing both colours. Reset clears the board and can be undone.</p>
-    <p>Use the arrow keys to move between empty cells, then Enter or Space to place a stone. Large boards can be scrolled on narrow screens.</p>
+    {% include controls/reset-progress.html plain=true %}
   </div>
   <noscript><p class="hex-caption">This game needs JavaScript. Enable it to place stones and use the game controls.</p></noscript>
 </section>

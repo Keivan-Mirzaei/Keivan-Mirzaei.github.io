@@ -77,28 +77,6 @@ export function legalMoves(cells) {
   return Array.from(cells.keys()).filter(i => cells[i] === 0);
 }
 
-// Number of empty cells needed along a cheapest chain; enemy cells are impassable.
-export function connectionCost(cells, size, color) {
-  const board = hexBoard(size), distances = new Float64Array(board.count).fill(Infinity);
-  const visited = new Uint8Array(board.count);
-  for (let k = 0; k < size; k++) {
-    const i = color === RED ? k : k * size;
-    if (cells[i] !== 3 - color) distances[i] = cells[i] === color ? 0 : 1;
-  }
-  for (let p = 0; p < board.count; p++) {
-    let best = -1;
-    for (let i = 0; i < board.count; i++) if (!visited[i] && (best < 0 || distances[i] < distances[best])) best = i;
-    if (best < 0 || !Number.isFinite(distances[best])) return Infinity;
-    if ((color === RED ? Math.floor(best / size) : best % size) === size - 1) return distances[best];
-    visited[best] = 1;
-    for (const next of board.neighbors[best]) {
-      if (cells[next] === 3 - color) continue;
-      distances[next] = Math.min(distances[next], distances[best] + (cells[next] === color ? 0 : 1));
-    }
-  }
-  return Infinity;
-}
-
 export function immediateWins(cells, size, color) {
   const trial = Array.from(cells), wins = [];
   for (const i of legalMoves(cells)) {
@@ -121,18 +99,6 @@ export function rankedMoves(cells, size, color, random = Math.random) {
       + localScore(cells, board, move, color) * .15 + centrality * .06 + random() * .035;
     return { move, score };
   }).sort((a, b) => b.score - a.score);
-}
-
-export function chooseMove(cells, size, color, level = 'medium', random = Math.random) {
-  if (winner(cells, size)) return -1;
-  const legal = legalMoves(cells);
-  if (!legal.length) return -1;
-  if (level === 'easy') return legal[Math.min(legal.length - 1, Math.floor(random() * legal.length))];
-  const wins = immediateWins(cells, size, color);
-  if (wins.length) return wins[0];
-  const threats = immediateWins(cells, size, 3 - color);
-  if (threats.length) return threats[0];
-  return rankedMoves(cells, size, color, random)[0].move;
 }
 
 const owns = (cells, count, i, color) => i >= count || cells[i] === color;
@@ -262,7 +228,7 @@ function* solvePosition(cells, size, color, moves, cache, random, answer = null)
 // RAVE shares evidence from later moves with earlier positions, so a large board
 // does not need thousands of independent visits to learn about each candidate.
 // Rollouts answer bridge attacks and avoid filling intact friendly bridges.
-export function createSearch(cells, size, color, random = Math.random) {
+export function createSearch(cells, size, color, random = Math.random, { exactLimit = 12, proofLimit = 0 } = {}) {
   cells = Array.from(cells); // Batched searches own their position, even if a caller edits the board.
   const board = hexBoard(size), moves = legalMoves(cells);
   const finished = move => ({ run() {}, best: () => move, visits: () => 0, solved: true });
@@ -274,7 +240,7 @@ export function createSearch(cells, size, color, random = Math.random) {
     return finished(Math.floor(size / 2) * size + Math.floor((size - 1) / 2));
   }
   const ranked = rankedMoves(cells, size, color, random), tactical = ranked[0].move;
-  if (moves.length <= 12) {
+  if (moves.length <= exactLimit) {
     let count = 0, solved = false;
     const answer = { move: tactical }, solver = solvePosition(cells.slice(), size, color, moves, new Map(), random, answer);
     return {
@@ -283,6 +249,12 @@ export function createSearch(cells, size, color, random = Math.random) {
     };
   }
   const root = treeNode(-1, 3 - color);
+  // Expert proves earlier endgames alongside sampling. Until a proof finishes,
+  // choose from the sampled tree, never from a partially explored proof branch.
+  const proofAnswer = { move: tactical };
+  const proof = moves.length <= proofLimit
+    ? solvePosition(cells.slice(), size, color, moves, new Map(), random, proofAnswer) : null;
+  let proofSteps = 0, proofDone = false, proofWin = false;
   root.untried = ranked.slice();
   const low = ranked[ranked.length - 1].score, range = ranked[0].score - low || 1;
   root.untried.forEach(candidate => { candidate.prior = (candidate.score - low) / range; });
@@ -389,16 +361,24 @@ export function createSearch(cells, size, color, random = Math.random) {
     }
   }
   return {
-    run(count = 100) { for (let i = 0; i < count && !root.result; i++) iteration(); },
+    run(count = 100) {
+      for (let i = 0; i < count && !root.result && !proofDone; i++) {
+        if (proof && (root.visits + proofSteps) % 4 !== 0) {
+          const step = proof.next(); proofSteps++;
+          if (step.done) { proofDone = true; proofWin = step.value; }
+        } else iteration();
+      }
+    },
     best: () => {
+      if (proofDone && proofWin) return proofAnswer.move;
       const win = root.children.find(child => child.result === color);
       if (win) return win.move;
       const viable = root.children.filter(child => child.result !== 3 - color);
       const choices = viable.length ? viable : root.children;
       return choices.length ? choices.reduce((a, b) => b.visits > a.visits ? b : a).move : tactical;
     },
-    visits: () => root.visits,
-    get solved() { return Boolean(root.result); }
+    visits: () => root.visits + proofSteps,
+    get solved() { return Boolean(root.result) || proofDone; }
   };
 }
 

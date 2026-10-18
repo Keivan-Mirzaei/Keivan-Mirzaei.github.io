@@ -1,36 +1,24 @@
 - title: Hex
   url: /puzzles/hex/
-  description: Build a path of your colour from one side to the other. Your opponent has the same idea.
   image: /assets/images/puzzle-thumbnails/hex.svg
-  image_alt: An upright diamond Hex board with red upper-right and lower-left sides and blue upper-left and lower-right sides.
-  players: Against the computer or local two-player
+  image_alt: A minimal nine-cell diamond Hex board with opposite red and blue sides.
 - title: Klotski
   url: /puzzles/klotski/
-  description: Slide the blocks to make room. Guide the large marked block to the exit.
   image: /assets/images/puzzle-thumbnails/klotski.svg
   image_alt: A Klotski board with sliding rectangular blocks and a marked large block to guide to the bottom exit.
-  players: A sliding-block puzzle
 - title: Lights Out
   url: /puzzles/lights-out/
-  description: One press flips a light and its neighbors. Follow the connections and turn them all off.
   image: /assets/images/puzzle-thumbnails/lights-out.svg
   image_alt: Six unnumbered lights connected in an open loop, with one amber light on.
-  players: Four difficulty levels, 1,000 graph puzzles each
 - title: Floor tiling
   url: /puzzles/tiling/
-  description: A floor with a few squares missing, and just enough tiles. Find a place for every piece.
   image: /assets/images/puzzle-thumbnails/tiling.svg
   image_alt: A floor grid with missing squares beside a set of coloured tiles to fit together.
-  players: Four difficulty levels, 1,000 puzzles each
 - title: Four equal regions
   url: /puzzles/four-equal-regions/
-  description: Two crossing lines, four regions. Move and rotate the lines until each region contains the same number of points.
   image: /assets/images/puzzle-thumbnails/four-equal-regions.svg
   image_alt: Coloured points separated into four regions by a solid line and a dashed line.
-  players: A point-partition puzzle
 - title: One Odd Coin
   url: /puzzles/one-odd-coin/
-  description: Weigh the coins, keep your own notes, and identify the odd one. Can you match the minimum?
   image: /assets/images/puzzle-thumbnails/one-odd-coin.svg
   image_alt: Three numbered coins beside a two-pan balance scale, with one pan slightly lower.
-  players: 1,000 cases against a computer opponent

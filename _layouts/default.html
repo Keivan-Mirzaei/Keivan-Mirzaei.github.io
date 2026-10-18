@@ -14,7 +14,6 @@
   <link rel="stylesheet" href="{{ '/assets/css/quick-search.css' | relative_url }}">
   {% if page.section == 'puzzles' %}<link data-page-style rel="stylesheet" href="{{ '/assets/css/puzzles.css' | relative_url }}">{% endif %}
   <link rel="stylesheet" href="{{ '/assets/css/gadget-dock.css' | relative_url }}">
-  {% if page.layout == 'puzzle' %}<link data-page-style rel="stylesheet" href="{{ '/assets/css/puzzle-workspace.css' | relative_url }}">{% endif %}
   {% if page.section == 'gadgets' %}
   {% if page.gadget %}
   <link data-page-style rel="stylesheet" href="{{ '/assets/css/widget-frame.css' | relative_url }}">
@@ -26,7 +25,7 @@
   {% include widget-assets.html %}
   <script type="module" src="{{ '/assets/js/app.mjs' | relative_url }}"></script>
 </head>
-<body{% if page.course_key %} data-page-reload="true" data-topic-math="{{ page.math | default: false }}"{% endif %} data-site-shell data-page-gadget="{{ page.gadget }}" data-page-math="{{ page.math | default: false }}" data-page-search="{{ page.search_page | default: false }}" data-page-problem="{% if page.format == 'problem' or page.problem_disclosures %}true{% else %}false{% endif %}"{% if page.layout == 'puzzle' %} class="puzzle-page{% if page.game_layout == 'board-first' %} puzzle-board-first{% endif %}"{% endif %}>
+<body{% if page.course_key %} data-page-reload="true" data-topic-math="{{ page.math | default: false }}"{% endif %} data-site-shell data-page-gadget="{{ page.gadget }}" data-page-math="{{ page.math | default: false }}" data-page-search="{{ page.search_page | default: false }}" data-page-problem="{% if page.format == 'problem' or page.problem_disclosures %}true{% else %}false{% endif %}"{% if page.layout == 'puzzle' %} class="puzzle-page"{% endif %}>
   <a class="skip-link" href="#main">Skip to content</a>
   <aside class="sidebar" id="sidebar" aria-label="Site navigation">
     <a class="identity" href="{{ '/' | relative_url }}" aria-label="{{ site.title | escape }} home">
@@ -72,6 +71,10 @@
           {% else %}
           <a class="topbar-home" href="{{ '/' | relative_url }}">Home</a>
           {% include icon.html name='chevron-right' %}
+          {% if page.layout == 'puzzle' %}
+          <a class="topbar-home" href="{{ '/puzzles/' | relative_url }}">Puzzles</a>
+          {% include icon.html name='chevron-right' %}
+          {% endif %}
           <span class="topbar-current" aria-current="page" title="{{ page.breadcrumb | default: page.title | escape }}">{{ page.breadcrumb | default: page.title | escape }}</span>
           {% endif %}
         </nav>

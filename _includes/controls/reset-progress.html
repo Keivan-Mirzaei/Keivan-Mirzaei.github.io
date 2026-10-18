@@ -1,5 +1,5 @@
 <div class="widget-progress-reset">
-  <button class="panel-button" type="button" data-widget-progress-reset disabled>{% include icon.html name='restart' %}<span>Reset progress</span></button>
+  <button class="panel-button" type="button" data-widget-progress-reset disabled>{% unless include.plain %}{% include icon.html name='restart' %}{% endunless %}<span>Reset progress</span></button>
   <div data-widget-progress-confirm hidden>
     <p>{{ include.message | default: 'Clear this game and its saved move history? Your settings and other puzzles are kept.' }}</p>
     <div class="widget-confirm-actions">

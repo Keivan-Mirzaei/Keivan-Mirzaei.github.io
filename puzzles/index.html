@@ -15,12 +15,7 @@ search: true
     {% for puzzle in site.data.puzzles %}
     <a class="puzzle-card" href="{{ puzzle.url | relative_url }}">
       <div class="puzzle-card-art">{% include content-logo.html item=puzzle kind='puzzle' %}</div>
-      <div class="puzzle-card-copy">
-        <span class="puzzle-card-meta">{{ puzzle.players }}</span>
-        <h2>{{ puzzle.title }} <span aria-hidden="true">↗</span></h2>
-        <p>{{ puzzle.description }}</p>
-        <span class="puzzle-card-play">Play {{ puzzle.title }} {% include icon.html name='arrow' %}</span>
-      </div>
+      <h2>{{ puzzle.title }}</h2>
     </a>
     {% endfor %}
   </div>

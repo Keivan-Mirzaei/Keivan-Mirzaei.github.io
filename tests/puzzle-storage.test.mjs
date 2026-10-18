@@ -138,4 +138,6 @@ test('Hex save validation rejects corrupt boards, invalid turns and impossible c
   const saved = { size: 3, human: 1, local: true, cells: [1, 2, 0, 0, 0, 0, 0, 0, 0], last: 1, toMove: 1, history: [], future: [] };
   assert.deepEqual(restoreHex(saved), saved);
   for (const invalid of [{ size: 12 }, { cells: [] }, { toMove: 2 }, { last: 8 }, { cells: [2, 2, 0, 0, 0, 0, 0, 0, 0] }, { history: [null] }]) assert.equal(restoreHex({ ...saved, ...invalid }), null);
+  for (const difficulty of ['easy', 'medium', 'hard', 'expert']) assert.equal(restoreHex({ ...saved, difficulty }).difficulty, difficulty);
+  for (const difficulty of [null, 'impossible', 4, {}, ['expert']]) assert.equal(restoreHex({ ...saved, difficulty }), null);
 });

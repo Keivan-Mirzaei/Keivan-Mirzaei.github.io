@@ -38,7 +38,7 @@ three-utilities:
 hex:
   script: /assets/js/widgets/hex.mjs
   selector: '[data-hex-game], [data-hex-proof]'
-  styles: [activities, puzzles, hex, widget-frame]
+  styles: [activities, hex, widget-frame]
 klotski:
   script: /assets/js/widgets/klotski.mjs
   selector: '[data-klotski-game]'
