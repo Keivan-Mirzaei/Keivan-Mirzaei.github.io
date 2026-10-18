@@ -53,3 +53,7 @@ node --test tests/*.test.mjs
 The site check also flags assets that no page or runtime dependency uses. GitHub Actions runs these checks on pull requests and pushes. A push to `main` publishes to `keivan-mirzaei.com`; editing locally does not publish. The repository's Pages source must be **GitHub Actions**. `CNAME` and `_config.yml` hold the custom domain.
 
 Keep `Gemfile.lock`, published media, and the compatibility pages in version control. `_site/`, caches, and local dependencies are generated and ignored. Never edit `_site/`; the next build replaces it.
+
+## License
+
+All rights reserved, with limited permission for personal reading and use of the website. Copying, modification, redistribution, and commercial reuse require prior written permission unless separately licensed or otherwise permitted by law. See [LICENSE](LICENSE) for the terms and exceptions, including earlier MIT-licensed versions and separately licensed assets.
