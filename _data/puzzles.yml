@@ -13,12 +13,12 @@
 - title: Floor tiling
   url: /puzzles/tiling/
   image: /assets/images/puzzle-thumbnails/tiling.svg
-  image_alt: A floor grid with missing squares beside a set of coloured tiles to fit together.
+  image_alt: Three flat coloured tiles fitted into a small square floor, with one shape still empty.
 - title: Four equal regions
   url: /puzzles/four-equal-regions/
   image: /assets/images/puzzle-thumbnails/four-equal-regions.svg
-  image_alt: Coloured points separated into four regions by a solid line and a dashed line.
+  image_alt: Twelve coloured points split into four equal groups by two solid perpendicular lines.
 - title: One Odd Coin
   url: /puzzles/one-odd-coin/
   image: /assets/images/puzzle-thumbnails/one-odd-coin.svg
-  image_alt: Three numbered coins beside a two-pan balance scale, with one pan slightly lower.
+  image_alt: A minimal balanced scale with two pale coins and a green odd coin below.

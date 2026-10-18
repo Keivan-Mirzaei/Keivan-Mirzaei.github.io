@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { initializeFourEqualRegions } from '../assets/js/widgets/four-equal-regions.mjs';
-import { makePointSet, lineDelta, normal, dot } from '../assets/js/lib/four-equal-regions.mjs';
+import { makePointSet, lineDelta } from '../assets/js/lib/four-equal-regions.mjs';
 
 class Element {
   constructor(dataset = {}) {
@@ -18,24 +18,32 @@ class Element {
 function fixture(saved = null) {
   globalThis.document = { activeElement: null };
   const root = new Element(), counts = Array.from({ length: 4 }, () => new Element());
-  const fields = Object.fromEntries(['stage', 'board', 'crossing', 'goal', 'feedback', 'rotation-a', 'rotation-b', 'rotation-a-name', 'rotation-b-name', 'angle-a', 'angle-b', 'independent', 'n', 'n-name', 'n-label', 'perpendicular', 'undo', 'redo', 'reset', 'shuffle'].map(name => [name, new Element()]));
+  const fields = Object.fromEntries(['stage', 'board', 'art', 'crossing', 'feedback', 'line-a', 'line-b', 'n', 'n-name', 'n-label', 'undo', 'redo', 'reset', 'shuffle'].map(name => [name, new Element()]));
   const progress = Object.fromEntries(['reset', 'confirm', 'apply', 'cancel', 'message', 'scope'].map(name => [name, new Element()]));
   fields.crossing.dataset.frCrossing = '';
+  const lines = ['a', 'b'].map((name, index) => { const line = fields[`line-${name}`]; line.dataset.frLine = String(index); return line; });
   const captures = new Set(); fields.stage.setPointerCapture = id => captures.add(id); fields.stage.hasPointerCapture = id => captures.has(id); fields.stage.releasePointerCapture = id => captures.delete(id);
   root.querySelector = selector => fields[selector.match(/data-fr-([^\]]+)/)?.[1]] || progress[selector.match(/data-widget-progress-([^\]]+)/)?.[1]];
-  root.querySelectorAll = selector => selector === '[data-fr-count]' ? counts : [];
+  root.querySelectorAll = selector => selector === '[data-fr-count]' ? counts : selector === '[data-fr-line]' ? lines : [];
   let state = saved;
   const storage = { read: () => state, save: value => { state = value; }, setSnapshotProvider() {}, clear() { throw new Error('A scoped reset must preserve the other point counts.'); } };
   const controller = initializeFourEqualRegions(root, storage);
   const slider = (name, value) => { fields[name].value = String(value); fields[name].emit('input'); fields[name].emit('change'); };
   const action = name => fields[name].emit('click');
-  return { root, fields, counts, progress, captures, controller, slider, action, saved: () => state };
+  const rotate = (name, angle) => {
+    const pose = controller.read().pose;
+    fields.stage.emit('pointerdown', { target: fields[`line-${name}`], button: 0, pointerId: 9, ...around(pose, pose[name]) });
+    fields.stage.emit('pointermove', { pointerId: 9, ...around(pose, angle) });
+    fields.stage.emit('pointerup', { pointerId: 9 });
+  };
+  return { root, fields, counts, progress, captures, controller, slider, rotate, action, saved: () => state };
 }
 const screen = pose => ({ clientX: 280 + pose.x * (310 / 1.3), clientY: 175 - pose.y * (310 / 1.3) });
+const around = (pose, angle) => screen({ x: pose.x + .5 * Math.cos(angle), y: pose.y + .5 * Math.sin(angle) });
 
 test('a complete line drag creates one history action and sets and clears the success colour', () => {
   const f = fixture(), solution = makePointSet(f.saved().sessions[6].seed, 6).solution.pose;
-  f.slider('rotation-a', solution.a * 180 / Math.PI);
+  f.rotate('a', solution.a);
   const before = f.controller.read(), size = f.saved().actions.past.length;
   f.fields.stage.emit('pointerdown', { target: f.fields.crossing, button: 0, pointerId: 1, ...screen(before.pose) });
   for (let step = 1; step <= 20; step++) f.fields.stage.emit('pointermove', { pointerId: 1, ...screen({ x: before.pose.x + (solution.x - before.pose.x) * step / 20, y: before.pose.y + (solution.y - before.pose.y) * step / 20 }) });
@@ -54,14 +62,15 @@ test('a cancelled drag restores exact geometry and preserves Redo', () => {
   assert.deepEqual(f.controller.read(), before); assert.equal(f.fields.redo.disabled, false); assert.equal(f.captures.size, 0);
 });
 
-test('sliding one line leaves the other fixed and a centre on the crossing prevents success', () => {
-  const f = fixture(), before = f.controller.read().pose, line = new Element({ frLine: '0' });
-  f.fields.stage.emit('pointerdown', { target: line, button: 0, pointerId: 3, ...screen(before) });
+test('dragging the crossing moves both lines without rotating and a point on the crossing prevents success', () => {
+  const f = fixture(), before = f.controller.read().pose;
+  f.fields.stage.emit('pointerdown', { target: f.fields.crossing, button: 0, pointerId: 3, ...screen(before) });
   f.fields.stage.emit('pointermove', { pointerId: 3, ...screen({ x: before.x + .2, y: before.y + .1 }) });
   f.fields.stage.emit('pointerup', { pointerId: 3 });
   const moved = f.controller.read().pose;
-  assert.ok(Math.abs(dot(normal(before.b), moved) - dot(normal(before.b), before)) < 1e-12);
-  assert.ok(Math.abs(dot(normal(before.a), moved) - dot(normal(before.a), before)) > .01);
+  assert.ok(Math.abs(moved.x - before.x - .2) < 1e-12);
+  assert.ok(Math.abs(moved.y - before.y - .1) < 1e-12);
+  assert.equal(moved.a, before.a); assert.equal(moved.b, before.b);
   const point = f.controller.read().points.find(point => Math.abs(point.x) <= .78 && Math.abs(point.y) <= .45);
   f.fields.stage.emit('pointerdown', { target: f.fields.crossing, button: 0, pointerId: 4, ...screen(moved) });
   f.fields.stage.emit('pointermove', { pointerId: 4, ...screen(point) });
@@ -70,17 +79,85 @@ test('sliding one line leaves the other fixed and a centre on the crossing preve
   f.fields.stage.emit('pointercancel', { pointerId: 4 });
 });
 
-test('rotation keyboard repeats form one action and independent controls cannot make parallel lines', () => {
+test('rotation keyboard repeats form one action and either line keeps the crossing fixed and lines perpendicular', () => {
   const f = fixture(), initial = f.controller.read();
-  f.fields['rotation-a'].emit('keydown', { key: 'ArrowRight' });
-  for (let angle = 80; angle <= 90; angle++) { f.fields['rotation-a'].value = String(angle); f.fields['rotation-a'].emit('input'); f.fields['rotation-a'].emit('change'); }
-  f.fields['rotation-a'].emit('keyup', { key: 'ArrowRight' });
+  for (let i = 0; i < 10; i++) f.fields['line-a'].emit('keydown', { key: 'ArrowRight' });
+  assert.ok(Math.abs(f.controller.read().pose.a - initial.pose.a - 5 * Math.PI / 180) < 1e-9);
+  f.fields['line-a'].emit('keyup', { key: 'ArrowRight' });
   assert.equal(f.saved().actions.past.length, 1); f.action('undo'); assert.deepEqual(f.controller.read(), initial);
-  f.fields.perpendicular.checked = false; f.fields.perpendicular.emit('change');
-  assert.equal(f.fields.independent.hidden, false); assert.equal(f.controller.read().perpendicular, false);
-  f.slider('rotation-b', 78.5);
-  const pose = f.controller.read().pose; assert.ok(Math.abs(lineDelta(pose.a - pose.b)) >= Math.PI / 15 - 1e-9);
-  f.action('reset'); assert.equal(f.controller.read().perpendicular, false);
+  f.rotate('b', initial.pose.a);
+  const pose = f.controller.read().pose;
+  assert.ok(Math.abs(Math.abs(lineDelta(pose.a - pose.b)) - Math.PI / 2) < 1e-9);
+  assert.equal(pose.x, initial.pose.x); assert.equal(pose.y, initial.pose.y);
+  assert.notEqual(pose.a, initial.pose.a);
+  f.action('reset'); assert.deepEqual(f.controller.read().pose, initial.pose);
+});
+
+test('canvas rotation fixes the crossing, turns both lines, and commits once per gesture', () => {
+  const f = fixture(), before = f.controller.read().pose;
+  f.fields.stage.emit('pointerdown', { target: f.fields['line-b'], button: 0, pointerId: 5, ...around(before, before.b) });
+  for (let i = 1; i <= 12; i++) f.fields.stage.emit('pointermove', { pointerId: 5, ...around(before, before.b + i * .03) });
+  const pose = f.controller.read().pose;
+  assert.equal(pose.x, before.x); assert.equal(pose.y, before.y);
+  assert.ok(Math.abs(lineDelta(pose.b - before.b) - .36) < 1e-9);
+  assert.ok(Math.abs(Math.abs(lineDelta(pose.a - pose.b)) - Math.PI / 2) < 1e-9);
+  assert.equal(f.saved().actions.past.length, 0); assert.equal(f.captures.size, 1);
+  f.fields.stage.emit('pointerup', { pointerId: 5 });
+  assert.equal(f.saved().actions.past.length, 1); assert.equal(f.captures.size, 0);
+  assert.match(f.fields['line-b'].attributes.get('aria-valuetext'), /lines rotate together/);
+  const reopened = fixture(f.saved()); assert.deepEqual(reopened.controller.read().pose, pose);
+  f.action('undo'); assert.deepEqual(f.controller.read().pose, before);
+  f.action('redo'); assert.deepEqual(f.controller.read().pose, pose);
+});
+
+test('cancelled rotation restores the pose and Redo after pointer loss or Escape', () => {
+  for (const cancel of ['pointercancel', 'lostpointercapture', 'Escape']) {
+    const f = fixture(); f.action('shuffle'); f.action('undo'); const before = f.controller.read();
+    f.fields.stage.emit('pointerdown', { target: f.fields['line-a'], button: 0, pointerId: 6, ...around(before.pose, before.pose.a) });
+    f.fields.stage.emit('pointermove', { pointerId: 6, ...around(before.pose, before.pose.a + .4) });
+    assert.notDeepEqual(f.controller.read().pose, before.pose);
+    f.fields.stage.emit(cancel === 'Escape' ? 'keydown' : cancel, { key: 'Escape', pointerId: 6 });
+    assert.deepEqual(f.controller.read(), before); assert.equal(f.fields.redo.disabled, false);
+    assert.equal(f.captures.size, 0); assert.equal(f.fields.stage.classes.has('is-dragging'), false);
+  }
+});
+
+test('rotation crosses the angle seam smoothly and ignores another pointer or the crossing dead zone', () => {
+  const f = fixture(), before = f.controller.read().pose;
+  f.fields.stage.emit('pointerdown', { target: f.fields['line-a'], button: 0, pointerId: 7, ...around(before, before.a) });
+  f.fields.stage.emit('pointermove', { pointerId: 8, ...around(before, before.a + .5) });
+  f.fields.stage.emit('pointermove', { pointerId: 7, ...screen(before) });
+  assert.deepEqual(f.controller.read().pose, before);
+  for (let i = 1; i <= 14; i++) {
+    f.fields.stage.emit('pointermove', { pointerId: 7, ...around(before, before.a + i * .5) });
+    assert.ok(Math.abs(lineDelta(f.controller.read().pose.a - before.a - i * .5)) < 1e-9);
+  }
+  f.fields.stage.emit('pointerup', { pointerId: 7 });
+  assert.equal(f.saved().actions.past.length, 1);
+});
+
+test('the lines support fine and coarse keyboard rotation and cancelling a held key', () => {
+  const f = fixture(), before = f.controller.read();
+  f.fields['line-b'].emit('keydown', { key: 'ArrowUp', shiftKey: true });
+  assert.ok(Math.abs(lineDelta(f.controller.read().pose.b - before.pose.b) - 5 * Math.PI / 180) < 1e-9);
+  f.fields.stage.emit('keydown', { key: 'Escape' });
+  f.fields['line-b'].emit('keyup', { key: 'Escape' });
+  assert.deepEqual(f.controller.read(), before); assert.equal(f.saved().actions.past.length, 0);
+  f.fields['line-a'].emit('keydown', { key: 'Home' }); f.fields['line-a'].emit('keyup', { key: 'Home' });
+  assert.ok(Math.abs(lineDelta(f.controller.read().pose.a)) < 1e-9);
+  f.fields['line-a'].emit('keydown', { key: 'End' }); f.fields['line-a'].emit('blur');
+  assert.ok(Math.abs(lineDelta(f.controller.read().pose.a - 179.9 * Math.PI / 180)) < 1e-9);
+  assert.equal(f.saved().actions.past.length, 2);
+});
+
+test('empty canvas, secondary buttons and extra pointers cannot start a rotation', () => {
+  const f = fixture(), before = f.controller.read();
+  for (const details of [{ target: f.fields.board }, { target: f.fields['line-a'], button: 1 }, { target: f.fields['line-b'], isPrimary: false }]) {
+    f.fields.stage.emit('pointerdown', { button: 0, pointerId: 1, ...around(before.pose, before.pose.a), ...details });
+    f.fields.stage.emit('pointermove', { pointerId: 1, ...around(before.pose, before.pose.a + .4) });
+    f.fields.stage.emit('pointerup', { pointerId: 1 });
+    assert.deepEqual(f.controller.read(), before); assert.equal(f.captures.size, 0);
+  }
 });
 
 test('keyboard movement groups held arrows and number changes preserve each point set', () => {

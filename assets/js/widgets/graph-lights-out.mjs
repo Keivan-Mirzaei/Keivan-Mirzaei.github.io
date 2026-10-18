@@ -1,3 +1,4 @@
+import { initializePuzzleList } from '../lib/puzzle-list.mjs';
 import { createPageEnvironment } from '../lib/page-environment.mjs';
 import { LIGHTS_OUT_LEVELS } from '../lib/lights-out-book-graphs.mjs';
 import { createLightsOutWorkspace } from '../lib/lights-out-workspace.mjs';
@@ -9,21 +10,20 @@ import { countBits, pressEffect, vertices } from '../lib/lights-out-math.mjs';
 import { lightsOutBoardMarkup, updateLightsOutBoard, lightsOutNeighbor } from '../lib/lights-out-view.mjs';
 
 let nextInstance = 0;
-export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('lights-out', root), random = Math.random, catalogue } = {}) {
+export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('lights-out', root), catalogue } = {}) {
   const get = name => root.querySelector(`[data-glo-${name}]`);
   const saved = storage.read(), play = createLightsOutWorkspace(saved, catalogue);
   let book = play.book, game = play.game, puzzle = book.puzzle, graph = puzzle.graph;
-  let hint = null, preview = -1, buttons = [], edges = [], numbers = saved?.numbers === true;
+  let feedback = '', hint = null, preview = -1, buttons = [], edges = [], numbers = saved?.numbers === true;
+  const puzzleList = initializePuzzleList(root, { prefix: 'glo', read: () => book, select: number => action(() => play.open(number)), unit: 'press' });
   const events = new AbortController();
   let boardEvents = new AbortController();
   const listen = (element, name, callback) => element.addEventListener(name, callback, { signal: events.signal });
   const disposePanels = initializeWidgetPanels(root);
   const prefix = `lights-out-${++nextInstance}`;
-  for (const name of ['difficulty', 'number']) {
-    get(name).id = `${prefix}-${name}`;
-    get(`${name}-name`).setAttribute('for', get(name).id);
-    get(`${name}-label`).setAttribute('for', get(name).id);
-  }
+  get('difficulty').id = `${prefix}-difficulty`;
+  get('difficulty-name').setAttribute('for', get('difficulty').id);
+  get('difficulty-label').setAttribute('for', get('difficulty').id);
   const snapshot = () => ({ ...play.exportState(), numbers });
   storage.setSnapshotProvider(snapshot);
 
@@ -54,19 +54,16 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
     const affected = preview < 0 ? 0 : pressEffect(graph, 1 << preview);
     buttons.forEach((button, i) => button.classList.toggle('is-preview', !!(affected & (1 << i))));
     edges.forEach(edge => edge.classList.toggle('is-preview', edge.dataset.edge.split(',').map(Number).includes(preview)));
-    get('preview').textContent = preview < 0 ? '' : numbers
+    const message = preview < 0 ? feedback : numbers
       ? `Press ${preview + 1} → flips ${vertices(affected, graph.size).map(i => i + 1).join(', ')}`
       : `${countBits(affected)} lights will flip`;
+    get('status').textContent = `${game.moves} ${game.moves === 1 ? 'press' : 'presses'} · ${message}`;
   }
 
   function showDifficulty(value = book.difficulty) {
     const level = LIGHTS_OUT_LEVELS[value];
     get('difficulty-label').textContent = level.name;
     get('level-detail').textContent = `${level.sizes[0]}–${level.sizes.at(-1)} lights · ${level.presses.join('–')} presses at best`;
-  }
-  function previewNumber(value) {
-    get('number-label').textContent = `${value} / ${book.total}`;
-    get('number-slider').setAttribute('aria-valuetext', `Puzzle ${value} of ${book.total}`);
   }
 
   function render(message = '') {
@@ -75,29 +72,23 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
     root.dataset.solved = String(game.solved); root.dataset.numbers = String(numbers);
     get('numbers').checked = numbers;
     get('board-name').textContent = `${graph.name} · ${graph.size} lights`;
-    get('moves').textContent = `${game.moves} ${game.moves === 1 ? 'press' : 'presses'}`;
-    get('name').textContent = `Puzzle ${book.number} / ${book.total}${book.currentCompleted ? ' ✓' : ''}`;
-    get('name').setAttribute('aria-label', `Puzzle ${book.number} of ${book.total}${book.currentCompleted ? ', solved' : ''}. Choose a puzzle.`);
     get('completed').textContent = `${book.completedCount} / ${book.total} ${LIGHTS_OUT_LEVELS[book.difficulty].name} puzzles solved`;
-    for (const name of ['number', 'number-slider']) { get(name).value = String(book.number); get(name).max = String(book.total); }
-    previewNumber(book.number);
-    get('remaining').textContent = game.solved ? 'All lights off' : `${countBits(game.lights)} ${countBits(game.lights) === 1 ? 'light' : 'lights'} on`;
+    puzzleList.render();
     get('undo').disabled = !play.canUndo; get('redo').disabled = !play.canRedo;
     get('restart').disabled = !game.moves;
     get('hint').disabled = game.solved;
     get('hint').setAttribute('aria-pressed', String(hint !== null));
     get('hint-label').textContent = hint === null ? 'Hint' : 'Hide hint';
     setActionLabel(get('hint'), hint === null ? 'Hint' : 'Hide hint');
-    get('new').disabled = !book.canAdvance; get('new').hidden = !game.solved || !book.canAdvance;
-    get('shuffle').disabled = !book.canAdvance;
+    get('next').disabled = !book.canAdvance;
     updateLightsOutBoard(get('board'), graph, game.lights, { numbered: numbers, solved: game.solved });
     buttons.forEach((button, i) => {
       button.classList.toggle('is-hint', i === hint);
       if (i === hint) button.setAttribute('aria-label', `${button.getAttribute('aria-label')} Suggested by the hint.`);
     });
-    get('status').textContent = game.solved
+    feedback = game.solved
       ? book.allCompleted ? `All ${book.total.toLocaleString('en')} ${LIGHTS_OUT_LEVELS[book.difficulty].name} puzzles complete! Choose a number to replay.`
-        : `Solved in ${game.moves} ${game.moves === 1 ? 'press' : 'presses'}.${game.moves === puzzle.minimum ? ' A shortest route!' : ` Can you find the ${puzzle.minimum}-press route?`}`
+        : `Solved.${game.moves === puzzle.minimum ? ' A shortest route!' : ` Can you find the ${puzzle.minimum}-press route?`}`
       : message || (hint !== null ? numbers ? `Try light ${hint + 1}.` : 'Try the marked light.' : `Aim for ${puzzle.minimum} presses. Take your time.`);
     showPreview(preview); storage.save(snapshot());
   }
@@ -120,19 +111,7 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
     loadPuzzle(message);
     if (document.activeElement?.disabled) (game.solved ? get('undo') : buttons.find(button => !button.disabled)).focus({ preventScroll: true });
   }
-  function openNumber(number) {
-    if (number === book.number) { render('This puzzle is already open.'); return; }
-    if (!play.open(number)) { render(`Choose a puzzle number from 1 to ${book.total}.`); get('number').focus(); return; }
-    loadPuzzle();
-  }
-  listen(get('new'), 'click', () => action(() => play.advance()));
-  listen(get('shuffle'), 'click', () => action(() => play.shuffle(random)));
-  listen(get('jump'), 'submit', event => { event.preventDefault(); openNumber(Number(get('number').value)); });
-  listen(get('number-slider'), 'input', () => { get('number').value = get('number-slider').value; previewNumber(get('number').value); });
-  listen(get('number'), 'input', () => {
-    const value = Number(get('number').value);
-    if (Number.isInteger(value) && value >= 1 && value <= book.total) { get('number-slider').value = String(value); previewNumber(value); }
-  });
+  listen(get('next'), 'click', () => action(() => play.advance()));
   listen(get('undo'), 'click', () => action(() => play.undo(), 'Action undone.'));
   listen(get('redo'), 'click', () => action(() => play.redo(), 'Action restored.'));
   listen(get('restart'), 'click', () => action(() => play.reset(), 'Back to the start.'));
@@ -143,11 +122,11 @@ export function initializeGraphLightsOut(root, { storage = createPuzzleStorage('
   const disposeProgress = initializeProgressReset(root, () => {
     play.resetProgress(); loadPuzzle(`${LIGHTS_OUT_LEVELS[play.book.difficulty].name} progress reset. Start with puzzle 1.`);
   });
-  for (const name of ['difficulty', 'number', 'number-slider', 'open', 'numbers']) get(name).disabled = false;
+  for (const name of ['difficulty', 'numbers']) get(name).disabled = false;
   loadPuzzle();
   return { get book() { return book; }, press,
     read: () => ({ number: book.number, difficulty: book.difficulty, key: puzzle.key, lights: game.lights, start: puzzle.start, minimum: puzzle.minimum, moves: game.moves, hint }),
-    destroy() { disposeProgress(); disposePanels(); events.abort(); boardEvents.abort(); },
+    destroy() { puzzleList.destroy(); disposeProgress(); disposePanels(); events.abort(); boardEvents.abort(); },
   };
 }
 

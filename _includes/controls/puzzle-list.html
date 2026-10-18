@@ -1,0 +1,13 @@
+<div class="puzzle-picker" aria-label="Choose a puzzle">
+  <div class="puzzle-picker-heading">
+    <h2>Puzzles</h2>
+    <div class="puzzle-page-controls">
+      <button class="puzzle-page-button" type="button" data-{{ include.game }}-page-prev aria-label="Previous 50 puzzles" disabled>{% include icon.html name='arrow' %}</button>
+      <output data-{{ include.game }}-page-range aria-live="polite" aria-atomic="true">1–50 / {{ include.total }}</output>
+      <button class="puzzle-page-button" type="button" data-{{ include.game }}-page-next aria-label="Next 50 puzzles" disabled>{% include icon.html name='arrow' %}</button>
+    </div>
+  </div>
+  <div class="puzzle-picker-key" aria-label="Puzzle status key"><span><i aria-hidden="true">○</i>Unsolved</span><span><i aria-hidden="true">✓</i>Solved</span>{% if include.minimum_label %}<span><i aria-hidden="true">★</i>{{ include.minimum_label }}</span>{% endif %}</div>
+  <div class="puzzle-number-grid" data-{{ include.game }}-puzzles role="group" aria-label="Puzzles 1 to 50"></div>
+  <p class="puzzle-completed" data-{{ include.game }}-completed>0 / {{ include.total }} Easy puzzles solved</p>
+</div>

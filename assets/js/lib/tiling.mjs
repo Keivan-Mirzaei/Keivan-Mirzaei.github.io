@@ -131,17 +131,16 @@ export function solveTiling(level, placements = {}) {
 }
 
 export function createGame(level = LEVELS[0], saved = null) {
-  let placements = {}, history = [], future = [], moves = 0;
-  const validSnapshot = value => value && Number.isSafeInteger(value.moves) && value.moves >= 0
-    && value.placements && typeof value.placements === 'object' && !Array.isArray(value.placements)
+  let placements = {}, history = [], future = [];
+  const validSnapshot = value => value && value.placements && typeof value.placements === 'object' && !Array.isArray(value.placements)
     && Object.entries(value.placements).every(([id, position]) => level.pieces.some(piece => piece.id === id) && position && Number.isInteger(position.x) && Number.isInteger(position.y))
     && Object.entries(value.placements).every(([id, position]) => checkPlacement(level, value.placements, id, position).valid);
   if (validSnapshot(saved) && ['history', 'future'].every(name => Array.isArray(saved[name]) && saved[name].length <= 1000 && saved[name].every(validSnapshot))) {
-    placements = clonePlacements(saved.placements); moves = saved.moves;
-    history = saved.history.map(value => ({ placements: clonePlacements(value.placements), moves: value.moves }));
-    future = saved.future.map(value => ({ placements: clonePlacements(value.placements), moves: value.moves }));
+    placements = clonePlacements(saved.placements);
+    history = saved.history.map(value => ({ placements: clonePlacements(value.placements) }));
+    future = saved.future.map(value => ({ placements: clonePlacements(value.placements) }));
   }
-  const snapshot = () => ({ placements: clonePlacements(placements), moves });
+  const snapshot = () => ({ placements: clonePlacements(placements) });
   const save = () => { history.push(snapshot()); future = []; };
   return {
     level,
@@ -150,31 +149,30 @@ export function createGame(level = LEVELS[0], saved = null) {
     get solved() { return isSolved(level, placements); },
     get canUndo() { return history.length > 0; },
     get canRedo() { return future.length > 0; },
-    get moves() { return moves; },
-    exportState() { return { ...snapshot(), history: history.slice(-1000).map(value => ({ placements: clonePlacements(value.placements), moves: value.moves })), future: future.slice(-1000).map(value => ({ placements: clonePlacements(value.placements), moves: value.moves })) }; },
+    exportState() { return { ...snapshot(), history: history.slice(-1000).map(value => ({ placements: clonePlacements(value.placements) })), future: future.slice(-1000).map(value => ({ placements: clonePlacements(value.placements) })) }; },
     place(id, position) {
       const result = checkPlacement(level, placements, id, position);
       if (!result.valid) return result;
       const next = { x: position.x, y: position.y };
       if (placements[id] && Object.keys(next).every(property => next[property] === placements[id][property])) return { ...result, changed: false };
-      save(); placements[id] = next; moves++;
+      save(); placements[id] = next;
       return { ...result, changed: true };
     },
     remove(id) {
       if (!placements[id]) return false;
-      save(); delete placements[id]; moves++; return true;
+      save(); delete placements[id]; return true;
     },
     undo() {
       if (!history.length) return false;
       future.push(snapshot());
-      const previous = history.pop(); placements = previous.placements; moves = previous.moves; return true;
+      placements = history.pop().placements; return true;
     },
     redo() {
       if (!future.length) return false;
       history.push(snapshot());
-      const next = future.pop(); placements = next.placements; moves = next.moves; return true;
+      placements = future.pop().placements; return true;
     },
-    reset() { placements = {}; history = []; future = []; moves = 0; },
+    reset() { placements = {}; history = []; future = []; },
     hint() { return solveTiling(level, placements); },
   };
 }

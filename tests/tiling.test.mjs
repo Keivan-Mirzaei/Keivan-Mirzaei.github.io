@@ -91,20 +91,21 @@ test('returning, moving, undoing and reset preserve a legal complete game', () =
   const level = LEVELS[0], game = createGame(level);
   assert.equal(game.filled, 0); assert.equal(game.canUndo, false); assert.equal(game.solved, false);
   for (const piece of level.pieces) assert.equal(game.place(piece.id, level.solution[piece.id]).valid, true);
-  assert.equal(game.moves, 4); assert.equal(game.filled, level.floor.length); assert.equal(game.solved, true);
-  const before = game.placements;
+  assert.equal(game.filled, level.floor.length); assert.equal(game.solved, true);
+  const before = game.placements, saved = game.exportState();
   assert.equal(game.place('A', { x: 2, y: 0 }).valid, false);
-  assert.deepEqual(game.placements, before); assert.equal(game.moves, 4);
+  assert.deepEqual(game.placements, before); assert.deepEqual(game.exportState(), saved);
   assert.equal(game.place('A', level.solution.A).changed, false);
-  assert.equal(game.moves, 4);
+  assert.deepEqual(game.exportState(), saved);
   assert.equal(game.remove('D'), true); assert.equal(game.solved, false);
-  assert.equal(game.remove('D'), false); assert.equal(game.moves, 5);
-  assert.equal(game.undo(), true); assert.equal(game.solved, true); assert.equal(game.moves, 4);
-  assert.equal(game.undo(), true); assert.equal(game.solved, false); assert.equal(game.moves, 3);
+  const removed = game.exportState();
+  assert.equal(game.remove('D'), false); assert.deepEqual(game.exportState(), removed);
+  assert.equal(game.undo(), true); assert.equal(game.solved, true);
+  assert.equal(game.undo(), true); assert.equal(game.solved, false); assert.equal(Object.keys(game.placements).length, 3);
   assert.equal(game.place('D', level.solution.D).valid, true); assert.equal(game.solved, true);
   const exposed = game.placements; exposed.A.x = 99;
   assert.deepEqual(game.placements.A, level.solution.A);
-  game.reset(); assert.equal(game.moves, 0); assert.equal(game.canUndo, false); assert.equal(game.filled, 0);
+  game.reset(); assert.equal(game.canUndo, false); assert.equal(game.filled, 0);
   assert.equal(game.undo(), false);
 });
 
@@ -151,7 +152,7 @@ test('winning requires the whole floor and all tiles, without overlap or holes',
   assert.equal(isSolved(level, { ...level.solution, Unknown: level.solution.A }), false);
 });
 
-test('redo restores copies, move counts and removal and rejects stale branches after reset', () => {
+test('redo restores copies and removal and rejects stale branches after reset', () => {
   const level = LEVELS[0], game = createGame(level);
   assert.equal(game.redo(), false);
   for (const piece of level.pieces) game.place(piece.id, level.solution[piece.id]);
@@ -160,9 +161,9 @@ test('redo restores copies, move counts and removal and rejects stale branches a
   assert.equal(game.solved, true);
   assert.equal(game.redo(), true);
   assert.equal(game.solved, false);
-  assert.equal(game.moves, 5);
+  assert.equal(game.placements.D, undefined);
   game.undo(); game.undo();
-  assert.equal(game.moves, 3);
+  assert.equal(Object.keys(game.placements).length, 3);
   assert.equal(game.place('A', level.solution.A).changed, false);
   assert.equal(game.place('A', { x: 99, y: 0 }).valid, false);
   assert.equal(game.canRedo, true);

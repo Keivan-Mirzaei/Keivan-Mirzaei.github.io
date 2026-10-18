@@ -69,8 +69,11 @@ export function createOddCoinWorkspace(saved = null, catalogue = ODD_COIN_CATALO
     const old = saved?.sessions?.[difficulty], number = validNumber(difficulty, old?.number) ? old.number : 1;
     const game = cleanGame(compatible ? old?.game : null, difficulty, number);
     const completed = new Set(compatible && Array.isArray(old?.completed) ? old.completed.filter(n => validNumber(difficulty, n)) : []);
+    const best = Object.fromEntries(Object.entries(compatible && old?.best || {}).filter(([n, used]) => validNumber(difficulty, Number(n))
+      && Number.isSafeInteger(used) && used >= catalogue[difficulty][Number(n) - 1][4]));
+    Object.keys(best).forEach(n => completed.add(Number(n)));
     if (game.submitted !== null) completed.add(number);
-    return { number, game, completed };
+    return { number, game, completed, best };
   });
   let difficulty = validNumber(saved?.difficulty, 1) ? saved.difficulty : 0;
   const current = () => sessions[difficulty];
@@ -85,6 +88,13 @@ export function createOddCoinWorkspace(saved = null, catalogue = ODD_COIN_CATALO
       .map(entry => ({ difficulty: entry.difficulty, number: entry.number, game: cleanGame(entry.game, entry.difficulty, entry.number) }));
   }
   let past = cleanHistory(saved?.actions?.past), future = cleanHistory(saved?.actions?.future);
+  function rememberResult(index, number, game) {
+    if (game.submitted === null) return;
+    sessions[index].completed.add(number);
+    sessions[index].best[number] = Math.min(sessions[index].best[number] ?? Infinity, game.log.length);
+  }
+  sessions.forEach((session, index) => rememberResult(index, session.number, session.game));
+  for (const entry of [...past, ...future]) rememberResult(entry.difficulty, entry.number, entry.game);
   function commit(action) {
     const before = capture();
     if (action() === false || same(before, capture())) return false;
@@ -100,6 +110,12 @@ export function createOddCoinWorkspace(saved = null, catalogue = ODD_COIN_CATALO
     get answer() { return clone(current().game.submitted); }, get solved() { return terminal(); },
     get completedCount() { return current().completed.size; }, get currentCompleted() { return current().completed.has(current().number); },
     get canUndo() { return past.length > 0; }, get canRedo() { return future.length > 0; },
+    get canAdvance() { return current().completed.size < this.total - (this.currentCompleted ? 0 : 1); },
+    puzzleResult(number) {
+      if (!validNumber(difficulty, number)) return null;
+      const minimum = catalogue[difficulty][number - 1][4], best = current().best[number] ?? null;
+      return { minimum, best, status: best === minimum ? 'minimum' : current().completed.has(number) ? 'solved' : 'unsolved' };
+    },
     moveCoins(coins, destination) {
       if (terminal() || !Array.isArray(coins) || !coins.length || !coins.every(coin => Number.isInteger(coin) && coin >= 1 && coin <= puzzle().coins) || ![-1, 0, 1].includes(destination)) return false;
       if (coins.every(coin => placements()[coin - 1] === destination)) return false;
@@ -147,7 +163,7 @@ export function createOddCoinWorkspace(saved = null, catalogue = ODD_COIN_CATALO
       if (!candidate) return { ok: false, reason: 'invalid' };
       if (!possible.some(state => stateKey(state) === stateKey(candidate))) return { ok: false, reason: 'contradicted' };
       if (possible.length > 1) return { ok: false, reason: 'uncertain' };
-      commit(() => { current().game.submitted = candidate; current().completed.add(current().number); });
+      commit(() => { current().game.submitted = candidate; rememberResult(difficulty, current().number, current().game); });
       return { ok: true, used: this.used, minimum: this.minimum };
     },
     open(number) {
@@ -158,23 +174,22 @@ export function createOddCoinWorkspace(saved = null, catalogue = ODD_COIN_CATALO
       if (!validNumber(value, 1) || value === difficulty) return false;
       return commit(() => { difficulty = value; });
     },
-    next(random = null) {
+    next() {
       const candidates = Array.from({ length: this.total }, (_, i) => i + 1).filter(number => number !== current().number && !current().completed.has(number));
       if (!candidates.length) return false;
-      const number = random ? candidates[Math.max(0, Math.min(candidates.length - 1, Math.floor(random() * candidates.length)))]
-        : candidates.find(number => number > current().number) || candidates[0];
+      const number = candidates.find(number => number > current().number) || candidates[0];
       return this.open(number);
     },
     reset() { return commit(() => { current().game = blankGame(); }); },
     undo() { if (!past.length) return false; future.push(capture()); restore(past.pop()); return true; },
     redo() { if (!future.length) return false; past.push(capture()); restore(future.pop()); return true; },
     resetProgress() {
-      Object.assign(current(), { number: 1, game: blankGame(), completed: new Set() });
+      Object.assign(current(), { number: 1, game: blankGame(), completed: new Set(), best: {} });
       past = past.filter(entry => entry.difficulty !== difficulty); future = future.filter(entry => entry.difficulty !== difficulty);
     },
     exportState() {
       return { version: 3, difficulty, sessions: sessions.map(session => ({ number: session.number, game: clone(session.game),
-        completed: [...session.completed].sort((a, b) => a - b) })), actions: clone({ past, future }) };
+        completed: [...session.completed].sort((a, b) => a - b), best: { ...session.best } })), actions: clone({ past, future }) };
     },
   };
 }

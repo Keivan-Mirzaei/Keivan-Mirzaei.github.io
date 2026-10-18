@@ -32,7 +32,7 @@ export function createPuzzleBook(saved = null, catalogue = CATALOGUE) {
   DIFFICULTIES.forEach((_, index) => {
     const total = catalogue[index].length, old = saved?.sessions?.[index];
     const session = { number: 1, completed: new Set(), overrides: {}, state: null, replaying: false };
-    if (saved?.version === 2 && old) {
+    if ([2, 3].includes(saved?.version) && old) {
       if (Number.isInteger(old.number) && old.number >= 1 && old.number <= total) session.number = old.number;
       if (Array.isArray(old.completed)) old.completed.forEach(number => {
         if (Number.isInteger(number) && number >= 1 && number <= total) session.completed.add(number);
@@ -42,6 +42,13 @@ export function createPuzzleBook(saved = null, catalogue = CATALOGUE) {
       }
       session.state = old.state || null;
       session.replaying = old.replaying === true;
+      // Preserve completions from the retired score records without keeping scores.
+      for (const [number, moves] of Object.entries(saved.version === 2 ? old.best || {} : {})) {
+        if (Number.isInteger(Number(number)) && Number(number) >= 1 && Number(number) <= total
+          && Number.isSafeInteger(moves) && moves >= DIFFICULTIES[index].sizes.length) {
+          session.completed.add(Number(number));
+        }
+      }
     } else if (old && Number.isInteger(old.seed) && old.seed >= 1 && old.seed <= 0xffffffff) {
       // Preserve the current floor from the earlier random generator. If it is
       // already in the catalogue, swap the two slots to retain distinct puzzles.
@@ -59,6 +66,23 @@ export function createPuzzleBook(saved = null, catalogue = CATALOGUE) {
     }
     sessions[index] = session;
   });
+  function recoverCompletion(index, number, state) {
+    if (!Number.isInteger(index) || !sessions[index] || !Number.isInteger(number) || !catalogue[index]?.[number - 1] || !state) return;
+    const rows = sessions[index].overrides[number] || catalogue[index][number - 1];
+    const level = buildLevel({ name: 'Puzzle', rows: rows.split('/') });
+    const game = createGame(level, { ...state, history: [], future: [] });
+    if (game.solved) sessions[index].completed.add(number);
+  }
+  Object.entries(sessions).forEach(([index, session]) => {
+    for (const state of [session.state, ...(Array.isArray(session.state?.history) ? session.state.history : []), ...(Array.isArray(session.state?.future) ? session.state.future : [])]) recoverCompletion(Number(index), session.number, state);
+    if (session.state) {
+      const rows = session.overrides[session.number] || catalogue[index][session.number - 1];
+      session.state = createGame(buildLevel({ name: 'Puzzle', rows: rows.split('/') }), session.state).exportState();
+    }
+  });
+  for (const name of ['past', 'future']) if (Array.isArray(saved?.actions?.[name])) {
+    for (const entry of saved.actions[name].slice(-100)) if (entry) recoverCompletion(entry.difficulty, entry.number, entry.state);
+  }
   const current = () => sessions[difficulty];
   const level = () => ({ ...buildLevel({ name: 'Puzzle', rows: (current().overrides[current().number] || catalogue[difficulty][current().number - 1]).split('/') }, current().number - 1), difficulty, seed: current().number });
   const available = () => Array.from({ length: catalogue[difficulty].length }, (_, index) => index + 1)
@@ -70,9 +94,13 @@ export function createPuzzleBook(saved = null, catalogue = CATALOGUE) {
     get completedCount() { return current().completed.size; },
     get currentCompleted() { return current().completed.has(current().number); },
     get allCompleted() { return current().completed.size === catalogue[difficulty].length; },
-    get canRefresh() { return available().length > 0; },
+    get canAdvance() { return available().length > 0; },
     get state() { return current().state; },
     get level() { return level(); },
+    result(number) {
+      if (!Number.isInteger(number) || number < 1 || number > this.total) return null;
+      return { status: current().completed.has(number) ? 'solved' : 'unsolved' };
+    },
     record(state, solved) {
       current().state = state;
       if (solved) current().completed.add(current().number);
@@ -90,14 +118,13 @@ export function createPuzzleBook(saved = null, catalogue = CATALOGUE) {
       current().number = number; current().state = null;
       current().replaying = explicit && current().completed.has(number); return true;
     },
-    next(random = Math.random) {
+    next() {
       const numbers = available();
-      if (!numbers.length) return false;
-      const index = Math.max(0, Math.min(numbers.length - 1, Math.floor(random() * numbers.length)));
-      return this.open(numbers[index], false);
+      const number = numbers.find(value => value > current().number) || numbers[0];
+      return number ? this.open(number, false) : false;
     },
     exportState() {
-      return { version: 2, difficulty, sessions: Object.fromEntries(Object.entries(sessions).map(([index, session]) => [index,
+      return { version: 3, difficulty, sessions: Object.fromEntries(Object.entries(sessions).map(([index, session]) => [index,
         { number: session.number, completed: [...session.completed].sort((a, b) => a - b), overrides: { ...session.overrides }, state: session.state, replaying: session.replaying }])) };
     },
   };

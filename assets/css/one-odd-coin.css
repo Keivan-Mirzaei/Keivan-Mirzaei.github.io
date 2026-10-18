@@ -1,42 +1,18 @@
-/* Sculpted sage, cream, and peach; all moving parts stay independently interactive. */
-.puzzle-page:has(.oc-game) {
-  --paper: #fdfcf8; --sidebar: #f4f4ed; --ink: #293b31; --muted: #697267;
-  --line: #dce1d2; --green: #315f4c; --tint: #e9eee1;
-  color-scheme: light;
-  overflow-x: clip;
-  background: radial-gradient(ellipse 720px 500px at 50% 420px, #f7f4e800, #fdfcf8 90%), #fdfcf8;
-}
-.puzzle-page:has(.oc-game) .topbar { background: #fdfcf8ed; }
-.puzzle-page:has(.oc-game) .puzzle-shell { width: min(884px, 100%); padding-top: 18px; }
-.puzzle-page:has(.oc-game) .puzzle-heading { max-width: 640px; margin: 0 auto 10px; }
-.puzzle-page:has(.oc-game) .puzzle-heading h1 { font: 400 46px/1.15 var(--serif); letter-spacing: -1.1px; }
-.puzzle-page:has(.oc-game) .puzzle-back { margin-bottom: 12px; }
-.oc-game { max-width: 800px; container-type: inline-size; --oc-coin-size: clamp(30px, 8.2cqw, 54px); }
-.oc-info { max-width: 640px; margin: 0 auto; padding: 12px 18px 0; border: 1px solid #dfe4d6; border-radius: 12px; background: #f2f5ecb3; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
-.oc-info-main { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.oc-info-heading { min-width: 0; }
-.oc-puzzle-link { min-height: 32px; padding: 0 0 5px; border: 0; background: transparent; color: var(--green); font: 500 12px/1.5 var(--sans); cursor: pointer; }
-.oc-puzzle-link::after { display: inline-block; content: '⌄'; margin-left: 9px; color: var(--muted); }
-.oc-puzzle-link:hover { color: var(--green); }
-.oc-info .oc-rule { margin: 0; color: var(--ink); font-size: 13px; font-weight: 400; }
-.oc-metrics { display: flex; flex-shrink: 0; gap: 24px; margin: 0; text-align: center; }
-.oc-metrics div { display: flex; flex-direction: column; gap: 2px; min-width: 36px; }
-.oc-metrics dt { color: var(--muted); font: 10px/1.4 var(--sans); }
-.oc-metrics dd { margin: 0; color: var(--green); font: 26px/1.1 var(--serif); }
+/* The balance keeps its physical motion inside the shared puzzle canvas. */
+.oc-game { max-width: 560px; container-type: inline-size; --oc-coin-size: clamp(30px, 8.2cqw, 54px); }
 .oc-clues { display: flex; flex-wrap: wrap; gap: 4px 20px; margin-top: 9px; color: var(--muted); font-size: 11px; }
 .oc-clues p { margin: 0; }
 .oc-evidence { display: flex; flex-wrap: wrap; gap: 0 8px; }
 .oc-evidence > span { color: var(--muted); }
-.oc-game .oc-info .oc-log { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; padding: 0; font-size: 11px; list-style: none; }
-.oc-info .oc-log li { padding: 0; }
+.oc-game .oc-evidence .oc-log { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; padding: 0; font-size: 11px; list-style: none; }
+.oc-evidence .oc-log li { padding: 0; }
 .oc-workbench { position: relative; isolation: isolate; }
-.oc-scale { position: relative; margin: 44px 0 0; padding-top: 6.875cqw; padding-bottom: 40px; }
-.oc-scale::after { position: absolute; z-index: -1; content: ''; bottom: -12px; left: 3%; width: 94%; height: 55px; border-radius: 50%; background: radial-gradient(ellipse, #a5a08333 10%, #c9c4a52b 45%, transparent 72%); filter: blur(9px); pointer-events: none; }
+.oc-scale { position: relative; margin: 32px 0 0; padding-top: 6.875cqw; padding-bottom: 40px; }
 .oc-column { position: absolute; top: 5cqw; bottom: 22px; left: calc(50% - 34px); width: 68px; height: calc(100% - 5cqw - 22px); overflow: visible; pointer-events: none; }
-.oc-pedestal { position: absolute; bottom: 0; left: 50%; width: 152px; height: 78px; transform: translateX(-50%); filter: drop-shadow(0 9px 6px #7a745a38); pointer-events: none; }
-.oc-game .oc-scale-weigh { position: absolute; z-index: 4; top: calc(3.875cqw - 48px); left: 50%; translate: -50% 0; width: 104px; min-width: 0; min-height: 36px; justify-content: center; padding: 5px 12px; border-radius: 8px; font: 16px/1.4 var(--serif); }
+.oc-pedestal { position: absolute; bottom: 0; left: 50%; width: 152px; height: 78px; transform: translateX(-50%);  pointer-events: none; }
+.oc-game .oc-scale-weigh { position: absolute; z-index: 4; top: calc(3.875cqw - 48px); left: 50%; translate: -50% 0; width: 104px; min-width: 0; min-height: 36px; justify-content: center; padding: 5px 12px; border-radius: 8px; font: 13px/1.4 var(--sans); }
 .oc-scale-weigh::after { position: absolute; content: ''; inset: -6px; }
-.oc-balance { position: absolute; z-index: 3; top: 0; left: 0; display: block; width: 100%; height: auto; overflow: visible; pointer-events: none; filter: drop-shadow(0 3px 2px #5b715538); }
+.oc-balance { position: absolute; z-index: 3; top: 0; left: 0; display: block; width: 100%; height: auto; overflow: visible; pointer-events: none;  }
 .oc-beam { transform-origin: 400px 40px; transition: transform .75s cubic-bezier(.22,1,.36,1); }
 .oc-scale[data-outcome='1'] .oc-beam { transform: rotate(-4deg); }
 .oc-scale[data-outcome='-1'] .oc-beam { transform: rotate(4deg); }
@@ -57,35 +33,34 @@
 .oc-game .oc-coin, .oc-drag-coin {
   position: relative; display: inline-flex; flex: 0 0 var(--oc-coin-size, 54px); align-items: center; justify-content: center;
   width: var(--oc-coin-size, 54px); height: var(--oc-coin-size, 54px); padding: 0; border: 0; border-radius: 50%; background: transparent; box-shadow: none;
-  color: #294234; font: 400 clamp(15px, 3.2cqw, 24px)/1 var(--serif); font-variant-numeric: tabular-nums; text-shadow: 0 1px 0 #fff3d5;
+  color: #294234; font: 400 clamp(14px, 3.2cqw, 20px)/1 var(--sans); font-variant-numeric: tabular-nums;
   cursor: grab; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none;
   transition: transform .18s, box-shadow .18s, outline-color .18s;
 }
-.oc-coin::before { position: absolute; z-index: -1; content: ''; inset: -10%; background: url('../images/odd-coin/peach-coin.webp') center / 100% 100% no-repeat; filter: var(--oc-face-filter, none); transition: filter .25s; pointer-events: none; }
+.oc-coin::before { position: absolute; z-index: -1; content: ''; inset: 0; border: 1px solid var(--line); border-radius: inherit; background: var(--oc-coin-fill, var(--paper)); pointer-events: none; }
 
 .oc-coin { isolation: isolate; }
 .oc-coin::after { position: absolute; content: ''; inset: 1px; border: 2px solid transparent; border-radius: inherit; pointer-events: none; }
-.oc-coin[data-mark='1'] { --oc-face-filter: hue-rotate(-22deg) saturate(1.35); }
-.oc-coin[data-mark='-1'] { --oc-face-filter: hue-rotate(160deg) saturate(.6); }
-.oc-coin[data-mark='0'] { --oc-face-filter: hue-rotate(60deg) saturate(.3) brightness(1.08); }
-.oc-coin.is-genuine { --oc-face-filter: hue-rotate(60deg) saturate(.6); }
+.oc-coin[data-mark='1'] { --oc-coin-fill: #f6e7df; }
+.oc-coin[data-mark='-1'] { --oc-coin-fill: #e5eef4; }
+.oc-coin[data-mark='0'] { --oc-coin-fill: var(--tint); }
+.oc-coin.is-genuine { --oc-coin-fill: var(--tint); }
 .oc-coin[aria-pressed='true'] { transform: translateY(-2px); }
 .oc-coin[aria-pressed='true']::after { inset: 1px; border: 2px solid #527b59; }
-.oc-coin.is-answer { outline: 2px solid #537d5f; outline-offset: 5px; box-shadow: 0 0 22px #88a47a77; }
-@media (hover: hover) { .oc-coin:not(:disabled):hover { transform: translateY(-3px); box-shadow: 0 7px 12px #7c725826; } }
+.oc-coin.is-answer { outline: 2px solid var(--green); outline-offset: 3px; }
+@media (hover: hover) { .oc-coin:not(:disabled):hover { background: var(--tint); } }
 .oc-game .oc-coin:disabled { cursor: default; opacity: 1; }
-.oc-game[data-solved='true'] .oc-coin:not(.is-answer) { opacity: .65; }
 .oc-game[data-dragging='true'], .oc-game[data-dragging='true'] .oc-coin { cursor: grabbing; }
-.oc-tray { position: relative; margin: 14px auto 0; padding: 0 28px 25px; width: min(100%, 480px); }
-.oc-tray-art { position: absolute; z-index: -1; top: 44px; bottom: 4px; left: 0; width: 100%; border: 1px solid #c5cfb9; border-bottom: 7px solid #b3c0a5; border-radius: 3px; background: linear-gradient(150deg, #e7ecdf, #d7e0cd); box-shadow: inset 0 1px 0 #ffffffe0, 0 5px 9px #62705224; pointer-events: none; transition: filter .25s; }
+.oc-tray { position: relative; margin: 14px auto 0; padding: 0 28px 12px; width: min(100%, 480px); }
+.oc-tray-art { position: absolute; z-index: -1; top: 44px; bottom: 4px; left: 0; width: 100%; border-bottom: 1px solid var(--line); pointer-events: none; }
 
 .oc-tray .oc-coins { gap: clamp(10px, 3cqw, 24px); }
 .oc-tray-bed { display: grid; }
-.oc-tray-bed .oc-coins { grid-area: 1 / 1; row-gap: 22px; padding-bottom: 16px; }
+.oc-tray-bed .oc-coins { grid-area: 1 / 1; row-gap: 22px; padding-bottom: 8px; }
 .oc-tray-space { visibility: hidden; pointer-events: none; align-content: flex-start; }
 .oc-coin-slot { flex: 0 0 var(--oc-coin-size); width: var(--oc-coin-size); height: var(--oc-coin-size); }
 
-.oc-tray-heading { height: 44px; min-height: 44px; margin-inline: calc((min(640px, 100cqw) - 100%) / -2); justify-content: space-between; color: var(--muted); margin-bottom: 12px; }
+.oc-tray-heading { height: 44px; min-height: 44px;  justify-content: space-between; color: var(--muted); margin-bottom: 12px; }
 .oc-tray-heading button { color: var(--green); }
 .oc-tray [data-oc-tray] > img { display: block; width: min(100%, 260px); height: auto; }
 .oc-pan.is-drop .oc-pan-bowl { filter: drop-shadow(0 0 5px #4e805c66); }
@@ -94,22 +69,11 @@
 .oc-coin.is-dragging { opacity: .18; }
 .oc-drag-coin { position: fixed; z-index: 1000; top: 0; left: 0; pointer-events: none; transition: none; box-shadow: 0 12px 18px #6c654a33; }
 .oc-drag-count { position: absolute; right: -9px; bottom: -6px; min-width: 26px; padding: 3px 5px; border: 1px solid #d8e5cb; border-radius: 12px; background: #315f4c; color: #fdfcf8; font: 11px/1.3 var(--sans); text-shadow: none; box-shadow: 0 3px 6px #6c654a44; }
-.oc-feedback { min-height: 35px; margin: 10px 0 0; padding: 9px 0; border-top: 1px solid #dfe4d6; color: var(--muted); text-align: left; font-size: 11px; line-height: 1.5; }
-.oc-game[data-solved='true'] .oc-feedback { color: #315f4c; }
-.oc-weigh-actions { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
-.oc-weigh-actions .panel-button { min-width: 160px; min-height: 48px; justify-content: center; border-radius: 9px; font: 18px/1.4 var(--serif); transition: transform .18s, filter .18s, box-shadow .18s; }
-.oc-game .oc-primary { border: 1px solid #315a46; background: linear-gradient(145deg, #426e56, #2d5844); box-shadow: inset 0 1px 0 #79997c66, 0 3px 6px #62745926; color: #fffdf4; text-shadow: 0 1px 0 #1e4239; }
-.oc-game .oc-primary:hover:not(:disabled) { background: linear-gradient(145deg, #507e61, #34654d); color: #fffdf4; transform: translateY(-1px); box-shadow: inset 0 1px 0 #79997c66, 0 5px 10px #62745933; }
-.oc-game .oc-primary:active:not(:disabled) { transform: translateY(1px); }
-.oc-game .oc-primary:disabled { opacity: .4; }
-.oc-game .oc-clear { min-width: 78px; min-height: 48px; padding: 8px 14px; border: 1px solid #cccbbd; border-radius: 9px; background: linear-gradient(#fffdf8, #f5f3e9); color: var(--ink); font: 17px/1.5 var(--serif); cursor: pointer; }
+.oc-weigh-actions { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+.oc-weigh-actions .panel-button { min-height: 44px; justify-content: center; }
+.oc-game .oc-clear { min-height: 44px; padding: 8px 12px; border: 0; border-radius: 4px; background: transparent; color: var(--muted); font: 13px/1.5 var(--sans); cursor: pointer; }
 .oc-clear:disabled { opacity: .35; cursor: default; }
 .oc-clear:not(:disabled):hover { border-color: #92a386; }
-.oc-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 23px; }
-.oc-controls .oc-tool { width: 44px; min-height: 44px; border: 1px solid transparent; background: transparent; border-radius: 8px; color: var(--green); }
-.oc-controls .oc-tool .icon { width: 20px; height: 20px; }
-.oc-controls .oc-tool:not(:disabled):hover, .oc-controls .oc-tool[aria-expanded='true'] { border-color: #b7c6ac; background: #e9eee1; color: #315f4c; }
-.oc-tool:disabled { opacity: .3; cursor: default; }
 .oc-history { margin-top: 14px; border-top: 1px solid var(--line); color: var(--muted); }
 .oc-history > summary { min-height: 44px; padding: 12px 0; color: var(--muted); font-size: 11px; cursor: pointer; }
 .oc-history summary span { margin-left: 4px; font-variant-numeric: tabular-nums; }
@@ -117,26 +81,13 @@
 .oc-log li { padding: 4px 0 4px 3px; overflow-wrap: anywhere; }
 .oc-log strong { color: var(--green); font-weight: 500; }
 .oc-history .oc-log { margin-bottom: 12px; }
-.oc-game .widget-support-panel { background: #f7f8f0; border-color: #d1dac4; }
-.oc-disclosure { margin-top: 14px; border-top: 1px solid var(--line); }
-.oc-disclosure summary { min-height: 44px; padding: 12px 0; color: var(--green); cursor: pointer; }
-.oc-number-entry { display: flex; gap: 8px; margin: 6px 0 12px; }
-.oc-number-entry input { flex: 1; min-width: 0; min-height: 44px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); font: inherit; }
-.oc-game [data-oc-number-slider] { width: 100%; min-height: 44px; accent-color: var(--green); }
 .oc-game button:focus-visible, .oc-game summary:focus-visible, .oc-game input:focus-visible { outline: 2px solid #527e5b; outline-offset: 4px; }
 @media (max-width: 600px) {
-  .puzzle-page:has(.oc-game) .puzzle-shell { padding-top: 12px; }
-  .puzzle-page:has(.oc-game) .puzzle-heading h1 { font-size: 37px; }
 
   .oc-pans { gap: 20%; }
   .oc-pan { padding-inline: 8px; }
   .oc-coins { gap: 8px; }
   .oc-pan .oc-coins { gap: 6px; }
-  .oc-info { padding: 10px 12px 0; }
-  .oc-info-main { gap: 10px; }
-  .oc-info .oc-rule { font-size: 12px; }
-  .oc-metrics { gap: 14px; }
-  .oc-metrics dd { font-size: 24px; }
   .oc-column { width: 44px; left: calc(50% - 22px); }
   .oc-suspension path { stroke-width: 2; }
   .oc-pedestal { width: 112px; height: 58px; }
@@ -144,7 +95,6 @@
   .oc-scale { padding-bottom: 30px; }
   .oc-balance { left: 1.667%; width: 96.666%; }
   .oc-tray { padding-inline: 15px; }
-  .oc-controls { gap: 5px; }
 }
 @media (max-width: 380px) {
 
@@ -152,20 +102,17 @@
   .oc-tray { padding-inline: 10px; }
   .oc-tray .oc-coins { gap: 9px; }
   .oc-pan-heading { gap: 4px; }
-  .oc-metrics { gap: 8px; }
-  .oc-puzzle-link { font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .oc-beam, .oc-pan, .oc-coin, .oc-coin::before, .oc-pan-bowl, .oc-tray-art, .oc-scale-weigh, .oc-weigh-actions .panel-button { transition: none; }
   .oc-coin:not(:disabled):hover { transform: none; }
 }
 @media (forced-colors: active) {
-  .puzzle-page:has(.oc-game) { background: Canvas; }
   .oc-game .oc-coin, .oc-game .oc-coin.is-genuine { box-shadow: none; background: Canvas; color: ButtonText; border: 1px solid ButtonText; filter: none; text-shadow: none; }
   .oc-coin::before, .oc-coin::after, .oc-tray-art { display: none; }
   .oc-coin[aria-pressed='true'], .oc-coin.is-answer { outline-color: Highlight; }
   .oc-column { background: CanvasText; }
-  .oc-game .oc-primary, .oc-clear { background: ButtonFace; color: ButtonText; border-color: ButtonText; text-shadow: none; }
+  .oc-game .game-primary, .oc-clear { background: ButtonFace; color: ButtonText; border-color: ButtonText; text-shadow: none; }
   .oc-suspension path { stroke: CanvasText; }
 }
 
@@ -180,8 +127,8 @@
 .oc-coin-note { position: absolute; top: calc(100% + 5px); left: 50%; transform: translateX(-50%); display: block; max-width: calc(var(--oc-coin-size) + 6px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #586b52; font: 10px/1.3 var(--sans); text-align: center; }
 .oc-game .oc-coin:focus-visible { outline: 2px dashed var(--green); outline-offset: 3px; }
 .oc-game[data-input='pointer'] .oc-coin:focus-visible { outline: none; }
-.oc-label-panel { position: absolute; z-index: 10; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px; width: min(336px, calc(100% - 12px)); margin: 0; padding: 6px 10px 10px; border: 1px solid #d6dfcc; border-radius: 12px; background: #fffef9; box-shadow: 0 6px 22px #40553724, 0 1px 3px #40553712; font-size: 12px; }
-.oc-label-panel::after { position: absolute; content: ''; bottom: -5px; left: var(--oc-label-arrow, 50%); width: 9px; height: 9px; translate: -50% 0; rotate: 45deg; border-right: 1px solid #d6dfcc; border-bottom: 1px solid #d6dfcc; background: #fffef9; pointer-events: none; }
+.oc-label-panel { position: absolute; z-index: 10; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px; width: min(336px, calc(100% - 12px)); margin: 0; padding: 6px 10px 10px; border: 1px solid #d6dfcc; border-radius: 7px; background: var(--paper); box-shadow: 0 3px 12px #282e2914; font-size: 12px; }
+.oc-label-panel::after { position: absolute; content: ''; bottom: -5px; left: var(--oc-label-arrow, 50%); width: 9px; height: 9px; translate: -50% 0; rotate: 45deg; border-right: 1px solid #d6dfcc; border-bottom: 1px solid #d6dfcc; background: var(--paper); pointer-events: none; }
 .oc-label-panel[data-placement='below']::after { top: -5px; bottom: auto; rotate: 225deg; }
 .oc-game[data-dragging='true'] .oc-label-panel { visibility: hidden; pointer-events: none; }
 .oc-label-heading { display: flex; flex: 0 0 100%; align-items: center; justify-content: center; position: relative; min-height: 28px; padding-inline: 28px; color: var(--muted); font-size: 11px; line-height: 1.5; }
@@ -201,14 +148,10 @@
 .oc-note-entry { display: flex; flex: 0 0 100%; gap: 8px; margin-top: 6px; }
 .oc-note-entry input { flex: 1; min-width: 0; min-height: 40px; padding: 7px 10px; border: 1px solid #cbd6bf; border-radius: 7px; background: var(--paper); color: var(--ink); font: 12px/1.4 var(--sans); }
 .oc-note-entry button { min-height: 40px; }
-.oc-game .oc-validate { min-width: 120px; border-color: #c8d2bc; background: linear-gradient(#fcfdf8, #f0f3e7); color: var(--green); }
-.oc-game[data-selection='true'] .oc-validate { border-color: #91a87e; }
-.oc-summary { margin: 18px 0 0; text-align: center; color: var(--green); font: 13px/1.7 var(--sans); }
-.oc-summary p { margin: 0; }
 @media (max-width: 600px) {
   .oc-weigh-actions { gap: 8px; }
-  .oc-weigh-actions .panel-button { min-width: 102px; min-height: 44px; font-size: 16px; }
-  .oc-game .oc-clear { min-width: 50px; min-height: 44px; padding-inline: 10px; font-size: 15px; }
+  .oc-weigh-actions .panel-button { min-width: 102px; min-height: 44px; font-size: 13px; }
+  .oc-game .oc-clear { min-width: 50px; min-height: 44px; padding-inline: 10px; font-size: 13px; }
   .oc-coin-mark { width: 12px; height: 12px; right: -2px; bottom: -2px; font-size: 9px; }
   .oc-label-actions { gap: 4px; }
   .oc-label-panel { padding-inline: 8px; }
@@ -226,19 +169,16 @@
 .oc-pan-heading:focus-within button { padding: 7px 12px; border-radius: 7px; background: var(--paper); }
 
 @media (min-width: 700px) and (max-height: 800px) {
-  .puzzle-page:has(.oc-game) .puzzle-shell { padding-top: 10px; }
-  .puzzle-page:has(.oc-game) .puzzle-back { min-height: 28px; margin-bottom: 4px; }
-  .puzzle-page:has(.oc-game) .puzzle-heading { margin-bottom: 6px; }
-  .puzzle-page:has(.oc-game) .puzzle-heading h1 { font-size: 40px; }
   .oc-workbench { max-width: 680px; margin: 0 auto; container-type: inline-size; --oc-coin-size: clamp(30px, 7cqw, 48px); }
   .oc-scale { padding-bottom: 32px; }
   .oc-tray { margin-top: 8px; padding-bottom: 18px; }
   .oc-tray-heading { margin-bottom: 8px; }
   .oc-weigh-actions { margin-top: 12px; }
-  .oc-controls { margin-top: 12px; }
 }
 
 @media (max-width: 600px) {
   .oc-scale[data-outcome='1'] [data-oc-zone='1'], .oc-scale[data-outcome='-1'] [data-oc-zone='-1'] { transform: translateY(2.0927cqw); }
   .oc-scale[data-outcome='1'] [data-oc-zone='-1'], .oc-scale[data-outcome='-1'] [data-oc-zone='1'] { transform: translateY(-2.0927cqw); }
 }
+
+.oc-column, .oc-pedestal, .oc-balance, .oc-pan-bowl { color: var(--green); }

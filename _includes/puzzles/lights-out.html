@@ -1,54 +1,39 @@
-<section class="glo-game widget-frame" data-graph-lights-out data-numbers="false" aria-label="Lights Out graph game">
-  <div class="glo-info">
-    <button class="panel-button glo-puzzle-link" type="button" data-glo-name data-widget-panel-trigger="puzzles" aria-expanded="false" disabled>Puzzle 1 / 1000</button>
-    <span data-glo-remaining>Turn every light off</span><span data-glo-moves>0 presses</span>
+<section class="glo-game widget-frame puzzle-game" data-graph-lights-out data-numbers="false" aria-label="Lights Out graph game">
+  <div class="game-canvas">
+    <div class="game-surface">
+      <div class="glo-board-wrap">
+        <div class="glo-board" data-glo-board role="group" aria-label="Connected lights"><img src="{{ '/assets/images/lights-out-board.svg' | relative_url }}" width="600" height="600" alt="Lights connected by lines in an irregular network. Amber lights are on; hollow lights are off."></div>
+      </div>
+    </div>
+    <div class="game-footer">
+      <p class="game-status" data-glo-status role="status" aria-live="polite" aria-atomic="true">Enable JavaScript to play Lights Out.</p>
+      <div class="game-controls" role="group" aria-label="Game controls">
+        {% include controls/game-action.html game='glo' action='undo' icon='undo' title='Undo' label='Undo action' %}
+        {% include controls/game-action.html game='glo' action='redo' icon='redo' title='Redo' label='Redo action' %}
+        {% include controls/game-action.html game='glo' action='restart' icon='restart' title='Reset' label='Reset board' %}
+        {% include controls/game-action.html game='glo' action='next' icon='arrow' title='Next unsolved' label='Next unsolved puzzle' %}
+        {% include controls/game-action.html game='glo' action='hint' icon='hint' title='Hint' toggle=true text_key='hint-label' %}
+        {% include controls/game-action.html icon='settings' title='Settings' panel='settings' %}
+        {% include controls/game-action.html icon='help' title='How to play' panel='info' %}
+      </div>
+    </div>
   </div>
-  <p class="glo-status" data-glo-status role="status" aria-live="polite" aria-atomic="true">Enable JavaScript to play Lights Out.</p>
-  <div class="glo-board-wrap">
-    <div class="glo-board" data-glo-board role="group" aria-label="Connected lights"><img src="{{ '/assets/images/lights-out-board.svg' | relative_url }}" width="600" height="600" alt="Lights connected by lines in an irregular network. Amber lights are on; hollow lights are off."></div>
-  </div>
-  <p class="glo-preview" data-glo-preview aria-hidden="true"></p>
-  <p class="widget-goal">Turn every light off</p>
-  <div class="widget-controls" role="group" aria-label="Game controls">
-    <button class="panel-button" type="button" data-glo-undo aria-label="Undo action" disabled>{% include icon.html name='undo' %}<span>Undo</span></button>
-    <button class="panel-button" type="button" data-glo-redo aria-label="Redo action" disabled>{% include icon.html name='redo' %}<span>Redo</span></button>
-    <button class="panel-button" type="button" data-glo-restart aria-label="Reset board" disabled>{% include icon.html name='restart' %}<span>Reset</span></button>
-    <button class="panel-button" type="button" data-glo-shuffle aria-label="Shuffle unsolved puzzles" disabled>{% include icon.html name='shuffle' %}<span>Shuffle</span></button>
-    <button class="panel-button" type="button" data-glo-hint data-puzzle-icon aria-label="Hint" aria-pressed="false" disabled>{% include icon.html name='hint' %}<span data-glo-hint-label>Hint</span></button>
-    <button class="panel-button" type="button" data-widget-panel-trigger="settings" aria-expanded="false" disabled>{% include icon.html name='settings' %}<span>Settings</span></button>
-    <button class="panel-button" type="button" data-widget-panel-trigger="info" aria-expanded="false" disabled>{% include icon.html name='info' %}<span>Info</span></button>
-  </div>
-  <button class="panel-button glo-next" type="button" data-glo-new disabled hidden>{% include icon.html name='arrow' %}<span>Next puzzle</span></button>
   <div class="widget-support-panel" data-widget-panel="settings" aria-label="Game settings" hidden>
     <div class="widget-slider-setting">
       <div class="widget-slider-heading"><label for="glo-difficulty" data-glo-difficulty-name>Difficulty</label><output data-glo-difficulty-label hidden>Easy</output></div>
       <select id="glo-difficulty" aria-label="Difficulty" data-glo-difficulty data-dropdown="difficulty" disabled><option value="1">Easy</option><option value="2">Medium</option><option value="3">Hard</option><option value="4">Expert</option></select>
       <p data-glo-level-detail>6–8 lights · 2–3 presses at best</p>
     </div>
+    {% include controls/puzzle-list.html game='glo' total=1000 minimum_label='Minimum presses' %}
     <label class="widget-switch"><span>Show light numbers</span><input type="checkbox" role="switch" data-glo-numbers disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
     <label class="widget-switch"><span>Save progress</span><input type="checkbox" role="switch" data-puzzle-remember checked disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
-    <p class="widget-note">Each difficulty keeps its own progress. Saving applies only to Lights Out on this device.</p>
-    {% include controls/reset-progress.html message='Clear <strong data-widget-progress-scope>Easy</strong> boards, move history, and solved records? Start at puzzle 1. Other difficulties, settings, and puzzles are kept.' %}
+    {% include controls/reset-progress.html plain=true message='Clear <strong data-widget-progress-scope>Easy</strong> boards, move history, and solved records? Start at puzzle 1. Other difficulties, settings, and puzzles are kept.' %}
   </div>
-  <div class="widget-support-panel" data-widget-panel="info" aria-label="About Lights Out" hidden>
-    <p>Pressing a light flips that light and every light joined directly to it. Amber lights are on; hollow lights are off. Lines that cross make no extra connections.</p>
-    <p>Hover or focus to preview a move. Use the arrow keys to move between lights, then Enter or Space to press.</p>
-    <p>Hint marks one useful light; press that light to use it. Tap Hint again to hide it. Numbers are optional.</p>
-    <p>Reset restores this puzzle's starting lights. Shuffle chooses another unsolved puzzle. Both keep your settings and can be undone.</p>
-    <p>Each difficulty has 1,000 numbered puzzles. Tap the puzzle number to revisit any puzzle. Solved records remain when you undo a press or replay a puzzle.</p>
-    <p data-glo-board-name>Open loop · 6 lights</p>
+  <div class="widget-support-panel game-help" data-widget-panel="info" aria-label="How to play" hidden>
+    <h2>How to play</h2>
+    <p>Press a light to flip it and its connected neighbours. Turn every light off. Crossing lines are not connections.</p>
+    <p class="sr-only" data-glo-board-name>Open loop · 6 lights</p>
     <a class="glo-math-link" href="{{ '/notes/lights-out/' | relative_url }}">Explore the mathematics {% include icon.html name='arrow' %}</a>
-  </div>
-  <div class="widget-support-panel" data-widget-panel="puzzles" aria-label="Choose a puzzle" hidden>
-    <form data-glo-jump>
-      <div class="widget-slider-heading"><label data-glo-number-name>Puzzle number</label><output data-glo-number-label>1 / 1000</output></div>
-      <input class="glo-number-slider" type="range" min="1" max="1000" step="1" value="1" aria-label="Puzzle number slider" data-glo-number-slider disabled>
-      <div class="glo-number-entry">
-        <input type="number" min="1" max="1000" step="1" value="1" inputmode="numeric" data-glo-number required disabled>
-        <button class="panel-button" type="submit" data-glo-open disabled>{% include icon.html name='arrow' %}<span>Open puzzle</span></button>
-      </div>
-      <p data-glo-completed>0 / 1000 Easy puzzles solved</p>
-    </form>
   </div>
   <noscript><p class="glo-caption">This game needs JavaScript. Enable it to play and browse the puzzle collection.</p></noscript>
 </section>

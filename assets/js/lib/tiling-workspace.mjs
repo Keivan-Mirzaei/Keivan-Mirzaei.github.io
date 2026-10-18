@@ -4,10 +4,7 @@ import { DIFFICULTIES } from './tiling-arrangements.mjs';
 
 export const TILING_HISTORY_LIMIT = 100;
 const clone = value => JSON.parse(JSON.stringify(value));
-const compact = game => {
-  const { placements, moves } = game.exportState();
-  return { placements, moves };
-};
+const compact = game => ({ placements: game.placements });
 const restoreGame = (level, state) => createGame(level, { ...state, history: [], future: [] });
 
 // One bounded action history also reverses Reset and puzzle navigation.
@@ -17,16 +14,16 @@ export function createTilingWorkspace(saved = null, catalogue) {
   const capture = () => ({ difficulty: book.difficulty, number: book.number, state: compact(game) });
   const remember = (entries, entry) => [...entries, entry].slice(-TILING_HISTORY_LIMIT);
   function valid(entry) {
-    if (!entry || !Number.isInteger(entry.difficulty) || !DIFFICULTIES[entry.difficulty]
-      || !Number.isSafeInteger(entry.state?.moves) || entry.state.moves < 0) return false;
+    if (!entry || !Number.isInteger(entry.difficulty) || !DIFFICULTIES[entry.difficulty] || !entry.state?.placements) return false;
     const probe = createPuzzleBook(book.exportState(), catalogue);
     probe.changeDifficulty(entry.difficulty);
     if (!probe.open(entry.number)) return false;
-    return JSON.stringify(compact(restoreGame(probe.level, entry.state))) === JSON.stringify(entry.state);
+    return JSON.stringify(compact(restoreGame(probe.level, entry.state))) === JSON.stringify({ placements: entry.state.placements });
   }
   const legacy = game.exportState();
   const history = (name, fallback) => Array.isArray(saved?.actions?.[name])
-    ? saved.actions[name].length <= TILING_HISTORY_LIMIT && saved.actions[name].every(valid) ? clone(saved.actions[name]) : []
+    ? saved.actions[name].length <= TILING_HISTORY_LIMIT && saved.actions[name].every(valid)
+      ? saved.actions[name].map(entry => ({ difficulty: entry.difficulty, number: entry.number, state: { placements: clone(entry.state.placements) } })) : []
     : fallback.slice(-TILING_HISTORY_LIMIT).map(state => ({ difficulty: book.difficulty, number: book.number, state }));
   let past = history('past', legacy.history), future = history('future', legacy.future);
   game = restoreGame(book.level, compact(game));
@@ -54,8 +51,8 @@ export function createTilingWorkspace(saved = null, catalogue) {
       return result;
     },
     remove(id) { return commit(() => game.remove(id)); },
-    reset() { return commit(() => { if (!game.moves) return false; book.replay(); game.reset(); return true; }); },
-    shuffle(random) { return commit(() => { if (!book.next(random)) return false; load(); return true; }); },
+    reset() { return commit(() => { if (!game.filled) return false; book.replay(); game.reset(); return true; }); },
+    advance() { return commit(() => { if (!book.next()) return false; load(); return true; }); },
     open(number) { return commit(() => { if (number === book.number || !book.open(number)) return false; load(); return true; }); },
     changeDifficulty(index) { return commit(() => { if (index === book.difficulty || !book.changeDifficulty(index)) return false; load(); return true; }); },
     undo() {

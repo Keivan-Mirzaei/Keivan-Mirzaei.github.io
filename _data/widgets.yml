@@ -30,7 +30,7 @@ lights-out:
 graph-lights-out:
   script: /assets/js/widgets/graph-lights-out.mjs
   selector: '[data-graph-lights-out]'
-  styles: [graph-lights-out, widget-frame]
+  styles: [graph-lights-out, widget-frame, puzzle-game]
 three-utilities:
   script: /assets/js/widgets/three-utilities.mjs
   selector: '[data-three-utilities-plane], [data-three-utilities-surface], [data-three-utilities-square]'
@@ -38,19 +38,19 @@ three-utilities:
 hex:
   script: /assets/js/widgets/hex.mjs
   selector: '[data-hex-game], [data-hex-proof]'
-  styles: [activities, hex, widget-frame]
+  styles: [activities, hex, widget-frame, puzzle-game]
 klotski:
   script: /assets/js/widgets/klotski.mjs
   selector: '[data-klotski-game]'
-  styles: [klotski, widget-frame]
+  styles: [klotski, widget-frame, puzzle-game]
 tiling:
   script: /assets/js/widgets/tiling.mjs
   selector: '[data-tiling-game]'
-  styles: [widget-frame, tiling]
+  styles: [widget-frame, tiling, puzzle-game]
 four-equal-regions:
   script: /assets/js/widgets/four-equal-regions.mjs
   selector: '[data-four-equal-regions]'
-  styles: [widget-frame, four-equal-regions]
+  styles: [widget-frame, four-equal-regions, puzzle-game]
 cube-cuts:
   script: /assets/js/widgets/cube-cuts.mjs
   selector: '[data-cube-cuts]'
@@ -58,4 +58,4 @@ cube-cuts:
 one-odd-coin:
   script: /assets/js/widgets/one-odd-coin.mjs
   selector: '[data-odd-coin]'
-  styles: [widget-frame, one-odd-coin]
+  styles: [widget-frame, one-odd-coin, puzzle-game]

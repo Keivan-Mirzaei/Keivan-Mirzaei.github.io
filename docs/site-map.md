@@ -49,7 +49,7 @@ Start with its name in `_data/widgets.yml`. The record gives the controller, act
 
 An activity usually has matching names in `_includes/widgets/`, `assets/js/widgets/`, and `assets/css/`. The controller imports its mathematics and drawing helpers from `assets/js/lib/`. The Hex article and standalone game reuse `_includes/puzzles/hex.html`; other shared games follow the same pattern.
 
-Controllers export `mount(root)` and return cleanup for listeners, timers, workers, observers, and renderers. `assets/js/app.mjs` manages page features when navigating between pages. Keep mathematical rules separate from event handling where useful. Shared controls live in `_includes/controls/`; history, panels, and storage helpers live in `assets/js/lib/`.
+Controllers export `mount(root)` and return cleanup for listeners, timers, workers, observers, and renderers. `assets/js/app.mjs` manages page features when navigating between pages. Keep mathematical rules separate from event handling where useful. Shared controls live in `_includes/controls/`; history, panels, and storage helpers live in `assets/js/lib/`. Playable puzzles use `puzzle-game.css` for their canvas, feedback footer, and supporting panels, with `controls/game-action.html` for the common icon buttons. Keep board geometry and puzzle rules in each activity’s own files.
 
 The persistent site frame lets running timers and sound continue between pages. Ordinary visits use browser navigation; `app.mjs` enables the shared page loader only while a gadget is starting, sound is playing, or a timer is running. Pending visits show loading feedback, repeated clicks keep the same request, and a five-second deadline falls back to browser navigation. `learning-topic-navigation.js` remembers the last topic and mounts the course path; `lib/path-rails.mjs` aligns its continuous spotlight rails after layout changes. `gadgets/service.mjs` owns the active timer and independent sound session; `model.mjs` handles timer calculations; `ambient.mjs` streams ambient files through one native audio player without a Web Audio graph; `audio.mjs` reserves Web Audio for timer alerts; `ui.mjs` connects the dock and current workspace to that service. Use the existing service for new controls rather than creating another timer or audio player. Search is shared by the header dialog and dedicated page through `site-search.mjs`.
 
@@ -67,6 +67,7 @@ Only recurring tools remain in `scripts/`:
 | `check_site.py` | Validate links, headings, images, search, feed, sitemap, exclusions, and unused assets, including imported modules and computed sound URLs |
 | `lights_out_catalogue.mjs` | Rebuild the deterministic Lights Out puzzle catalogue |
 | `tiling_catalogue.mjs` | Rebuild the deterministic tiling puzzle catalogue |
+| `odd_coin_catalogue.mjs` | Rebuild the deterministic One Odd Coin puzzle catalogue |
 
 Puzzle numbers are tied to saved progress. Regenerate a catalogue only for an intentional catalogue change; ordinary content editing does not require it. `tests/` checks the maintained mathematics, controllers, storage, navigation, authoring, and asset versions. Keep tests for retained behavior.
 

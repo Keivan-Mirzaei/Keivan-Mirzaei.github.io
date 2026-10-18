@@ -87,12 +87,6 @@ export function clipHalfPlane(polygon, vector, threshold, sign) {
   }
   return output;
 }
-export function keepCrossing(angle, other, previous) {
-  const delta = lineDelta(angle - other), minimum = Math.PI / 15;
-  if (Math.abs(delta) >= minimum) return angle;
-  const sign = Math.sign(lineDelta(previous - other)) || 1;
-  return angle + sign * minimum - delta;
-}
 export function boundedMotion(pose, dx, dy) {
   let scale = 1;
   if (pose.x + dx > .78) scale = Math.min(scale, (.78 - pose.x) / dx);

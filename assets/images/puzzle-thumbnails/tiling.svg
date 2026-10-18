@@ -1,18 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="440" height="410" viewBox="0 0 440 410" role="img" aria-labelledby="title description"><title id="title">Floor tiling</title><desc id="description">A floor grid with three missing squares beside four coloured tiles.</desc><g transform="translate(11 34) scale(.95)">
-
-
-  <defs><pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V8" stroke="#d9ded3" stroke-width="2"/></pattern></defs>
-  <rect width="440" height="360" fill="#fcfcf9"/>
-  <rect x="24" y="63" width="236" height="236" rx="8" fill="#eef0e8" stroke="#e0e4dc"/>
-  <g fill="#fcfcf9" stroke="#d8ddd1" stroke-width="1">
-    <rect x="36" y="75" width="50" height="50" rx="3"/><rect x="90" y="75" width="50" height="50" rx="3"/><rect x="144" y="75" width="50" height="50" rx="3"/>
-    <rect x="36" y="129" width="50" height="50" rx="3"/><rect x="90" y="129" width="50" height="50" rx="3"/><rect x="144" y="129" width="50" height="50" rx="3"/><rect x="198" y="129" width="50" height="50" rx="3"/>
-    <rect x="36" y="183" width="50" height="50" rx="3"/><rect x="90" y="183" width="50" height="50" rx="3"/><rect x="144" y="183" width="50" height="50" rx="3"/><rect x="198" y="183" width="50" height="50" rx="3"/>
-    <rect x="90" y="237" width="50" height="50" rx="3"/><rect x="144" y="237" width="50" height="50" rx="3"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="410" viewBox="0 0 440 410" role="img" aria-labelledby="title description">
+  <title id="title">Floor tiling</title>
+  <desc id="description">Three flat coloured tiles fit into an inset square floor, with one shape still empty.</desc>
+  <defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V7" stroke="#cbd3c4" stroke-width="1"/></pattern></defs>
+  <rect x="65" y="50" width="310" height="310" rx="6" fill="#e7eae1" stroke="#ccd4c7"/>
+  <g transform="translate(80 65) scale(1.25)" stroke-linejoin="round">
+    <path d="M0 0h168v56h56v112h-56v56H56v-56H0Z" fill="#fcfcf9"/>
+    <path d="M168 0h56v56h-56ZM0 168h56v56H0Zm168 0h56v56h-56Z" fill="url(#hatch)"/>
+    <path d="M56 0v224m56-224v224m56-224v224M0 56h224M0 112h224M0 168h224" fill="none" stroke="#dce2d5"/>
+    <g stroke="#6c7964" stroke-width="1.4">
+      <path d="M0 0h112v56H56v56H0Z" fill="#c67b67"/>
+      <path d="M112 0h56v56h56v56H112Z" fill="#70968c"/>
+      <path d="M56 56h56v168H56v-56H0v-56h56Z" fill="#839bbc"/>
+    </g>
+    <path d="M0 0h168v56h56v112h-56v56H56v-56H0Z" fill="none" stroke="#bac6b1"/>
   </g>
-  <g fill="url(#hatch)" stroke="#c6ccbf" stroke-dasharray="3 3"><rect x="198" y="75" width="50" height="50" rx="3"/><rect x="36" y="237" width="50" height="50" rx="3"/><rect x="198" y="237" width="50" height="50" rx="3"/></g>
-  <g fill="#c67b67"><rect x="290" y="65" width="28" height="28" rx="2"/><rect x="322" y="65" width="28" height="28" rx="2"/><rect x="290" y="97" width="28" height="28" rx="2"/></g>
-  <g fill="#70968c"><rect x="358" y="144" width="28" height="28" rx="2"/><rect x="358" y="176" width="28" height="28" rx="2"/><rect x="390" y="176" width="28" height="28" rx="2"/></g>
-  <g fill="#839bbc"><rect x="316" y="227" width="28" height="28" rx="2"/><rect x="284" y="259" width="28" height="28" rx="2"/><rect x="316" y="259" width="28" height="28" rx="2"/><rect x="316" y="291" width="28" height="28" rx="2"/></g>
-  <g fill="#c4a168"><rect x="370" y="248" width="28" height="28" rx="2"/><rect x="402" y="248" width="28" height="28" rx="2"/><rect x="370" y="280" width="28" height="28" rx="2"/></g>
-</g></svg>
+</svg>

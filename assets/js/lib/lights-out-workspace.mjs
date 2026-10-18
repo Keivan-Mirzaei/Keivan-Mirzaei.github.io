@@ -42,7 +42,6 @@ export function createLightsOutWorkspace(saved = null, catalogue) {
     get canRedo() { return future.length > 0 || game.canRedo; },
     press(vertex) { return commit(() => game.press(vertex)); },
     reset() { return commit(() => { if (!game.moves) return false; book.replay(); game.reset(); return true; }); },
-    shuffle(random) { return commit(() => { if (!book.shuffle(random)) return false; game = createLightsOutGame(book.puzzle, book.state); return true; }); },
     advance() { return commit(() => { if (!book.advance()) return false; game = createLightsOutGame(book.puzzle, book.state); return true; }); },
     open(number) { return commit(() => { if (number === book.number || !book.open(number)) return false; game = createLightsOutGame(book.puzzle, book.state); return true; }); },
     changeDifficulty(index) { return commit(() => { if (index === book.difficulty || !book.changeDifficulty(index)) return false; game = createLightsOutGame(book.puzzle, book.state); return true; }); },

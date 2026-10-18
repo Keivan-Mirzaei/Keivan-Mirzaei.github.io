@@ -1,29 +1,4 @@
 .glo-game { width: min(100%, 540px); }
-.glo-settings { display: grid; grid-template-columns: 180px minmax(160px, 1fr); gap: 20px; align-items: center; margin-bottom: 28px; }
-.glo-difficulty-heading { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
-.glo-difficulty-heading output { color: var(--green); font: 12px var(--mono); }
-.glo-settings input, .glo-picker-content input[type='range'] { width: 100%; min-height: 44px; margin: 0; accent-color: var(--green); cursor: pointer; }
-.glo-info { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 5px 14px; margin-bottom: 12px; color: var(--muted); font: 12px/1.7 var(--mono); }
-.glo-count { white-space: nowrap; }
-.glo-picker { position: relative; z-index: 16; }
-.glo-picker > summary { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; color: var(--green); cursor: pointer; list-style: none; }
-.glo-picker > summary::-webkit-details-marker { display: none; }
-.glo-picker > summary::marker { content: ''; }
-.glo-picker > summary::after { content: ''; width: 6px; height: 6px; margin-top: -3px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg); }
-.glo-picker[open] > summary::after { margin-top: 3px; transform: rotate(225deg); }
-.glo-picker-content { position: absolute; top: calc(100% + 8px); left: 0; width: 280px; max-width: calc(100vw - 32px); padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); box-shadow: 0 5px 20px #282e2914; font: 13px/1.7 var(--sans); }
-.glo-number-entry { display: flex; gap: 10px; margin: 8px 0; }
-.glo-number-entry input { flex: 1; width: 0; min-height: 44px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); }
-.glo-book-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
-.glo-book-footer p { margin: 0; color: var(--muted); font: 12px/1.7 var(--mono); }
-.glo-navigation { display: flex; gap: 6px; }
-.glo-previous-icon { transform: rotate(180deg); }
-.glo-status { min-height: 1.7em; margin: 0 0 12px; color: var(--green); font: 14px/1.7 var(--sans); }
-.glo-actions { margin-top: 0; margin-bottom: 16px; }
-.glo-actions .panel-help { position: static; }
-.glo-actions .panel-help-content { left: 0; right: auto; width: min(320px, 100%); }
-.glo-preference { display: flex; align-items: center; gap: 9px; min-height: 44px; cursor: pointer; }
-.glo-preference input { width: 17px; height: 17px; margin: 0; accent-color: var(--green); }
 .glo-math-link { display: inline-flex; align-items: center; gap: 6px; margin: 12px 0; color: var(--green) !important; font-size: 12px; }
 .glo-math-link .icon { width: 16px; height: 16px; }
 .glo-board-wrap { width: min(100%, 442px); margin: 0 auto; border-radius: 18px; background: color-mix(in srgb, var(--tint) 35%, var(--paper)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--green) 18%, var(--line)), inset 0 2px 5px #285b4610, 0 6px 18px #285b4608; }
@@ -40,34 +15,15 @@
 .glo-hint-label { display: none; position: absolute; top: calc(100% + 2px); padding: 0 4px; background: var(--paper); color: var(--green); font-size: 11px; }
 .glo-light.is-hint .glo-hint-label { display: block; }
 .glo-board[data-numbers='false'] .glo-light-number { visibility: hidden; }
-.glo-under-board { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 12px; color: var(--muted); font: 12px/1.7 var(--mono); }
-.glo-preview { min-height: 1.7em; margin: 6px 0 0; color: var(--muted); font: 12px/1.7 var(--mono); }
-.glo-completed { margin: 8px 0 0; color: var(--muted); font: 12px/1.7 var(--mono); }
-.glo-game[data-solved='true'] .glo-board-wrap { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--green) 45%, var(--line)), 0 6px 18px #285b4608; }
 .glo-caption { margin-top: 16px; color: var(--muted); font-size: 13px; }
-@media (max-width: 620px) {
-  .glo-settings { grid-template-columns: 1fr; gap: 0; margin-bottom: 20px; }
-}
 @media (max-width: 380px) {
   .glo-light-core { width: 30px; height: 30px; }
 }
 @media (prefers-reduced-motion: reduce) { .glo-light-core, .glo-edges path { transition: none; } }
 .glo-game.widget-frame { max-width: 560px; }
-.glo-game.widget-frame .glo-info { margin-bottom: 4px; font: 400 13px/1.6 var(--sans); font-variant-numeric: tabular-nums; }
-.glo-game.widget-frame .glo-info .glo-puzzle-link { min-height: 36px; padding: 5px 10px; color: var(--green); font: inherit; }
-.glo-game.widget-frame .glo-status { min-height: 40px; margin: 6px 0 10px; padding: 8px 10px; border-radius: 6px; font: 400 14px/1.6 var(--sans); }
-.glo-game.widget-frame .glo-board-wrap { width: 100%; max-width: clamp(288px, calc(100dvh - 360px), 380px); transition: background-color .2s; }
+.glo-game.widget-frame .glo-board-wrap { width: 100%; max-width: clamp(288px, calc(100dvh - 360px), 380px); }
 .glo-game.widget-frame .glo-light-core { font: 400 12px/1 var(--sans); }
-.glo-game.widget-frame .glo-preview { min-height: 22px; text-align: center; font: 400 13px/1.6 var(--sans); }
-.glo-game.widget-frame .glo-preview:empty { visibility: hidden; }
-.glo-game.widget-frame .glo-next { display: flex; margin: 12px auto 0; }
-.glo-game.widget-frame .glo-number-slider { display: block; width: 100%; min-height: 44px; margin: 0; accent-color: var(--green); }
-.glo-game.widget-frame[data-solved='true'] .glo-status { color: var(--green); background: var(--tint); }
-.glo-game.widget-frame[data-solved='true'] .glo-board-wrap { background: #dcebdd; box-shadow: inset 0 0 0 2px #81a68a, 0 0 0 3px #dcebdd; }
-.glo-game.widget-frame[data-solved='true'] .glo-light-core { background: #eaf3e6; border-color: #72977a; }
-.glo-game.widget-frame .glo-number-entry input { font: inherit; }
 @media (max-width: 340px) { .glo-game.widget-frame .glo-board-wrap { max-width: 100%; } }
-@media (prefers-reduced-motion: reduce) { .glo-game.widget-frame .glo-board-wrap { transition: none; } }
 @media (forced-colors: active) {
   .glo-board-wrap { border: 1px solid CanvasText; }
   .glo-light.is-on .glo-light-core { background: Highlight; color: HighlightText; border-color: Highlight; }
@@ -86,3 +42,5 @@
 .glo-grid .glo-light { width: calc(100% / var(--glo-side)); height: auto; aspect-ratio: 1; }
 .glo-grid .glo-light-core { width: calc(100% - 8px); height: auto; aspect-ratio: 1; border-radius: 8px; }
 .glo-grid .glo-step { top: 0; right: 0; }
+
+.glo-game.puzzle-game .glo-board-wrap { border-radius: 0; background: transparent; box-shadow: none; }

@@ -48,6 +48,28 @@ test('extra weighings remain possible even after an answer is logically forced',
   w.clearPans(); w.arrange([1], [3]); assert.equal(w.weigh(), true);
   assert.equal(w.used, 2); assert.equal(w.answer, null); assert.equal(w.completedCount, 0);
   assert.deepEqual(w.submitAnswer([3, 1]), { ok: true, used: 2, minimum: 1 });
+  assert.deepEqual(w.puzzleResult(1), { minimum: 1, best: 2, status: 'solved' });
+});
+
+test('minimum badges preserve the best weighing count through replay, Undo, saving and scoped reset', () => {
+  let w = createOddCoinWorkspace(); solve(w);
+  assert.deepEqual(w.puzzleResult(1), { minimum: 1, best: 1, status: 'minimum' });
+  w.undo(); assert.equal(w.puzzleResult(1).status, 'minimum'); w.redo();
+  w.reset(); w.arrange([1], [2]); w.weigh(); w.arrange([1], [3]); w.weigh(); w.submitAnswer([3, 1]);
+  assert.equal(w.puzzleResult(1).best, 1);
+  w = createOddCoinWorkspace(w.exportState()); assert.equal(w.puzzleResult(1).status, 'minimum');
+  w.changeDifficulty(1); solve(w); w.resetProgress(); assert.equal(w.puzzleResult(1).status, 'unsolved');
+  w.changeDifficulty(0); assert.equal(w.puzzleResult(1).status, 'minimum');
+});
+
+test('Next unsolved follows coin puzzle order, wraps and skips completed cases', () => {
+  const w = createOddCoinWorkspace(); w.open(2); solve(w);
+  w.next(); assert.equal(w.number, 3);
+  w.open(250); w.next(); assert.equal(w.number, 1);
+  w.moveCoins([1], 1); const before = w.exportState().sessions[0].game;
+  w.next(); assert.equal(w.number, 3);
+  w.undo(); assert.equal(w.number, 1); assert.deepEqual(w.exportState().sessions[0].game, before);
+  w.redo(); assert.equal(w.number, 3);
 });
 
 test('reweighing the same coins replays the result without consuming moves or undo history', () => {
@@ -132,7 +154,7 @@ test('reload preserves comparisons and submitted answers without accepting forge
 });
 
 test('reset and navigation are undoable, and progress reset cannot resurrect labels or solved records', () => {
-  const w = createOddCoinWorkspace(); solve(w); w.next(() => .5); const number = w.number;
+  const w = createOddCoinWorkspace(); solve(w); w.next(); const number = w.number;
   w.undo(); assert.equal(w.number, 1); assert.equal(w.solved, true); w.redo(); assert.equal(w.number, number);
   w.moveCoins([1], 1); w.labelCoins([1], { mark: 1 }); w.reset(); w.undo(); assert.equal(w.placements[0], 1); assert.equal(w.labels[1].mark, 1);
   w.changeDifficulty(1); solve(w); w.changeDifficulty(0); w.resetProgress();

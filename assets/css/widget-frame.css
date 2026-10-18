@@ -24,9 +24,6 @@
 .widget-frame .widget-switch input:checked + .widget-switch-track { background: var(--green); }
 .widget-frame .widget-switch input:checked + .widget-switch-track::before { transform: translateX(16px); }
 .widget-frame .widget-switch:has(input:focus-visible) .widget-switch-track { outline: 2px solid var(--green); outline-offset: 3px; }
-.puzzle-page:has(.widget-frame) .puzzle-shell { width: min(660px, 100%); }
-.puzzle-page:has(.widget-frame) .puzzle-heading { margin-bottom: 20px; }
-.puzzle-page:has(.widget-frame) .puzzle-heading h1 { font: 500 30px/1.3 var(--sans); letter-spacing: 0; }
 @media (max-width: 380px) {
   .widget-frame .widget-controls { gap: 6px; }
   .widget-frame .widget-controls .panel-button { gap: 5px; padding-inline: 8px; }

@@ -25,7 +25,7 @@ export function initializeKlotski(game, storage = createPuzzleStorage('klotski',
     button.className = `klotski-block${piece.id === 'target' ? ' klotski-target' : ''}`;
     button.dataset.klotskiBlock = piece.id;
     button.innerHTML = piece.id === 'target'
-      ? '<span><span class="klotski-target-arrow" aria-hidden="true">↓</span><span>Exit</span></span>'
+      ? '<span class="klotski-target-arrow" aria-hidden="true">↓</span>'
       : '';
     board.append(button); blocks.set(piece.id, button);
   }
@@ -48,9 +48,8 @@ export function initializeKlotski(game, storage = createPuzzleStorage('klotski',
     get('undo').disabled = !state.history.length;
     get('redo').disabled = !state.future.length;
     get('restart').disabled = isKlotskiStart(state);
-    get('status').textContent = state.won
-      ? `You found the way out! Solved in ${state.moves} ${state.moves === 1 ? 'move' : 'moves'}.`
-      : message || 'Slide blocks into empty space.';
+    get('status').textContent = state.won ? 'Solved.' : message;
+    get('status').hidden = !get('status').textContent;
     storage.save(serializeKlotski(state));
   }
 
@@ -62,7 +61,7 @@ export function initializeKlotski(game, storage = createPuzzleStorage('klotski',
   function move(direction, distance = 1) {
     if (!selected || state.won) return false;
     const next = slideKlotski(state, selected, direction, distance);
-    if (!next) { render('That way is blocked. Slide into an empty space.'); return false; }
+    if (!next) { render('Blocked.'); return false; }
     state = next; render();
     if (state.won) get('undo').focus({ preventScroll: true });
     return true;
@@ -177,11 +176,10 @@ export function initializeKlotski(game, storage = createPuzzleStorage('klotski',
   listen(get('undo'), 'click', undo);
   listen(get('redo'), 'click', redo);
   listen(get('restart'), 'click', () => {
-    releaseDrag(); board.classList.add('is-resetting');
+    releaseDrag();
     const next = resetKlotski(state);
     if (next) { state = next; selected = null; }
     render();
-    board.getBoundingClientRect(); board.classList.remove('is-resetting');
     if (document.activeElement === get('restart')) blocks.get('target').focus({ preventScroll: true });
   });
   const disposeProgress = initializeProgressReset(game, () => {

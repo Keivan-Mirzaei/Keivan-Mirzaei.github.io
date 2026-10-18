@@ -28,7 +28,8 @@ class Element {
   focus() { if (!this.disabled) this.ownerDocument.activeElement = this; }
   setAttribute(name, value) { this.attributes.set(name, value); }
   getAttribute(name) { return this.attributes.get(name) ?? null; }
-  closest(selector) { return selector === '[data-light]' && this.dataset.light !== undefined ? this : null; }
+  closest(selector) { return selector === '[data-light]' && this.dataset.light !== undefined || selector === '[data-glo-puzzle]' && this.dataset.gloPuzzle !== undefined ? this : null; }
+  replaceChildren(...children) { this.children = children; }
   querySelector(selector) { return selector === '.glo-step' ? this.marker : null; }
 }
 class Board extends Element {
@@ -177,15 +178,16 @@ test('directional navigation is shared across puzzle networks and regular grids'
   assert.equal(f.owner.activeElement.dataset.light, '1');
 });
 
-function numberedFixture(storage) {
+function numberedFixture(storage, catalogue = LIGHTS_OUT_CATALOGUE.map(level => level.slice(0, 3))) {
   const owner = new Element(); owner.body = new Element(owner); owner.activeElement = owner.body;
+  owner.createElement = () => { const element = new Element(owner); element.disabled = false; return element; };
   globalThis.document = owner;
-  const names = ['board', 'difficulty', 'difficulty-name', 'difficulty-label', 'level-detail', 'number', 'number-name', 'number-label', 'number-slider', 'numbers', 'board-name', 'moves', 'name', 'completed', 'remaining', 'undo', 'redo', 'restart', 'hint', 'hint-label', 'new', 'shuffle', 'status', 'preview', 'jump', 'open'];
+  const names = ['board', 'difficulty', 'difficulty-name', 'difficulty-label', 'level-detail', 'puzzles', 'page-prev', 'page-next', 'page-range', 'numbers', 'board-name', 'completed', 'undo', 'redo', 'restart', 'hint', 'hint-label', 'next', 'status'];
   const elements = Object.fromEntries(names.map(name => [name, name === 'board' ? new Board(owner) : new Element(owner)]));
   const root = new Element(owner);
   root.querySelector = selector => elements[selector.match(/data-glo-([^\]]+)/)?.[1]] || null;
   root.querySelectorAll = () => [];
-  const controller = initializeGraphLightsOut(root, { storage, catalogue: LIGHTS_OUT_CATALOGUE.map(level => level.slice(0, 3)) });
+  const controller = initializeGraphLightsOut(root, { storage, catalogue });
   return { root, elements, controller };
 }
 
@@ -193,8 +195,16 @@ test('the numbered puzzle keeps saved display preferences and exact Undo/Redo af
   let saved = null;
   const storage = { read: () => structuredClone(saved), save: state => { saved = structuredClone(state); }, setSnapshotProvider() {} };
   let f = numberedFixture(storage);
+  const feedback = f.elements.status.textContent;
+  assert.match(feedback, /^0 presses · /);
+  f.elements.board.lights[0].emit('pointerenter', { pointerType: 'mouse' });
+  assert.match(f.elements.status.textContent, /lights will flip/);
+  f.elements.board.lights[0].emit('pointerleave');
+  assert.equal(f.elements.status.textContent, feedback);
   f.elements.numbers.checked = true; f.elements.numbers.emit('change');
-  f.controller.press(0); const moved = f.controller.read(); f.elements.undo.click();
+  f.controller.press(0); const moved = f.controller.read();
+  assert.match(f.elements.status.textContent, /^1 press · /);
+  f.elements.undo.click();
   f.controller.destroy(); f = numberedFixture(storage);
   assert.equal(f.root.dataset.numbers, 'true'); assert.equal(f.elements.board.dataset.numbers, 'true');
   assert.equal(f.elements.redo.disabled, false); f.elements.redo.click();
@@ -207,8 +217,52 @@ test('the numbered puzzle keeps saved display preferences and exact Undo/Redo af
     f.controller.press(hint);
   }
   assert.ok(f.elements.board.lights.every(light => light.disabled));
-  assert.match(f.elements.status.textContent, /Solved in/);
+  assert.match(f.elements.status.textContent, /^\d+ press(?:es)? · Solved\./);
   f.elements.undo.click(); assert.equal(f.root.dataset.solved, 'false');
   f.elements.redo.click(); assert.equal(f.root.dataset.solved, 'true');
+  f.controller.destroy(); delete globalThis.document;
+});
+
+test('Next unsolved follows puzzle order, skips completions, wraps, and preserves Undo/Redo', () => {
+  const f = numberedFixture({ read: () => null, save() {}, setSnapshotProvider() {} });
+  const solve = () => {
+    while (f.root.dataset.solved !== 'true') {
+      f.elements.hint.click(); f.controller.press(f.controller.read().hint);
+    }
+  };
+  f.elements.next.click(); assert.equal(f.controller.read().number, 2);
+  solve();
+  f.elements.next.click(); assert.equal(f.controller.read().number, 3);
+  f.elements.next.click(); assert.equal(f.controller.read().number, 1);
+  f.controller.press(0); const before = f.controller.read();
+  f.elements.next.click(); assert.equal(f.controller.read().number, 3);
+  f.elements.undo.click(); assert.deepEqual(f.controller.read(), before);
+  f.elements.redo.click(); assert.equal(f.controller.read().number, 3);
+  solve();
+  f.elements.next.click(); assert.equal(f.controller.read().number, 1);
+  solve(); assert.equal(f.elements.next.disabled, true);
+  f.controller.destroy(); delete globalThis.document;
+});
+
+test('the picker shows 50 puzzles with result badges, selects replays, and resets its page with difficulty', () => {
+  const saved = { version: 1, difficulty: 0, sessions: [{ number: 51, completed: [1, 2], best: { 1: 2, 2: 4 } }] };
+  const f = numberedFixture({ read: () => saved, save() {}, setSnapshotProvider() {} }, LIGHTS_OUT_CATALOGUE.map(level => level.slice(0, 125)));
+  const entries = () => f.elements.puzzles.children;
+  assert.equal(entries().length, 50); assert.equal(f.elements['page-range'].textContent, '51–100 / 125');
+  assert.equal(entries()[0].getAttribute('aria-current'), 'true');
+  f.elements['page-prev'].click();
+  assert.equal(entries().length, 50); assert.equal(f.elements['page-range'].textContent, '1–50 / 125');
+  assert.equal(f.elements['page-prev'].disabled, true);
+  assert.deepEqual(entries().slice(0, 3).map(button => button.dataset.completion), ['minimum', 'solved', 'unsolved']);
+  const first = entries()[0]; first.focus(); f.elements.puzzles.emit('click', { target: first });
+  assert.equal(f.controller.read().number, 1); assert.equal(f.controller.read().moves, 0);
+  assert.equal(entries()[0], first); assert.equal(first.getAttribute('aria-current'), 'true');
+  assert.equal(first.dataset.completion, 'minimum');
+  f.elements['page-next'].click(); f.elements['page-next'].click();
+  assert.equal(entries().length, 25); assert.equal(f.elements['page-range'].textContent, '101–125 / 125');
+  assert.equal(f.elements['page-next'].disabled, true);
+  f.elements.difficulty.value = '2'; f.elements.difficulty.emit('change');
+  assert.equal(f.elements['page-range'].textContent, '1–50 / 125');
+  assert.ok(entries().every(button => button.dataset.completion === 'unsolved'));
   f.controller.destroy(); delete globalThis.document;
 });

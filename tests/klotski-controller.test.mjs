@@ -199,7 +199,8 @@ test('the visible solved state and disabled blocks follow winning, Undo, Redo, a
   f.root.emit('keydown', { target: f.block('target'), key: 'ArrowDown' });
   assert.equal(f.root.attributes.get('data-klotski-solved'), 'true');
   assert.equal(f.fields.board.classes.has('is-solved'), true);
-  assert.match(f.fields.status.textContent, /Solved in 1 move/);
+  assert.equal(f.fields.count.textContent, '1 move');
+  assert.equal(f.fields.status.textContent, 'Solved.');
   assert.ok(f.fields.board.children.every(block => block.disabled));
   f.action('undo');
   assert.equal(f.root.attributes.get('data-klotski-solved'), 'false');

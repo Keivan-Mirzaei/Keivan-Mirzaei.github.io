@@ -76,8 +76,8 @@ test('completion survives undo, revisits and reload; automatic navigation skips 
   book = createLightsOutBook(book.exportState(), smallCatalogue); book.resume(); assert.equal(book.number, 2);
   solve(book); book.open(1); assert.equal(book.currentCompleted, true); solve(book);
   assert.equal(book.completedCount, 2); book.advance(); assert.equal(book.number, 3);
-  book.open(1); assert.equal(book.shuffle(() => 0), true); assert.equal(book.number, 3);
-  solve(book); assert.equal(book.allCompleted, true); assert.equal(book.advance(), false); assert.equal(book.shuffle(), false);
+  book.open(1); assert.equal(book.advance(), true); assert.equal(book.number, 3);
+  solve(book); assert.equal(book.allCompleted, true); assert.equal(book.advance(), false);
   book.open(1); assert.equal(book.currentCompleted, true);
   book.changeDifficulty(3); assert.equal(book.completedCount, 0); assert.equal(book.canAdvance, true);
   book.changeDifficulty(0); assert.equal(book.allCompleted, true);
@@ -102,4 +102,48 @@ test('invalid saves and puzzle numbers cannot corrupt the book or board', () => 
   const legal = solvePresses(book.puzzle.graph, book.puzzle.start).solutions[0];
   const invalidHistory = createLightsOutGame(book.puzzle, { moves: [...vertices(legal, book.puzzle.graph.size), 0], future: [] });
   assert.equal(invalidHistory.moves, 0); assert.equal(invalidHistory.lights, book.puzzle.start);
+});
+
+test('best press counts distinguish ordinary and minimum solves and never regress on replay', () => {
+  let book = createLightsOutBook(null, smallCatalogue);
+  const longerSolve = () => {
+    const game = createLightsOutGame(book.puzzle);
+    game.press(0); game.press(0);
+    while (!game.solved) game.press(game.hint());
+    book.record(game.exportState(), true); return game;
+  };
+  const longer = longerSolve();
+  assert.deepEqual(book.result(1), { minimum: 2, best: 4, status: 'solved' });
+  longer.undo(); book.record(longer.exportState(), false);
+  assert.equal(book.result(1).best, 4);
+  book.open(1); solve(book);
+  assert.deepEqual(book.result(1), { minimum: 2, best: 2, status: 'minimum' });
+  book.open(1); longerSolve();
+  assert.equal(book.result(1).best, 2);
+  book = createLightsOutBook(book.exportState(), smallCatalogue);
+  assert.equal(book.result(1).status, 'minimum');
+  book.changeDifficulty(1); assert.equal(book.result(1).status, 'unsolved');
+  book.changeDifficulty(0); assert.equal(book.result(1).status, 'minimum');
+  assert.equal(book.result(0), null); assert.equal(book.result(4), null);
+});
+
+test('old completions survive and verified board/history snapshots recover minimum badges', () => {
+  const original = createLightsOutBook(null, smallCatalogue), first = solve(original).exportState();
+  original.open(2); solve(original);
+  const legacy = original.exportState();
+  legacy.sessions.forEach(session => { delete session.best; });
+  legacy.sessions[0].completed.push(3);
+  legacy.actions = { past: [{ difficulty: 0, number: 1, state: first }], future: [] };
+  const restored = createLightsOutBook(legacy, smallCatalogue);
+  assert.equal(restored.result(1).status, 'minimum');
+  assert.equal(restored.result(2).status, 'minimum');
+  assert.deepEqual(restored.result(3), { minimum: 2, best: null, status: 'solved' });
+});
+
+test('invalid stored best counts cannot award minimum badges', () => {
+  const book = createLightsOutBook({ version: 1, sessions: [{ number: 3, completed: [1], best: { 1: 1, 2: 4, 3: 10001, 4: 2, invalid: 2 } }] }, smallCatalogue);
+  assert.deepEqual(book.result(1), { minimum: 2, best: null, status: 'solved' });
+  assert.deepEqual(book.result(2), { minimum: 2, best: 4, status: 'solved' });
+  assert.equal(book.result(3).status, 'unsolved');
+  assert.deepEqual(book.exportState().sessions[0].best, { 2: 4 });
 });

@@ -1,4 +1,5 @@
 import { createPageEnvironment } from '../lib/page-environment.mjs';
+import { initializePuzzleList } from '../lib/puzzle-list.mjs';
 import { placementCells, occupiedCells, checkPlacement, key } from '../lib/tiling.mjs';
 
 import { DIFFICULTIES } from '../lib/tiling-arrangements.mjs';
@@ -13,9 +14,9 @@ import { setActionLabel } from '../lib/puzzle-controls.mjs';
 
 const colors = ['#c67b67', '#70968c', '#839bbc', '#c4a168', '#a68cad', '#8eaa72', '#b68d9e', '#769fac'];
 const reasonText = {
-  outside: 'That tile reaches beyond the floor. Choose another square.',
-  hole: 'That tile covers a missing square. Choose another square.',
-  overlap: 'Tiles cannot overlap. Choose a clear space or move the other tile first.',
+  outside: 'That tile reaches beyond the floor.',
+  hole: 'That tile covers a missing square.',
+  overlap: 'Tiles cannot overlap.',
 };
 
 function describeShape(cells) {
@@ -27,19 +28,16 @@ function describeShape(cells) {
 let nextInstance = 0;
 export function initializeTilingGame(root, storage = createPuzzleStorage('tiling', root), catalogue) {
   const get = name => root.querySelector(`[data-tiling-${name}]`);
-  const saved = storage.read(), play = createTilingWorkspace(saved, catalogue), events = new AbortController();
+  const play = createTilingWorkspace(storage.read(), catalogue), events = new AbortController();
   const listen = (element, name, callback) => element.addEventListener(name, callback, { signal: events.signal });
   const disposePanels = initializeWidgetPanels(root, root.ownerDocument || document);
   const prefix = `tiling-${++nextInstance}`;
-  for (const name of ['challenge', 'number']) {
-    get(name).id = `${prefix}-${name}`;
-    get(`${name}-name`)?.setAttribute('for', get(name).id);
-    get(`${name}-label`)?.setAttribute('for', get(name).id);
-  }
+  get('challenge').id = `${prefix}-challenge`;
+  get('challenge-name').setAttribute('for', get('challenge').id);
+  get('challenge-label').setAttribute('for', get('challenge').id);
   let book = play.book, game = play.game, selected = null;
-  let trayLayout = saved?.trayLayout === 'grid' ? 'grid' : 'scroll';
-  const snapshot = () => ({ ...play.exportState(), trayLayout });
-  storage.setSnapshotProvider(snapshot);
+  const puzzleList = initializePuzzleList(root, { prefix: 'tiling', read: () => book, select: openPuzzle });
+  storage.setSnapshotProvider(() => play.exportState());
   let anchor = null, boardCursor = game.level.floor[0], hintPreview = null;
   let drag = null, dragGhost = null, suppressClickUntil = 0, lastTap = null;
   const pieceFor = id => game.level.pieces.find(piece => piece.id === id);
@@ -59,6 +57,13 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     render(message || 'Choose a spot for this tile. The dot marks its anchor.');
   };
 
+  function updateTrayFades() {
+    const tray = get('tray'), left = tray.scrollLeft || 0;
+    const end = Math.max(0, (tray.scrollWidth || 0) - (tray.clientWidth || 0));
+    tray.style.setProperty('--fade-left', left > 1 ? 'transparent' : '#000');
+    tray.style.setProperty('--fade-right', left < end - 1 ? 'transparent' : '#000');
+  }
+
   function showChallenge() {
     const value = Number(get('challenge').value);
     const name = DIFFICULTIES[value - 1].name;
@@ -68,22 +73,8 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
   }
 
   function preview() {
-    const board = get('board');
-    board.querySelectorAll('.is-preview, .is-preview-invalid, .is-preview-anchor').forEach(cell => {
-      cell.classList.remove('is-preview', 'is-preview-invalid', 'is-preview-anchor');
-      cell.style.removeProperty('--preview-color');
-    });
     const position = currentPosition();
-    if (!position) { drawOutline(); return; }
-    const result = checkPlacement(game.level, game.placements, selected, position);
-    for (const [x, y] of result.cells) {
-      const cell = board.querySelector(`[data-tiling-cell="${key(x, y)}"]`);
-      if (!cell) continue;
-      cell.classList.add(result.valid ? 'is-preview' : 'is-preview-invalid');
-      cell.style.setProperty('--preview-color', colorFor(selected));
-    }
-    drawOutline(result);
-    if (result.valid) board.querySelector(`[data-tiling-cell="${key(...anchor)}"]`)?.classList.add('is-preview-anchor');
+    drawOutline(position ? checkPlacement(game.level, game.placements, selected, position) : null);
   }
 
   function drawOutline(preview = null) {
@@ -106,7 +97,6 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     const focusCell = hadFocus ? active.dataset?.tilingCell : null;
     const focusPiece = root.contains(active) ? active.dataset?.tilingPiece : null;
     const trayScroll = get('tray').scrollLeft || 0;
-    root.dataset.trayLayout = trayLayout; get('scroll-tiles').checked = trayLayout === 'scroll';
     const level = game.level, placed = game.placements, occupied = occupiedCells(level, placed);
     const floor = new Set(level.floor.map(([x, y]) => key(x, y)));
     const pieceAnchors = new Map(Object.entries(placed).map(([id, position]) => {
@@ -130,39 +120,26 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
       markup += `<button type="button" class="tiling-cell${id ? ' is-filled' : ''}${id === selected ? ' is-selected' : ''}" data-tiling-cell="${cellKey}"${id ? ` data-tiling-occupant="${id}"` : ''}${style} tabindex="${boardCursor[0] === x && boardCursor[1] === y ? '0' : '-1'}" aria-label="Row ${y + 1}, column ${x + 1}: ${id ? `tile ${labelFor(id)}${isAnchor ? ', anchor square' : ''}. Select tile ${labelFor(id)}; double tap to return it.` : 'empty floor. Place the selected tile here.'}"></button>`;
     }
     board.innerHTML = markup + `<svg class="tiling-board-outline" data-tiling-outline viewBox="0 0 ${level.width * 24} ${level.height * 24}" preserveAspectRatio="none" aria-hidden="true"></svg>`;
-    get('tray').style.setProperty('--tiling-tray-columns', Math.min(4, level.types.length));
-    get('tray').classList.toggle('has-few-types', level.types.length <= 3);
     get('tray').innerHTML = level.types.map(type => {
       const remaining = type.ids.filter(id => !placed[id]).length;
       const chosen = selected && labelFor(selected) === type.id;
-      return `<button class="tiling-piece${chosen ? ' is-selected' : ''}${remaining === 0 ? ' is-placed' : ''}" type="button" data-tiling-piece="${type.id}" style="--tile-color:${colorFor(type.ids[0])}" aria-pressed="${Boolean(chosen)}" aria-label="Tile ${type.id}, ${type.count} needed, ${remaining} left. ${remaining ? 'Select a copy to place.' : 'All copies placed. Select a copy to move or return.'} ${describeShape(type.cells)}"><span class="tiling-piece-art">${shapeMarkup(type.cells, colorFor(type.ids[0]), true)}</span><span class="tiling-piece-state">${remaining ? `${remaining} left` : '<span aria-hidden="true">✓</span> Placed'}</span></button>`;
+      return `<button class="tiling-piece${chosen ? ' is-selected' : ''}${remaining === 0 ? ' is-placed' : ''}" type="button" data-tiling-piece="${type.id}" style="--tile-color:${colorFor(type.ids[0])}" aria-pressed="${Boolean(chosen)}" aria-label="Tile ${type.id}, ${type.count} needed, ${remaining} left. ${remaining ? 'Select a copy to place.' : 'All copies placed. Select a copy to move or return.'} ${describeShape(type.cells)}"><span class="tiling-piece-art">${shapeMarkup(type.cells, colorFor(type.ids[0]), true)}</span><span class="tiling-piece-state">${remaining ? `×${remaining}` : '<span aria-hidden="true">✓</span> Placed'}</span></button>`;
     }).join('');
     get('tray').scrollLeft = trayScroll;
-    get('name').textContent = `Puzzle ${book.number} / ${book.total}${book.currentCompleted ? ' ✓' : ''}`;
-    get('name').title = book.currentCompleted ? 'Solved puzzle. Choose a puzzle.' : 'Choose a puzzle';
-    get('name').setAttribute('aria-label', `Puzzle ${book.number} of ${book.total}${book.currentCompleted ? ', solved' : ''}. Choose a puzzle.`);
+    updateTrayFades();
     get('completed').textContent = `${book.completedCount} / ${book.total} ${DIFFICULTIES[book.difficulty].name} puzzles solved`;
-    for (const name of ['number', 'number-slider']) {
-      get(name).value = String(book.number); get(name).max = String(book.total);
-    }
-    previewNumber(book.number);
-    get('number-label').textContent = `${book.number} / ${book.total}`;
-    get('progress').textContent = `${game.filled} / ${level.floor.length} filled`;
-    get('moves').textContent = `${game.moves} ${game.moves === 1 ? 'move' : 'moves'}`;
-    const remaining = level.pieces.length - Object.keys(placed).length;
-    get('tray-count').textContent = `${remaining} left`;
+    puzzleList.render();
     get('remove').disabled = !selected || !placed[selected];
     get('remove').hidden = get('remove').disabled;
     get('undo').disabled = !play.canUndo;
     get('redo').disabled = !play.canRedo;
-    get('reset').disabled = !game.moves;
+    get('reset').disabled = !game.filled;
     get('hint').disabled = game.solved;
     setActionLabel(get('hint'), hintPreview ? 'Hide hint' : 'Hint');
     get('hint-label').textContent = hintPreview ? 'Hide hint' : 'Hint';
     get('hint').setAttribute('aria-pressed', String(Boolean(hintPreview)));
     get('use-hint').hidden = !hintPreview; get('use-hint').disabled = !hintPreview;
-    get('refresh').disabled = !book.canRefresh;
-    get('next').hidden = !game.solved || !book.canRefresh; get('next').disabled = !book.canRefresh;
+    get('next').disabled = !book.canAdvance;
     get('status').textContent = game.solved
       ? book.allCompleted ? `All ${book.total} ${DIFFICULTIES[book.difficulty].name} puzzles complete!` : 'A perfect fit! Every floor square is filled.'
       : message || (selected ? 'Choose a spot for this tile.' : 'Choose a tile. Drag it, or tap its place on the floor.');
@@ -171,21 +148,25 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     if (focusCell) board.querySelector(`button[data-tiling-cell="${focusCell}"]`)?.focus({ preventScroll: true });
     else if (focusPiece) get('tray').querySelector(`[data-tiling-piece="${focusPiece}"]`)?.focus({ preventScroll: true });
     else if (hadFocus && (active.disabled || active.hidden)) {
-      const destination = game.solved ? get('refresh').disabled ? get('name') : get('refresh')
+      const destination = game.solved ? get('next').disabled ? get('undo') : get('next')
         : selected ? get('tray').querySelector(`[data-tiling-piece="${labelFor(selected)}"]`)
         : board.querySelector('button');
       destination?.focus({ preventScroll: true });
     }
-    storage.save(snapshot());
+    storage.save(play.exportState());
   }
 
-  function place(position = currentPosition()) {
+  function place(position = currentPosition(), { dragged = false } = {}) {
     if (!selected || !position) return false;
     const id = selected, result = play.place(id, position); game = play.game;
     hintPreview = null;
     if (!result.valid) {
-      render(reasonText[result.reason] || 'That tile does not fit there. Try another square.', true);
+      if (dragged) clearSelection();
+      render(`${reasonText[result.reason] || 'That tile does not fit there.'} ${dragged ? 'Choose a tile to try again.' : 'Try another square.'}`);
       return false;
+    }
+    if (dragged && !result.changed) {
+      clearSelection(); render('Tile unchanged. Choose a tile.'); return false;
     }
     const type = typeFor(id);
     selected = type.ids.find(copy => !game.placements[copy]) || null; anchor = null; lastTap = null;
@@ -193,10 +174,10 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     return true;
   }
 
-  function remove(id = selected) {
+  function remove(id = selected, { dragged = false } = {}) {
     if (!id || !play.remove(id)) return;
     game = play.game;
-    selected = id; anchor = null; hintPreview = null; lastTap = null;
+    selected = dragged ? null : id; anchor = null; hintPreview = null; lastTap = null;
     render(`Tile ${labelFor(id)} returned. Its copy is available in the tray again.`);
   }
 
@@ -230,22 +211,18 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     clearSelection(); showChallenge(); render();
   }
 
-  function refresh() {
+  function nextPuzzle() {
     endDrag();
-    if (!play.shuffle()) return;
+    if (!play.advance()) return;
     book = play.book; game = play.game;
     clearSelection(); render();
   }
 
-  function openPuzzle(event) {
-    event.preventDefault();
+  function openPuzzle(number) {
     endDrag();
-    if (Number(get('number').value) === book.number) { render('This puzzle is already open.'); return; }
-    if (!play.open(Number(get('number').value))) {
-      render(`Choose a puzzle from 1 to ${book.total}.`, true); get('number').focus(); return;
-    }
+    if (!play.open(number)) return;
     book = play.book; game = play.game;
-    clearSelection(); render(); get('name').focus({ preventScroll: true });
+    clearSelection(); render();
   }
 
   function restart() {
@@ -292,10 +269,7 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     const next = buttons[index + (event.key === 'ArrowRight' ? 1 : -1)];
     if (next) { event.preventDefault(); next.focus(); next.scrollIntoView?.({ block: 'nearest', inline: 'nearest' }); }
   });
-  listen(get('scroll-tiles'), 'change', () => {
-    endDrag(true); trayLayout = get('scroll-tiles').checked ? 'scroll' : 'grid'; render();
-  });
-  get('scroll-tiles').disabled = false;
+  listen(get('tray'), 'scroll', updateTrayFades);
   listen(get('board'), 'click', event => {
     if (performance.now() < suppressClickUntil) return;
     const cell = event.target.closest('[data-tiling-cell]');
@@ -344,7 +318,7 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
       return;
     }
     if ((event.key === 'Delete' || event.key === 'Backspace') && selected) { event.preventDefault(); remove(); }
-    else if (event.key === 'Escape' && selected) { event.preventDefault(); selected = null; anchor = null; hintPreview = null; lastTap = null; render('Selection cleared. Choose a tile to continue.'); }
+    else if (event.key === 'Escape' && selected) { event.preventDefault(); clearSelection(); render('Selection cleared. Choose a tile to continue.'); }
   });
 
   // Pointer drag is an extra convenience; every action is also available by tap and keyboard.
@@ -361,7 +335,7 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     if (!drag || drag.pointer !== event.pointerId) return;
     const dx = event.clientX - drag.startX, dy = event.clientY - drag.startY;
     if (!drag.active && Math.hypot(dx, dy) < 8) return;
-    if (!drag.active && drag.fromTray && trayLayout === 'scroll' && event.pointerType === 'touch' && Math.abs(dx) > Math.abs(dy)) {
+    if (!drag.active && drag.fromTray && event.pointerType === 'touch' && Math.abs(dx) > Math.abs(dy)) {
       drag = null; return;
     }
     if (!drag.active) {
@@ -400,10 +374,9 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     const current = drag;
     endDrag();
     if (!current.active) return;
-    suppressClickUntil = performance.now() + 350;
-    if (anchor) place();
-    else if (current.wasPlaced && current.outside) remove(current.id);
-    else { anchor = null; render('Drop onto a floor square to place the tile.'); }
+    if (anchor) place(currentPosition(), { dragged: true });
+    else if (current.wasPlaced && current.outside) remove(current.id, { dragged: true });
+    else { clearSelection(); render('Tile not placed. Choose a tile.'); }
   });
   listen(root, 'pointercancel', () => endDrag(true));
   listen(root, 'lostpointercapture', () => endDrag(true));
@@ -412,39 +385,30 @@ export function initializeTilingGame(root, storage = createPuzzleStorage('tiling
     const previous = drag;
     get('board').querySelectorAll('.is-drag-origin').forEach(cell => cell.classList.remove('is-drag-origin'));
     drag = null; dragGhost?.remove(); dragGhost = null; root.classList.remove('is-dragging');
+    if (previous.active) suppressClickUntil = performance.now() + 350;
     if (previous?.active && root.hasPointerCapture?.(previous.pointer)) root.releasePointerCapture(previous.pointer);
-    if (cancelled && previous?.active) { anchor = null; preview(); }
+    if (cancelled && previous?.active) { selected = null; anchor = null; hintPreview = null; lastTap = null; render('Tile not placed. Choose a tile.'); }
   }
 
-  function previewNumber(value) {
-    get('number-label').textContent = `${value} / ${book.total}`;
-    get('number-slider').setAttribute('aria-valuetext', `Puzzle ${value} of ${book.total}`);
-  }
   const disposeProgress = initializeProgressReset(root, () => {
     endDrag(true); play.resetProgress(); book = play.book; game = play.game;
     clearSelection(); get('challenge').value = String(book.difficulty + 1); showChallenge(); render(`${DIFFICULTIES[book.difficulty].name} progress reset. Start with puzzle 1.`);
   });
   listen(get('use-hint'), 'click', () => { if (hintPreview) place(hintPreview.position); });
-  listen(get('next'), 'click', refresh);
+  listen(get('next'), 'click', nextPuzzle);
   listen(get('remove'), 'click', () => { endDrag(); remove(); });
   listen(get('undo'), 'click', undo);
   listen(get('redo'), 'click', redo);
   listen(get('reset'), 'click', restart);
   listen(get('hint'), 'click', hint);
-  listen(get('refresh'), 'click', refresh);
-  listen(get('jump'), 'submit', openPuzzle);
-  listen(get('number-slider'), 'input', () => { get('number').value = get('number-slider').value; previewNumber(get('number').value); });
-  listen(get('number'), 'input', () => {
-    const value = Number(get('number').value);
-    if (Number.isInteger(value) && value >= 1 && value <= book.total) { get('number-slider').value = String(value); previewNumber(value); }
-  });
-  for (const name of ['number', 'number-slider', 'open']) get(name).disabled = false;
   listen(get('challenge'), 'input', showChallenge);
   listen(get('challenge'), 'change', changeDifficulty);
   get('challenge').disabled = false;
+  const trayResize = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(updateTrayFades);
+  trayResize?.observe(get('tray'));
   get('challenge').value = String(book.difficulty + 1); showChallenge(); render();
   return { get game() { return game; }, get selected() { return selected; }, get book() { return book; },
-    destroy() { endDrag(true); disposeProgress(); disposePanels(); events.abort(); },
+    destroy() { endDrag(true); trayResize?.disconnect(); puzzleList.destroy(); disposeProgress(); disposePanels(); events.abort(); },
   };
 }
 

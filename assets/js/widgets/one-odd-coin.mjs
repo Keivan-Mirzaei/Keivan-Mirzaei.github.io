@@ -1,4 +1,5 @@
 import { createPageEnvironment } from '../lib/page-environment.mjs';
+import { initializePuzzleList } from '../lib/puzzle-list.mjs';
 import { createPuzzleStorage } from '../lib/puzzle-storage.mjs';
 import { initializeWidgetPanels } from '../lib/widget-panels.mjs';
 import { initializeProgressReset } from '../lib/widget-progress.mjs';
@@ -10,9 +11,10 @@ const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 const coinList = coins => coins.join(', ');
 const entryMarkup = entry => `<li>${coinList(entry.left)} <span aria-label="against">vs</span> ${coinList(entry.right)} — <strong>${outcomeName(entry.outcome)}</strong></li>`;
 
-export function initializeOddCoin(root, { storage = createPuzzleStorage('one-odd-coin', root), random = Math.random, catalogue } = {}) {
+export function initializeOddCoin(root, { storage = createPuzzleStorage('one-odd-coin', root), catalogue } = {}) {
   const owner = root.ownerDocument, view = owner.defaultView, get = name => root.querySelector(`[data-oc-${name}]`);
   const play = createOddCoinWorkspace(storage.read(), catalogue), events = new AbortController();
+  const puzzleList = initializePuzzleList(root, { prefix: 'oc', read: () => ({ difficulty: play.difficulty, number: play.number, total: play.total, result: number => play.puzzleResult(number) }), select: number => change(() => play.open(number)), unit: 'weighing' });
   const listen = (element, type, callback) => element.addEventListener(type, callback, { signal: events.signal });
   const disposePanels = initializeWidgetPanels(root);
   let selection = new Set(), drag = null, suppressClickUntil = 0, scrollFrame = 0, dragFrame = 0, labelFrame = 0, noteOpen = false;
@@ -21,11 +23,9 @@ export function initializeOddCoin(root, { storage = createPuzzleStorage('one-odd
   get('label-panel').id = `${prefix}-labels`;
   get('note-entry').id = `${prefix}-note`;
   get('note-toggle').setAttribute('aria-controls', get('note-entry').id);
-  for (const name of ['difficulty', 'number']) {
-    get(name).id = `${prefix}-${name}`;
-    get(`${name}-name`).setAttribute('for', get(name).id);
-    get(`${name}-label`).setAttribute('for', get(name).id);
-  }
+  get('difficulty').id = `${prefix}-difficulty`;
+  get('difficulty-name').setAttribute('for', get('difficulty').id);
+  get('difficulty-label').setAttribute('for', get('difficulty').id);
   storage.setSnapshotProvider(() => play.exportState());
   const setText = (name, value) => { if (get(name).textContent !== value) get(name).textContent = value; };
   const reducedMotion = () => view.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -77,10 +77,6 @@ export function initializeOddCoin(root, { storage = createPuzzleStorage('one-odd
     if (capacity.childElementCount !== puzzle.coins) capacity.replaceChildren(...Array.from({ length: puzzle.coins }, () => {
       const slot = owner.createElement('span'); slot.className = 'oc-coin-slot'; return slot;
     }));
-    setText('name', `${level.name} · Puzzle ${play.number}${play.currentCompleted ? ' ✓' : ''}`);
-    get('name').setAttribute('aria-label', `Puzzle ${play.number} of ${play.total}, ${level.name}${play.currentCompleted ? ', completed' : ''}. Choose a puzzle.`);
-    setText('used', String(play.used)); setText('minimum', String(play.minimum));
-    get('minimum').title = `Minimum: ${plural(play.minimum, 'weighing')}`;
     setText('rule', `${puzzle.coins} coins · one ${puzzle.kind === 'unknown' ? 'heavier or lighter' : puzzle.kind === 'heavy' ? 'heavier' : 'lighter'}`);
     get('clues').hidden = !puzzle.genuine.length && !puzzle.evidence.length;
     get('genuine').hidden = !puzzle.genuine.length;
@@ -90,8 +86,9 @@ export function initializeOddCoin(root, { storage = createPuzzleStorage('one-odd
     const reply = terminal ? `Correct. ${stateName(play.answer)}.`
         : result ? `${outcomeName(result.outcome)}.`
           : valid ? 'Ready to weigh.' : left.length || right.length ? 'Put the same number of coins on each pan.'
-            : 'Drag coins onto the pans, then weigh.';
-    setText('status', message || reply);
+            : !log.length && puzzle.evidence.length ? 'See the given weighings below.'
+              : `Find the ${puzzle.kind === 'unknown' ? 'heavier or lighter' : puzzle.kind === 'heavy' ? 'heavier' : 'lighter'} coin.`;
+    setText('status', `${plural(play.used, 'weighing')} · Minimum ${play.minimum} · ${message || reply}`);
     get('scale').dataset.outcome = String(result?.outcome || 0);
     const wrappers = new Map([...root.querySelectorAll('[data-oc-wrap]')].map(node => [Number(node.dataset.ocWrap), node]));
     for (let coin = 1; coin <= puzzle.coins; coin++) {
@@ -151,29 +148,25 @@ export function initializeOddCoin(root, { storage = createPuzzleStorage('one-odd
     get('clear').disabled = !values.some(Boolean) || terminal;
     get('validate').disabled = terminal;
     get('validate').title = only ? `Validate coin ${only}${[-1, 1].includes(selectedWeight) ? ` as ${selectedWeight === 1 ? 'heavier' : 'lighter'}` : ''}` : 'Select the odd coin, then validate';
-    get('next').hidden = get('replay').hidden = get('summary').hidden = !terminal;
-    get('next').disabled = play.completedCount === play.total; get('replay').disabled = !terminal;
+    get('replay').hidden = !terminal;
+    get('next').disabled = !play.canAdvance; get('replay').disabled = !terminal;
     setText('replay', play.used > play.minimum ? `Try in ${play.minimum}` : 'Replay');
-    setText('score', play.used > play.minimum ? `You used ${plural(play.used, 'weighing')}. The minimum is ${play.minimum}. Try again to match it.`
-      : `Solved in ${plural(play.used, 'weighing')} — the minimum.`);
-    get('history').hidden = !log.length; get('log').innerHTML = log.map(entryMarkup).join('');
-    setText('log-count', `(${log.length})`);
+    get('history').hidden = !log.length && !puzzle.evidence.length && !puzzle.genuine.length;
+    get('log').innerHTML = log.map(entryMarkup).join('');
+    setText('log-count', log.length + puzzle.evidence.length ? `(${log.length + puzzle.evidence.length})` : '');
     get('undo').disabled = !play.canUndo; get('redo').disabled = !play.canRedo;
     get('reset').disabled = !log.length && !values.some(Boolean) && !Object.keys(labels).length;
     get('hint').disabled = terminal;
-    get('shuffle').disabled = play.completedCount >= play.total - (play.currentCompleted ? 0 : 1);
     get('difficulty').value = String(play.difficulty + 1); setText('difficulty-label', level.name); setText('level-detail', level.detail);
     root.querySelector('[data-widget-progress-scope]').textContent = level.name;
-    for (const name of ['number', 'number-slider']) { get(name).value = String(play.number); get(name).max = String(play.total); }
-    setText('number-label', `${play.number} / ${play.total}`);
-    get('number-slider').setAttribute('aria-valuetext', `Puzzle ${play.number} of ${play.total}`);
+    puzzleList.render();
     setText('completed', `${play.completedCount} / ${play.total} ${level.name} puzzles solved`);
     queueLabels();
     storage.save(play.exportState());
   }
 
   function motionElements() {
-    return [...root.querySelectorAll('[data-oc-wrap], .oc-column, .oc-pedestal, .oc-scale-weigh, .oc-pan-bowl, .oc-suspension, .oc-tray-art, .oc-tray-heading, .oc-feedback, .oc-weigh-actions, .oc-controls, .oc-history')];
+    return [...root.querySelectorAll('[data-oc-wrap], .oc-column, .oc-pedestal, .oc-scale-weigh, .oc-pan-bowl, .oc-suspension, .oc-tray-art, .oc-tray-heading, .oc-weigh-actions, .oc-history')];
   }
   function change(action, message = '', motion = false, origin = null, keepSelection = false) {
     // Capture the visible position before cancelling an interrupted animation.
@@ -262,6 +255,7 @@ export function initializeOddCoin(root, { storage = createPuzzleStorage('one-odd
   });
   listen(root, 'keydown', event => {
     if (event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.key === 'Escape' && root.querySelector('[data-widget-panel-trigger][aria-expanded="true"]')) return;
     if (event.key === 'Escape' && drag) { event.preventDefault(); suppressClickUntil = Date.now() + 250; finishDrag(); return; }
     if (event.key === 'Escape' && selection.size) {
       event.preventDefault(); const coin = [...selection].at(-1); selection.clear(); render(); focusCoin(coin); return;
@@ -306,7 +300,7 @@ export function initializeOddCoin(root, { storage = createPuzzleStorage('one-odd
     }
     selection.clear(); noteOpen = false; render();
     if (!reducedMotion()) { const coin = root.querySelector('.is-answer'); if (coin) animate(coin, [{ transform: 'scale(1)' }, { transform: 'scale(1.12)' }, { transform: 'scale(1)' }], { duration: 650, easing: 'ease-in-out' }); }
-    get('next').focus({ preventScroll: true });
+    (get('next').disabled ? get('undo') : get('next')).focus({ preventScroll: true });
   });
   root.querySelectorAll('[data-oc-mark]').forEach(button => listen(button, 'click', () => {
     const mark = button.getAttribute('aria-pressed') === 'true' ? null : Number(button.dataset.ocMark);
@@ -327,21 +321,8 @@ export function initializeOddCoin(root, { storage = createPuzzleStorage('one-odd
   }
   listen(get('reset'), 'click', restart);
   listen(get('replay'), 'click', restart);
-  listen(get('shuffle'), 'click', () => change(() => play.next(random)));
   listen(get('next'), 'click', () => change(() => play.next()));
   listen(get('difficulty'), 'change', () => change(() => play.changeDifficulty(Number(get('difficulty').value) - 1)));
-  listen(get('jump'), 'submit', event => {
-    event.preventDefault(); const number = Number(get('number').value);
-    if (!Number.isInteger(number) || number < 1 || number > play.total) { render(`Choose a puzzle number from 1 to ${play.total}.`); return; }
-    change(() => play.open(number));
-  });
-  function previewNumber(value) {
-    if (!Number.isInteger(value) || value < 1 || value > play.total) return;
-    get('number').value = get('number-slider').value = String(value);
-    setText('number-label', `${value} / ${play.total}`); get('number-slider').setAttribute('aria-valuetext', `Puzzle ${value} of ${play.total}`);
-  }
-  listen(get('number-slider'), 'input', () => previewNumber(Number(get('number-slider').value)));
-  listen(get('number'), 'input', () => previewNumber(Number(get('number').value)));
   const disposeProgress = initializeProgressReset(root, () => { play.resetProgress(); selection.clear(); render(`${ODD_COIN_LEVELS[play.difficulty].name} progress reset.`); });
 
   function finishDrag() {
@@ -429,9 +410,9 @@ export function initializeOddCoin(root, { storage = createPuzzleStorage('one-odd
   listen(owner, 'pointercancel', event => { if (drag?.id === event.pointerId) { suppressClickUntil = Date.now() + 250; finishDrag(); } });
   listen(root, 'lostpointercapture', () => finishDrag());
   listen(owner, 'keydown', event => { if (event.key === 'Escape' && drag) { event.preventDefault(); suppressClickUntil = Date.now() + 250; finishDrag(); } });
-  for (const name of ['difficulty', 'number', 'number-slider', 'open']) get(name).disabled = false;
+  get('difficulty').disabled = false;
   render();
-  return { workspace: play, render, destroy() { finishDrag(); if (labelFrame) view.cancelAnimationFrame(labelFrame); labelObserver.disconnect(); animations.forEach(animation => animation.cancel()); animations.clear(); events.abort(); disposeProgress(); disposePanels(); } };
+  return { workspace: play, render, destroy() { finishDrag(); if (labelFrame) view.cancelAnimationFrame(labelFrame); labelObserver.disconnect(); animations.forEach(animation => animation.cancel()); animations.clear(); puzzleList.destroy(); events.abort(); disposeProgress(); disposePanels(); } };
 }
 
 export function mount(root) {

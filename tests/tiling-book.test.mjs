@@ -47,19 +47,19 @@ test('solved puzzles are skipped until deliberately opened, including after undo
   assert.equal(book.completedCount, 1); assert.equal(book.currentCompleted, true);
   book = createPuzzleBook(book.exportState(), smallCatalogue);
   for (let count = 0; count < 10; count++) {
-    assert.equal(book.next(() => 0), true); assert.notEqual(book.number, 1);
+    assert.equal(book.next(), true); assert.notEqual(book.number, 1);
     assert.notEqual(arrangementFingerprint(book.level), arrangementFingerprint(completed));
   }
   assert.equal(book.open(1), true); assert.deepEqual(book.level, completed); assert.equal(book.state, null);
   assert.equal(book.currentCompleted, true); solve(book); assert.equal(book.completedCount, 1);
 });
 
-test('finishing a difficulty stops shuffle and still permits numbered replays and other difficulties', () => {
+test('finishing a difficulty stops Next unsolved and still permits numbered replays and other difficulties', () => {
   const book = createPuzzleBook(null, smallCatalogue);
   for (let number = 1; number <= 3; number++) { book.open(number); solve(book); }
-  assert.equal(book.allCompleted, true); assert.equal(book.canRefresh, false); assert.equal(book.next(), false);
+  assert.equal(book.allCompleted, true); assert.equal(book.canAdvance, false); assert.equal(book.next(), false);
   book.open(1); assert.equal(book.currentCompleted, true); assert.equal(book.next(), false);
-  book.changeDifficulty(3); assert.equal(book.completedCount, 0); assert.equal(book.canRefresh, true);
+  book.changeDifficulty(3); assert.equal(book.completedCount, 0); assert.equal(book.canAdvance, true);
   book.changeDifficulty(0); assert.equal(book.allCompleted, true);
 });
 

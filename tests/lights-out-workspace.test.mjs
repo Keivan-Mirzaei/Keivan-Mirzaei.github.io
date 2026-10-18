@@ -17,23 +17,23 @@ test('board Reset restores the start and Undo/Redo preserve the exact completed 
   assert.equal(play.redo(), true); assert.equal(play.game.moves, 0);
 });
 
-test('Shuffle and puzzle navigation preserve settings, progress, and an undoable board', () => {
+test('next unsolved and puzzle navigation preserve settings, progress, and an undoable board', () => {
   const play = createLightsOutWorkspace(null, catalogue); play.press(0); const before = position(play);
-  play.shuffle(() => .99); assert.equal(play.book.number, 3);
+  play.advance(); assert.equal(play.book.number, 2);
   play.undo(); assert.deepEqual(position(play), before);
-  play.redo(); assert.equal(play.book.number, 3);
+  play.redo(); assert.equal(play.book.number, 2);
   play.changeDifficulty(2); assert.equal(play.book.difficulty, 2);
   play.open(2); const chosen = position(play);
   const saved = play.exportState(), reloaded = createLightsOutWorkspace(saved, catalogue);
   assert.deepEqual(position(reloaded), chosen);
   reloaded.undo(); assert.equal(reloaded.book.number, 1); assert.equal(reloaded.book.difficulty, 2);
-  reloaded.undo(); assert.equal(reloaded.book.number, 3); assert.equal(reloaded.book.difficulty, 0);
+  reloaded.undo(); assert.equal(reloaded.book.number, 2); assert.equal(reloaded.book.difficulty, 0);
 });
 
 test('new presses discard a navigation Redo branch and solved records survive Undo', () => {
   const play = createLightsOutWorkspace(null, catalogue); solve(play);
   play.undo(); assert.equal(play.game.solved, false); assert.equal(play.book.completedCount, 1);
-  play.shuffle(() => 0); play.undo(); play.press(play.game.hint());
+  play.advance(); play.undo(); play.press(play.game.hint());
   assert.equal(play.canRedo, false); assert.equal(play.book.completedCount, 1);
 });
 
@@ -46,6 +46,8 @@ test('Reset progress clears only the selected difficulty and preserves other boa
   assert.equal(play.book.difficulty, 2); assert.equal(play.book.number, 1); assert.equal(play.game.moves, 0);
   const saved = play.exportState();
   assert.deepEqual(saved.sessions[2].completed, []); assert.equal(saved.sessions[2].number, 1);
+  assert.deepEqual(saved.sessions[2].best, {});
+  assert.equal(saved.sessions[0].best[1], 2);
   for (const index of [0, 1, 3]) assert.deepEqual(saved.sessions[index], before.sessions[index]);
   for (const name of ['past', 'future']) assert.deepEqual(saved.actions[name], before.actions[name].filter(entry => entry.difficulty !== 2));
   const restored = createLightsOutWorkspace(saved, catalogue);

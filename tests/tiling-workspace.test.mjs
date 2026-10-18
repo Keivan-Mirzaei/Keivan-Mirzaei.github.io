@@ -7,24 +7,24 @@ import { createGame } from '../assets/js/lib/tiling.mjs';
 const solve = play => {
   for (const piece of play.game.level.pieces) assert.equal(play.place(piece.id, play.game.level.solution[piece.id]).valid, true);
 };
-const state = play => ({ difficulty: play.book.difficulty, number: play.book.number, placements: play.game.placements, moves: play.game.moves, solved: play.game.solved });
+const state = play => ({ difficulty: play.book.difficulty, number: play.book.number, placements: play.game.placements, solved: play.game.solved });
 
-test('Reset is one reversible action, including completion, placements and counts', () => {
+test('Reset is one reversible action preserving completion and placements', () => {
   const play = createTilingWorkspace(); solve(play);
   const completed = state(play);
   assert.equal(play.book.completedCount, 1);
-  assert.equal(play.reset(), true); assert.equal(play.game.filled, 0); assert.equal(play.game.moves, 0);
+  assert.equal(play.reset(), true); assert.equal(play.game.filled, 0);
   assert.equal(play.undo(), true); assert.deepEqual(state(play), completed);
   assert.equal(play.redo(), true); assert.equal(play.game.filled, 0);
   assert.equal(play.book.completedCount, 1);
   play.undo(); play.undo(); assert.equal(play.game.solved, false); assert.equal(play.book.completedCount, 1);
 });
 
-test('Shuffle, number changes and difficulty changes restore exact boards across saving', () => {
+test('Next unsolved, number changes and difficulty changes restore exact boards across saving', () => {
   let play = createTilingWorkspace();
   play.place('A', play.game.level.solution.A);
   const first = state(play);
-  play.shuffle(() => .4); const second = state(play);
+  play.advance(); const second = state(play);
   assert.notEqual(second.number, first.number);
   play.undo(); assert.deepEqual(state(play), first);
   play = createTilingWorkspace(play.exportState());
@@ -96,4 +96,48 @@ test('corrupt history is rejected and storage stays bounded without nested move 
   const current = state(play);
   saved.actions.past.push({ difficulty: 0, number: 1, state: { placements: { A: { x: -1, y: 0 } }, moves: 1 } });
   play = createTilingWorkspace(saved); assert.deepEqual(state(play), current); assert.equal(play.canUndo, false);
+});
+
+test('every completed floor is solved regardless of retries, replays, Undo or reload', () => {
+  let play = createTilingWorkspace();
+  play.place('A', play.game.level.solution.A); play.remove('A'); solve(play);
+  assert.deepEqual(play.book.result(1), { status: 'solved' });
+  play.undo(); assert.equal(play.book.result(1).status, 'solved');
+  play.reset(); solve(play);
+  assert.deepEqual(play.book.result(1), { status: 'solved' });
+  play.reset(); play.place('A', play.game.level.solution.A); play.remove('A'); solve(play);
+  assert.deepEqual(play.book.result(1), { status: 'solved' });
+  play = createTilingWorkspace(play.exportState());
+  assert.equal(play.book.result(1).status, 'solved');
+  play.changeDifficulty(1); assert.equal(play.book.result(1).status, 'unsolved');
+  play.changeDifficulty(0); play.resetProgress(); assert.equal(play.book.result(1).status, 'unsolved');
+});
+
+test('older move scores and saved histories retain completion and placements without keeping counters', () => {
+  const game = createGame();
+  for (const piece of game.level.pieces) game.place(piece.id, game.level.solution[piece.id]);
+  const completed = game.placements;
+  const saved = { version: 2, difficulty: 0, sessions: { 0: { number: 1, replaying: true, completed: [], best: { 2: 9, 3: 4 },
+    state: { ...game.exportState(), moves: 0 } } },
+    actions: { past: [{ difficulty: 0, number: 1, state: { placements: { A: completed.A }, moves: 1 } }], future: [] } };
+  let play = createTilingWorkspace(saved);
+  assert.equal(play.game.solved, true); assert.equal(play.book.completedCount, 3);
+  for (const number of [1, 2, 3]) assert.deepEqual(play.book.result(number), { status: 'solved' });
+  play.undo(); assert.deepEqual(play.game.placements, { A: completed.A });
+  play.redo(); assert.deepEqual(play.game.placements, completed); assert.equal(play.game.solved, true);
+  const exported = play.exportState();
+  assert.equal(exported.version, 3); assert.doesNotMatch(JSON.stringify(exported), /"(?:moves|best)":/);
+  play = createTilingWorkspace(exported);
+  assert.deepEqual(play.game.placements, completed); assert.equal(play.book.completedCount, 3);
+  play.undo(); assert.deepEqual(play.game.placements, { A: completed.A });
+});
+
+test('Next unsolved advances in order, skips completed floors and wraps without losing Undo', () => {
+  const play = createTilingWorkspace();
+  play.open(2); solve(play); play.advance(); assert.equal(play.book.number, 3);
+  play.open(1000); play.advance(); assert.equal(play.book.number, 1);
+  play.place('A', play.game.level.solution.A); const before = state(play);
+  play.advance(); assert.equal(play.book.number, 3);
+  play.undo(); assert.deepEqual(state(play), before);
+  play.redo(); assert.equal(play.book.number, 3);
 });

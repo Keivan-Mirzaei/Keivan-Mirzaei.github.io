@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { initialPose, makePointSet, classify, keepCrossing, lineDelta, boundedMotion, clipHalfPlane } from '../assets/js/lib/four-equal-regions.mjs';
+import { initialPose, makePointSet, classify, lineDelta, boundedMotion, clipHalfPlane } from '../assets/js/lib/four-equal-regions.mjs';
 import { createFourRegionsWorkspace, REGIONS_HISTORY_LIMIT } from '../assets/js/lib/four-regions-workspace.mjs';
 
 test('every supported point count produces deterministic, spaced, unsolved sets with an exact equal partition', () => {
@@ -28,8 +28,7 @@ test('classification counts line points separately and is invariant under rotati
   assert.deepEqual(classify(set.points.map(rotate), { ...rotate(solved), a: solved.a + angle, b: solved.b + angle }), classify(set.points, solved));
 });
 
-test('independent lines remain separated, movement stays bounded, and clipped regions cover the field', () => {
-  for (const angle of [-9, -.01, 0, .01, 9]) assert.ok(Math.abs(lineDelta(keepCrossing(angle, 0, .8))) >= Math.PI / 15 - 1e-9);
+test('movement stays bounded and clipped regions cover the field', () => {
   const moved = boundedMotion(initialPose(), 900, -900); assert.ok(Math.abs(moved.x) <= .78 && Math.abs(moved.y) <= .45);
   const square = [{ x: -1, y: -1 }, { x: 1, y: -1 }, { x: 1, y: 1 }, { x: -1, y: 1 }];
   const area = polygon => Math.abs(polygon.reduce((sum, p, i) => { const q = polygon[(i + 1) % polygon.length]; return sum + p.x * q.y - q.x * p.y; }, 0)) / 2;
@@ -47,16 +46,34 @@ test('many preview frames form one action and completion is removed and restored
   const cancelling = play.capture(); play.previewPose(initialPose()); play.cancel(cancelling); assert.equal(play.solved, true);
 });
 
-test('Shuffle, Reset and mode changes preserve settings, reverse exactly, and survive saving', () => {
-  let play = createFourRegionsWorkspace(); play.setPerpendicular(false);
+test('Shuffle and Reset preserve the point count, reverse exactly, and survive saving', () => {
+  let play = createFourRegionsWorkspace(); play.changeN(3);
   const before = play.capture(), points = play.points; play.shuffle(); const shuffled = play.capture();
-  assert.equal(play.perpendicular, false); assert.notDeepEqual(play.points, points);
+  assert.equal(play.n, 3); assert.notDeepEqual(play.points, points);
   play = createFourRegionsWorkspace(play.exportState()); play.undo(); assert.deepEqual(play.capture(), before);
   play.redo(); assert.deepEqual(play.capture(), shuffled);
   const edit = play.capture(); play.previewPose({ ...play.pose, x: .3 }); play.commit(edit);
-  const moved = play.capture(); play.reset(); assert.equal(play.perpendicular, false);
+  const moved = play.capture(); play.reset(); assert.equal(play.n, 3);
   play.undo(); assert.deepEqual(play.capture(), moved); play.redo(); assert.deepEqual(play.pose, initialPose());
-  play.setPerpendicular(true); play.undo(); assert.equal(play.perpendicular, false);
+});
+
+test('old independent games and history become perpendicular while keeping their point sets and positions', () => {
+  const seed = 71084239, pose = { x: .3, y: -.2, a: .8, b: .4 };
+  const saved = { version: 1, n: 6, perpendicular: false,
+    sessions: { 6: { seed, pose }, 3: { seed: 731, pose: { ...pose, x: -.4 } } },
+    actions: { past: [true, false].map(perpendicular => ({ n: 6, perpendicular, seed, pose: initialPose() })),
+      future: [{ n: 6, perpendicular: false, seed, pose: { ...pose, x: .5 } }] } };
+  let play = createFourRegionsWorkspace(saved);
+  const migrated = play.capture();
+  assert.equal(migrated.seed, seed); assert.equal(play.pose.x, pose.x); assert.equal(play.pose.y, pose.y); assert.equal(play.pose.a, pose.a);
+  const assertPerpendicular = () => assert.ok(Math.abs(Math.abs(lineDelta(play.pose.a - play.pose.b)) - Math.PI / 2) < 1e-9);
+  assertPerpendicular(); assert.equal(play.exportState().actions.past.length, 1);
+  play.undo(); assert.deepEqual(play.pose, initialPose()); assertPerpendicular();
+  play.redo(); assert.deepEqual(play.capture(), migrated); assertPerpendicular();
+  play.redo(); assert.equal(play.pose.x, .5); assertPerpendicular();
+  play.changeN(3); assert.equal(play.pose.x, -.4); assert.equal(play.capture().seed, 731); assertPerpendicular();
+  const exported = play.exportState(); assert.equal(exported.version, 2); assert.equal('perpendicular' in exported, false);
+  play = createFourRegionsWorkspace(exported); assert.deepEqual(play.exportState(), exported); assertPerpendicular();
 });
 
 test('each n resumes its point set and Reset progress clears only that n, including its old histories', () => {
@@ -74,6 +91,8 @@ test('corrupt saves are ignored, no-op edits preserve Redo, and history is bound
   const play = createFourRegionsWorkspace(); play.shuffle(); play.undo();
   assert.equal(play.commit(play.capture()), false); assert.equal(play.canRedo, true);
   assert.equal(play.previewPose({ ...play.pose, x: 100 }), false);
+  const pose = play.pose;
+  assert.equal(play.previewPose({ ...pose, b: pose.b + .2 }), false); assert.deepEqual(play.pose, pose);
   assert.equal(play.changeN(13), false);
   for (let i = 0; i < REGIONS_HISTORY_LIMIT + 10; i++) play.shuffle();
   const saved = play.exportState(); assert.equal(saved.actions.past.length, REGIONS_HISTORY_LIMIT);
