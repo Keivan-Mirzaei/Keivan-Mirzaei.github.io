@@ -1,0 +1,4 @@
+one-odd-coin:
+  script: /assets/js/widgets/one-odd-coin.mjs
+  selector: '[data-odd-coin]'
+  styles: [widget-frame, one-odd-coin, puzzle-game]

@@ -67,7 +67,6 @@ Only recurring tools remain in `scripts/`:
 | `check_site.py` | Validate links, headings, images, search, feed, sitemap, exclusions, and unused assets, including imported modules and computed sound URLs |
 | `lights_out_catalogue.mjs` | Rebuild the deterministic Lights Out puzzle catalogue |
 | `tiling_catalogue.mjs` | Rebuild the deterministic tiling puzzle catalogue |
-| `odd_coin_catalogue.mjs` | Rebuild the deterministic One Odd Coin puzzle catalogue |
 
 Puzzle numbers are tied to saved progress. Regenerate a catalogue only for an intentional catalogue change; ordinary content editing does not require it. `tests/` checks the maintained mathematics, controllers, storage, navigation, authoring, and asset versions. Keep tests for retained behavior.
 
@@ -80,3 +79,7 @@ The three guides in `docs/` and three starter files in `docs/templates/` are mai
 `_site/`, `.jekyll-cache/`, and Python caches can be removed when no build is running. They return as needed. Build and check using the commands in [README](../README.md#check-and-publish). For a site with a nonempty `baseurl`, pass it after the destination to both build scripts, for example `python3 scripts/check_site.py _site /repository`.
 
 Before removing a page or asset, search for its filename and URL in content, data, templates, imports, and styles. Keep linked downloads and compatibility URLs. When removing an unused activity, remove its registry entry and dedicated tests too, then rebuild and check the remaining site.
+
+## Graveyard
+
+`graveyard/` is excluded from publication. `graveyard/one-odd-coin/` preserves the retired One Odd Coin puzzle, its dedicated assets, catalogue generator, tests, and registry entries. Its README explains how to restore it.

@@ -28,6 +28,8 @@ export function mountWidgets(root, descriptors) {
         loading = false;
         console.warn('Activity could not load:', error);
         for (const target of targets) {
+          const status = target.querySelector('.game-status');
+          if (status) status.textContent = 'The game could not load. Use Retry activity to try again.';
           if (target.querySelector('[data-widget-retry]')) continue;
           const retry = document.createElement('button');
           retry.type = 'button'; retry.className = 'panel-button'; retry.dataset.widgetRetry = ''; retry.textContent = 'Retry activity';

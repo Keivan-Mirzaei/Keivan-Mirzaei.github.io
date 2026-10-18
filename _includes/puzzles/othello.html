@@ -1,0 +1,47 @@
+<section class="othello-game widget-frame puzzle-game" data-othello-game aria-label="Othello game">
+  <h1>Othello</h1>
+  <div class="game-canvas">
+    <div class="game-surface">
+      <div class="othello-players" aria-label="Players">
+        <span><i class="othello-disc is-black" aria-hidden="true"></i><span data-othello-black-name>Black · You</span></span>
+        <span><i class="othello-disc is-white" aria-hidden="true"></i><span data-othello-white-name>White · Computer</span></span>
+      </div>
+      <div class="othello-board" data-othello-board role="group" aria-label="Othello board, eight rows and eight columns"><p>Black starts. Place a disc to enclose a line of white discs between yours.</p></div>
+    </div>
+    <div class="game-footer">
+      <p class="game-status" data-othello-status role="status" aria-live="polite" aria-atomic="true">Loading Othello…</p>
+      <div class="game-controls" role="group" aria-label="Game controls">
+        {% include controls/game-action.html game='othello' action='undo' icon='undo' title='Undo' label='Undo your turn' %}
+        {% include controls/game-action.html game='othello' action='redo' icon='redo' title='Redo' label='Redo your turn' %}
+        {% include controls/game-action.html game='othello' action='reset' icon='restart' title='Reset' label='Reset board' %}
+        {% include controls/game-action.html icon='settings' title='Settings' panel='settings' %}
+        {% include controls/game-action.html icon='help' title='How to play' panel='info' %}
+      </div>
+    </div>
+  </div>
+  <div class="widget-support-panel game-help" data-widget-panel="info" aria-label="How to play" hidden>
+    <h2>How to play</h2>
+    <p>Black plays first. Place a disc on a marked square to trap one or more opposing discs between the new disc and another of your colour. Every trapped line flips, horizontally, vertically, and diagonally.</p>
+    <p>If a player has no legal move, their turn passes automatically. When neither player can move, the player with more discs wins; equal counts are a draw.</p>
+    <p>Dashed circles mark legal moves; four small green corners mark the last square played. Use arrow keys to explore the board and Enter or Space to play. Corners cannot be flipped.</p>
+  </div>
+  <div class="widget-support-panel" data-widget-panel="settings" aria-label="Game settings" hidden>
+    <label class="widget-switch"><span>Play computer</span><input type="checkbox" role="switch" data-othello-computer checked disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
+    <div class="widget-slider-setting" data-othello-difficulty-setting>
+      <label data-othello-difficulty-name>Difficulty</label>
+      <select aria-label="Difficulty" data-othello-difficulty data-dropdown="difficulty" disabled>
+        <option value="easy" data-dropdown-mark="1">Easy</option>
+        <option value="medium" data-dropdown-mark="2">Medium</option>
+        <option value="hard" data-dropdown-mark="3" selected>Hard</option>
+        <option value="expert" data-dropdown-mark="4">Expert</option>
+      </select>
+      <p data-othello-difficulty-description></p>
+    </div>
+    <label class="widget-switch"><span>Play second (White)</span><input type="checkbox" role="switch" data-othello-second disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
+    <label class="widget-switch"><span>Show legal moves</span><input type="checkbox" role="switch" data-othello-hints checked disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
+    <label class="widget-switch"><span>Save progress</span><input type="checkbox" role="switch" data-puzzle-remember checked disabled><span class="widget-switch-track" aria-hidden="true"></span></label>
+    <p>Changing players starts a new game.</p>
+    {% include controls/reset-progress.html plain=true %}
+  </div>
+  <noscript><p>This game needs JavaScript to place and flip discs.</p></noscript>
+</section>

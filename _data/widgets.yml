@@ -55,7 +55,7 @@ cube-cuts:
   script: /assets/js/widgets/cube-cuts.mjs
   selector: '[data-cube-cuts]'
   styles: [widget-frame, cube-cuts]
-one-odd-coin:
-  script: /assets/js/widgets/one-odd-coin.mjs
-  selector: '[data-odd-coin]'
-  styles: [widget-frame, one-odd-coin, puzzle-game]
+othello:
+  script: /assets/js/widgets/othello.mjs
+  selector: '[data-othello-game]'
+  styles: [widget-frame, othello, puzzle-game]

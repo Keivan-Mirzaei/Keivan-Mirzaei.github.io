@@ -18,7 +18,7 @@
   url: /puzzles/four-equal-regions/
   image: /assets/images/puzzle-thumbnails/four-equal-regions.svg
   image_alt: Twelve coloured points split into four equal groups by two solid perpendicular lines.
-- title: One Odd Coin
-  url: /puzzles/one-odd-coin/
-  image: /assets/images/puzzle-thumbnails/one-odd-coin.svg
-  image_alt: A minimal balanced scale with two pale coins and a green odd coin below.
+- title: Othello
+  url: /puzzles/othello/
+  image: /assets/images/puzzle-thumbnails/othello.svg
+  image_alt: An Othello game in progress with black and outlined white discs, dashed legal moves, and green corner brackets.

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="410" viewBox="0 0 440 410" role="img" aria-labelledby="title description">
+  <title id="title">Othello</title>
+  <desc id="description">An Othello game in progress, with black and outlined white discs, dashed legal moves, and four green brackets around the last move.</desc>
+  <rect x="52" y="37" width="336" height="336" rx="4" fill="#e8ede5" stroke="#426b50" stroke-width="1.5"/>
+  <path d="M94 37v336 M52 79h336 M136 37v336 M52 121h336 M178 37v336 M52 163h336 M220 37v336 M52 205h336 M262 37v336 M52 247h336 M304 37v336 M52 289h336 M346 37v336 M52 331h336" fill="none" stroke="#cdd4cb" stroke-width="1"/>
+  <circle cx="241" cy="100" r="15" fill="none" stroke="#426b50" stroke-width="1.2" stroke-dasharray="3 3" opacity=".55"/>
+  <circle cx="325" cy="100" r="15" fill="#2c322b" stroke="#2c322b" stroke-width="1"/>
+  <circle cx="367" cy="100" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="115" cy="142" r="15" fill="#2c322b" stroke="#2c322b" stroke-width="1"/>
+  <circle cx="199" cy="142" r="15" fill="#2c322b" stroke="#2c322b" stroke-width="1"/>
+  <circle cx="241" cy="142" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="283" cy="142" r="15" fill="none" stroke="#426b50" stroke-width="1.2" stroke-dasharray="3 3" opacity=".55"/>
+  <circle cx="325" cy="142" r="15" fill="#2c322b" stroke="#2c322b" stroke-width="1"/>
+  <circle cx="73" cy="184" r="15" fill="#2c322b" stroke="#2c322b" stroke-width="1"/>
+  <circle cx="115" cy="184" r="15" fill="#2c322b" stroke="#2c322b" stroke-width="1"/>
+  <circle cx="157" cy="184" r="15" fill="#2c322b" stroke="#2c322b" stroke-width="1"/>
+  <circle cx="199" cy="184" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="241" cy="184" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="283" cy="184" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="325" cy="184" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="367" cy="184" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="157" cy="226" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="199" cy="226" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="241" cy="226" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="283" cy="226" r="15" fill="none" stroke="#426b50" stroke-width="1.2" stroke-dasharray="3 3" opacity=".55"/>
+  <circle cx="325" cy="226" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="367" cy="226" r="15" fill="none" stroke="#426b50" stroke-width="1.2" stroke-dasharray="3 3" opacity=".55"/>
+  <circle cx="157" cy="268" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="199" cy="268" r="15" fill="none" stroke="#426b50" stroke-width="1.2" stroke-dasharray="3 3" opacity=".55"/>
+  <circle cx="241" cy="268" r="15" fill="#2c322b" stroke="#2c322b" stroke-width="1"/>
+  <circle cx="325" cy="268" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="367" cy="268" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="157" cy="310" r="15" fill="none" stroke="#426b50" stroke-width="1.2" stroke-dasharray="3 3" opacity=".55"/>
+  <circle cx="241" cy="310" r="15" fill="#2c322b" stroke="#2c322b" stroke-width="1"/>
+  <circle cx="283" cy="310" r="15" fill="#2c322b" stroke="#2c322b" stroke-width="1"/>
+  <circle cx="325" cy="310" r="15" fill="#fcfcf9" stroke="#2c322b" stroke-width="2"/>
+  <circle cx="367" cy="310" r="15" fill="none" stroke="#426b50" stroke-width="1.2" stroke-dasharray="3 3" opacity=".55"/>
+  <circle cx="241" cy="352" r="15" fill="#2c322b" stroke="#2c322b" stroke-width="1"/>
+  <circle cx="325" cy="352" r="15" fill="none" stroke="#426b50" stroke-width="1.2" stroke-dasharray="3 3" opacity=".55"/>
+  <path d="M307 300v-8h8 M335 292h8v8 M307 320v8h8 M335 328h8v-8" fill="none" stroke="#426b50" stroke-width="2"/>
+</svg>
