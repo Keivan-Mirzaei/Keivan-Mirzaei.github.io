@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="760" viewBox="0 0 1000 760" fill="none">
+<title>A clearer explanation, with a little emphasis</title>
+<defs>
+<linearGradient id="surface" x1="80" y1="90" x2="910" y2="680" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#fcfcf9"/></linearGradient>
+<radialGradient id="glow"><stop stop-color="#ff304b" stop-opacity=".26"/><stop offset="1" stop-color="#ff304b" stop-opacity="0"/></radialGradient>
+<filter id="shadow" x="-10%" y="-15%" width="120%" height="145%" color-interpolation-filters="sRGB"><feDropShadow dy="18" stdDeviation="20" flood-color="#65554c" flood-opacity=".10"/></filter>
+</defs>
+<rect width="1000" height="760" fill="#f3eeea"/>
+<path d="M-50 180C260 80 780 130 1060 440M-60 225C260 125 780 175 1060 485" stroke="#eae1d9"/>
+<rect x="58" y="86" width="884" height="578" rx="18" fill="url(#surface)" filter="url(#shadow)"/>
+<rect x="58.5" y="86.5" width="883" height="577" rx="17.5" stroke="#deded7"/>
+<path d="M59 146H941" stroke="#e8e9e2"/>
+<g fill="#d9dbd4"><circle cx="86" cy="116" r="4"/><circle cx="103" cy="116" r="4"/><circle cx="120" cy="116" r="4"/></g>
+<rect x="310" y="101" width="380" height="31" rx="9" fill="#f1f3ed"/>
+<text x="500" y="121" text-anchor="middle" fill="#77816f" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="12">A shared idea</text>
+<circle cx="908" cy="116" r="12" stroke="#53535d" stroke-width="3"/><circle cx="908" cy="116" r="3.5" fill="#ff304b"/>
+<g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><text x="115" y="205" fill="#7b8275" font-size="11" letter-spacing="2">THE IDEA</text><text x="115" y="419" fill="#6a7365" font-size="15">A little attention makes</text><text x="115" y="443" fill="#6a7365" font-size="15">the connection easier to see.</text></g>
+<g fill="#285b46" font-family="Georgia,Times New Roman,serif" font-size="45" letter-spacing="-1.5"><text x="115" y="280">Small changes.</text><text x="115" y="334">A bigger difference.</text></g>
+<path d="M153 356C225 345 349 349 451 357" stroke="#ff304b" stroke-width="5" stroke-linecap="round"/>
+<g stroke="#e3e8de" stroke-width="7" stroke-linecap="round"><path d="M119 501H403"/><path d="M119 524H437"/><path d="M119 547H358"/></g>
+<rect x="536" y="211" width="347" height="346" rx="14" fill="#f4f6ef"/>
+<g stroke="#e0e6d9"><path d="M575 282H847M575 346H847M575 410H847M575 474H847"/><path d="M597 250V495M675 250V495M753 250V495M831 250V495"/></g>
+<path d="M581 485C619 480 645 455 675 423S724 398 754 352 799 304 841 261" stroke="#8b9e80" stroke-width="3" stroke-linecap="round"/>
+<path d="M675 423 713 423 713 386" stroke="#285b46" stroke-width="1.5" stroke-dasharray="3 6"/>
+<circle cx="713" cy="386" r="6" fill="#285b46"/>
+<path d="M690 340C718 326 756 340 767 370S756 431 724 438 660 421 655 390 667 350 690 340" stroke="#ff304b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="690" cy="340" r="31" fill="url(#glow)"/><circle cx="690" cy="340" r="7" fill="#ff304b"/><circle cx="690" cy="340" r="3.2" fill="#fff"/>
+<g stroke="#e8eae3" stroke-linecap="round"><path d="M115 602H884"/><path d="M118 627H239" stroke-width="5"/><path d="M829 627H883" stroke-width="5"/></g>
+</svg>

@@ -18,6 +18,10 @@
   url: /gadgets/
   key: gadgets
   icon: gadgets
+- title: Applications
+  url: /applications/
+  key: applications
+  icon: applications
 - title: About
   url: /about/
   key: about

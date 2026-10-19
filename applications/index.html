@@ -1,0 +1,19 @@
+---
+layout: default
+title: Applications
+section: applications
+permalink: /applications/
+description: Apps for work and study.
+search: true
+---
+<div class="page-wrap applications-wrap">
+  <header class="page-heading"><h1>Applications</h1></header>
+  <div class="puzzle-grid application-grid">
+    {% for application in site.data.applications %}
+    <a class="puzzle-card" href="{{ application.url | relative_url }}">
+      <div class="puzzle-card-art">{% include content-logo.html item=application kind='application' decorative=true %}</div>
+      <h2>{{ application.title }}</h2>
+    </a>
+    {% endfor %}
+  </div>
+</div>

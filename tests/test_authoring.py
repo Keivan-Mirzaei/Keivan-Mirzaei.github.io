@@ -277,7 +277,8 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
             homepage = (destination / "index.html").read_text()
             sidebar = homepage.partition('<nav aria-label="Main">')[2].partition('</nav>')[0]
             self.assertNotIn('<details', sidebar)
-            self.assertEqual(sidebar.count('class="nav-link'), 7)
+            self.assertEqual(sidebar.count('class="nav-link'), 8)
+            self.assertIn('href="/applications/"', sidebar)
             self.assertIn('href="/gadgets/"', sidebar)
             self.assertIn('href="/learning/"', sidebar)
             self.assertIn('href="/learning/" class="subject-card"', homepage)

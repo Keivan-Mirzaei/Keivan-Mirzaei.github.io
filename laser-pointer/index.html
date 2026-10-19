@@ -1,0 +1,97 @@
+---
+layout: default
+section: applications
+product: laser-pointer
+title: Laser Pointer for Safari
+breadcrumb: Laser Pointer
+permalink: /laser-pointer/
+description: Make your point in Safari. A simple laser pointer and fading marks for teaching, presenting, and reviewing webpages on Mac. One-time US$0.99 purchase.
+search: true
+problem_disclosures: true
+---
+
+{% assign application = site.data.applications | where: 'id', page.product | first %}
+<article class="page-wrap laser-product">
+  <header class="laser-hero">
+    <div class="laser-hero-copy">
+      <div class="laser-brand">
+        <img src="{{ '/assets/images/applications/laser-pointer.svg' | relative_url }}" width="52" height="52" alt="" aria-hidden="true">
+        <p>Laser Pointer<span>For Safari on Mac</span></p>
+      </div>
+      <h1>Make your <span>point.</span><br>Keep the flow.</h1>
+      <p class="laser-intro">Bring attention to the detail that matters. Point, sketch, and explain right on the webpage. Your marks fade when you’re done.</p>
+      <div class="laser-actions">
+      {% if application.app_store_url %}
+      <a class="laser-action" href="{{ application.app_store_url | escape }}">View on the Mac App Store {% include icon.html name='arrow' %}</a>
+      {% else %}
+      <a class="laser-action" href="#how-it-works">See how it works {% include icon.html name='arrow' %}</a>
+      {% endif %}
+      <span class="laser-price">{{ application.price | escape }}<span>One-time purchase</span></span>
+      </div>
+      {% unless application.app_store_url %}<p class="laser-availability">Coming to the Mac App Store.</p>{% endunless %}
+      <p class="laser-compatibility">macOS 12+ <span aria-hidden="true">·</span> Safari 17.5+</p>
+    </div>
+    <figure class="laser-showcase">
+      <div class="laser-showcase-art">
+        <img src="{{ '/assets/images/applications/laser-page.svg' | relative_url }}" width="1000" height="760" fetchpriority="high" alt="An illustrative webpage with a red laser underline beneath an idea and a hand-drawn circle highlighting a point on a chart.">
+      </div>
+      <figcaption>A little emphasis. Right where it matters.<span>Illustration</span></figcaption>
+    </figure>
+  </header>
+
+  <div class="laser-gestures" id="how-it-works" aria-label="Three simple controls">
+    <p><span class="laser-point-symbol" aria-hidden="true"></span><span><strong>Move</strong> to point</span></p>
+    <p><span class="laser-draw-symbol" aria-hidden="true"></span><span><strong>Drag</strong> to draw</span></p>
+    <p><kbd>Space</kbd><span>Pause. Browse. Resume.</span></p>
+  </div>
+
+  <section class="laser-uses" aria-labelledby="laser-uses-title">
+    <p class="laser-eyebrow">A clearer way to explain</p>
+    <h2 id="laser-uses-title">Keep everyone on the same page.</h2>
+    <div class="laser-use-grid">
+      <div><h3>Teach a tricky step.</h3><p>Circle a term, connect two ideas, or walk through a diagram as you explain.</p></div>
+      <div><h3>Present with focus.</h3><p>Guide attention to a number, a chart, or the next step in your live demo.</p></div>
+      <div><h3>Review together.</h3><p>Point out a detail on a webpage while sharing your screen. Keep the conversation moving.</p></div>
+    </div>
+  </section>
+
+  <section class="laser-details" aria-labelledby="laser-details-title">
+    <figure class="laser-settings-art">
+      <img src="{{ '/assets/images/applications/laser-settings.svg' | relative_url }}" width="480" height="420" loading="lazy" alt="A soft frosted settings panel with three colour dots, three circular stroke sizes, and colour-matched smoothing and visibility sliders.">
+    </figure>
+    <div class="laser-details-copy">
+      <p class="laser-eyebrow">Make it feel like you</p>
+      <h2 id="laser-details-title">A few quiet controls.</h2>
+      <p>Three colours. Three stroke sizes. Adjust the smoothing and choose how long marks stay: anywhere from 1 to 20 seconds.</p>
+      <p>Marks follow the page as you scroll and stay visible while you write. Start a new page with a clean slate.</p>
+      <p class="laser-quiet">Everything lives in one movable gear. Start drawing, and the settings panel slips away.</p>
+    </div>
+  </section>
+
+  <section class="laser-setup" id="setup" aria-labelledby="laser-setup-title">
+    <div class="laser-setup-heading"><div><p class="laser-eyebrow">A simple start</p><h2 id="laser-setup-title">Ready when you are.</h2></div><a class="laser-text-link" href="#how-it-works">Back to the essentials {% include icon.html name='arrow' %}</a></div>
+    <ol>
+      <li><span>Enable it in Safari.</span><p>Once installed from the Mac App Store, open the app. Choose <strong>Open Safari Settings…</strong> and enable Laser Pointer under Extensions.</p></li>
+      <li><span>Choose your website.</span><p>On a webpage, click the toolbar icon, then <strong>Use on this website</strong>.</p></li>
+      <li><span>Make your point.</span><p>Move to point. Drag to draw. Press <strong>Space</strong> to pause and browse, or <strong>Esc</strong> to turn the laser off.</p></li>
+    </ol>
+    <p class="laser-access-note">Allow each website when you choose. Pause stays with you as you follow links.</p>
+  </section>
+
+  <div class="laser-purchase"><div><p class="laser-eyebrow">One purchase. Every feature.</p><p class="laser-purchase-price">{{ application.price | escape }}<span>No subscription. No in-app purchases.</span></p></div><p class="laser-purchase-note">{% if application.app_store_url %}<a class="laser-text-link" href="{{ application.app_store_url | escape }}">Get it on the Mac App Store {% include icon.html name='arrow' %}</a>{% else %}Coming to the Mac App Store.{% endif %}<span>Local App Store prices may vary.</span></p></div>
+
+  <section class="laser-support problem-disclosures" aria-label="Support">
+    <details>
+      <summary>Need a hand? {% include icon.html name='chevron-down' %}</summary>
+      <div class="laser-support-content">
+        <p>If the toolbar icon is missing, check <strong>Safari Settings → Extensions</strong>. To review access for a website, go to <strong>Safari Settings → Websites → Extensions</strong>.</p>
+        <p>Laser Pointer works on regular webpages. Safari’s protected pages, Reader, and the built-in PDF viewer aren’t supported. Some embedded scrolling areas or unusual page layouts may behave differently.</p>
+        <p><a href="mailto:{{ site.email }}?subject=Laser%20Pointer%20support">Email Keivan</a> with your macOS and Safari versions and a short description. Please keep private information out of screenshots.</p>
+      </div>
+    </details>
+    <div class="laser-privacy">
+      <p>Your marks stay on your Mac. No accounts, ads, or analytics.</p>
+      <a href="{{ '/laser-pointer/privacy/' | relative_url }}">Privacy policy {% include icon.html name='arrow' %}</a>
+    </div>
+  </section>
+</article>

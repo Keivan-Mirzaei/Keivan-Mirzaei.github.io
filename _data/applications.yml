@@ -1,0 +1,8 @@
+- title: Laser Pointer
+  id: laser-pointer
+  url: /laser-pointer/
+  app_store_id: "6824366541"
+  app_store_url:
+  price: "US$0.99"
+  image: /assets/images/applications/laser-pointer.svg
+  image_alt: A graphite ring with a red laser point on a pale square.

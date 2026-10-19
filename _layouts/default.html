@@ -12,7 +12,8 @@
   <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/css/sliders.css' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/css/quick-search.css' | relative_url }}">
-  {% if page.section == 'puzzles' %}<link data-page-style rel="stylesheet" href="{{ '/assets/css/puzzles.css' | relative_url }}">{% endif %}
+  {% if page.section == 'puzzles' or page.section == 'applications' %}<link data-page-style rel="stylesheet" href="{{ '/assets/css/puzzles.css' | relative_url }}">{% endif %}
+  {% if page.product == 'laser-pointer' %}<link data-page-style rel="stylesheet" href="{{ '/assets/css/laser-pointer.css' | relative_url }}">{% endif %}
   <link rel="stylesheet" href="{{ '/assets/css/gadget-dock.css' | relative_url }}">
   {% if page.section == 'gadgets' %}
   {% if page.gadget %}
@@ -73,6 +74,9 @@
           {% include icon.html name='chevron-right' %}
           {% if page.layout == 'puzzle' %}
           <a class="topbar-home" href="{{ '/puzzles/' | relative_url }}">Puzzles</a>
+          {% include icon.html name='chevron-right' %}
+          {% elsif page.section == 'applications' and page.url != '/applications/' %}
+          <a class="topbar-home" href="{{ '/applications/' | relative_url }}">Applications</a>
           {% include icon.html name='chevron-right' %}
           {% endif %}
           <span class="topbar-current" aria-current="page" title="{{ page.breadcrumb | default: page.title | escape }}">{{ page.breadcrumb | default: page.title | escape }}</span>

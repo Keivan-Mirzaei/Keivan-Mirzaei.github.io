@@ -13,6 +13,7 @@ A Jekyll website for mathematical problems, explorations, research, puzzles, and
 | Learning topics | `learning/`, `_layouts/learning-topic.html` — see [the learning guide](docs/learning-roadmap.md) and [starter](docs/templates/learning-topic.md) |
 | Menu links | `_data/navigation.yml` |
 | Puzzle or gadget catalogue | `_data/puzzles.yml`, `_data/gadgets.yml` |
+| Applications and app support | `_data/applications.yml`, `applications/`, `laser-pointer/` |
 | Artwork | `assets/images/`, `assets/figures/` — edit the SVG itself |
 | Shared appearance | `assets/css/site.css` |
 
