@@ -9,7 +9,7 @@ Start with [README](../README.md) for common edits and [writing](writing.md) for
 | `_posts/` | Published problems and explorations, named `YYYY-MM-DD-title.md` |
 | `_drafts/` | Future post drafts; created when needed and included only with `--drafts` |
 | `_research/` | Research summaries, paper metadata, and links |
-| `puzzles/`, `gadgets/` | Catalogues and entry pages for games and tools |
+| `puzzles/`, `gadgets/`, `applications/` | Catalogues and entry pages for games, study tools, and apps |
 | `notes/index.html` | Paginated post archive |
 | `index.html`, `about.md`, `research.html` | Main section pages |
 | `problems.md`, `explorations.md` | Lists filtered by post format |

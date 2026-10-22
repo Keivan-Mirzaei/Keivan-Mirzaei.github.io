@@ -1,8 +1,53 @@
 - title: Laser Pointer
   id: laser-pointer
   url: /laser-pointer/
+  description: An essential, featherweight laser pointer and live annotation tool for teachers, lecturers, and presenters—with natural fading ink, Apple Pencil support on iPad, and seamless page interaction across Edge, Safari, Chrome, and Firefox.
   app_store_id: "6824366541"
   app_store_url:
+  chrome_url:
+  firefox_url: https://addons.mozilla.org/en-CA/firefox/addon/laser-pointer/
+  edge_url: https://microsoftedge.microsoft.com/addons/detail/laser-pointer/jchjghiccoilojlbgnoipkcilebppjbl
   price: "US$0.99"
   image: /assets/images/applications/laser-pointer.svg
   image_alt: A graphite ring with a red laser point on a pale square.
+  platforms:
+    - id: edge
+      name: Microsoft Edge
+      subtitle: Desktop browser extension
+      status: available
+      status_label: Available now
+      price: Free
+      price_note: Free download
+      store_label: Get on Edge Add-ons
+      url: https://microsoftedge.microsoft.com/addons/detail/laser-pointer/jchjghiccoilojlbgnoipkcilebppjbl
+      note: For Microsoft Edge on macOS, Windows, and Linux.
+    - id: safari
+      name: Safari (macOS & iPadOS)
+      subtitle: Universal native app bundle
+      status: coming-soon
+      status_label: Coming soon
+      price: "US$0.99"
+      price_note: One-time universal purchase
+      store_label: View on the App Store
+      url:
+      note: One purchase for Mac and iPad. Requires macOS 12+ with Safari 17.5+, or iPadOS 17.5+ with Apple Pencil.
+    - id: chrome
+      name: Google Chrome
+      subtitle: Desktop browser extension
+      status: coming-soon
+      status_label: Coming soon
+      price: Free
+      price_note: Free download
+      store_label: Get on Chrome Web Store
+      url:
+      note: For Google Chrome on macOS, Windows, ChromeOS, and Linux.
+    - id: firefox
+      name: Mozilla Firefox
+      subtitle: Desktop browser extension
+      status: coming-soon
+      status_label: Coming soon
+      price: Free
+      price_note: Free download
+      store_label: Get on Firefox Add-ons
+      url: https://addons.mozilla.org/en-CA/firefox/addon/laser-pointer/
+      note: For Mozilla Firefox on macOS, Windows, and Linux.

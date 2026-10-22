@@ -1,0 +1,103 @@
+---
+layout: null
+permalink: /laser-pointer/demo/
+sitemap: false
+search: false
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Moon &amp; tides</title>
+  <style>
+    * { box-sizing:border-box; }
+    :root { color-scheme:dark; }
+    body { --entrance:1; --ink:#e5e8d9; --muted:#b7c5bf; --line:#8daaa644; --accent:#c8d6be; --gold:#f0d395; --orbit:#a0b8ae; margin:0; min-height:100vh; overflow-x:hidden; background:radial-gradient(ellipse at 50% 35%,#4d6369 0%,#3b5057 58%,#34474e 100%); color:var(--ink); font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    .study-wash { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 200px 180px at var(--moon-x,65%) var(--moon-y,48%),#f0d3950a,transparent 75%); }
+    .page-art { position:absolute; top:0; right:0; width:56%; height:290px; color:var(--orbit); pointer-events:none; opacity:.28; }
+    main { position:relative; max-width:850px; margin:auto; padding:40px 40px 18px; opacity:calc(.78 + .22 * var(--entrance)); transform:translateY(calc(6px * (1 - var(--entrance)))); }
+    h1 { margin:0 0 12px; font:400 50px/1.15 Georgia,serif; letter-spacing:-1.5px; }
+    h1 em { color:var(--gold); font-weight:400; }
+    .idea { display:inline-block; }
+    .lead { margin:0; color:var(--muted); font-size:16px; transition:opacity 320ms ease; }
+    .experiment { padding:4px 0 0; }
+    .diagram { display:block; width:100%; height:310px; overflow:visible; }
+    .study-orbit { opacity:.38; transition:opacity 360ms ease; }
+    .is-page-active .study-orbit { opacity:.75; }
+    .grab-target { stroke:var(--accent); stroke-opacity:0; transition:stroke-opacity 280ms ease; }
+    .is-page-active .celestial-handle:hover .grab-target,.celestial-handle.is-dragging .grab-target { stroke-opacity:.55; }
+    .celestial-face { transform:scale(1); transform-box:fill-box; transform-origin:center; transition:transform 260ms ease; }
+    .celestial-handle.is-dragging .celestial-face { transform:scale(1.08); }
+    .celestial-handle { cursor:grab; touch-action:none; outline:none; }
+    .celestial-handle.is-dragging { cursor:grabbing; }
+    .celestial-handle:focus-visible .grab-target { stroke-opacity:1; stroke-width:1.5; stroke-dasharray:3 4; }
+    .reading { fill:var(--ink); font:500 23px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; letter-spacing:-.5px; }
+    .diagram-label { fill:var(--muted); font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; letter-spacing:.2px; }
+    .study-note { margin:0; color:#b7c5bf99; font-size:10px; text-align:center; letter-spacing:.2px; }
+    .demo-cursor { position:fixed; top:0; left:0; z-index:2147483647; pointer-events:none; will-change:transform; }
+    .demo-cursor[hidden] { display:none; }
+    @media(prefers-reduced-motion:reduce) { .lead,.study-orbit,.grab-target,.celestial-face { transition:none; } }
+    @media(max-width:600px) { main { padding:34px 25px 22px; } h1 { font-size:36px; } .lead { font-size:14px; } .diagram { height:300px; } }
+  </style>
+</head>
+<body tabindex="-1">
+  <div class="study-wash" aria-hidden="true"></div>
+  <svg class="page-art" viewBox="0 0 560 290" fill="none" aria-hidden="true">
+    <path d="M 280 -100 A 245 245 0 0 0 625 235 M 320 -100 A 205 205 0 0 0 625 191" stroke="currentColor" stroke-width=".7"/>
+    <g fill="currentColor"><circle cx="369" cy="29" r="1.6"/><circle cx="321" cy="80" r="3"/><circle cx="490" cy="78" r="1.2"/></g>
+    <path d="M 250 47 v 7 m -3.5 -3.5 h 7 M 428 124 v 8 m -4 -4 h 8" stroke="currentColor" stroke-width=".8"/>
+  </svg>
+  <main>
+    <h1><span class="idea">Follow the <em>Moon.</em></span></h1>
+    <p class="lead" data-study-intro>Drag the Moon. Watch the tides follow.</p>
+    <div class="experiment">
+      <svg class="diagram" data-study-diagram viewBox="0 -100 700 330" role="group" aria-label="Drag the Moon to turn two tidal bulges around Earth. The marked coast changes from high to low tide.">
+        <defs>
+          <radialGradient id="moon-glow"><stop stop-color="#f0d395" stop-opacity=".16"/><stop offset="1" stop-color="#f0d395" stop-opacity="0"/></radialGradient>
+          <radialGradient id="earth-colour" cx=".35" cy=".3" r=".85"><stop stop-color="#688b88"/><stop offset=".65" stop-color="#496e72"/><stop offset="1" stop-color="#34545e"/></radialGradient>
+          <linearGradient id="moon-colour" x2=".8" y2="1"><stop stop-color="#ffe9b0"/><stop offset="1" stop-color="#d6c28d"/></linearGradient>
+          <linearGradient id="ocean-colour" x2="0" y2="1"><stop stop-color="#b0dcd3" stop-opacity=".25"/><stop offset="1" stop-color="#7dbbb6" stop-opacity=".1"/></linearGradient>
+          <clipPath id="earth-clip"><circle cx="350" cy="105" r="60"/></clipPath>
+          <clipPath id="moon-clip"><circle r="18"/></clipPath>
+        </defs>
+        <path class="study-orbit" d="M 516 105 A 166 166 0 0 0 184 105" stroke="var(--orbit)" stroke-width=".8" stroke-dasharray="2 7" fill="none"/>
+        <g data-study-bulges transform="rotate(-25 350 105)">
+          <ellipse cx="350" cy="105" rx="88" ry="63" fill="url(#ocean-colour)" stroke="#badbd0" stroke-width="1.1"/>
+          <path d="M 271 89 Q 257 105 271 121 M 429 89 Q 443 105 429 121" stroke="#d0e8dd" stroke-width="1" stroke-opacity=".65" fill="none"/>
+        </g>
+        <path data-study-axis d="" stroke="var(--gold)" stroke-opacity=".5" stroke-width=".8" stroke-dasharray="2 5" fill="none"/>
+        <circle cx="350" cy="105" r="60" fill="url(#earth-colour)" stroke="#afcbc04d" stroke-width=".8"/>
+        <g clip-path="url(#earth-clip)" fill="#a5b79c" opacity=".6">
+          <path d="M 300 65 C 310 57 322 55 332 61 L 340 68 Q 345 75 335 78 L 329 85 Q 336 93 329 100 L 333 107 327 112 Q 320 108 317 100 L 308 96 Q 307 89 300 85 L 293 77 Z M 331 111 Q 341 106 349 114 L 356 121 Q 354 130 347 136 Q 344 146 336 157 Q 329 161 331 150 L 329 137 Q 321 131 322 121 Z M 366 69 Q 375 64 384 68 L 389 76 Q 399 78 403 87 L 394 94 382 91 376 98 367 91 Q 359 92 360 85 L 367 81 Z M 371 101 Q 384 96 392 106 L 398 117 Q 393 128 384 133 L 380 145 Q 372 147 368 136 L 363 121 Q 357 111 365 106 Z"/>
+        </g>
+        <path d="M 300 83 Q 350 99 400 83 M 297 121 Q 350 139 403 121 M 350 45 C 321 71 321 139 350 165 M 350 45 C 379 71 379 139 350 165" stroke="#b8d2c2" stroke-width=".6" opacity=".16" fill="none"/>
+        <circle cx="350" cy="105" r="60" fill="none" stroke="#ceded04d" stroke-width=".8"/>
+        <text class="diagram-label" x="350" y="212" text-anchor="middle">Earth</text>
+        <path d="M 411 105 L 450 154 H 495" stroke="var(--muted)" stroke-width=".7" stroke-opacity=".65" fill="none"/>
+        <circle cx="411" cy="105" r="3" fill="#f0d395" stroke="#435b5e" stroke-width="1.5"/>
+        <text class="diagram-label" x="466" y="177">At the coast</text>
+        <text class="reading" data-study-reading x="466" y="204">High tide</text>
+        <g class="celestial-handle" data-study-moon role="slider" tabindex="0" aria-label="Moon position" aria-valuemin="0" aria-valuemax="180" aria-valuenow="25">
+          <circle r="49" fill="url(#moon-glow)" pointer-events="none"/>
+          <circle r="29" stroke="var(--orbit)" stroke-width=".6" fill="none" opacity=".6" pointer-events="none"/>
+          <g class="celestial-face" clip-path="url(#moon-clip)" pointer-events="none">
+            <circle r="18" fill="url(#moon-colour)"/>
+            <path d="M 7 -19 C -2 -6 0 10 15 17 L 25 15 25 -20 Z" fill="#6d7a75" opacity=".55"/>
+            <circle cx="-8" cy="1" r="3" fill="#a79e77" opacity=".23"/><circle cx="-4" cy="10" r="1.8" fill="#a79e77" opacity=".25"/>
+          </g>
+          <circle class="grab-target" r="29" fill="transparent"/>
+        </g>
+      </svg>
+    </div>
+    <p class="study-note">A simplified view · tides exaggerated</p>
+  </main>
+  <script type="module">
+    import { mountTideStudy } from '{{ '/assets/js/lib/laser-demo-scene.mjs' | relative_url }}';
+    const study=mountTideStudy(document);
+    const { mountLaserDemo }=await import('{{ '/assets/js/laser-demo-bridge.mjs' | relative_url }}');
+    await mountLaserDemo(study);
+  </script>
+</body>
+</html>

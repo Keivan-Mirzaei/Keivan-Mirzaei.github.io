@@ -111,11 +111,12 @@ export function initializeSiteNavigation({ leave, enter, preserveSession = () =>
   }
   async function navigate(href, { pop = false, saved = null } = {}) {
     const url = new URL(href, location.href);
-    if (url.origin !== location.origin || (!pop && !preserveSession())) { pending?.abort(); history.scrollRestoration = 'auto'; location.assign(url.href); return; }
+    const samePage = url.pathname === displayed.pathname && url.search === displayed.search;
+    if (url.origin !== location.origin || (!pop && !preserveSession() && !(samePage && url.hash))) { pending?.abort(); history.scrollRestoration = 'auto'; location.assign(url.href); return; }
     history.scrollRestoration = 'manual';
     // A second click is still the same visit, including while its styles load.
     if (!pop && pending && pendingURL === url.href) return;
-    if (url.pathname === displayed.pathname && url.search === displayed.search) {
+    if (samePage) {
       pending?.abort(); sequence++;
       document.querySelectorAll('[data-navigation-style]').forEach(link => link.remove());
       if (!pop) { saveScroll(); history.pushState({ siteScroll: [0, 0] }, '', url); }
@@ -212,10 +213,11 @@ export function initializeSiteNavigation({ leave, enter, preserveSession = () =>
     if (event.defaultPrevented || event.button !== 0) return;
     const url = internalLink(event, environment);
     if (!url) return;
-    if (!preserveSession()) { history.scrollRestoration = 'auto'; return; }
+    const samePageAnchor = url.hash && url.pathname === displayed.pathname && url.search === displayed.search;
+    if (!samePageAnchor && !preserveSession()) { history.scrollRestoration = 'auto'; return; }
     event.preventDefault(); navigate(url.href);
   });
-  window.addEventListener('popstate', event => { committing = true; navigate(location.href, { pop: true, saved: event.state?.siteScroll || [0, 0] }); });
+  window.addEventListener('popstate', event => { committing = true; navigate(location.href, { pop: true, saved: event.state?.siteScroll ?? null }); });
   window.addEventListener('pageshow', event => { if (event.persisted) { displayed = new URL(location.href); document.dispatchEvent(new Event('site:page')); } });
   window.addEventListener('pagehide', () => { history.scrollRestoration = 'auto'; });
   return navigate;

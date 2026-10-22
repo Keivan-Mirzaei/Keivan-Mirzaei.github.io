@@ -40,6 +40,7 @@ That is the kind of moment this notebook is about: a little experimentation, the
 - [Learning]({{ '/learning/' | relative_url }}) offers courses built around compact explanations, interactive visuals, worked examples, and practice. Start with Calculus for Engineers and Scientists, then work through the problems at the end of each module.
 - [Puzzles]({{ '/puzzles/' | relative_url }}) give you something to play with, from tiling a floor to finding a winning path in Hex.
 - [Gadgets]({{ '/gadgets/' | relative_url }}) provide practical tools for work and study, including an exam clock, a Pomodoro timer, and ambient sound.
+- [Applications]({{ '/applications/' | relative_url }}) include standalone apps and browser extensions such as [Laser Pointer]({{ '/laser-pointer/' | relative_url }}).
 - [Research]({{ '/research/' | relative_url }}) collects my work in stochastic analysis and mathematical finance.
 
 ## Reading the problem thumbnails

@@ -22,6 +22,7 @@ function enter(root) {
   if (descriptors.length) mount(import('./widgets.js'), 'mountWidgets', [root, descriptors]);
   if (data.pageSearch === 'true') mount(import('./search.js'));
   if (data.pageProblem === 'true') mount(import('./problem-disclosures.js'));
+  if (root.querySelector('[data-laser-demo]')) mount(import('./laser-pointer.js'));
   if (data.pageMath === 'true') {
     cleanups.push(() => { clearMath(root); });
     typesetMath(root).then(() => {

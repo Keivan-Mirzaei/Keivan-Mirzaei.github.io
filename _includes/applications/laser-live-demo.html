@@ -1,0 +1,30 @@
+<div class="laser-live-browser">
+  <div class="laser-browser-toolbar">
+    <span class="laser-window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="laser-browser-address" aria-hidden="true"></span>
+    <button type="button" class="laser-toolbar-ring" data-laser-toolbar aria-label="Turn Laser Pointer on or off in the demo">
+      <span class="laser-toolbar-pulse" data-laser-click-pulse aria-hidden="true"></span>
+      <svg width="23" height="23" viewBox="0 0 128 128" fill="none" aria-hidden="true"><circle cx="64" cy="64" r="42" stroke="#63728c" stroke-width="11"/><circle cx="64" cy="64" r="42" stroke="#6b6b70" stroke-width="9"/><circle class="laser-toolbar-dot" cx="64" cy="64" r="12" fill="#ff304b"/></svg>
+    </button>
+  </div>
+  <div class="laser-demo-viewport" data-laser-viewport>
+    {% assign laser_demo_url = '/laser-pointer/demo/' | relative_url %}
+    <iframe data-laser-frame data-source="{{ laser_demo_url }}" src="{{ laser_demo_url }}?mode=replay" width="1000" height="520" title="Laser Pointer running on an interactive Moon and tides experiment" loading="lazy"></iframe>
+    <div class="laser-demo-signature" data-laser-signature aria-label="Laser Pointer. Make your point. Keep the flow." hidden>
+      <img src="{{ '/assets/images/applications/laser-pointer.svg' | relative_url }}" width="84" height="84" alt="" aria-hidden="true">
+      <p>Laser Pointer</p>
+      <span>Make your point. Keep the flow.</span>
+    </div>
+  </div>
+  <div class="laser-access-popup" data-laser-access hidden aria-hidden="true">
+    <h3>Laser Pointer</h3>
+    <p class="laser-access-explanation">Draws over webpages. No page text or form entries are read or sent.</p>
+    <span class="laser-access-button">Use on this website</span>
+  </div>
+  <span class="laser-replay-cursor" data-laser-cursor aria-hidden="true"><svg width="19" height="24" viewBox="0 0 19 24"><path d="M2 1v19l4.5-4 3 7 3-1.3-3-6.7h7z" fill="#202324" stroke="white" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
+</div>
+<div class="laser-demo-instructions">
+  <div class="laser-demo-cue" data-laser-cue>
+    <kbd data-laser-cue-key hidden></kbd>
+  </div>
+</div>

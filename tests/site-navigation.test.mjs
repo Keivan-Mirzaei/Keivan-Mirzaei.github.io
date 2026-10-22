@@ -141,6 +141,34 @@ test('same-page anchors and search URL changes do not reload, while Back restore
   assert.equal(app.browser.scrollY, 180); assert.equal(app.history.entries.length, 2);
 });
 
+test('same-page section links scroll immediately without a session or a page reload', () => {
+  const app = setup({ preserveSession: () => false });
+  const link = { href: 'https://example.test/search/?q=math#anchor', target: '', hasAttribute: () => false };
+  const event = new Event('click', { cancelable: true }); Object.assign(event, { button: 0 });
+  Object.defineProperty(event, 'target', { value: { closest: () => link } });
+  app.document.dispatchEvent(event);
+  assert.equal(event.defaultPrevented, true);
+  assert.equal(app.browser.anchored, true);
+  assert.deepEqual(app.browser.location.assigned, []);
+  assert.equal(app.requests.length, 0);
+  assert.equal(app.history.entries.at(-1), link.href);
+});
+
+test('a fragment history entry without saved scroll lands on its target instead of the page top', () => {
+  const app = setup({ preserveSession: () => false });
+  app.browser.location.href = 'https://example.test/search/?q=math#anchor';
+  const event = new Event('popstate'); Object.assign(event, { state: null });
+  app.browser.dispatchEvent(event);
+  assert.equal(app.browser.anchored, true);
+  assert.deepEqual(app.browser.location.assigned, []);
+  assert.equal(app.requests.length, 0);
+  app.browser.anchored = false;
+  const back = new Event('popstate'); Object.assign(back, { state: { siteScroll: [0, 240] } });
+  app.browser.dispatchEvent(back);
+  assert.equal(app.browser.scrollY, 240);
+  assert.equal(app.browser.anchored, false);
+});
+
 test('external, modified, download and new-tab links retain native browser behavior', async () => {
   const app = setup();
   for (const patch of [{ href: 'https://elsewhere.test/' }, { ctrlKey: true }, { metaKey: true }, { target: '_blank' }, { download: true }]) {

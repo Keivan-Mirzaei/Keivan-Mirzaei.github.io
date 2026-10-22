@@ -2,10 +2,10 @@
 layout: default
 section: applications
 product: laser-pointer
-title: Laser Pointer for Safari
+title: Laser Pointer
 breadcrumb: Laser Pointer
 permalink: /laser-pointer/
-description: Make your point in Safari. A simple laser pointer and fading marks for teaching, presenting, and reviewing webpages on Mac. One-time US$0.99 purchase.
+description: Make your point in the browser. A fast, featherweight laser pointer and live web annotation tool for teachers, lecturers, and presenters on Microsoft Edge, Safari for Mac and iPad (with Apple Pencil), Google Chrome, and Mozilla Firefox.
 search: true
 problem_disclosures: true
 ---
@@ -14,83 +14,212 @@ problem_disclosures: true
 <article class="page-wrap laser-product">
   <header class="laser-hero">
     <div class="laser-hero-copy">
-      <div class="laser-brand">
-        <img src="{{ '/assets/images/applications/laser-pointer.svg' | relative_url }}" width="52" height="52" alt="" aria-hidden="true">
-        <p>Laser Pointer<span>For Safari on Mac</span></p>
+      <div class="laser-hero-heading">
+        <div class="laser-brand">
+          <img src="{{ '/assets/images/applications/laser-pointer.svg' | relative_url }}" width="54" height="54" alt="" aria-hidden="true">
+          <p>Laser Pointer<span>A laser pointer for your browser</span></p>
+        </div>
+        <h1>Make your <span>point.</span><br>Keep the flow.</h1>
       </div>
-      <h1>Make your <span>point.</span><br>Keep the flow.</h1>
-      <p class="laser-intro">Bring attention to the detail that matters. Point, sketch, and explain right on the webpage. Your marks fade when you’re done.</p>
-      <div class="laser-actions">
-      {% if application.app_store_url %}
-      <a class="laser-action" href="{{ application.app_store_url | escape }}">View on the Mac App Store {% include icon.html name='arrow' %}</a>
-      {% else %}
-      <a class="laser-action" href="#how-it-works">See how it works {% include icon.html name='arrow' %}</a>
-      {% endif %}
-      <span class="laser-price">{{ application.price | escape }}<span>One-time purchase</span></span>
+      <div class="laser-hero-message">
+        <p class="laser-intro">A must-have for teachers and presenters. Turn a live webpage into your teaching space: point, underline, and sketch with natural, fading ink. Pause to use the page, then pick up exactly where you left off.</p>
+        <div class="laser-actions">
+          <a class="laser-action" href="#platforms">Get Laser Pointer {% include icon.html name='arrow' %}</a>
+          <a class="laser-text-link" href="#walkthrough">See it in action {% include icon.html name='arrow' %}</a>
+        </div>
       </div>
-      {% unless application.app_store_url %}<p class="laser-availability">Coming to the Mac App Store.</p>{% endunless %}
-      <p class="laser-compatibility">macOS 12+ <span aria-hidden="true">·</span> Safari 17.5+</p>
     </div>
-    <figure class="laser-showcase">
-      <div class="laser-showcase-art">
-        <img src="{{ '/assets/images/applications/laser-page.svg' | relative_url }}" width="1000" height="760" fetchpriority="high" alt="Animation of Laser Pointer in Safari: the toolbar button turns it on and a red laser underlines the heading “Point something out”; blue is chosen in the settings panel; pressing Space pauses the laser so the graph’s tangent point can be dragged, and pressing Space again resumes so the new point is circled in blue with an arrow to its derivative; the settings button is moved to another corner and opened, and a switch changes the page and the settings panel from light to dark before the laser is turned off.">
-      </div>
-      <figcaption>A little emphasis. Right where it matters.<span>Animation</span></figcaption>
+    <figure class="laser-showcase" id="walkthrough" data-laser-demo data-duration="30">
+      {% include applications/laser-live-demo.html %}
+      <figcaption>
+        <div class="laser-walkthrough" data-laser-controls hidden>
+          <div class="laser-demo-step" data-laser-step aria-live="off" aria-atomic="true">
+            <div class="laser-demo-step-copy">
+              <p class="laser-demo-step-title"><strong data-laser-step-title>Enable &amp; allow</strong><span data-laser-step-count>Step 1 of 5</span></p>
+              <p class="laser-demo-step-instruction" data-laser-step-instruction hidden>Click the toolbar icon and allow access to this website.</p>
+            </div>
+          </div>
+          <div class="laser-demo-navigation" role="group" aria-label="Walkthrough playback" data-laser-navigation>
+            <button type="button" class="laser-demo-nav laser-demo-motion" data-laser-motion aria-label="Pause demo" title="Pause demo"><span data-laser-pause-icon>{% include icon.html name='pause' %}</span><span data-laser-play-icon hidden>{% include icon.html name='play' %}</span></button>
+            <button type="button" class="laser-demo-nav" data-laser-restart aria-label="Restart demo" title="Restart demo">{% include icon.html name='restart' %}</button>
+          </div>
+          <div class="laser-demo-chapters" role="group" aria-label="Walkthrough steps" data-laser-progress>
+            <button type="button" data-laser-chapter data-start="0" data-preview="2.4" data-title="Enable &amp; allow" data-instruction="Click the toolbar icon and allow access to this website." aria-label="Step 1 of 5: Enable and allow" title="Enable &amp; allow" aria-current="step"></button>
+            <button type="button" data-laser-chapter data-start="3.4" data-preview="8.8" data-title="Draw &amp; customize" data-instruction="Draw on the page; use the gear to adjust your ink." aria-label="Step 2 of 5: Draw and customize" title="Draw &amp; customize"></button>
+            <button type="button" data-laser-chapter data-start="12" data-preview="17.7" data-title="Space to interact" data-instruction="Press Space to pause the ink and use the page." aria-label="Step 3 of 5: Space to interact" title="Space to interact"></button>
+            <button type="button" data-laser-chapter data-start="18.3" data-preview="24.7" data-title="Space to resume" data-instruction="Press Space again to pick up drawing where you left off." aria-label="Step 4 of 5: Space to resume" title="Space to resume"></button>
+            <button type="button" data-laser-chapter data-start="26" data-preview="28" data-title="Click to turn off" data-instruction="Click the toolbar icon to turn off the laser and clear the ink." aria-label="Step 5 of 5: Click to turn off" title="Click to turn off"></button>
+          </div>
+          <div class="laser-demo-actions">
+            <button type="button" class="laser-demo-try" data-laser-try>Try the ink</button>
+          </div>
+        </div>
+        <p class="laser-demo-note">Try the ink here—no installation needed. Permission prompts vary by browser.</p>
+      </figcaption>
     </figure>
   </header>
 
-  <div class="laser-gestures" id="how-it-works" aria-label="Three simple controls">
-    <p><span class="laser-point-symbol" aria-hidden="true"></span><span><strong>Move</strong> to point</span></p>
-    <p><span class="laser-draw-symbol" aria-hidden="true"></span><span><strong>Drag</strong> to draw</span></p>
-    <p><kbd>Space</kbd><span>Pause. Browse. Resume.</span></p>
-  </div>
-
-  <section class="laser-uses" aria-labelledby="laser-uses-title">
-    <p class="laser-eyebrow">A clearer way to explain</p>
-    <h2 id="laser-uses-title">Keep everyone on the same page.</h2>
-    <div class="laser-use-grid">
-      <div><h3>Teach a tricky step.</h3><p>Circle a term, connect two ideas, or walk through a diagram as you explain.</p></div>
-      <div><h3>Present with focus.</h3><p>Guide attention to a number, a chart, or the next step in your live demo.</p></div>
-      <div><h3>Review together.</h3><p>Point out a detail on a webpage while sharing your screen. Keep the conversation moving.</p></div>
+  <section class="laser-essentials" id="features" aria-label="Ink, shortcuts, and Apple Pencil">
+    <div class="laser-essential-grid">
+      <article class="laser-essential">
+        <div class="laser-essential-art" aria-hidden="true">
+          {% include applications/laser-ink-controls.svg %}
+        </div>
+        <div class="laser-essential-copy">
+          <h2>Your ink, your way.</h2>
+          <p>Three colours, three widths, and adjustable smoothing. Choose a 1–20-second hold, then let your marks gently fade.</p>
+        </div>
+      </article>
+      <article class="laser-essential">
+        <div class="laser-essential-art" aria-hidden="true">
+          {% include applications/laser-escape.svg %}
+        </div>
+        <div class="laser-essential-copy">
+          <h2>Press Esc. Start fresh.</h2>
+          <p>Turn the laser off and clear every mark instantly. Your webpage is ready for the next idea.</p>
+        </div>
+      </article>
     </div>
+    <article class="laser-pencil-feature" id="laser-ipad-title" aria-labelledby="laser-pencil-title">
+      <div class="laser-pencil-copy">
+        <h2 id="laser-pencil-title">Apple Pencil for the <span class="laser-pencil-word">ink<span class="laser-pencil-mark" aria-hidden="true">{% include applications/laser-pencil-underline.svg %}</span></span>.<br>Fingers for the page.</h2>
+        <p>Draw directly on a Safari webpage while your fingers keep scrolling, zooming, and tapping.</p>
+        <p class="laser-pencil-note">Hover to point on supported iPads.</p>
+      </div>
+    </article>
+    <p class="laser-trust">Lightweight and responsive, with no accounts, ads, or analytics. Your ink stays on your device.</p>
   </section>
 
-  <section class="laser-details" aria-labelledby="laser-details-title">
-    <figure class="laser-settings-art">
-      <img src="{{ '/assets/images/applications/laser-settings.svg' | relative_url }}" width="480" height="420" loading="lazy" alt="A soft frosted settings panel with three colour dots, three circular stroke sizes, and colour-matched smoothing and visibility sliders.">
-    </figure>
-    <div class="laser-details-copy">
-      <p class="laser-eyebrow">Make it feel like you</p>
-      <h2 id="laser-details-title">A few quiet controls.</h2>
-      <p>Three colours. Three stroke sizes. Adjust the smoothing and choose how long marks stay: anywhere from 1 to 20 seconds.</p>
-      <p>Marks follow the page as you scroll and stay visible while you write. Start a new page with a clean slate.</p>
-      <p class="laser-quiet">Everything lives in one movable gear. Start drawing, and the settings panel slips away.</p>
+  <section class="laser-setup" id="setup" aria-labelledby="laser-setup-title" data-laser-setup>
+    <div class="laser-setup-heading">
+      <div>
+        <p class="laser-eyebrow">Welcome to Laser Pointer</p>
+        <h2 id="laser-setup-title">Ready to make your <span>point?</span></h2>
+        <p class="laser-setup-intro">Your next explanation starts with a single click. Let’s get you ready.</p>
+      </div>
+      <a class="laser-text-link" href="#walkthrough">Watch the 30-second demo {% include icon.html name='arrow' %}</a>
     </div>
-  </section>
-
-  <section class="laser-setup" id="setup" aria-labelledby="laser-setup-title">
-    <div class="laser-setup-heading"><div><p class="laser-eyebrow">A simple start</p><h2 id="laser-setup-title">Ready when you are.</h2></div><a class="laser-text-link" href="#how-it-works">Back to the essentials {% include icon.html name='arrow' %}</a></div>
-    <ol>
-      <li><span>Enable it in Safari.</span><p>Once installed from the Mac App Store, open the app. Choose <strong>Open Safari Settings…</strong> and enable Laser Pointer under Extensions.</p></li>
-      <li><span>Choose your website.</span><p>On a webpage, click the toolbar icon, then <strong>Use on this website</strong>.</p></li>
-      <li><span>Make your point.</span><p>Move to point. Drag to draw. Press <strong>Space</strong> to pause and browse, or <strong>Esc</strong> to turn the laser off.</p></li>
+    <div class="laser-setup-browser">
+      <label for="laser-setup-browser">I’m using</label>
+      <div class="laser-setup-select">
+        <select id="laser-setup-browser" data-laser-browser>
+          <option value="safari-mac">Safari on Mac</option>
+          <option value="safari-ipad">Safari on iPad</option>
+          <option value="other">Edge, Chrome or Firefox</option>
+        </select>
+        {% include icon.html name='chevron-down' %}
+      </div>
+    </div>
+    <ol class="laser-setup-steps">
+      <li>
+        <span class="laser-setup-number" aria-hidden="true">01</span>
+        <h3>Enable the extension.</h3>
+        <p data-laser-guide="safari-mac">Open the <strong>Laser Pointer</strong> app, choose <strong>Open Safari Settings…</strong>, then enable Laser Pointer in <strong>Extensions</strong>.</p>
+        <p data-laser-guide="safari-ipad" hidden>In <strong>Settings → Apps → Safari → Extensions</strong>, turn on <strong>Laser Pointer</strong>.</p>
+        <p data-laser-guide="other" hidden>Open your browser’s <strong>Extensions</strong> menu and pin <strong>Laser Pointer</strong> to the toolbar so it’s always within reach.</p>
+      </li>
+      <li>
+        <span class="laser-setup-number" aria-hidden="true">02</span>
+        <h3>Click. Allow. You’re on.</h3>
+        <p data-laser-guide="safari-mac">Open a webpage, click the <strong>Laser Pointer toolbar icon</strong>, and allow access to that website when asked.</p>
+        <p data-laser-guide="safari-ipad" hidden>Open a webpage in Safari. Tap its <strong>extensions button</strong>, choose <strong>Laser Pointer</strong>, and allow website access when asked.</p>
+        <p data-laser-guide="other" hidden>Open a webpage, click the <strong>Laser Pointer toolbar icon</strong>, and allow website access when asked.</p>
+      </li>
+      <li>
+        <span class="laser-setup-number" aria-hidden="true">03</span>
+        <h3>Make your first mark.</h3>
+        <p data-laser-guide="safari-mac">Move to point. Drag to draw. Open the floating <strong>gear</strong> to choose your colour, width, and how long the ink stays.</p>
+        <p data-laser-guide="safari-ipad" hidden>Touch <strong>Apple Pencil</strong> to the page to draw. Your fingers keep scrolling, zooming, and tapping. The floating <strong>gear</strong> adjusts your ink.</p>
+        <p data-laser-guide="other" hidden>Move to point. Drag to draw. Open the floating <strong>gear</strong> to choose your colour, width, and how long the ink stays.</p>
+      </li>
     </ol>
-    <p class="laser-access-note">Allow each website when you choose. Pause stays with you as you follow links.</p>
+    <div class="laser-setup-footer">
+      <div class="laser-setup-shortcuts" data-laser-desktop-shortcuts>
+        <span><kbd>Space</kbd> Pause / resume drawing</span>
+        <span><kbd>Esc</kbd> Turn off &amp; clear</span>
+      </div>
+      <p class="laser-setup-ipad-note" data-laser-ipad-shortcuts hidden>Tap the gear, then <strong>Turn off laser</strong> when you’re done.</p>
+      <a class="laser-text-link" href="#platforms">Need the extension? {% include icon.html name='arrow' %}</a>
+    </div>
+    <noscript><p class="laser-setup-noscript">On iPad, enable Laser Pointer in Settings → Apps → Safari → Extensions. In Edge, Chrome or Firefox, pin it from the Extensions menu. Then open a webpage and choose Laser Pointer to begin.</p></noscript>
   </section>
 
-  <div class="laser-purchase"><div><p class="laser-eyebrow">One purchase. Every feature.</p><p class="laser-purchase-price">{{ application.price | escape }}<span>No subscription. No in-app purchases.</span></p></div><p class="laser-purchase-note">{% if application.app_store_url %}<a class="laser-text-link" href="{{ application.app_store_url | escape }}">Get it on the Mac App Store {% include icon.html name='arrow' %}</a>{% else %}Coming to the Mac App Store.{% endif %}<span>Local App Store prices may vary.</span></p></div>
+  <section class="laser-platforms" id="platforms" aria-labelledby="laser-platforms-title">
+    <div class="laser-section-heading">
+      <div>
+        <h2 id="laser-platforms-title">Get Laser Pointer.</h2>
+      </div>
+      <p class="laser-platforms-summary">Free on Edge, Chrome, and Firefox. One purchase covers Safari on Mac and iPad.</p>
+    </div>
+    <div class="laser-platform-grid">
+      {% for platform in application.platforms %}
+      <div class="laser-platform-card{% if platform.status == 'available' %} is-available{% endif %}">
+        <div class="laser-platform-top">
+          <div class="laser-platform-identity">
+            <span class="laser-browser-icon" aria-hidden="true">
+              {% assign browser_icon = '/assets/images/applications/browsers/' | append: platform.id | append: '.png' %}
+              <img src="{{ browser_icon | relative_url }}" width="40" height="40" loading="lazy" alt="" aria-hidden="true">
+            </span>
+            <span class="laser-status-badge{% if platform.status == 'available' %} is-live{% endif %}">{{ platform.status_label | escape }}</span>
+          </div>
+          <span class="laser-platform-price">{{ platform.price | escape }}</span>
+        </div>
+        <h3>{{ platform.name | escape }}</h3>
+        <p class="laser-platform-note">{{ platform.note | escape }}</p>
+        <div class="laser-platform-footer">
+          {% if platform.status == 'available' and platform.url %}
+          <a class="laser-action" href="{{ platform.url | escape }}">{{ platform.store_label | escape }} {% include icon.html name='arrow' %}</a>
+          {% elsif platform.id == 'firefox' and platform.url %}
+          <span class="laser-coming-note">Coming soon to <a href="{{ platform.url | escape }}">Firefox Add-ons</a></span>
+          {% elsif platform.id == 'safari' %}
+          <span class="laser-coming-note">Coming soon to the App Store</span>
+          {% else %}
+          <span class="laser-coming-note">Coming soon to the Chrome Web Store</span>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
 
-  <section class="laser-support problem-disclosures" aria-label="Support">
+  <section class="laser-support problem-disclosures" id="support" aria-labelledby="laser-support-title">
+    <div class="laser-support-header">
+      <h2 id="laser-support-title">A little extra help.</h2>
+    </div>
     <details>
-      <summary>Need a hand? {% include icon.html name='chevron-down' %}</summary>
+      <summary>Where does Laser Pointer work? {% include icon.html name='chevron-down' %}</summary>
       <div class="laser-support-content">
-        <p>If the toolbar icon is missing, check <strong>Safari Settings → Extensions</strong>. To review access for a website, go to <strong>Safari Settings → Websites → Extensions</strong>.</p>
-        <p>Laser Pointer works on regular webpages. Safari’s protected pages, Reader, and the built-in PDF viewer aren’t supported. Some embedded scrolling areas or unusual page layouts may behave differently.</p>
-        <p><a href="mailto:{{ site.email }}?subject=Laser%20Pointer%20support">Email Keivan</a> with your macOS and Safari versions and a short description. Please keep private information out of screenshots.</p>
+        <p><strong>Restricted browser pages:</strong> For security, all browsers block extensions from running on internal pages (such as <code>edge://</code>, <code>chrome://</code>, <code>about:</code>, and new-tab pages), official extension stores (Microsoft Edge Add-ons, Chrome Web Store, Firefox Add-ons), Safari Reader view, and built-in PDF viewers. Switch to any regular <code>https://</code> or <code>http://</code> webpage to use the laser.</p>
+        <p><strong>Website permissions:</strong> If the laser won’t start on a regular website, verify that site access is allowed:</p>
+        <ul>
+          <li><strong>Safari on Mac:</strong> Check <strong>Safari → Settings → Websites → Extensions</strong> (or <strong>Safari → Settings → Extensions → Laser Pointer</strong>) and allow the current website.</li>
+          <li><strong>Safari on iPad:</strong> Tap the extensions icon in the address bar → <strong>Manage Extensions</strong>, or check <strong>Settings → Apps → Safari → Extensions → Laser Pointer</strong>.</li>
+          <li><strong>Edge &amp; Chrome:</strong> Right-click the <strong>Laser Pointer</strong> toolbar icon, choose <strong>Manage extension</strong>, and check its <strong>Site access</strong> setting.</li>
+          <li><strong>Firefox:</strong> Click the <strong>Extensions</strong> icon, open <strong>Manage Extension</strong> for <strong>Laser Pointer</strong>, and check the <strong>Permissions</strong> tab.</li>
+        </ul>
+      </div>
+    </details>
+    <details>
+      <summary>Can I still interact with the webpage? {% include icon.html name='chevron-down' %}</summary>
+      <div class="laser-support-content">
+        <p>On desktop browsers, Laser Pointer places an active drawing layer over the page so dragging your mouse or trackpad draws smooth strokes instead of selecting text or dragging images.</p>
+        <p>Press <strong>Space</strong> at any time to <strong>pause</strong> the laser and interact with links, buttons, sliders, videos, or draggable graphs normally while your drawn marks stay visible on screen. Press <strong>Space</strong> again to resume drawing, or press <strong>Esc</strong> (or click the toolbar icon) to turn the laser off completely. On iPad, your fingers and trackpad always scroll and tap the page normally while <strong>Apple Pencil</strong> draws.</p>
+      </div>
+    </details>
+    <details>
+      <summary>How does Apple Pencil work on iPad? {% include icon.html name='chevron-down' %}</summary>
+      <div class="laser-support-content">
+        <p>On iPad, hovering the Pencil on a supported iPad moves the laser dot, and touching the screen draws, while finger touches and trackpad gestures continue scrolling, zooming, and clicking the page normally. A mode button beside the floating gear switches the Pencil between drawing and pointer-only mode, and a <strong>Turn off laser</strong> button in the settings panel lets you exit without a hardware keyboard.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Can I move the settings? {% include icon.html name='chevron-down' %}</summary>
+      <div class="laser-support-content">
+        <p><strong>Moving the settings gear:</strong> Drag the floating gear button to any corner of the browser window; it remembers its position locally and automatically closes its panel when you start drawing.</p>
       </div>
     </details>
     <div class="laser-privacy">
-      <p>Your marks stay on your Mac. No accounts, ads, or analytics.</p>
+      <a href="mailto:{{ site.email }}?subject=Laser%20Pointer%20support">Contact Keivan {% include icon.html name='arrow' %}</a>
       <a href="{{ '/laser-pointer/privacy/' | relative_url }}">Privacy policy {% include icon.html name='arrow' %}</a>
     </div>
   </section>
