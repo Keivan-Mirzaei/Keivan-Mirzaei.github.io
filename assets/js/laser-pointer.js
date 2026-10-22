@@ -45,14 +45,15 @@ export function mount(root) {
   const chapters = [...host.querySelectorAll('[data-laser-chapter]')];
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const duration = Number(host.dataset.duration) * 1000;
-  let api = null, frame = 0, closed = false, inView = true, manual = false, pendingEnabled = null;
+  let api = null, frame = 0, closed = false, inView = true, manual = false, loading = false, pendingEnabled = null;
   let wantsPlayback = !reduced.matches, time = reduced.matches ? DEMO.preview.resume : 0, origin = 0, lastChapter = null;
   function camera() {
     const pose=cameraPose(time,viewport.clientWidth);
     iframe.style.width=manual ? '100%' : '1000px';
     iframe.style.height='520px';
     iframe.style.transform=manual ? 'none' : `scale(${pose.scale}) translate(${-pose.x}px,${-pose.y}px)`;
-    viewport.style.height=manual ? '520px' : `${pose.height}px`;
+    // Reserve the tallest camera view so the controls never move during playback.
+    viewport.style.height=manual ? '520px' : `${viewport.clientWidth < 650 ? Math.max(340, 520*viewport.clientWidth/1000) : 520*viewport.clientWidth/1000}px`;
     const intro=iframe.contentDocument?.querySelector('[data-study-intro]');
     if(intro) intro.style.opacity=!manual && viewport.clientWidth<650 && time>=12300 && time<24400 ? '0':'1';
   }
@@ -139,7 +140,10 @@ export function mount(root) {
     playIcon.hidden = wantsPlayback;
     toggle.hidden = manual;
     restart.hidden = manual;
-    tryButton.textContent = manual ? 'Back to demo' : 'Try the ink';
+    tryButton.textContent = loading ? 'Loading…' : manual ? 'Back to demo' : 'Try the ink';
+    tryButton.disabled = loading;
+    toolbar.disabled = loading;
+    host.setAttribute('aria-busy', String(loading));
     host.classList.toggle('is-interactive',manual);
     camera();
   }
@@ -178,6 +182,8 @@ export function mount(root) {
     return onClick;
   });
   const onTry = () => {
+    if (loading) return;
+    loading = true;
     manual = !manual;
     if(!manual) pendingEnabled=null;
     api = null;
@@ -188,6 +194,7 @@ export function mount(root) {
     render();
   };
   const onToolbar = async () => {
+    if (loading) return;
     if (!manual) { pendingEnabled=!enabledAt(time); onTry(); return; }
     if (api) { await api.toggle(); render(); iframe.focus(); }
   };
@@ -196,8 +203,11 @@ export function mount(root) {
   };
   const onReady = async event => {
     if (event.source !== iframe.contentWindow || event.origin !== location.origin || event.data?.type !== 'laser-demo-ready' || closed) return;
-    api = iframe.contentWindow.laserDemo;
+    const readyApi = iframe.contentWindow.laserDemo;
+    if (!readyApi?.ready || readyApi.mode !== (manual ? 'try' : 'replay')) return;
+    api = readyApi;
     if(manual && pendingEnabled!==null) { await api.setEnabled(pendingEnabled); pendingEnabled=null; }
+    loading = false;
     if (manual) iframe.focus();
     host.querySelectorAll('[data-laser-controls]').forEach(control => { control.hidden = false; });
     updatePlayback();
@@ -222,6 +232,7 @@ export function mount(root) {
   // A cached frame can become ready before the page feature finishes loading.
   if (iframe.contentWindow?.laserDemo?.ready) {
     api = iframe.contentWindow.laserDemo;
+    loading = false;
     if (manual) iframe.focus();
     host.querySelectorAll('[data-laser-controls]').forEach(control => { control.hidden = false; });
   }

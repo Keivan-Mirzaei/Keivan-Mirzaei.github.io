@@ -62,7 +62,7 @@ function fixture(t, { reduced = false, width = 1000 } = {}) {
   const chapters = [[0,2.4],[3.4,8.8],[12,17.7],[18.3,24.7],[26,28]].map(([start,preview],i) => {
     const element = new Element(); element.dataset = {start,preview,title:titles[i],instruction:`Instruction ${i+1}`}; return element;
   });
-  const seeks = [], api = { ready:true, state:{enabled:false}, seek(time) { seeks.push(time); }, async toggle() { this.state.enabled = !this.state.enabled; }, async setEnabled(value) { this.state.enabled=value; } };
+  const seeks = [], api = { ready:true, mode:'replay', state:{enabled:false}, seek(time) { seeks.push(time); }, async toggle() { this.state.enabled = !this.state.enabled; }, async setEnabled(value) { this.state.enabled=value; } };
   iframe.contentWindow = {laserDemo:api}; iframe.dataset.source = '/laser-pointer/demo/';
   viewport.clientWidth = width; host.dataset.duration = String(DEMO.duration/1000);
   const elements = {frame:iframe,viewport,motion:toggle,restart,try:tryButton,toolbar,access:popup,cursor,cue,'cue-key':cueKey,'click-pulse':clickPulse,signature,navigation,progress,step,'step-title':stepTitle,'step-count':stepCount,'step-instruction':stepInstruction,'pause-icon':pauseIcon,'play-icon':playIcon};
@@ -83,7 +83,10 @@ function fixture(t, { reduced = false, width = 1000 } = {}) {
   globalThis.ResizeObserver = class { constructor(callback) { resizeObserver=this; this.callback=callback; } observe() {} disconnect() { this.disconnected=true; } };
   dispose = mount({querySelector:selector => selector === '[data-laser-demo]' ? host : null});
   const advance = ms => { now += ms; const pending=[...frames.values()]; frames.clear(); pending.forEach(callback=>callback(now)); };
-  const ready = (origin='https://example.test') => win.emit('message',{source:iframe.contentWindow,origin,data:{type:'laser-demo-ready'}});
+  const ready = (origin='https://example.test', mode=iframe.src?.includes('mode=try') ? 'try' : 'replay') => {
+    api.mode=mode;
+    win.emit('message',{source:iframe.contentWindow,origin,data:{type:'laser-demo-ready'}});
+  };
   return {host,iframe,viewport,toggle,restart,tryButton,toolbar,popup,cursor,controls,chapters,motion,doc,win,seeks,api,frames,observer,resizeObserver,advance,ready,dispose,cue,cueKey,clickPulse,signature,navigation,progress,step,stepTitle,stepCount,stepInstruction,pauseIcon,playIcon};
 }
 
@@ -182,7 +185,7 @@ test('phone framing enlarges the real controls and restores the full page on res
   f.chapters[1].emit('click'); assert.match(f.iframe.style.transform,/translate\(-635px,0px\)/);
   assert.equal(f.viewport.style.height,'340px');
   f.chapters[2].emit('click'); assert.match(f.iframe.style.transform,/translate\(-285px,-125px\)/);
-  assert.equal(f.viewport.style.height,'320px');
+  assert.equal(f.viewport.style.height,'340px');
   f.viewport.clientWidth=1100; f.resizeObserver.callback();
   assert.equal(f.iframe.style.transform,'scale(1.1) translate(0px,0px)');
 });
@@ -392,4 +395,29 @@ test('clicking the toolbar during an active replay enters hands-on mode with the
   assert.equal(f.api.state.enabled,false);
   f.toolbar.emit('click'); await Promise.resolve();
   assert.equal(f.api.state.enabled,true);
+});
+
+
+test('a single try click waits for the matching frame and ignores repeated activation', t => {
+  const f=fixture(t);
+  f.tryButton.emit('click');
+  assert.equal(f.tryButton.disabled,true);
+  assert.equal(f.tryButton.textContent,'Loading…');
+  f.tryButton.emit('click'); f.toolbar.emit('click');
+  assert.equal(f.iframe.src,'/laser-pointer/demo/?mode=try');
+  f.ready('https://example.test','replay');
+  assert.equal(f.tryButton.disabled,true);
+  f.ready();
+  assert.equal(f.tryButton.disabled,false);
+  assert.equal(f.tryButton.textContent,'Back to demo');
+  assert.equal(f.iframe.focused,true);
+});
+
+test('phone playback keeps the try button at a fixed vertical position', t => {
+  const f=fixture(t,{width:350});
+  const height=f.viewport.style.height;
+  for (let i=0;i<30;i++) {
+    f.advance(1000);
+    assert.equal(f.viewport.style.height,height);
+  }
 });
