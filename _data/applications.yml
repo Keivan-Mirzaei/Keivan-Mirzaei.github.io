@@ -44,8 +44,8 @@
     - id: firefox
       name: Mozilla Firefox
       subtitle: Desktop browser extension
-      status: coming-soon
-      status_label: Coming soon
+      status: available
+      status_label: Available now
       price: Free
       price_note: Free download
       store_label: Get on Firefox Add-ons
