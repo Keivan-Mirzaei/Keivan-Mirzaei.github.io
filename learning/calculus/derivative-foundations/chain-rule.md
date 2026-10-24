@@ -6,6 +6,11 @@ course_key: calculus
 module_key: derivative-foundations
 position: "2.3"
 description: Follow a change through nested functions by multiplying their local rates.
+epigraph:
+  text: "…divide each of the difficulties under examination into as many parts as possible…"
+  author: "René Descartes"
+  source: "A Discourse on Method, Part II; John Veitch translation, excerpt"
+  source_url: "https://www.gutenberg.org/files/59/59-h/59-h.htm"
 math: true
 topic_script: /assets/js/learning-chain-rule.js
 sitemap: false

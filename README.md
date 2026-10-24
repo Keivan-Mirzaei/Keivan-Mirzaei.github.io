@@ -25,10 +25,10 @@ Install Ruby 3.3 or newer and Bundler, then run from this folder:
 
 ```sh
 bundle install
-bundle exec jekyll serve
+bundle exec jekyll serve --livereload
 ```
 
-Open <http://127.0.0.1:4000>. Changes to Markdown and styles rebuild automatically. Restart after changing `_config.yml`. Add `--port 4001` if the default port is occupied.
+Open <http://127.0.0.1:4000>. Changes rebuild the site and refresh the browser automatically. Refresh an already-open page once after enabling live reload. Restart after changing `_config.yml`.
 
 ## Create content
 

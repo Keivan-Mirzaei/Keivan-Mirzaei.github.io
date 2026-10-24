@@ -6,6 +6,11 @@ course_key: calculus
 module_key: elementary-function-derivatives
 position: "3.5"
 description: Use logarithms to turn products into sums and bring changing exponents down where you can differentiate them.
+epigraph:
+  text: "…putteth other numbers in their place which perform as much as they can do, only by addition and subtraction…"
+  author: "John Napier"
+  source: "Mirifici Logarithmorum Canonis Descriptio, author’s preface; English translation, excerpt"
+  source_url: "https://ximera.osu.edu/history/historyOfMathematics/10NewtonAndSeries/LogarithmsAndMultiplication"
 math: true
 sitemap: false
 exercises:

@@ -6,6 +6,11 @@ course_key: calculus
 module_key: limits-and-continuity
 position: "1.3"
 description: Find a limit by trapping a function between simpler ones, then apply the idea to small angles.
+epigraph:
+  text: "If you cannot solve the proposed problem, look around for an appropriate related problem."
+  author: "George Pólya"
+  source: "Mathematical Discovery, section 1.6"
+  source_url: "https://www.tlu.ee/~tonu/modesimu/George_Polya_Mathematical_discovery.pdf"
 math: true
 topic_script: /assets/js/learning-squeeze.js
 sitemap: false

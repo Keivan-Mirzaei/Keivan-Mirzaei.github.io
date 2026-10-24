@@ -52,9 +52,9 @@ Compare the areas at $$9.9$$ and $$10.1$$ with the nominal area $$100$$.
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-For $$A=s^2$$, $$dA=2s\,ds$$, so the predicted error magnitude is at most $$2(10)(0.1)=2\text{ cm}^2$$.
+For $$A=s^2$$, $$dA=2s\,ds$$. The differential model therefore estimates the largest error magnitude as $$2(10)(0.1)=2\text{ cm}^2$$.
 
-The actual area varies from $$9.9^2=98.01$$ to $$10.1^2=102.01\text{ cm}^2$$. The downward error is $$1.99$$ and the upward error is $$2.01\text{ cm}^2$$. Thus the greatest magnitude is $$2.01\text{ cm}^2$$: the differential estimate is not a strict bound. The missing term in $$\Delta A=20\,\Delta s+(\Delta s)^2$$ explains the difference.
+The actual area varies from $$9.9^2=98.01$$ to $$10.1^2=102.01\text{ cm}^2$$. The downward error is $$1.99$$ and the upward error is $$2.01\text{ cm}^2$$. Thus the greatest magnitude is $$2.01\text{ cm}^2$$: the differential estimate is not a guaranteed upper bound. The missing term in $$\Delta A=20\,\Delta s+(\Delta s)^2$$ explains the difference.
 
 </details>
 </section>
@@ -63,11 +63,17 @@ The actual area varies from $$9.9^2=98.01$$ to $$10.1^2=102.01\text{ cm}^2$$. Th
 {% include learning/problem-label.html number=3 difficulty=1 %}
 <h3>Read a function without seeing it</h3>
 
-The figure gives $$f^{\prime}$$ for a differentiable function $$f$$ on $$[-3,3]$$. The indicated segments are straight.
+The figure gives $$f^{\prime}$$ on $$[-3,3]$$ for a function $$f$$ differentiable on an open interval containing $$[-3,3]$$. The indicated segments are straight.
 
-<figure class="topic-figure"><img src="{{ '/assets/figures/learning/applications-problem-slopes.svg' | relative_url }}" alt="The derivative decreases linearly from minus three, one to minus one, minus one, then increases to one, one, then decreases to three, minus one." width="640"><figcaption>This is the derivative graph. Its height gives a slope of the unseen function.</figcaption></figure>
+<figure class="topic-figure">
+<div class="applications-legend" aria-label="Derivative graph legend">
+<span markdown="span"><i class="applications-legend-key" style="border-color:#285b46" aria-hidden="true"></i> $$f^{\prime}(x)$$</span>
+</div>
+<img src="{{ '/assets/figures/learning/applications-problem-slopes.svg' | relative_url }}?v=7a5180845d6a" alt="The derivative decreases linearly from minus three, one to minus one, minus one, then increases to one, one, then decreases to three, minus one." width="640" height="350">
+<figcaption>This is the derivative graph. Its height gives a slope of the unseen function.</figcaption>
+</figure>
 
-Find the intervals of increase and decrease of $$f$$, its interior local extrema, and its intervals of concavity. Locate its inflection inputs. Can the height $$f(0)$$ be recovered?
+Find the intervals of increase and decrease of $$f$$, the inputs of its interior local extrema, and its intervals of concavity. Locate its inflection inputs. Can the height $$f(0)$$ be recovered?
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
@@ -89,9 +95,14 @@ The height $$f(0)$$ is undetermined. Adding a constant to any compatible functio
 
 <section class="worked" data-problem-id="applications-cars" markdown="1">
 {% include learning/problem-label.html number=4 difficulty=2 %}
-<h3>Approaching an intersection, separating from a car</h3>
+<h3>Two cars on perpendicular roads</h3>
 
 Two roads cross at right angles. At one instant, a car is $$3\text{ km}$$ east of the intersection and moving east at $$60\text{ km/h}$$. Another is $$4\text{ km}$$ north and moving south at $$40\text{ km/h}$$.
+
+<figure class="topic-figure">
+<img src="{{ '/assets/figures/learning/applications-problem-cars.svg' | relative_url }}" alt="Two perpendicular roads meet at O. The east car is three kilometres from O and travels east at sixty kilometres per hour. The north car is four kilometres from O and travels south at forty kilometres per hour. A diagonal s joins the cars." width="640" height="350" loading="lazy">
+<figcaption markdown="span">The arrows show the cars’ motions at the stated instant; $$s$$ is the straight-line distance between them.</figcaption>
+</figure>
 
 Is their separation increasing or decreasing at that instant, and at what rate? Explain why the direction of the second car alone cannot settle the question.
 
@@ -121,9 +132,14 @@ Separation increases. One car's approach reduces one component of the distance, 
 {% include learning/problem-label.html number=5 difficulty=2 %}
 <h3>Track a rising balloon</h3>
 
-An observer stands $$20\text{ m}$$ from the point directly below a vertically rising balloon. Its height increases at $$3\text{ m/s}$$. Let $$\theta$$ be the observer's angle above the horizontal, measured in radians.
+An observer watches a balloon rising vertically at $$3\text{ m/s}$$. Its path is $$20\text{ m}$$ horizontally from the observer's eye. Let $$h$$ be its height above eye level and $$\theta$$ its angle above the horizontal, measured in radians.
 
-Find $$d\theta/dt$$ when the balloon is $$15\text{ m}$$ high. If its rise continues at the same speed, does its angular rate increase or decrease as it rises?
+<figure class="topic-figure">
+<img src="{{ '/assets/figures/learning/applications-problem-balloon.svg' | relative_url }}" alt="A line of sight joins an observer to a rising balloon. The horizontal distance is twenty metres, the balloon’s height is h, and the upward speed is three metres per second. Theta is the angle above the horizontal." width="640" height="350" loading="lazy">
+<figcaption markdown="span">The observer’s horizontal distance stays fixed while the height and viewing angle change.</figcaption>
+</figure>
+
+Find $$d\theta/dt$$ when $$h=15\text{ m}$$. If its rise continues at the same speed, does its angular rate increase or decrease as it rises?
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
@@ -188,6 +204,16 @@ Factor both derivatives and keep their purposes separate.
 We have $$f^{\prime}=4x^2(x-3)$$ and $$f^{\prime\prime}=12x(x-2)$$. The critical numbers are $$0$$ and $$3$$. Candidate values are $$f(-1)=5$$, $$f(0)=0$$, $$f(3)=-27$$ and $$f(4)=0$$. The absolute maximum is $$5$$ at $$-1$$; the absolute minimum is $$-27$$ at $$3$$.
 
 The first derivative is negative on either side of zero, so zero is not an extremum. The second derivative has signs $$+,-,+$$ on $$(-1,0),(0,2),(2,4)$$. Thus the inflections are $$(0,0)$$ and $$(2,-16)$$. A horizontal tangent can coincide with an inflection without creating a turn.
+
+<figure class="topic-figure">
+<div class="applications-legend" aria-label="Polynomial sketch legend">
+<span markdown="span"><i class="applications-legend-key" style="border-color:#285b46" aria-hidden="true"></i> $$f(x)=x^4-4x^3$$</span>
+<span><i class="applications-legend-dot" aria-hidden="true"></i> Absolute extrema</span>
+<span><i class="applications-legend-dot" style="background:#617a9a" aria-hidden="true"></i> Inflections</span>
+</div>
+<img src="{{ '/assets/figures/learning/applications-problem-turns.svg' | relative_url }}?v=0f8ea6f6867d" alt="The graph of x to the fourth minus four x cubed on minus one to four has its absolute maximum at minus one, five and absolute minimum at three, minus twenty-seven. Blue inflection points are zero, zero and two, minus sixteen. The graph keeps decreasing through zero." width="640" height="350" loading="lazy">
+<figcaption markdown="span">At $$x=0$$ the tangent is horizontal and the concavity changes, while the function keeps decreasing. The other inflection, at $$x=2$$, has a nonzero slope.</figcaption>
+</figure>
 
 </details>
 </section>
@@ -297,6 +323,16 @@ The function increases on $$(-\infty,0)$$ and $$(2,\infty)$$, and decreases on $
 
 The left branch is concave down and the right branch concave up. No inflection exists at $$1$$ because no graph point exists there. Draw the left branch below its slant asymptote and the right branch above it, as the sign of $$1/(x-1)$$ requires.
 
+<figure class="topic-figure">
+<div class="applications-legend" aria-label="Rational sketch legend">
+<span markdown="span"><i class="applications-legend-key" style="border-color:#285b46" aria-hidden="true"></i> $$f(x)=\frac{x^2}{x-1}$$</span>
+<span markdown="span"><svg class="applications-legend-line" width="20" height="6" viewBox="0 0 20 6" aria-hidden="true" focusable="false"><line x1="0" y1="3" x2="20" y2="3" stroke="#617a9a" stroke-width="2.4" stroke-dasharray="6 5" stroke-linecap="butt" vector-effect="non-scaling-stroke"/></svg> Asymptotes</span>
+<span><i class="applications-legend-dot" aria-hidden="true"></i> Local extrema</span>
+</div>
+<img src="{{ '/assets/figures/learning/applications-problem-rational.svg' | relative_url }}" alt="Two branches of x squared divided by x minus one are separated by the dashed vertical asymptote x equals one. The dashed slant asymptote is y equals x plus one. Amber points show a local maximum at zero, zero and local minimum at two, four." width="640" height="350" loading="lazy">
+<figcaption markdown="span">The dashed lines are $$x=1$$ and $$y=x+1$$. The branches have opposite concavity, and the gap at $$x=1$$ contains no inflection point.</figcaption>
+</figure>
+
 </details>
 </section>
 
@@ -305,6 +341,11 @@ The left branch is concave down and the right branch concave up. No inflection e
 <h3>Material costs change the proportions</h3>
 
 An open-top cylindrical container holds $$18\pi\text{ cm}^3$$. Material for its base costs three times as much per square centimetre as material for its curved side. Find the radius and height giving least material cost. Compare height with radius, and justify global optimality.
+
+<figure class="topic-figure">
+<img src="{{ '/assets/figures/learning/applications-problem-weighted-cylinder.svg' | relative_url }}?v=912c144f7fee" alt="A slim rim and visible inner wall show that the cylinder has no lid. Its radius r is marked outside the base and its height is h. The base costs three units per square centimetre and the curved side costs one." width="640" height="350" loading="lazy">
+<figcaption markdown="span">The inner wall is visible through the opening; there is no lid. Only the base and curved side are charged, at the marked relative prices.</figcaption>
+</figure>
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
@@ -340,6 +381,11 @@ The container is three times as tall as its radius. The more expensive base favo
 A vertical picture has its bottom edge $$1\text{ m}$$ above an observer's eye level and its top edge $$3\text{ m}$$ above it. The observer stands a horizontal distance $$x>0$$ from the wall. Maximize the angle subtended by the picture at the observer's eye.
 
 Find both the best distance and the maximum angle. Explain why standing as close as possible is not optimal.
+
+<figure class="topic-figure">
+<img src="{{ '/assets/figures/learning/applications-problem-viewing-angle.svg' | relative_url }}" alt="An observer’s eye is horizontal distance x from a vertical picture. The bottom and top of the picture are one and three metres above eye level. Theta lies between the two lines of sight, rather than between the top line and the horizontal." width="640" height="350" loading="lazy">
+<figcaption markdown="span">Both heights are measured from eye level. The apparent size is the angle $$\theta$$ between the two sight lines.</figcaption>
+</figure>
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
@@ -402,7 +448,7 @@ Thus $$s^{\prime}(t)=3$$ at every interior instant, not just one. If the rate ne
 
 <section class="worked" data-problem-id="applications-three-zeros" markdown="1">
 {% include learning/problem-label.html number=14 difficulty=3 %}
-<h3>Three zeros force a flatter point</h3>
+<h3>What do three zeros force?</h3>
 
 Let $$f$$ be twice differentiable on an open interval containing $$[a,b]$$, and suppose $$f(a)=f(d)=f(b)=0$$ with $$a<d<b$$. Prove that $$f^{\prime\prime}(c)=0$$ for some $$a<c<b$$.
 
@@ -453,9 +499,108 @@ $$\begin{aligned}
 &\quad-\cos(1/x).
 \end{aligned}$$
 
-At $$x_n=1/(2\pi n)$$ this equals $$-1$$; at $$z_n=1/((2n+1)\pi)$$ it equals $$1$$. Both lists of inputs approach zero, so no common derivative-ratio limit exists.
+For positive integers $$n$$, at $$x_n=1/(2\pi n)$$ this equals $$-1$$; at $$z_n=1/((2n+1)\pi)$$ it equals $$1$$. Both lists of inputs approach zero, so no common derivative-ratio limit exists.
 
 This disproves “if the derivative ratio has no limit, then the original quotient has no limit.” The rule gives a sufficient method, not a necessary test for convergence. It also illustrates why differentiating blindly can make a simple limit harder.
+
+</details>
+</section>
+
+<section class="worked" data-problem-id="applications-gentlest-arch" markdown="1">
+{% include learning/problem-label.html number=16 difficulty=4 %}
+<h3>The gentlest possible arch</h3>
+
+An arch is modelled by $$y=f(x)$$ for $$0\le x\le1$$. Assume that $$f$$ has a continuous second derivative on an open interval containing $$[0,1]$$ and satisfies
+
+$$\begin{aligned}
+f(0)=f(1)&=0,\\
+f(x)&\ge0\qquad(0\le x\le1),\\
+\max_{0\le x\le1}f(x)&=1.
+\end{aligned}$$
+
+Measure the largest rate of change of its slope by
+
+$$B(f)=\max_{0\le x\le1}\lvert f^{\prime\prime}(x)\rvert.$$
+
+Find the smallest possible value of $$B(f)$$ and determine *every* arch that attains it. Your proof must cover all functions satisfying the conditions; do not assume that the arch is symmetric or polynomial.
+
+Use only the tools established in this module.
+
+<details class="disclosure" markdown="1">
+<summary>Hint 1</summary>
+
+Let $$a\in(0,1)$$ be an input where $$f(a)=1$$. Choose a quadratic of the form $$q(x)=C x(1-x)$$ passing through $$(0,0)$$, $$(a,1)$$ and $$(1,0)$$. Apply the result of Problem 14 to $$f-q$$.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Hint 2</summary>
+
+Your comparison gives a lower bound involving $$a(1-a)$$. How large can this product be? Find a candidate attaining the resulting bound, then check whether equality could allow a different profile.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Hint 3</summary>
+
+For the equality case, compare $$f$$ with $$4x(1-x)$$. The difference has nonnegative second derivative and vanishes at both endpoints and the midpoint. Use the sign of its first derivative on each side of the midpoint.
+
+</details>
+<details class="disclosure" markdown="1">
+<summary>Solution</summary>
+
+*Find a lower bound for every admissible arch.* Continuity gives a highest point $$f(a)=1$$. Because the endpoints have height zero, $$0<a<1$$. Define
+
+$$q(x)=\frac{x(1-x)}{a(1-a)}.$$
+
+The difference $$F=f-q$$ vanishes at $$0,a,1$$. Applying Rolle's theorem twice, as in Problem 14, gives some $$c\in(0,1)$$ with $$F^{\prime\prime}(c)=0$$. Therefore
+
+$$f^{\prime\prime}(c)=q^{\prime\prime}(c)=-\frac{2}{a(1-a)}.$$
+
+Since
+
+$$a(1-a)=\frac14-\left(a-\frac12\right)^2\le\frac14,$$
+
+we obtain the universal bound
+
+$$B(f)\ge\frac{2}{a(1-a)}\ge8.$$
+
+*Show that the bound is attained.* The profile
+
+$$f_*(x)=4x(1-x)$$
+
+is nonnegative on $$[0,1]$$, has zero endpoint heights and reaches its maximum value $$1$$ at $$x=1/2$$. Its second derivative is constantly $$-8$$, so $$B(f_*)=8$$. Thus the smallest possible value is $$8$$.
+
+<figure class="topic-figure">
+<div class="applications-legend" aria-label="Optimal arch legend">
+<span markdown="span"><i class="applications-legend-key" style="border-color:#285b46" aria-hidden="true"></i> $$f_*(x)=4x(1-x)$$</span>
+<span><i class="applications-legend-dot" aria-hidden="true"></i> Highest point</span>
+</div>
+<img src="{{ '/assets/figures/learning/applications-problem-optimal-arch.svg' | relative_url }}" alt="The optimal parabolic arch meets the baseline at zero and one and reaches height one at the midpoint. Horizontal and vertical units use the same scale." width="640" height="360" loading="lazy">
+<figcaption markdown="span">The minimizing arch reaches height $$1$$ at the midpoint. Its slope changes at the constant rate $$f_*^{\prime\prime}=-8$$.</figcaption>
+</figure>
+
+*Prove that no other profile attains the bound.* Suppose $$B(f)=8$$. The two inequalities in the bound must both be equalities, forcing $$a=1/2$$. Thus $$f(1/2)=1$$, and Fermat's theorem gives $$f^{\prime}(1/2)=0$$.
+
+Set
+
+$$g(x)=f(x)-4x(1-x).$$
+
+Then $$g(0)=g(1/2)=g(1)=0$$ and $$g^{\prime}(1/2)=0$$. Also,
+
+$$g^{\prime\prime}(x)=f^{\prime\prime}(x)+8\ge0,$$
+
+because $$\lvert f^{\prime\prime}(x)\rvert\le8$$. The mean value theorem therefore makes $$g^{\prime}$$ nondecreasing. Since its midpoint value is zero,
+
+$$g^{\prime}(x)\le0\quad(0<x<1/2),$$
+
+$$g^{\prime}(x)\ge0\quad(1/2<x<1).$$
+
+Consequently $$g$$ is nonincreasing on the left half and nondecreasing on the right half. Its values at both ends of each half are zero, so $$g$$ is identically zero throughout $$[0,1]$$.
+
+The unique minimizing profile is therefore
+
+$$\boxed{f(x)=4x(1-x),\qquad \min B(f)=8.}$$
+
+The comparison with a quadratic supplies a bound for *all* admissible functions; the equality argument identifies the only design that achieves it.
 
 </details>
 </section>

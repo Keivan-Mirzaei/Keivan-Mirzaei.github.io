@@ -6,6 +6,11 @@ course_key: calculus
 module_key: limits-and-continuity
 position: "1.5"
 description: When the value at a point agrees with what the nearby values approach.
+epigraph:
+  text: "Upon those who step into the same rivers, different and again different waters flow."
+  author: "Heraclitus"
+  source: "Fragment B12, A Presocratics Reader, selection 39, quoting Arius Didymus"
+  source_url: "https://users.manchester.edu/Facstaff/SSNaragon/Online/texts/316/Presocratics/Heraclitus.pdf"
 math: true
 topic_script: /assets/js/learning-continuity.js
 sitemap: false

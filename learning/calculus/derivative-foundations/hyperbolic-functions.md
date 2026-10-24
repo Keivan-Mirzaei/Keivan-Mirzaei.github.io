@@ -6,6 +6,11 @@ course_key: calculus
 module_key: elementary-function-derivatives
 position: "3.3"
 description: Differentiate exponentials and logarithms, then use exponentials to build hyperbolic functions.
+epigraph:
+  text: "By shortening the labors, the invention of logarithms doubled the life of the astronomer."
+  author: "Pierre-Simon Laplace"
+  source: "Observation on logarithms, quoted in the MAA review of Eli Maor, e: The Story of a Number"
+  source_url: "https://old.maa.org/press/maa-reviews/e-the-story-of-a-number"
 math: true
 topic_script: /assets/js/learning-hyperbolic.js
 sitemap: false

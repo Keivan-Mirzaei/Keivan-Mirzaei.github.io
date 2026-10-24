@@ -6,6 +6,11 @@ course_key: calculus
 module_key: elementary-function-derivatives
 position: "3.4"
 description: Differentiate a relation without first solving it for one variable.
+epigraph:
+  text: "Mathematicians do not study objects, but relations between objects."
+  author: "Henri Poincaré"
+  source: "Science and Hypothesis, relations between mathematical objects"
+  source_url: "https://mathshistory.st-andrews.ac.uk/Biographies/Poincare/quotations/"
 math: true
 topic_script: /assets/js/learning-implicit.js
 sitemap: false

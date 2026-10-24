@@ -6,6 +6,11 @@ course_key: calculus
 module_key: derivative-foundations
 position: "2.4"
 description: Read a whole function of slopes, then differentiate the rate itself.
+epigraph:
+  text: "The alteration of motion is ever proportional to the motive force impressed…"
+  author: "Isaac Newton"
+  source: "Principia, Law II; Andrew Motte translation, 1846 American edition, excerpt"
+  source_url: "https://en.wikisource.org/wiki/Page:Newton%27s_Principia_(1846).djvu/89"
 math: true
 topic_script: /assets/js/learning-higher-derivatives.js
 sitemap: false

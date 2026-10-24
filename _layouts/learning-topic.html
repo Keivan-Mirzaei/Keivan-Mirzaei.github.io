@@ -20,7 +20,14 @@ layout: default
 <div class="learning-page">
     <article class="topic-wrap">
       <h1>{{ page.title | escape }}</h1>
-      {% if page.description and page.problem_set != true %}<p class="topic-lead">{{ page.description | escape }}</p>{% endif %}
+      {% if page.problem_set != true %}
+      {% if page.epigraph.text %}
+      <blockquote class="topic-epigraph">
+        <p>“{{ page.epigraph.text | escape }}”</p>
+        <footer>— {{ page.epigraph.author | escape }}</footer>
+      </blockquote>
+      {% elsif page.description %}<p class="topic-lead">{{ page.description | escape }}</p>{% endif %}
+      {% endif %}
       {% assign topic_body = content | strip %}
       {% capture rendered_topic_body %}{% if topic_body == '' %}{% unless page.exercises.size > 0 %}{% include learning/coming-soon.html %}{% endunless %}{% else %}{{ content }}{% endif %}{% endcapture %}
       {% if page.problem_set %}<div id="module-problems">{{ rendered_topic_body }}</div>{% else %}{{ rendered_topic_body }}{% endif %}

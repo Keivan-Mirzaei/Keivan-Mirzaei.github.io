@@ -6,6 +6,11 @@ course_key: calculus
 module_key: applications-of-derivatives
 position: "4.1"
 description: "Predict a nearby value from a known value and slope, and distinguish the prediction from the actual change."
+epigraph:
+  text: "All models are wrong but some are useful."
+  author: "George E. P. Box"
+  source: "Robustness in the Strategy of Scientific Model Building (1979), section heading, p. 202"
+  source_url: "https://gwern.net/doc/statistics/decision/1979-box.pdf"
 math: true
 sitemap: false
 topic_script: /assets/js/learning-applications.js

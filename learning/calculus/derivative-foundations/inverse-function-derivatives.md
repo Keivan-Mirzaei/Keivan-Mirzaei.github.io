@@ -6,6 +6,11 @@ course_key: calculus
 module_key: elementary-function-derivatives
 position: "3.2"
 description: An inverse swaps inputs and outputs, so its tangent slope is reciprocal at the corresponding point.
+epigraph:
+  text: "One must always invert."
+  author: "Carl Gustav Jacob Jacobi"
+  source: "Man muss immer umkehren; reported by E. B. Van Vleck (1916), not a surviving written statement by Jacobi"
+  source_url: "https://old.maa.org/press/periodicals/convergence/quotations-in-context-jacobi"
 math: true
 topic_script: /assets/js/learning-inverse.js
 sitemap: false

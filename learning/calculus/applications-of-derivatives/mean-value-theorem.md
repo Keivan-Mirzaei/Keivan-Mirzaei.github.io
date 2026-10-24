@@ -6,6 +6,11 @@ course_key: calculus
 module_key: applications-of-derivatives
 position: "4.4"
 description: "Find the instantaneous rate hidden inside an average rate, and use derivative bounds to control actual changes."
+epigraph:
+  text: "As for my methods, I have sought to give them all the rigour which is demanded in geometry…"
+  author: "Augustin-Louis Cauchy"
+  source: "Cours d’Analyse (1821), Introduction, on his methods; translated excerpt"
+  source_url: "https://mathshistory.st-andrews.ac.uk/Extras/Cauchy_Calculus/"
 math: true
 sitemap: false
 topic_script: /assets/js/learning-applications.js

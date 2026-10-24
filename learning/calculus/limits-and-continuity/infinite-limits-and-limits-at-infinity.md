@@ -6,6 +6,11 @@ course_key: calculus
 module_key: limits-and-continuity
 position: "1.4"
 description: Distinguish unbounded outputs from faraway inputs, and describe the lines a graph approaches.
+epigraph:
+  text: "The infinite! No other question has ever moved so profoundly the spirit of man."
+  author: "David Hilbert"
+  source: "On the Infinite; translation quoted in The World of Mathematics (1956)"
+  source_url: "https://mathshistory.st-andrews.ac.uk/Biographies/Hilbert/quotations/"
 math: true
 topic_script: /assets/js/learning-infinite-limits.js
 sitemap: false

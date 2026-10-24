@@ -6,6 +6,11 @@ course_key: calculus
 module_key: limits-and-continuity
 position: "1.1"
 description: What a function approaches, even when its value at the point tells a different story.
+epigraph:
+  text: "…that which is in locomotion must arrive at the half-way stage before it arrives at the goal."
+  author: "Aristotle"
+  source: "Physics VI.9, W. D. Ross translation; excerpt describing Zeno’s dichotomy"
+  source_url: "https://classics.mit.edu/Aristotle/physics.6.vi.html"
 math: true
 topic_script: /assets/js/learning-limits.js
 sitemap: false

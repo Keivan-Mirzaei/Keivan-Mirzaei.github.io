@@ -239,10 +239,12 @@ export function initializeApplications(document, MathJax) {
         line(drawing, 75, top, 565, top, { stroke: '#b4c1b7', 'stroke-width': 3 });
         element('path', { d: `M${left} ${top}V${top + x * scale}H${left + length * scale}V${top}`, fill: '#dce8df', 'fill-opacity': .5, stroke: green, 'stroke-width': 2 }, drawing);
         text(drawing, 320, 24, String.raw`\text{Wall · no fence needed}`, { 'text-anchor': 'middle' });
-        text(drawing, 320, top + x * scale + 28, String.raw`x = ${fmt(x, 1)}\,\mathrm{m},\quad y = ${fmt(length, 1)}\,\mathrm{m}`, { 'text-anchor': 'middle', fill: green });
+        text(drawing, left - 12, top + x * scale / 2 + 4, String.raw`x = ${fmt(x, 1)}\,\mathrm{m}`, { 'text-anchor': 'end', fill: green });
+        text(drawing, 320, top + x * scale + 28, String.raw`y = ${fmt(length, 1)}\,\mathrm{m}`, { 'text-anchor': 'middle', fill: green });
         const p = panel(0, 20, 0, 220, 240, 450); p.curve(z => z * (40 - 2 * z));
+        for (const endpoint of [0, 20]) element('circle', { cx: p.sx(endpoint), cy: p.sy(0), r: 4, fill: '#fcfcf9', stroke: green, 'stroke-width': 1.7 }, drawing);
         dot(p, 10, 200, amber, 4); handle(p, x, x * length, 'Pen depth on area graph');
-        pointLabel(p, x, x * length, String.raw`${fmt(x * length, 1)}\,\mathrm{m}^2`, green, x * length > 150 ? 26 : -22);
+        text(drawing, p.sx(10), p.sy(200) - 22, '(10,200)', { fill: amber, 'text-anchor': 'middle' });
         readouts([
           ['2x + y', '40 m', String.raw`2x+y=40\,\mathrm{m}`],
           ['area', `${fmt(x * length, 1)} m²`, String.raw`A=${fmt(x * length, 1)}\,\mathrm{m}^2`],

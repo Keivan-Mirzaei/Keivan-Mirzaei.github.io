@@ -6,6 +6,11 @@ course_key: calculus
 module_key: limits-and-continuity
 position: "1.2"
 description: Combine limits you know, then rewrite expressions that resist substitution.
+epigraph:
+  text: "Mathematics is the art of giving the same name to different things."
+  author: "Henri Poincaré"
+  source: "Science and Method, The Future of Mathematics"
+  source_url: "https://mathshistory.st-andrews.ac.uk/Extras/Poincare_Future/"
 math: true
 sitemap: false
 exercises:

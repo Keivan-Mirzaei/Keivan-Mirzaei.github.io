@@ -6,6 +6,11 @@ course_key: calculus
 module_key: applications-of-derivatives
 position: "4.5"
 description: "Use signs to read motion of a graph, distinguish a turn from a flattening, and locate changes of concavity."
+epigraph:
+  text: "…if he will be content to begin with doubts, he shall end in certainties."
+  author: "Francis Bacon"
+  source: "The Advancement of Learning (1605), Book I, V.8, excerpt"
+  source_url: "https://www.gutenberg.org/files/5500/5500-h/5500-h.htm"
 math: true
 sitemap: false
 topic_script: /assets/js/learning-applications.js

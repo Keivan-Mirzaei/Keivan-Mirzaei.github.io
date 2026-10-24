@@ -6,6 +6,11 @@ course_key: calculus
 module_key: derivative-foundations
 position: "2.2"
 description: Differentiate the parts, then combine them according to the structure of the function.
+epigraph:
+  text: "It is unworthy of excellent men to lose hours like slaves in the labor of calculation…"
+  author: "Gottfried Wilhelm Leibniz"
+  source: "Excerpt from his observation on calculating machines"
+  source_url: "https://mathshistory.st-andrews.ac.uk/Biographies/Leibniz/quotations/"
 math: true
 topic_script: /assets/js/learning-rules.js
 sitemap: false

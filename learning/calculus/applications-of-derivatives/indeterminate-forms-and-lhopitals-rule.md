@@ -6,6 +6,11 @@ course_key: calculus
 module_key: applications-of-derivatives
 position: "4.6"
 description: "Decide when a derivative ratio can evaluate a limit, and turn products, differences and powers into suitable quotients."
+epigraph:
+  text: "May we not call them the ghosts of departed quantities?"
+  author: "George Berkeley"
+  source: "The Analyst (1734), section XXXV; capitalization modernized"
+  source_url: "https://www.maths.tcd.ie/pub/HistMath/People/Berkeley/Analyst/Analyst.html"
 math: true
 sitemap: false
 exercises:

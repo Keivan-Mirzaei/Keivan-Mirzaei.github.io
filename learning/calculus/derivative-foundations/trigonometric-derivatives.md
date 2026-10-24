@@ -6,6 +6,11 @@ course_key: calculus
 module_key: elementary-function-derivatives
 position: "3.1"
 description: Connect sine and cosine to their slopes, then apply the differentiation rules.
+epigraph:
+  text: "The profound study of nature is the most fertile source of mathematical discoveries."
+  author: "Joseph Fourier"
+  source: "The Analytical Theory of Heat, Preliminary Discourse"
+  source_url: "https://mathshistory.st-andrews.ac.uk/Biographies/Fourier/quotations/"
 math: true
 topic_script: /assets/js/learning-trig.js
 sitemap: false

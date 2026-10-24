@@ -6,6 +6,11 @@ course_key: calculus
 module_key: applications-of-derivatives
 position: "4.2"
 description: "Turn a changing geometric relationship into an equation connecting rates, with time, signs and units kept explicit."
+epigraph:
+  text: "Observe constantly that all things take place by change…"
+  author: "Marcus Aurelius"
+  source: "Meditations IV.36; George Long translation, excerpt"
+  source_url: "https://en.wikisource.org/wiki/The_Thoughts_of_the_Emperor_Marcus_Aurelius_Antoninus/Book_IV"
 math: true
 sitemap: false
 topic_script: /assets/js/learning-applications.js

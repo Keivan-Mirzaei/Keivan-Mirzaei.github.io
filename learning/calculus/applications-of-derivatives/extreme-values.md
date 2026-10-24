@@ -6,6 +6,11 @@ course_key: calculus
 module_key: applications-of-derivatives
 position: "4.3"
 description: "Distinguish nearby peaks from global bounds, then find every candidate on a closed interval."
+epigraph:
+  text: "Nature is thrifty in all its actions."
+  author: "Pierre-Louis Moreau de Maupertuis"
+  source: "Principle of least action (1744); English wording quoted in Scientific Reports (2022), A unifying physically meaningful relativistic action"
+  source_url: "https://www.nature.com/articles/s41598-022-14740-7"
 math: true
 sitemap: false
 exercises:

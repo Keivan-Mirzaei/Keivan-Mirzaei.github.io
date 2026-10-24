@@ -6,6 +6,11 @@ course_key: calculus
 module_key: limits-and-continuity
 position: "1.6"
 description: A continuous function cannot skip a height between its endpoint values.
+epigraph:
+  text: "Nature never makes leaps."
+  author: "Gottfried Wilhelm Leibniz"
+  source: "New Essays on Human Understanding, Preface; Jonathan Bennett translation"
+  source_url: "https://www.earlymoderntexts.com/assets/pdfs/leibniz1705book1.pdf"
 math: true
 topic_script: /assets/js/learning-ivt.js
 sitemap: false

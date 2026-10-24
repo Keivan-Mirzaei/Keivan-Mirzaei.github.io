@@ -6,6 +6,11 @@ course_key: calculus
 module_key: applications-of-derivatives
 position: "4.8"
 description: "Choose a feasible design, express its objective in one variable, and show why its best value beats every competitor."
+epigraph:
+  text: "…nothing at all takes place in the universe in which some rule of the maximum or minimum does not appear."
+  author: "Leonhard Euler"
+  source: "Methodus inveniendi (1744), Additamentum I, excerpt"
+  source_url: "https://mathshistory.st-andrews.ac.uk/Biographies/Euler/quotations/"
 math: true
 sitemap: false
 topic_script: /assets/js/learning-applications.js
@@ -44,7 +49,9 @@ A fencing problem may ask for the greatest area; a packaging problem may ask for
 
 An **objective function** measures what we want to maximize or minimize. A **constraint** relates or restricts the choices. The **feasible domain** contains only choices that satisfy the problem's requirements.
 
-## A pen against a wall
+<section class="worked" markdown="1" id="fenced-pen-example">
+<p class="element-label">Example 1</p>
+<h3>A pen against a wall</h3>
 
 There are $$40\text{ m}$$ of fencing for three sides of a rectangular pen; the fourth side lies against a straight wall. Let $$x$$ be each perpendicular side and $$y$$ the fenced side parallel to the wall. Then
 
@@ -60,16 +67,17 @@ The strict inequalities require a pen with positive width and length.
 
 <div class="topic-widget applications-widget" data-applications="pen">
 <figure class="applications-plot">
+<div class="applications-legend" aria-label="Pen area graph legend">
+<span markdown="span"><i class="applications-legend-key" style="border-color:#285b46" aria-hidden="true"></i> $$A(x)=x(40-2x)$$</span>
+<span><i class="applications-legend-dot" style="background:#285b46" aria-hidden="true"></i> Selected pen</span>
+<span><i class="applications-legend-dot" aria-hidden="true"></i> Maximum</span>
+</div>
 <svg viewBox="0 0 640 500" role="group" aria-label="A rectangular pen and its area graph"><title>A rectangular pen and its area graph</title><desc>The rectangle uses forty metres of fencing on three sides. As its depth changes, its length changes and the area moves along a downward parabola.</desc><image data-applications-fallback href="{{ '/assets/figures/learning/applications-pen.svg' | relative_url }}" width="640" height="500"/></svg>
 </figure>
 <div class="applications-controls" hidden></div>
 <div class="widget-readouts applications-values" hidden></div>
-<p class="widget-instruction" markdown="span">Drag the point on the area graph, or focus it and use the arrow keys. Compare a long, shallow pen with a shorter, deeper one. The same fence length can enclose very different areas.</p>
+<p class="widget-instruction" markdown="span">Drag the green point on the area graph, or focus it and use the arrow keys; hold Shift for finer steps. The amber point marks the maximum. Open endpoints represent collapsed pens, excluded from the feasible domain.</p>
 </div>
-<section class="worked" markdown="1">
-<p class="element-label">Example 1</p>
-<h3>A best value over the whole feasible interval</h3>
-
 Differentiate the area:
 
 $$A^{\prime}(x)=40-4x.$$
@@ -80,6 +88,13 @@ The dimensions are $$x=10\text{ m}$$ and $$y=20\text{ m}$$, giving $$A=200\text{
 
 The second derivative $$A^{\prime\prime}=-4$$ would establish a local maximum, but the full-domain sign analysis explains why no other feasible pen does better.
 
+<section class="attention" markdown="1">
+<p class="element-label">Attention</p>
+<h3>A constraint can move the optimum</h3>
+
+Suppose the pen's depth is additionally limited to $$x\le8\text{ m}$$. The old critical number $$10$$ is now infeasible. Since $$A^{\prime}>0$$ throughout $$0<x\le8$$, the best allowed design has $$x=8$$ and $$y=24$$, with area $$192\text{ m}^2$$. A boundary introduced by the problem can determine the answer.
+
+</section>
 </section>
 
 ## A reusable modelling sequence
@@ -102,6 +117,15 @@ $$V(x)=x(12-2x)^2,$$
 
 with $$0<x<6$$.
 
+<figure class="topic-figure" id="open-box-design">
+<div class="applications-legend" aria-label="Open box diagram legend">
+<span><i class="applications-legend-key" style="border-color:#285b46" aria-hidden="true"></i> Sheet and box edges</span>
+<span><svg class="applications-legend-line" width="20" height="6" viewBox="0 0 20 6" aria-hidden="true" focusable="false"><line x1="0" y1="3" x2="20" y2="3" stroke="#617a9a" stroke-width="2.4" stroke-dasharray="6 5" stroke-linecap="butt" vector-effect="non-scaling-stroke"/></svg> Fold lines</span>
+</div>
+<img src="{{ '/assets/figures/learning/applications-open-box.svg' | relative_url }}" alt="A twelve centimetre square sheet with four corner squares of side x removed. Dashed fold lines enclose the square base of side twelve minus two x. The folded open box has the same square base and height x." width="640" height="330" loading="lazy">
+<figcaption markdown="span">Each base edge loses $$x$$ at both ends. The flap width $$x$$ becomes the vertical height $$x$$ when folded; the base side remains $$12-2x$$.</figcaption>
+</figure>
+
 Differentiate using the product and chain rules:
 
 $$\begin{aligned}
@@ -117,9 +141,9 @@ The box is $$8\times8\times2\text{ cm}$$, with volume $$128\text{ cm}^3$$. The l
 </section>
 <section class="worked" markdown="1">
 <p class="element-label">Example 3</p>
-<h3>A minimum on an unbounded domain</h3>
+<h3>A closed cylinder with the least surface area</h3>
 
-A closed cylindrical container holds $$54\pi\text{ cm}^3$$. Its base, lid and side use the same material per unit area. Minimize the surface area.
+A closed cylindrical container holds $$54\pi\text{ cm}^3$$. Assume uniform material thickness and ignore seams and waste, so the material used is proportional to the surface area. Minimize that area.
 
 For radius $$r>0$$ and height $$h>0$$,
 
@@ -134,18 +158,21 @@ S(r)&=2\pi r^2+\frac{108\pi}{r},\\
 S^{\prime}(r)&=\frac{4\pi(r^3-27)}{r^2}.
 \end{aligned}$$
 
+<figure class="topic-figure" id="closed-cylinder-design">
+<div class="applications-legend" aria-label="Cylinder surface area figure legend">
+<span markdown="span"><i class="applications-legend-key" style="border-color:#285b46" aria-hidden="true"></i> Surface area $$S(r)$$</span>
+<span><i class="applications-legend-dot" aria-hidden="true"></i> Minimum</span>
+</div>
+<img src="{{ '/assets/figures/learning/applications-closed-cylinder.svg' | relative_url }}?v=bb22e086ab5f" alt="A fitted lid and a closed base cover both circular ends. Radius r is marked on the lid and h is the height. The adjacent surface-area curve has its minimum at radius three and area fifty-four pi." width="640" height="350" loading="lazy">
+<figcaption markdown="span">The solid lid and base both count toward surface area. With $$h=54/r^2$$, the area is smallest at $$r=3$$.</figcaption>
+</figure>
+
 The denominator is positive. The numerator changes from negative to positive at $$r=3$$, giving a global minimum on $$r>0$$. The required height is $$h=6\text{ cm}$$, and the minimum area is $$54\pi\text{ cm}^2$$.
 
 The area tends to infinity as $$r\to0^+$$ and as $$r\to+\infty$$. Very narrow containers need a large side area; very wide ones need large ends. The optimal design balances these costs.
 
 </section>
-<section class="attention" markdown="1">
-<p class="element-label">Attention</p>
-<h3>A constraint can move the optimum</h3>
 
-Suppose the pen's depth is additionally limited to $$x\le8\text{ m}$$. The old critical number $$10$$ is now infeasible. Since $$A^{\prime}>0$$ throughout $$0<x\le8$$, the best allowed design has $$x=8$$ and $$y=24$$, with area $$192\text{ m}^2$$. A boundary introduced by the problem can determine the answer.
-
-</section>
 <section class="warning" markdown="1">
 <p class="element-label">Warning</p>
 

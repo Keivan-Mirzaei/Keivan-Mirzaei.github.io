@@ -6,6 +6,11 @@ course_key: calculus
 module_key: derivative-foundations
 position: "2.1"
 description: From the slope between two points to the rate of change at one instant.
+epigraph:
+  text: "I consider mathematical quantities in this place not as consisting of very small parts, but as described by a continued motion."
+  author: "Isaac Newton"
+  source: "On the Quadrature of Curves (1704), opening; quoted in Florian Cajori, A History of Mathematics"
+  source_url: "https://www.hlevkin.com/hlevkin/90MathPhysBioBooks/mathHistory/Cajori.pdf"
 math: true
 topic_script: /assets/js/learning-derivative.js
 sitemap: false
