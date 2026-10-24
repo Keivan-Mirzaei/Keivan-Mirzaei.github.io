@@ -84,10 +84,8 @@ mode. Playback timing and the animation itself are unchanged.
 
 The supporting artwork consists of two native SVG plates, ink controls and
 Esc before/after, plus a native ink underline in the Apple Pencil text hero.
-Regenerate the SVG plates with `python3 scripts/generate_laser_artwork.py`.
-Tapered geometry lives in `scripts/laser_ink.py`. The generator never changes
-the animation. Retired SVG studies live under
-`docs/laser-pointer-reference/retired/` and are excluded from the published site.
+Edit the saved SVG files in `_includes/applications/` directly. The completed
+artwork generator and retired illustration studies remain in Git history.
 
 ## Apple Pencil text hero
 
@@ -98,17 +96,13 @@ note remain beneath the heading. The type scales from 56px on desktop to a
 smaller responsive size on phones, with left-aligned copy and generous space.
 
 `_includes/applications/laser-pencil-underline.svg` is a decorative native SVG.
-Regenerate it with `python3 scripts/generate_laser_artwork.py`; its filled
-outline uses `scripts/laser_ink.py`, sharing the product-style speed-sensitive
-width and tapered endpoints. The underline stays attached to the word as text
+Its filled outline follows the product-style speed-sensitive width and tapered
+endpoints. The underline stays attached to the word as text
 wraps and scales. It is hidden from assistive technology; the heading remains
 selectable, accessible text.
 
-The former hand/Pencil/iPad illustration is archived at
-`docs/laser-pointer-reference/laser-pencil-tides.png`. Earlier studies and
-product photographs remain in that reference folder. Generation history is
-preserved in `laser-pencil-annotation-prompt.md`,
-`laser-pencil-tides-prompt.md`, and `laser-pencil-wireframe-prompt.md`.
+The former hand/Pencil/iPad illustration, reference photographs, and generation
+prompts remain recoverable from Git history.
 
 Browser PNGs were exported at 128 × 128 from vendor icons in the installed
 Safari, Chrome, Edge and Firefox apps with `sips`. Keep their colours and

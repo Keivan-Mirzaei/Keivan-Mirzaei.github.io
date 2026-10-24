@@ -280,11 +280,15 @@ $$F_n(x)=\frac{x+3}{(x-3)^{n-1}}.$$
 
 The numerator approaches the positive number $$6$$. Therefore:
 
+<div class="table-scroll" markdown="1" role="region" aria-label="Limits for each exponent" tabindex="0">
+
 | $$n$$ | Left-hand limit | Right-hand limit | Behaviour |
-| --- | --- | --- | --- |
+| --- | :---: | :---: | --- |
 | $$1$$ | $$6$$ | $$6$$ | Hole, repaired by assigning $$F_1(3)=6$$ |
 | $$2$$ | $$-\infty$$ | $$+\infty$$ | Vertical asymptote |
 | $$3$$ | $$+\infty$$ | $$+\infty$$ | Vertical asymptote |
+
+</div>
 
 For every $$n\ge2$$ there is a vertical asymptote. If $$n$$ is odd, the remaining exponent $$n-1$$ is even and both limits are $$+\infty$$. If $$n$$ is even, the left-hand limit is $$-\infty$$ and the right-hand limit is $$+\infty$$.
 
@@ -369,7 +373,7 @@ A student replaces $$\sqrt{4x^2}$$ by $$2x$$ at both ends and predicts the same 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
 
-At the negative end, $$\sqrt{x^2}=|x|=-x$$. Rationalise $$F(x)-2x$$ on the right and $$F(x)+2x$$ on the left.
+At the negative end, $$\sqrt{x^2}=\lvert x\rvert=-x$$. Rationalise $$F(x)-2x$$ on the right and $$F(x)+2x$$ on the left.
 
 </details>
 <details class="disclosure" markdown="1">
@@ -468,7 +472,7 @@ For the remaining case, use $$S^2=2+2\sqrt{1-x^2}$$, then rationalise $$1-\sqrt{
 <details class="disclosure" markdown="1">
 <summary>Solution</summary>
 
-For $$0<|x|<1$$, define $$S=\sqrt{1+x}+\sqrt{1-x}$$. Then
+For $$0<\lvert x\rvert<1$$, define $$S=\sqrt{1+x}+\sqrt{1-x}$$. Then
 
 $$\frac{\sqrt{1+x}-\sqrt{1-x}-cx}{x^3}
 =\frac{2/S-c}{x^2}.$$
@@ -569,7 +573,7 @@ First try a linear function. Subtract that candidate from $$f$$ to obtain a new 
 <details class="disclosure" markdown="1">
 <summary>Hint 2</summary>
 
-For a fixed input $$x$$, show that $$|g(x)|=|g(x/2^n)|$$ for every positive integer $$n$$. Then use continuity only at zero.
+For a fixed input $$x$$, show that $$\lvert g(x)\rvert=\lvert g(x/2^n)\rvert$$ for every positive integer $$n$$. Then use continuity only at zero.
 
 </details>
 <details class="disclosure" markdown="1">
@@ -587,7 +591,7 @@ $$g(x)+g(2x)=0.$$
 
 Apply this identity at $$x/2$$, then at $$x/4$$, and keep halving. For every positive integer $$n$$,
 
-$$g(x)=(-1)^n g(x/2^n),\qquad |g(x)|=|g(x/2^n)|.$$
+$$g(x)=(-1)^n g(x/2^n),\qquad \lvert g(x)\rvert=\lvert g(x/2^n)\rvert.$$
 
 Fix any real $$x$$. As $$n\to\infty$$, the inputs $$x/2^n\to0$$. Continuity at zero makes the right-hand side tend to zero. The left-hand side is a fixed number, so it must equal zero.
 

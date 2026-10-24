@@ -20,6 +20,10 @@ Catalogue and section pages use the shared `page-wrap`, `page-heading`, and `pag
 
 Learning control defaults use zero-specificity scoping so button, answer-choice, and widget classes retain their intended colours and typography. Quiz and Problems cards share `--practice-surface`. Figures preserve their natural aspect ratio when resized. Longer lesson explanations retain the established serif reading style; interface text uses the shared sans-serif family.
 
+Numbered and bulleted lists in lesson prose match the surrounding paragraphs in typeface, size, and line spacing. Show a figure with a worked example when it helps explain the geometry, compare behaviours, or identify candidate points.
+
+All tables use **Book style**, defined once in `assets/css/site.css`: thin green top and bottom rules, a light divider beneath the header, open body rows, and no vertical gridlines or coloured fills. Use the shared sans-serif labels and MathJax mathematics, with text aligned left, comparison columns centred, and numerical totals aligned right. Wrap tables in a labelled, keyboard-focusable `.table-scroll` region so wider tables scroll within the page on phones. Lesson and activity styles should not override the shared table appearance.
+
 Quizzes show feedback as soon as an answer is chosen; choosing the same answer again clears it. Do not add a separate check or clear button. Save quiz answers and the current question in this browser, matching saved answers to unchanged question content. Save Problems study labels and the current problem, while leaving hints and solutions closed on a new visit.
 
 ## Graph axes
@@ -27,6 +31,16 @@ Quizzes show feedback as soon as an answer is chosen; choosing the same answer a
 Interactive information displayed below a graph belongs in a soft strip with centered, wrapping values. Keep point-local feedback near its point when that placement is useful.
 
 Use barely-there axes (style A), giving each numbered axis value a fine tick and omitting unnecessary additional ticks. Axis labels identify coordinates or measured quantities, with units where appropriate. Identify functions through curve legends or direct labels; for a standard function graph, use horizontal `x` and vertical `y`, with the curve named separately.
+
+Use the lesson’s MathJax typography for mathematical expressions everywhere, including graph labels, live readouts, units, captions and static figures. Render roots, powers, fractions and derivative primes structurally; do not substitute plain text or Unicode approximations for typeset mathematics.
+
+Give legends reserved space where they cannot cover a curve, point, axis or numbered tick. Place them below the plot when the graph has no reliably empty area. Tangents use solid lines; use opacity and colour to distinguish overlapping lines, and match the legend samples to the plot.
+
+Use the shared soft sage legend strip with muted labels, MathJax expressions, and matching line or point samples. Put derivative facts and classifications in the figure caption.
+
+Draw dashed legend samples with SVG using the plot's dash lengths, stroke width, and line caps. Keep these strokes from scaling so the samples continue to match on smaller screens.
+
+When a point already controls a numerical quantity, use dragging and keyboard input on that point. Do not add a duplicate range slider for the same quantity.
 
 ## Content artwork
 

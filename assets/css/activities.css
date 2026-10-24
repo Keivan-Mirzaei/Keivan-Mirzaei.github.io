@@ -20,9 +20,7 @@
 .graph-actions button { flex-shrink: 0; }
 .graph-widget .graph-values { background: transparent; border: 0; border-top: 1px solid var(--line); padding: 15px 0 0; margin: 20px 0 0; font-size: 12px; }
 .graph-values summary { color: var(--green); }
-.graph-values table { display: table; margin-top: 15px; width: 100%; max-width: 28rem; border-collapse: collapse; }
-.graph-values th, .graph-values td { padding: 6px 14px; text-align: left; border-bottom: 1px solid var(--line); }
-.graph-values caption { text-align: left; padding-bottom: 10px; color: var(--muted); }
+.graph-values table { margin-top: 15px; max-width: 28rem; }
 
 /* Shared activity controls. */
 .activity-badge { font: 11px/1.7 var(--mono); color: var(--muted); }

@@ -241,7 +241,7 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
                 self.assertIn(f'<span aria-current="page">{module_number}.{topic_number} ', breadcrumb)
                 self.assertNotIn(f'/learning/calculus/#{module_slug}', breadcrumb)
                 self.assertIn('href="/learning/" aria-current="true"', html)
-                if topic['slug'] in {'limits', 'limit-laws', 'squeeze-theorem', 'infinite-limits-and-limits-at-infinity', 'continuity', 'intermediate-value-theorem', 'definition-and-geometry', 'differentiation-rules', 'chain-rule', 'higher-derivatives', 'trigonometric-derivatives', 'inverse-function-derivatives', 'hyperbolic-functions', 'implicit-differentiation', 'logarithmic-differentiation'}:
+                if topic['slug'] in {'limits', 'limit-laws', 'squeeze-theorem', 'infinite-limits-and-limits-at-infinity', 'continuity', 'intermediate-value-theorem', 'definition-and-geometry', 'differentiation-rules', 'chain-rule', 'higher-derivatives', 'trigonometric-derivatives', 'inverse-function-derivatives', 'hyperbolic-functions', 'implicit-differentiation', 'logarithmic-differentiation', 'linear-approximation-and-differentials', 'related-rates', 'extreme-values', 'mean-value-theorem', 'derivative-tests', 'indeterminate-forms-and-lhopitals-rule', 'curve-sketching', 'optimization'}:
                     self.assertIn('id="practice"', html)
                 else:
                     self.assertNotIn('id="practice"', html)
@@ -249,6 +249,11 @@ For $$\lvert h\rvert \leq 1$$, the slice has radius $$\sqrt{1-h^2}$$.
                     self.assertIn('learning-problems.js', html)
                     self.assertIn('learning-problems.css', html)
                     self.assertIn('id="module-problems"', html)
+                if topic['slug'] == 'extreme-values':
+                    # Absolute values must stay inline, not create extra tables.
+                    self.assertEqual(html.count('<table>'), 1)
+                    self.assertIn(r'\(\lvert x\rvert\)', html)
+                    self.assertIn(r'\(f(x)=\lvert x-1\rvert\)', html)
                 self.assertNotIn("learning-slope", html)
                 self.assertIn('class="topic-chain"', html)
                 self.assertIn('learning-topic-navigation.js', html)

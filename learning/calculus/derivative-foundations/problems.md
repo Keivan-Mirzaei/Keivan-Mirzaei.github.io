@@ -35,7 +35,7 @@ $$\left.\frac{d}{dx}v(u(x))\right|_{x=0}
 But the outer derivative at zero would require
 
 $$v^{\prime}(0)=\lim_{k\to0}\frac{\sqrt[3]{k}}{k}
-=\lim_{k\to0}\frac1{|k|^{2/3}},$$
+=\lim_{k\to0}\frac1{\lvert k\rvert^{2/3}},$$
 
 which is not finite. The chain rule's hypothesis fails at this input. An undefined factor multiplied by zero is not a derivative calculation—even though the composition itself is as simple as a straight line.
 
@@ -115,7 +115,7 @@ The graph consists of the line segment from $$(-2,-1)$$ to $$(0,1)$$, followed b
 
 1. Sketch $$f^{\prime}$$ on $$(-2,2)$$, showing any excluded input with an open circle.
 2. Where does $$f^{\prime\prime}$$ exist, and what are its values?
-3. Changing only $$f(0)$$ cannot repair the corner. Instead, find $$k$$ such that $$g(x)=f(x)+k|x|$$ is differentiable at zero. Does this also make $$g$$ twice differentiable there?
+3. Changing only $$f(0)$$ cannot repair the corner. Instead, find $$k$$ such that $$g(x)=f(x)+k\lvert x\rvert$$ is differentiable at zero. Does this also make $$g$$ twice differentiable there?
 
 <details class="disclosure" markdown="1">
 <summary>Hint</summary>
@@ -459,7 +459,7 @@ The sine addition identity gives $$\sin(n\pi+u)=(-1)^n\sin u$$ for an integer $$
 <details class="disclosure" markdown="1">
 <summary>Hint 1</summary>
 
-At zero, bound the difference quotient by $$|h|$$. At $$a=1/(n\pi)$$, write $$1/(a+h)=n\pi+u$$ and compute $$u/h$$ exactly.
+At zero, bound the difference quotient by $$\lvert h\rvert$$. At $$a=1/(n\pi)$$, write $$1/(a+h)=n\pi+u$$ and compute $$u/h$$ exactly.
 
 </details>
 <details class="disclosure" markdown="1">
@@ -476,7 +476,7 @@ At zero,
 $$f^{\prime}(0)=\lim_{h\to0}\frac{h^2\sin(1/h)}h
 =\lim_{h\to0}h\sin(1/h)=0,$$
 
-by the squeeze theorem, since $$|h\sin(1/h)|\le|h|$$.
+by the squeeze theorem, since $$\lvert h\sin(1/h)\rvert\le\lvert h\rvert$$.
 
 For $$a=1/(n\pi)$$, we have $$f(a)=0$$. Write
 

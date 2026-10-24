@@ -172,10 +172,10 @@ V=\frac{2E}{q},\qquad F=\frac{2E}{p}.
 \end{gathered}
 $$
 
-<div id="five-solids" markdown="1">
+<div id="five-solids" class="table-scroll" markdown="1" role="region" aria-label="The five regular convex polyhedra" tabindex="0">
 
 | Solid | $$(p,q)$$ | $$V$$ | $$E$$ | $$F$$ |
-| --- | --- | ---: | ---: | ---: |
+| --- | :---: | ---: | ---: | ---: |
 | Tetrahedron | $$(3,3)$$ | 4 | 6 | 4 |
 | Cube | $$(4,3)$$ | 8 | 12 | 6 |
 | Octahedron | $$(3,4)$$ | 6 | 12 | 8 |

@@ -70,7 +70,7 @@ Only recurring tools remain in `scripts/`:
 
 Puzzle numbers are tied to saved progress. Regenerate a catalogue only for an intentional catalogue change; ordinary content editing does not require it. `tests/` checks the maintained mathematics, controllers, storage, navigation, authoring, and asset versions. Keep tests for retained behavior.
 
-The three guides in `docs/` and three starter files in `docs/templates/` are maintenance material and are excluded from publication. Historical plans, review transcripts, and completed production scripts belong in Git history rather than the working directory.
+The guides in `docs/` and starters in `docs/templates/` cover current site maintenance and are excluded from publication. Historical plans, review transcripts, retired features, and completed production scripts belong in Git history rather than the working directory. Keep YouTube branding, app-store listing artwork, and video-production exports in their own projects outside this repository. The current course hierarchy lives in `_data/learning_courses.json`; use [the learning guide](learning-roadmap.md) when authoring topics.
 
 ## Build files and cleanup
 
@@ -80,6 +80,4 @@ The three guides in `docs/` and three starter files in `docs/templates/` are mai
 
 Before removing a page or asset, search for its filename and URL in content, data, templates, imports, and styles. Keep linked downloads and compatibility URLs. When removing an unused activity, remove its registry entry and dedicated tests too, then rebuild and check the remaining site.
 
-## Graveyard
-
-`graveyard/` is excluded from publication. `graveyard/one-odd-coin/` preserves the retired One Odd Coin puzzle, its dedicated assets, catalogue generator, tests, and registry entries. Its README explains how to restore it.
+Retired code and artwork remain recoverable from Git history. For example, `git log --all -- graveyard/one-odd-coin/` locates the archived One Odd Coin puzzle; review the files in a commit before its removal if it is needed again.

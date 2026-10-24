@@ -3,7 +3,7 @@
 .topic-wrap h1 { font-size: var(--page-title-size); overflow-wrap: break-word; }
 .topic-wrap h2 { font-size: 30px; margin: 0 0 18px; }
 .topic-lead { font: 21px/1.6 Georgia, serif; color: var(--muted); margin-bottom: 38px; }
-.topic-wrap > p:not(.eyebrow):not(.topic-lead), .topic-wrap section > p { font: 18px/1.85 Georgia, serif; }
+.topic-wrap > :is(p:not(.eyebrow):not(.topic-lead), ol, ul), .topic-wrap section > :is(p, ol, ul) { font: 18px/1.85 Georgia, serif; }
 .topic-section { margin: 40px 0; }
 .topic-wrap .element-label { display: table; width: fit-content; max-width: 100%; padding: 4px 9px; border-radius: 3px; background: #285b4610; font: 10px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-transform: uppercase; letter-spacing: 1.4px; color: var(--green); margin: 0 0 10px; }
 .topic-wrap :is(.definition, .theorem, .worked, .prerequisite, .note, .attention, .warning, .caution):has(> :is(h2, h3, .block-title)) > .element-label { float: right; margin-left: 16px; }
@@ -17,7 +17,7 @@
 .topic-wrap :is(.definition, .theorem, .worked, .prerequisite, .note, .attention, .warning, .caution) > :is(h2, h3)::after,
 .topic-wrap .block-title::after { content: ''; display: block; width: 28px; height: 2px; background: #285b4680; margin-top: 8px; }
 
-.definition p:not(.element-label), .theorem > p:not(.element-label), .disclosure p, .attention p:not(.element-label), .caution p:not(.element-label), .warning p:not(.element-label) { font: 17px/1.85 Georgia, serif; }
+.definition :is(p, ol, ul):not(.element-label), .theorem > :is(p, ol, ul):not(.element-label), .disclosure :is(p, ol, ul), .attention :is(p, ol, ul):not(.element-label), .caution :is(p, ol, ul):not(.element-label), .warning :is(p, ol, ul):not(.element-label) { font: 17px/1.85 Georgia, serif; }
 .definition p:last-child, .attention p:last-child, .caution p:last-child, .warning p:last-child { margin-bottom: 0; }
 .attention, .caution, .warning { display: flow-root; background: #faf1dd; border-radius: 5px; padding: 18px 20px; margin: 28px 0; }
 .attention > .element-label, .caution > .element-label, .warning > .element-label { color: #80612a; }
@@ -35,6 +35,10 @@
 
 .topic-figure { margin: 25px 0; }
 .topic-figure img, .topic-figure svg, .topic-widget > svg { display: block; width: 100%; height: auto; }
+.extrema-comparison { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 25px 0; }
+.extrema-comparison .topic-figure { margin: 0; }
+.extrema-comparison img { max-width: 280px; margin: 0 auto; }
+@media(max-width:600px) { .extrema-comparison { grid-template-columns: 1fr; gap: 28px; } }
 .widget-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 16px 24px; padding-top: 20px; }
 .widget-controls label { flex: 1 1 160px; font-size: 12px; color: var(--ink); }
 .widget-controls output { float: right; color: var(--green); font-variant-numeric: tabular-nums; }
@@ -58,13 +62,7 @@
 .answer[data-result=incorrect], .answer[data-result=incorrect]:has(input:checked), .feedback[data-result=incorrect] { background: #f6e3df; color: #843f35; }
 .feedback[data-result] { padding: 12px 14px; border-radius: 5px; }
 .topic-wrap .question-number { margin-bottom: 20px; }
-.table-scroll { overflow-x: auto; }
-.topic-wrap table { border-collapse: collapse; width: 100%; font-size: 13px; }
-.topic-wrap caption { text-align: left; font-size: 11px; color: var(--muted); margin-bottom: 10px; }
-.topic-wrap th, .topic-wrap td { text-align: left; padding: 12px; }
-.topic-wrap thead { background: #f0f3ec; }
-.topic-wrap th { font-weight: 500; }
-.derivation { padding-left: 22px; font: 17px/1.8 Georgia, serif; }
+.derivation { padding-left: 22px; }
 .derivation li { padding: 6px 0; }
 .topic-wrap pre { padding: 20px; background: #f0f0ed; overflow-x: auto; border-radius: 4px; font: 12px/1.8 ui-monospace, monospace; }
 .topic-wrap blockquote { margin: 28px 0; padding: 0 20px; font: italic 21px/1.6 Georgia, serif; }
@@ -111,7 +109,7 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .limit-album:has(input[value=oscillation]:checked) .scenario-oscillation { display: block; }
 .scenario-panel .topic-figure { margin: 12px 0 18px; }
 .note { display: flow-root; margin: 30px 0; padding: 18px 22px; border-radius: 5px; background: #f1f2ef; }
-.note > p:not(.element-label) { font: 17px/1.8 Georgia, serif; margin: 0; }
+.note > :is(p, ol, ul):not(.element-label) { font: 17px/1.8 Georgia, serif; margin: 0; }
 
 
 .quiz-status, .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
@@ -174,7 +172,7 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 
 .prerequisite { display: flow-root; background: #f7ece7; border-radius: 5px; padding: 18px 20px; margin: 25px 0; }
 .prerequisite > .element-label { color: #895d4e; }
-.prerequisite p:not(.element-label) { font: 17px/1.85 Georgia, serif; }
+.prerequisite :is(p, ol, ul):not(.element-label) { font: 17px/1.85 Georgia, serif; }
 .prerequisite p:last-child { margin-bottom: 0; }
 
 .algebra-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
@@ -273,9 +271,41 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .hyperbolic-album:has(input[value=cosh]:checked) .hyperbolic-cosh,
 .hyperbolic-album:has(input[value=tanh]:checked) .hyperbolic-tanh { display: block; }
 
-.graph-album > .scenario-choices { justify-content: center; gap: 6px 18px; margin-top: 14px; }
-.graph-album > .scenario-choices legend { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.graph-album > .scenario-choices span { padding: 5px 9px; border-radius: 0; background: transparent; color: var(--muted); font-size: 13px; }
-.graph-album > .scenario-choices input:checked + span { background: transparent; color: var(--green); box-shadow: inset 0 -2px var(--green); }
+.extrema-album { margin: 24px 0 35px; }
+.extrema-album:has(input[value=open]:checked) .extrema-open,
+.extrema-album:has(input[value=unbounded]:checked) .extrema-unbounded,
+.extrema-album:has(input[value=discontinuous]:checked) .extrema-discontinuous { display: block; }
+
+.graph-album .scenario-choices { justify-content: center; gap: 6px 18px; margin-top: 14px; }
+.graph-album .scenario-choices legend { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.graph-album .scenario-choices span { padding: 5px 9px; border-radius: 0; background: transparent; color: var(--muted); font-size: 13px; }
+.graph-album .scenario-choices input:checked + span { background: transparent; color: var(--green); box-shadow: inset 0 -2px var(--green); }
 
 .inverse-summary { gap: 12px 22px; font-size: 13px; }
+
+/* Derivative applications: plots retain the lesson's transparent surface. */
+.applications-plot { margin: 0; }
+.applications-plot > svg, .applications-plot img { display: block; width: 100%; height: auto; }
+[data-applications="linear"], [data-applications="ladder"], [data-applications="mvt"], [data-applications="signs"] { margin: 25px 0 40px; }
+[data-applications="linear"] .applications-legend, [data-applications="mvt"] .applications-legend, [data-applications="signs"] .applications-legend { margin: 0 auto 18px; }
+.applications-controls { display: grid; grid-template-columns: auto minmax(120px, 1fr); align-items: center; gap: 12px 20px; max-width: 520px; margin: 16px auto 0; font: 14px/1.4 var(--font-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); }
+.applications-controls[hidden], .applications-values[hidden] { display: none; }
+[data-applications="signs"] .applications-controls { display: block; max-width: none; margin: 0 auto 20px; }
+.applications-plot .graph-handle[data-dragging], .applications-plot svg[data-dragging] { cursor: grabbing; }
+.applications-values { font-size: 14px; }
+@media (max-width:600px) {
+  .applications-controls { gap: 12px; font-size: 13px; }
+  .applications-values { gap: 8px 18px; font-size: 13px; }
+}
+
+.applications-math { width: fit-content; white-space: nowrap; line-height: 1; font-size: 14px; }
+.applications-math mjx-container { margin: 0 !important; }
+.applications-math-label { overflow: visible; pointer-events: none; }
+.applications-legend { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px 24px; width: fit-content; max-width: 100%; margin: 6px auto 16px; padding: 9px 14px; border-radius: 4px; background: #edf1e9; color: var(--muted); font: 13px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+.applications-legend[hidden] { display: none; }
+.applications-legend > span { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.applications-legend-key { display: inline-block; width: 20px; border-top: 3px solid; }
+.applications-legend .applications-legend-line { display: block; flex: none; width: 20px; height: 6px; }
+.applications-legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #a67936; }
+.extrema-comparison .applications-legend { flex-direction: column; justify-content: flex-start; gap: 8px; width: 100%; min-height: 70px; margin: 0 0 12px; }
+@media(max-width:600px) { .applications-math { font-size: 25px; } }

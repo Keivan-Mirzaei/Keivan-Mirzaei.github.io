@@ -61,7 +61,6 @@ exclude:
   - README.md
   - LICENSE
   - docs
-  - graveyard
   - scripts
   - tests
   - vendor
