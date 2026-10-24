@@ -1,22 +1,24 @@
 import { soundChoice, validSound } from './sounds.mjs';
+import { readFocusLog } from './focus-log.mjs';
 export const STORAGE_KEY = 'almost-obvious:gadgets:v1';
-export const defaults = { examMinutes: 60, focusMinutes: 25, breakMinutes: 5, rules: '', awake: false, chime: false, chimeSound: 'soft', examInBar: false, pomodoroInBar: true, soundInBar: true, examReminder: true, examWarningMinutes: 5, source: 'brown', volume: 25 };
+export const defaults = { examMinutes: 60, focusMinutes: 25, breakMinutes: 5, longBreakMinutes: 15, pomodoroTask: '', autoStartBreaks: false, autoStartFocus: false, rules: '', awake: false, chime: false, chimeSound: 'soft', examInBar: false, pomodoroInBar: true, soundInBar: true, examReminder: true, examWarningMinutes: 5, source: 'brown', volume: 25 };
 const number = (value, low, high, fallback) => typeof value === 'number' && Number.isFinite(value) && value >= low && value <= high ? value : fallback;
 export function readPreferences(value = {}) {
-  return { examMinutes: number(value.examMinutes, 1, 1440, 60), focusMinutes: number(value.focusMinutes, 1, 180, 25), breakMinutes: number(value.breakMinutes, 1, 60, 5), rules: typeof value.rules === 'string' ? value.rules.slice(0, 20000) : '', awake: value.awake === true, chime: value.chime === true, chimeSound: ['soft', 'two-tone', 'bell'].includes(value.chimeSound) ? value.chimeSound : 'soft', examInBar: value.examInBar === true, pomodoroInBar: typeof value.pomodoroInBar === 'boolean' ? value.pomodoroInBar : true, examReminder: typeof value.examReminder === 'boolean' ? value.examReminder : true, examWarningMinutes: number(value.examWarningMinutes, 1, 120, 5), soundInBar: typeof value.soundInBar === 'boolean' ? value.soundInBar : true, source: soundChoice(value.source), volume: number(value.volume, 0, 100, 25) };
+  return { examMinutes: number(value.examMinutes, 1, 1440, 60), focusMinutes: number(value.focusMinutes, 1, 180, 25), breakMinutes: number(value.breakMinutes, 1, 60, 5), longBreakMinutes: number(value.longBreakMinutes, 1, 60, 15), pomodoroTask: typeof value.pomodoroTask === 'string' ? value.pomodoroTask.replace(/[\r\n\t]/g, ' ').slice(0, 100) : '', autoStartBreaks: value.autoStartBreaks === true, autoStartFocus: value.autoStartFocus === true, rules: typeof value.rules === 'string' ? value.rules.slice(0, 20000) : '', awake: value.awake === true, chime: value.chime === true, chimeSound: ['soft', 'two-tone', 'bell'].includes(value.chimeSound) ? value.chimeSound : 'soft', examInBar: value.examInBar === true, pomodoroInBar: typeof value.pomodoroInBar === 'boolean' ? value.pomodoroInBar : true, examReminder: typeof value.examReminder === 'boolean' ? value.examReminder : true, examWarningMinutes: number(value.examWarningMinutes, 1, 120, 5), soundInBar: typeof value.soundInBar === 'boolean' ? value.soundInBar : true, source: soundChoice(value.source), volume: number(value.volume, 0, 100, 25) };
 }
+export function pomodoroBreakMinutes(config, round) { return round % 4 === 0 ? config.longBreakMinutes : config.breakMinutes; }
 export function timerInBar(timer) { return !!timer && (timer.kind === 'exam' ? timer.config.examInBar === true : timer.config.pomodoroInBar !== false); }
 export function remaining(timer, now = Date.now()) {
   if (!timer) return 0;
   return Math.max(0, timer.status === 'running' ? timer.deadline - now : timer.remaining);
 }
 export function reconcile(timer, now = Date.now()) {
-  return timer?.status === 'running' && remaining(timer, now) === 0 ? { ...timer, status: 'complete', remaining: 0, deadline: null } : timer;
+  return timer?.status === 'running' && remaining(timer, now) === 0 ? { ...timer, status: 'complete', remaining: 0, completedAt: timer.deadline, deadline: null } : timer;
 }
 export function createTimer(kind, preferences, now = Date.now(), phase = 'focus', round = 1) {
   const config = readPreferences(preferences);
-  const duration = (kind === 'exam' ? config.examMinutes : phase === 'focus' ? config.focusMinutes : config.breakMinutes) * 60000;
-  return { kind, phase: kind === 'exam' ? 'exam' : phase, round, status: 'running', duration, remaining: duration, deadline: now + duration, config };
+  const duration = (kind === 'exam' ? config.examMinutes : phase === 'focus' ? config.focusMinutes : pomodoroBreakMinutes(config, round)) * 60000;
+  return { kind, phase: kind === 'exam' ? 'exam' : phase, round, status: 'running', duration, remaining: duration, deadline: now + duration, completedAt: null, completionRecorded: false, config };
 }
 export function pauseTimer(timer, now = Date.now()) {
   const current = reconcile(timer, now);
@@ -30,7 +32,7 @@ export function nextPhase(timer, now = Date.now()) {
   return createTimer('pomodoro', timer.config, now, timer.phase === 'focus' ? 'break' : 'focus', timer.round + (timer.phase === 'break' ? 1 : 0));
 }
 export function readState(serialized, now = Date.now()) {
-  const fallback = { version: 1, timer: null, sound: null, preferences: { ...defaults } };
+  const fallback = { version: 1, timer: null, sound: null, focusLog: [], preferences: { ...defaults } };
   try {
     const value = typeof serialized === 'string' ? JSON.parse(serialized) : serialized;
     if (!value || value.version !== 1) return fallback;
@@ -44,13 +46,17 @@ export function readState(serialized, now = Date.now()) {
       && (t.kind === 'exam' ? t.phase === 'exam' : ['focus', 'break'].includes(t.phase))
       && (t.status !== 'running' || Number.isFinite(t.deadline) && t.deadline <= now + t.duration)
       && (t.status !== 'complete' || t.remaining === 0)) {
-      timer = reconcile({ kind: t.kind, phase: t.phase, round: t.round, status: t.status, duration: t.duration, remaining: t.remaining, deadline: t.status === 'running' ? t.deadline : null, config: readPreferences(t.config), alarmOwner: typeof t.alarmOwner === 'string' ? t.alarmOwner.slice(0, 100) : '' }, now);
+      timer = reconcile({ kind: t.kind, phase: t.phase, round: t.round, status: t.status, duration: t.duration, remaining: t.remaining, deadline: t.status === 'running' ? t.deadline : null,
+        phaseId: typeof t.phaseId === 'string' && t.phaseId.length > 0 && t.phaseId.length <= 200 ? t.phaseId : `legacy:${t.kind}:${t.phase}:${t.round}:${t.deadline || 0}:${t.duration}:${t.remaining}`,
+        completedAt: t.status === 'complete' && Number.isFinite(t.completedAt) && t.completedAt >= 0 && t.completedAt <= now ? t.completedAt : null,
+        completionRecorded: t.completionRecorded === true || t.status === 'complete' && !Number.isFinite(t.completedAt),
+        config: readPreferences(t.config), alarmOwner: typeof t.alarmOwner === 'string' ? t.alarmOwner.slice(0, 100) : '' }, now);
     }
     const sound = value.sound && validSound(value.sound.source) ? {
       source: value.sound.source, volume: number(value.sound.volume, 0, 100, 25), playing: value.sound.playing === true,
       owner: typeof value.sound.owner === 'string' ? value.sound.owner.slice(0, 100) : ''
     } : null;
-    return { version: 1, timer, sound, preferences };
+    return { version: 1, timer, sound, focusLog: readFocusLog(value.focusLog, now), preferences };
   } catch { return fallback; }
 }
 export function formatTime(milliseconds) {
@@ -69,7 +75,7 @@ export function examTone(timer, milliseconds = remaining(timer)) {
   if (timer.status === 'complete' || milliseconds <= 0) return 'complete';
   return milliseconds <= timer.config.examWarningMinutes * 60000 ? 'warning' : 'normal';
 }
-export function timerLabel(timer) { return timer?.kind === 'exam' ? 'Exam' : timer?.phase === 'break' ? 'Break' : 'Focus'; }
+export function timerLabel(timer) { return timer?.kind === 'exam' ? 'Exam' : timer?.phase === 'break' ? timer.round % 4 === 0 ? 'Long break' : 'Break' : 'Focus'; }
 // Keep TeX atomic across lines and outside Markdown emphasis. HTML remains text.
 const mathPattern = /\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|(?<![\\$])\$(?!\$)(?:\\.|[^$\\\n])+?(?<!\\)\$(?!\$)/g;
 export function hasRulesMath(source) { return !!String(source).match(mathPattern); }

@@ -24,6 +24,7 @@
   {% feed_meta %}
   <script type="importmap">{"imports":{"three":{{ site.data.graph_libraries.three | jsonify }},"three/addons/":{{ site.data.graph_libraries.three_addons | jsonify }}}}</script>
   {% include widget-assets.html %}
+  {% if page.gadget == 'pomodoro' %}<link data-page-style rel="stylesheet" href="{{ '/assets/css/puzzle-game.css' | relative_url }}">{% endif %}
   <script type="module" src="{{ '/assets/js/app.mjs' | relative_url }}"></script>
 </head>
 <body{% if page.course_key %} data-page-reload="true" data-topic-math="{{ page.math | default: false }}"{% endif %} data-site-shell data-page-gadget="{{ page.gadget }}" data-page-math="{{ page.math | default: false }}" data-page-search="{{ page.search_page | default: false }}" data-page-problem="{% if page.format == 'problem' or page.problem_disclosures %}true{% else %}false{% endif %}"{% if page.layout == 'puzzle' %} class="puzzle-page"{% endif %}>

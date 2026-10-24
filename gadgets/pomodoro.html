@@ -5,54 +5,84 @@ section: gadgets
 gadget: pomodoro
 permalink: /gadgets/pomodoro/
 search: true
-description: A focus timer with adjustable work and break periods.
+description: A focus timer with quick presets, four-round cycles, and deliberate breaks.
 ---
 <div class="page-wrap gadgets-wrap" data-gadget-workspace="pomodoro">
   <header class="page-heading"><a class="gadget-back" href="{{ '/gadgets/' | relative_url }}">← Gadgets</a><h1>Pomodoro</h1></header>
-  <div class="gadget-workbench widget-frame">
-  <div class="gadget-periods">
-    <div class="gadget-period"><label for="pomodoro-focus">Focus</label><div class="gadget-stepper" data-stepper>
-      <button type="button" data-number-step="-5" aria-label="Decrease focus duration" disabled><span aria-hidden="true">−</span></button>
-      <input id="pomodoro-focus" type="number" name="focusMinutes" form="gadget-pomodoro-settings" data-preference="focusMinutes" min="1" max="180" step="1" value="25" aria-label="Focus duration in minutes" required>
-      <span aria-hidden="true">min</span>
-      <button type="button" data-number-step="5" aria-label="Increase focus duration" disabled><span aria-hidden="true">+</span></button>
-    </div></div>
-    <div class="gadget-period"><label for="pomodoro-break">Break</label><div class="gadget-stepper" data-stepper>
-      <button type="button" data-number-step="-1" aria-label="Decrease break by 1 minute" disabled><span aria-hidden="true">−</span></button>
-      <input id="pomodoro-break" type="number" name="breakMinutes" form="gadget-pomodoro-settings" data-preference="breakMinutes" min="1" max="60" step="1" value="5" aria-label="Break duration in minutes" required>
-      <span aria-hidden="true">min</span>
-      <button type="button" data-number-step="1" aria-label="Increase break by 1 minute" disabled><span aria-hidden="true">+</span></button>
-    </div></div>
-  </div>
-  <p class="gadget-form-hint" data-period-hint hidden>Lengths apply to your next session.</p>
-  <section class="gadget-display gadget-focus-display" data-pomodoro-display data-phase="focus" aria-label="Pomodoro timer">
-    <div class="gadget-focus-dial">
-      <svg viewBox="0 0 240 240" aria-hidden="true">
-        <circle class="gadget-focus-track" cx="120" cy="120" r="108" fill="none" stroke-width="7"/>
-        <circle class="gadget-focus-ring" data-focus-ring cx="120" cy="120" r="108" fill="none" stroke-width="7" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" transform="rotate(-90 120 120)"/>
-      </svg>
-      <div class="gadget-focus-center">
-        <div class="gadget-focus-phase" data-workspace-phase>Focus</div>
-        <div class="gadget-countdown" data-workspace-time role="timer" aria-live="off">25:00</div>
-        <div class="gadget-focus-round" data-workspace-round></div>
+  <div class="gadget-workbench widget-frame puzzle-game gadget-pomodoro">
+    <div class="game-canvas">
+    <div class="game-surface gadget-pomodoro-stage">
+    <div class="gadget-pomodoro-toolbar">
+      <div class="gadget-presets" role="group" aria-label="Timer presets">
+        <button type="button" data-pomodoro-preset="classic" aria-pressed="true" disabled><span>Classic</span><span class="gadget-preset-caption">25 / 5 min</span></button>
+        <button type="button" data-pomodoro-preset="deep" aria-pressed="false" disabled><span>Deep work</span><span class="gadget-preset-caption">50 / 10 min</span></button>
+        <button type="button" data-pomodoro-preset="custom" aria-pressed="false" disabled><span>Custom</span><span class="gadget-preset-caption">Your pace</span></button>
       </div>
     </div>
-    {% include gadgets/timer-actions.html %}
-  </section>
-  {% include gadgets/panels.html %}
-  <div class="widget-support-panel" data-widget-panel="settings" aria-label="Pomodoro settings" hidden>
-  <form id="gadget-pomodoro-settings" class="gadget-setup" data-gadget-form novalidate>
-    {% include gadgets/options.html %}
-    <label class="widget-switch"><span>Show in top bar</span><input type="checkbox" role="switch" name="pomodoroInBar" data-preference="pomodoroInBar" checked><span class="widget-switch-track" aria-hidden="true"></span></label>
-  </form>
-  </div>
-  <div class="widget-support-panel" data-widget-panel="info" aria-label="About Pomodoro" hidden>
-    <p>Set the focus and break lengths above the timer, then start. Each phase waits for you to start the next. Changes to the lengths apply to your next session.</p>
-    <p>Show in top bar is on by default; turn it off in Settings. Pause or resume whenever you need to; Restart begins a new focus session.</p>
-    <p>Keep screen awake works while the timer runs and this page is visible, when your browser permits it.</p>
-    <p>Time-up sound is scheduled when you start the timer, so you can switch tabs or apps. Device sleep or browser restrictions can interrupt sound; missed alarms do not replay when you return.</p>
-    <p><a href="{{ '/gadgets/sound/' | relative_url }}">Choose a background sound →</a> Sound keeps playing independently, including during a break.</p>
-  </div>
+    <p class="gadget-form-hint" data-period-hint hidden>Lengths apply to your next session. Your current timer keeps its original lengths.</p>
+    <label class="gadget-focus-task" for="pomodoro-task"><span class="gadget-focus-task-label">Focus on</span><input id="pomodoro-task" type="text" data-preference="pomodoroTask" maxlength="100" aria-label="Focus on (optional)" placeholder="Your next small step" autocomplete="off"></label>
+    <section class="gadget-display gadget-focus-display" data-pomodoro-display data-phase="focus" aria-label="Pomodoro timer">
+      <div class="gadget-focus-dial">
+        <svg viewBox="0 0 240 240" aria-hidden="true">
+          <circle class="gadget-focus-track" cx="120" cy="120" r="108" fill="none" stroke-width="5"/>
+          <circle class="gadget-focus-ring" data-focus-ring cx="120" cy="120" r="108" fill="none" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" transform="rotate(-90 120 120)"/>
+          <g class="gadget-focus-ticks">
+            {% for tick in (0..59) %}{% assign major_tick = tick | modulo: 5 %}<path d="M120 25v{% if major_tick == 0 %}6{% else %}3{% endif %}" transform="rotate({{ tick | times: 6 }} 120 120)"{% if major_tick == 0 %} class="gadget-focus-tick-major"{% endif %}/>{% endfor %}
+          </g>
+        </svg>
+        <div class="gadget-focus-center">
+          <div class="gadget-focus-phase" data-workspace-phase>Focus</div>
+          <div class="gadget-countdown" data-workspace-time role="timer" aria-live="off">25:00</div>
+          <div class="gadget-focus-end" data-pomodoro-end>Ready when you are</div>
+        </div>
+      </div>
+      <div class="gadget-focus-rounds"><div class="gadget-round-dots" aria-hidden="true"><span data-round-dot data-round-state="current">1</span><span data-round-dot>2</span><span data-round-dot>3</span><span data-round-dot>4</span></div><span class="gadget-next-phase" data-pomodoro-next>Next · 5 min break</span></div>
+    </section>
+    </div>
+    <footer class="game-footer">
+      <p class="game-status"><span data-pomodoro-state-label>Ready to focus</span><span aria-hidden="true">·</span><span data-workspace-round>Round 1 of 4</span></p>
+      {% include gadgets/timer-actions.html %}
+    </footer>
+    </div>
+    <p class="gadget-focus-total" data-pomodoro-total aria-live="polite">Today · 0 focus sessions · 0 min</p>
+    <div class="widget-support-panel" data-widget-panel="settings" aria-label="Pomodoro settings" hidden>
+      <form id="gadget-pomodoro-settings" class="gadget-setup" data-gadget-form novalidate>
+        <div class="gadget-periods">
+          <div class="gadget-period"><label for="pomodoro-focus">Focus</label><div class="gadget-stepper" data-stepper>
+            <button type="button" data-number-step="-5" aria-label="Decrease focus duration" disabled><span aria-hidden="true">−</span></button>
+            <input id="pomodoro-focus" type="number" name="focusMinutes" data-preference="focusMinutes" min="1" max="180" step="1" value="25" aria-label="Focus duration in minutes" required>
+            <span aria-hidden="true">min</span>
+            <button type="button" data-number-step="5" aria-label="Increase focus duration" disabled><span aria-hidden="true">+</span></button>
+          </div></div>
+          <div class="gadget-period"><label for="pomodoro-break">Short break</label><div class="gadget-stepper" data-stepper>
+            <button type="button" data-number-step="-1" aria-label="Decrease short break duration" disabled><span aria-hidden="true">−</span></button>
+            <input id="pomodoro-break" type="number" name="breakMinutes" data-preference="breakMinutes" min="1" max="60" step="1" value="5" aria-label="Short break duration in minutes" required>
+            <span aria-hidden="true">min</span>
+            <button type="button" data-number-step="1" aria-label="Increase short break duration" disabled><span aria-hidden="true">+</span></button>
+          </div></div>
+          <div class="gadget-period"><label for="pomodoro-long-break">Long break · every 4 rounds</label><div class="gadget-stepper" data-stepper>
+            <button type="button" data-number-step="-5" aria-label="Decrease long break duration" disabled><span aria-hidden="true">−</span></button>
+            <input id="pomodoro-long-break" type="number" name="longBreakMinutes" data-preference="longBreakMinutes" min="1" max="60" step="1" value="15" aria-label="Long break duration in minutes" required>
+            <span aria-hidden="true">min</span>
+            <button type="button" data-number-step="5" aria-label="Increase long break duration" disabled><span aria-hidden="true">+</span></button>
+          </div></div>
+        </div>
+        <label class="widget-switch"><span>Start breaks automatically</span><input type="checkbox" role="switch" name="autoStartBreaks" data-preference="autoStartBreaks"><span class="widget-switch-track" aria-hidden="true"></span></label>
+        <label class="widget-switch"><span>Start focus automatically</span><input type="checkbox" role="switch" name="autoStartFocus" data-preference="autoStartFocus"><span class="widget-switch-track" aria-hidden="true"></span></label>
+        {% include gadgets/options.html %}
+        <label class="widget-switch"><span>Show in top bar</span><input type="checkbox" role="switch" name="pomodoroInBar" data-preference="pomodoroInBar" checked><span class="widget-switch-track" aria-hidden="true"></span></label>
+      </form>
+    </div>
+    <div class="widget-support-panel game-help" data-widget-panel="info" aria-label="About Pomodoro" hidden>
+      <h2>Using Pomodoro</h2>
+      <p>Choose Classic for 25 minutes of focus and a 5-minute break, or Deep work for 50 and 10. Custom opens Settings, where you can adjust all three lengths. Each fourth focus round is followed by a long break, 15 minutes by default.</p>
+      <p>Add an optional focus task. It stays with your session and is saved for your next visit.</p>
+      <p>Each phase waits for you by default. Settings lets you start breaks and focus periods automatically, separately. With a time-up sound enabled, the next phase starts after the chime. If the browser delays a transition or you reopen the page, start the next phase manually.</p>
+      <p>Pause or resume whenever you need to. Restart offers two choices: restart this round's focus timer while keeping earlier rounds, or restart the cycle from round 1. Restarting during a break returns to focus. Both choices keep today's completed focus time. Skip moves straight to the next phase. Stop ends this session.</p>
+      <p>Today counts fully completed focus sessions and their focus minutes, saved in this browser. Breaks, skipped phases and unfinished sessions do not count. A session belongs to the local date on which it finishes, including when you return after it has ended.</p>
+      <p>Changes to the lengths apply to your next session. The active session keeps its original lengths, including later rounds. Your choices and active timer are saved in this browser when storage is available.</p>
+      <p>Keep screen awake works while the timer runs and this page is visible, when your browser permits it. Time-up sound is scheduled when you start each phase; device sleep or browser restrictions can interrupt it. Missed alarms do not replay when you return.</p>
+    </div>
   </div>
   <noscript><p>Enable JavaScript to use Pomodoro.</p></noscript>
 </div>

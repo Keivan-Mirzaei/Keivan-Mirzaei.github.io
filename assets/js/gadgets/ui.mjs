@@ -1,11 +1,13 @@
 import { remaining, formatTime, formatExamTime, examTone, timerInBar, timerLabel } from './model.mjs';
 import { initializeWidgetPanels } from '../lib/widget-panels.mjs';
+import { setActionLabel } from '../lib/puzzle-controls.mjs';
 import { createCountdown } from './countdown.mjs';
 import { createRulesView } from './rules.mjs';
 import { initializeStepper } from './stepper.mjs';
 import { createDial } from './dial.mjs';
 import { initializeDropdowns, disposeDropdowns } from '../lib/dropdown.mjs';
 import { sounds, soundChoice } from './sounds.mjs';
+import { createPomodoroView } from './pomodoro.mjs';
 
 export const soundLabel = source => sounds[soundChoice(source)].label;
 export function awakeLabel(state) {
@@ -99,7 +101,7 @@ export function mountWorkspace(root, service) {
   const rulesView = kind === 'exam' ? createRulesView(get('exam-rules'), { onError: message => text(get('exam-rules-message'), message) }) : null;
   const steppers = [...workspace.querySelectorAll('[data-stepper]')].map(wrapper => initializeStepper(wrapper, () => service.getState().preferences[wrapper.querySelector('input').dataset.preference]));
   const listen = (element, type, callback) => element?.addEventListener(type, callback, { signal: events.signal });
-  let closed = false, clock = null, pendingConfig = null, confirmTrigger = null, leavePresentation = () => {}, displayedTime = null, previewed = false;
+  let closed = false, clock = null, pendingConfig = null, pendingRestart = false, confirmTrigger = null, leavePresentation = () => {}, displayedTime = null, previewed = false, pomodoro = null;
   function renderTime(milliseconds, running = false) {
     if (countdown) countdown.render(formatExamTime(milliseconds), running && displayedTime !== null && Math.ceil(displayedTime / 1000) - Math.ceil(milliseconds / 1000) === 1);
     else text(get('workspace-time'), formatTime(milliseconds));
@@ -120,10 +122,10 @@ export function mountWorkspace(root, service) {
   }
   function renderPeriodHint(timer = service.getState().timer?.kind === 'pomodoro' ? service.getState().timer : null) {
     const lengths = preferences();
-    get('period-hint').hidden = !timer || lengths.focusMinutes === timer.config.focusMinutes && lengths.breakMinutes === timer.config.breakMinutes;
+    get('period-hint').hidden = !timer || ['focusMinutes', 'breakMinutes', 'longBreakMinutes'].every(key => lengths[key] === timer.config[key]);
   }
   function cancelReplacement() {
-    pendingConfig = null; get('replace-confirm').hidden = true;
+    pendingConfig = null; pendingRestart = false; get('replace-confirm').hidden = true;
     confirmTrigger?.focus({ preventScroll: true });
   }
   function renderSoundChoice() {
@@ -139,11 +141,13 @@ export function mountWorkspace(root, service) {
   const initial = service.getState();
   workspace.querySelectorAll('[data-preference]').forEach(input => {
     const key = input.dataset.preference;
-    const value = initial.timer?.kind === kind && ['awake', 'chime', 'chimeSound', 'examInBar', 'pomodoroInBar', 'examMinutes', 'examReminder', 'examWarningMinutes'].includes(key) ? initial.timer.config[key] : initial.preferences[key];
+    const value = initial.timer?.kind === kind && ['awake', 'chime', 'chimeSound', 'examInBar', 'pomodoroInBar', 'pomodoroTask', 'autoStartBreaks', 'autoStartFocus', 'examMinutes', 'examReminder', 'examWarningMinutes'].includes(key) ? initial.timer.config[key] : initial.preferences[key];
     if (input.type === 'checkbox') input.checked = value; else input.value = value;
     listen(input, 'input', () => {
       const key = input.dataset.preference, value = input.type === 'checkbox' ? input.checked : input.type === 'number' ? Number(input.value) : input.value;
-      if (input.type !== 'number' || input.validity.valid) service.preferences({ [key]: value });
+      if (key === 'pomodoroTask') service.pomodoroTask(value);
+      else if (['autoStartBreaks', 'autoStartFocus'].includes(key)) service.pomodoroTransitions({ [key]: value });
+      else if (input.type !== 'number' || input.validity.valid) service.preferences({ [key]: value });
       if (key === 'rules') { service.rules(value); if (service.getState().timer?.kind !== 'exam') rulesView.render(value); }
       if (key === 'awake' && service.getState().timer?.kind === kind) service.awake(value);
       else if (key === 'awake') text(get('workspace-awake'), value ? 'Requested when the timer starts, if your browser permits it.' : '');
@@ -159,10 +163,19 @@ export function mountWorkspace(root, service) {
         renderTime(milliseconds); dial?.render(null, milliseconds);
       }
       if (key === 'examMinutes') renderDuration();
-      if (kind === 'pomodoro' && ['focusMinutes', 'breakMinutes'].includes(key)) renderPeriodHint();
+      if (kind === 'pomodoro' && ['focusMinutes', 'breakMinutes', 'longBreakMinutes'].includes(key)) { renderPeriodHint(); pomodoro?.render(service.getState()); }
     });
   });
   initializeDropdowns(workspace);
+  if (kind === 'pomodoro') pomodoro = createPomodoroView(workspace, service, {
+    preferences,
+    applyPreset(preset) {
+      for (const [key, value] of Object.entries(preset)) workspace.querySelector(`[data-preference="${key}"]`).value = value;
+      service.preferences(preset); steppers.forEach(stepper => stepper.update()); renderPeriodHint();
+      if (service.getState().timer?.kind !== 'pomodoro') { const milliseconds = preset.focusMinutes * 60000; renderTime(milliseconds); dial.render(null, milliseconds); }
+      pomodoro.render(service.getState());
+    }
+  });
   listen(get('chime-preview'), 'click', () => { previewed = true; service.previewChime(workspace.querySelector('[data-preference="chimeSound"]').value); });
   const form = get('gadget-form');
   if (form) {
@@ -176,6 +189,7 @@ export function mountWorkspace(root, service) {
         form.reportValidity(); return;
       }
       const config = preferences(), active = service.getState().timer;
+      pendingRestart = false; text(get('replace-accept'), 'Replace timer');
       if (active && active.status !== 'complete') {
         confirmTrigger = get('start');
         pendingConfig = config; get('replace-confirm').hidden = false;
@@ -183,12 +197,13 @@ export function mountWorkspace(root, service) {
         get('replace-accept').focus({ preventScroll: true });
       } else { service.start(kind, config); get('workspace-timer-toggle').focus({ preventScroll: true }); }
     });
-    listen(get('replace-accept'), 'click', () => { if (pendingConfig) service.start(kind, pendingConfig); pendingConfig = null; get('replace-confirm').hidden = true; get('workspace-timer-toggle').focus({ preventScroll: true }); });
+    listen(get('replace-accept'), 'click', () => { if (pendingConfig) { if (pendingRestart) service.restart(); else service.start(kind, pendingConfig); } pendingConfig = null; pendingRestart = false; get('replace-confirm').hidden = true; get('workspace-timer-toggle').focus({ preventScroll: true }); });
     listen(get('replace-cancel'), 'click', cancelReplacement);
     listen(get('workspace-timer-toggle'), 'click', () => { const timer = service.getState().timer; if (timer?.status === 'running') service.pause(); else if (timer?.status === 'paused') service.resume(); else service.restart(); });
-    listen(get('workspace-restart'), 'click', () => { const config = service.getState().timer.config; confirmTrigger = get('workspace-restart'); pendingConfig = config; get('replace-confirm').hidden = false; text(get('replace-message'), 'Restart this timer from the beginning?'); get('replace-accept').focus({ preventScroll: true }); });
-    listen(get('workspace-stop'), 'click', () => { pendingConfig = null; get('replace-confirm').hidden = true; service.stop(); get('start').focus({ preventScroll: true }); });
-    listen(get('workspace-next'), 'click', () => service.next());
+    if (kind === 'exam') listen(get('workspace-restart'), 'click', () => { const config = service.getState().timer.config; confirmTrigger = get('workspace-restart'); pendingConfig = config; pendingRestart = true; get('replace-confirm').hidden = false; text(get('replace-message'), 'Restart this timer from the beginning?'); text(get('replace-accept'), 'Restart timer'); get('replace-accept').focus({ preventScroll: true }); });
+    listen(get('workspace-stop'), 'click', () => { pendingConfig = null; pendingRestart = false; get('replace-confirm').hidden = true; service.stop(); get('start').focus({ preventScroll: true }); });
+    listen(get('workspace-next'), 'click', () => { service.next(); get('workspace-timer-toggle').focus({ preventScroll: true }); });
+    listen(get('workspace-skip'), 'click', () => { pendingConfig = null; pendingRestart = false; get('replace-confirm').hidden = true; service.skip(); get('workspace-timer-toggle').focus({ preventScroll: true }); });
   }
   if (kind === 'exam') {
     function wallClock() { text(get('wall-clock'), new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })); clock = setTimeout(wallClock, 1000); }
@@ -248,16 +263,18 @@ export function mountWorkspace(root, service) {
       renderTime(milliseconds, timer?.status === 'running');
       dial?.render(timer, milliseconds);
       text(get('workspace-phase'), kind === 'exam' ? timer?.status === 'paused' ? `Paused${reminder ? ` · ${reminder.toLowerCase()}` : ''}` : timer?.status === 'complete' ? 'Time is up' : reminder || 'Time remaining' : `${timer ? timerLabel(timer) : 'Focus'}${timer?.status === 'paused' ? ' · Paused' : timer?.status === 'complete' ? ' complete' : ''}`);
-      text(get('workspace-round'), timer ? `Round ${timer.round}` : '');
       get('workspace-timer-toggle').disabled = !timer;
       get('start').hidden = !!timer;
-      text(get('workspace-timer-toggle'), timer?.status === 'paused' ? 'Resume' : timer?.status === 'complete' ? 'Restart' : 'Pause');
+      setActionLabel(get('workspace-timer-toggle'), timer?.status === 'paused' ? 'Resume' : timer?.status === 'complete' ? 'Restart' : 'Pause');
+      get('workspace-timer-toggle').dataset.timerRunning = String(timer?.status === 'running');
       get('workspace-timer-toggle').hidden = !timer || (kind === 'pomodoro' && timer.status === 'complete');
       get('workspace-next').hidden = kind !== 'pomodoro' || timer?.status !== 'complete';
-      text(get('workspace-next'), timer?.phase === 'break' ? 'Start focus' : 'Start break');
+      get('workspace-next').disabled = kind !== 'pomodoro' || timer?.status !== 'complete';
+      setActionLabel(get('workspace-next'), timer?.phase === 'break' ? 'Start focus' : 'Start break');
       get('workspace-restart').disabled = get('workspace-stop').disabled = !timer;
-      get('workspace-restart').hidden = !timer || timer.status === 'complete';
+      get('workspace-restart').hidden = !timer || (kind === 'exam' && timer.status === 'complete');
       get('workspace-stop').hidden = !timer;
+      if (get('workspace-skip')) { get('workspace-skip').disabled = !timer; get('workspace-skip').hidden = !timer || timer.status === 'complete'; }
       const key = `${timer?.status || ''}:${timer?.phase || ''}:${state.timer?.kind || ''}:${tone}:${reminder}`;
       if (key !== statusKey) { statusKey = key; text(get('workspace-status'), kind === 'exam' ? timer?.status === 'complete' ? 'Time is up.' : timer?.status === 'paused' ? 'Paused.' : reminder ? `${reminder}.` : '' : timer?.status === 'complete' ? `${timerLabel(timer)} complete.` : timer?.status === 'paused' ? 'Paused.' : timer ? '' : state.timer ? `The ${timerLabel(state.timer).toLowerCase()} timer is active. Starting here will replace it.` : ''); }
       text(get('workspace-awake'), timer ? awakeLabel(state) : preferences().awake ? 'Requested when the timer starts, if your browser permits it.' : '');
@@ -266,6 +283,7 @@ export function mountWorkspace(root, service) {
       if (kind === 'pomodoro') {
         workspace.querySelector('[data-preference="pomodoroInBar"]').checked = timer?.config.pomodoroInBar ?? state.preferences.pomodoroInBar;
         renderPeriodHint(timer);
+        pomodoro.render(state);
       }
       if (kind === 'exam') rulesView.render(timer?.config.rules ?? preferences().rules);
       if (kind === 'exam') {
@@ -301,5 +319,5 @@ export function mountWorkspace(root, service) {
     if (get('replace-confirm') && !get('replace-confirm').hidden) { cancelReplacement(); event.preventDefault(); }
     else { const details = event.target.closest('details[open]'); if (details) { details.open = false; details.querySelector('summary').focus(); event.preventDefault(); } }
   });
-  return () => { closed = true; events.abort(); disposePanels(); disposeDropdowns(workspace); steppers.forEach(stepper => stepper.dispose()); countdown?.dispose(); rulesView?.dispose(); if (previewed) service.stopChimePreview(); unsubscribe(); clearTimeout(clock); };
+  return () => { closed = true; events.abort(); disposePanels(); disposeDropdowns(workspace); steppers.forEach(stepper => stepper.dispose()); countdown?.dispose(); rulesView?.dispose(); pomodoro?.dispose(); if (previewed) service.stopChimePreview(); unsubscribe(); clearTimeout(clock); };
 }

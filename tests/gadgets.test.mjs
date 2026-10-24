@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { defaults, createTimer, remaining, pauseTimer, resumeTimer, reconcile, nextPhase, readState, rulesMarkup, formatTime, formatExamTime, examTone, timerInBar, STORAGE_KEY } from '../assets/js/gadgets/model.mjs';
+import { defaults, createTimer, remaining, pauseTimer, resumeTimer, reconcile, nextPhase, readState, readPreferences, rulesMarkup, formatTime, formatExamTime, examTone, timerInBar, STORAGE_KEY } from '../assets/js/gadgets/model.mjs';
+import { dailyFocus, localDay } from '../assets/js/gadgets/focus-log.mjs';
 import { createAudioPlayer } from '../assets/js/gadgets/audio.mjs';
 import { createGadgetService } from '../assets/js/gadgets/service.mjs';
 import { sounds } from '../assets/js/gadgets/sounds.mjs';
@@ -80,6 +81,32 @@ test('Pomodoro waits at completion rather than skipping elapsed phases', () => {
   assert.equal(nextPhase(focus, 1300100), focus);
 });
 
+test('every fourth Pomodoro round uses the saved long break and the next cycle returns to short breaks', () => {
+  let now = 1000, timer = createTimer('pomodoro', { ...defaults, focusMinutes: 1, breakMinutes: 2, longBreakMinutes: 20 }, now);
+  for (let round = 1; round <= 8; round++) {
+    assert.equal(timer.phase, 'focus'); assert.equal(timer.round, round);
+    now = timer.deadline;
+    timer = nextPhase(reconcile(timer, now), now);
+    assert.equal(timer.phase, 'break'); assert.equal(timer.round, round);
+    assert.equal(timer.duration, (round % 4 === 0 ? 20 : 2) * 60000);
+    now = timer.deadline;
+    timer = nextPhase(reconcile(timer, now), now);
+  }
+  assert.equal(timer.round, 9); assert.equal(timer.phase, 'focus');
+});
+
+test('older Pomodoro sessions keep their current deadline and restore a valid long-break default', () => {
+  const timer = createTimer('pomodoro', defaults, 1000, 'break', 4);
+  timer.duration = timer.remaining = 300000; timer.deadline = 301000;
+  delete timer.config.longBreakMinutes;
+  for (const longBreakMinutes of [undefined, -1, 0, 61, '20']) {
+    const restored = readState({ version: 1, timer, preferences: { longBreakMinutes } }, 1000);
+    assert.equal(restored.preferences.longBreakMinutes, 15);
+    assert.equal(restored.timer.config.longBreakMinutes, 15);
+    assert.equal(restored.timer.duration, 300000); assert.equal(restored.timer.deadline, 301000);
+  }
+});
+
 test('saved state restores elapsed and paused timers and rejects corrupt state', () => {
   const running = createTimer('exam', defaults, 1000);
   const saved = { version: 1, timer: running, preferences: defaults, sound: { source: 'brown', volume: 25, playing: true, owner: 'other' } };
@@ -137,6 +164,299 @@ function environment(saved = null, wake = null, nativeOutput = false) {
     setTimeout: (callback, delay) => { const id = ++count; timers.set(id, callback); delays.set(id, delay); return id; }, clearTimeout: id => { timers.delete(id); delays.delete(id); }, timers, delays, saved: () => value });
   return browser;
 }
+
+test('task and automatic choices restore safely and can change live without moving the deadline', t => {
+  t.mock.method(Date, 'now', () => 1000);
+  const browser = environment(), service = createGadgetService(browser);
+  assert.equal(readPreferences({ autoStartBreaks: 'true', autoStartFocus: 1 }).autoStartBreaks, false);
+  assert.equal(readPreferences({ autoStartFocus: 1 }).autoStartFocus, false);
+  assert.equal(readPreferences({ pomodoroTask: 123 }).pomodoroTask, '');
+  assert.equal(readPreferences({ pomodoroTask: 'a\nb\tc' }).pomodoroTask, 'a b c');
+  service.start('pomodoro', defaults); const deadline = service.getState().timer.deadline;
+  service.pomodoroTask('Read the chain rule'); service.pomodoroTransitions({ autoStartBreaks: true });
+  assert.equal(service.getState().timer.deadline, deadline);
+  assert.equal(service.getState().timer.config.pomodoroTask, 'Read the chain rule');
+  assert.equal(service.getState().timer.config.autoStartBreaks, true);
+  assert.equal(service.getState().timer.config.autoStartFocus, false);
+  const restored = readState(browser.saved());
+  assert.equal(restored.preferences.pomodoroTask, 'Read the chain rule');
+  assert.equal(restored.timer.config.autoStartBreaks, true);
+  service.pomodoroTask('x'.repeat(200)); assert.equal(service.getState().timer.config.pomodoroTask.length, 100);
+  service.pomodoroTask(''); assert.equal(service.getState().preferences.pomodoroTask, '');
+  service.start('exam', service.getState().preferences); const exam = service.getState().timer;
+  service.pomodoroTask('Next task'); service.pomodoroTransitions({ autoStartFocus: true });
+  assert.equal(exam.config.pomodoroTask, ''); assert.equal(exam.config.autoStartFocus, false);
+});
+
+test('only fully completed focus phases count once, including after a reload', t => {
+  let now = new Date(2026, 9, 23, 10).getTime(); t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('pomodoro', { ...defaults, focusMinutes: 1, breakMinutes: 1 });
+  now = service.getState().timer.deadline; service.refresh(); service.refresh();
+  assert.deepEqual(dailyFocus(service.getState().focusLog), { sessions: 1, milliseconds: 60000 });
+  service.next(); now = service.getState().timer.deadline; service.refresh();
+  assert.equal(dailyFocus(service.getState().focusLog).sessions, 1);
+  service.next(); now = service.getState().timer.deadline; service.refresh();
+  assert.deepEqual(dailyFocus(service.getState().focusLog), { sessions: 2, milliseconds: 120000 });
+  const restored = createGadgetService(environment(browser.saved())); restored.refresh();
+  assert.deepEqual(dailyFocus(restored.getState().focusLog), { sessions: 2, milliseconds: 120000 });
+});
+
+test('skips, partial restarts, stopped sessions, paused time and exams do not inflate focus totals', t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const service = createGadgetService(environment());
+  service.start('pomodoro', { ...defaults, focusMinutes: 1 });
+  now += 10000; service.restart(); now += 10000; service.skip(); service.stop();
+  service.start('pomodoro', { ...defaults, focusMinutes: 1 });
+  now += 10000; service.pause(); now += 3600000; service.refresh();
+  assert.equal(dailyFocus(service.getState().focusLog).sessions, 0);
+  service.stop(); service.start('exam', { ...defaults, examMinutes: 1 });
+  now = service.getState().timer.deadline; service.refresh(); service.stop();
+  assert.equal(service.getState().focusLog.length, 0);
+  service.start('pomodoro', { ...defaults, focusMinutes: 1 });
+  now = service.getState().timer.deadline; service.stop();
+  assert.deepEqual(dailyFocus(service.getState().focusLog), { sessions: 1, milliseconds: 60000 });
+});
+
+test('a focus phase that ends while closed is recorded on its actual local finishing date without auto-starting on return', t => {
+  let now = new Date(2026, 9, 23, 23, 59, 30).getTime(); t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('pomodoro', { ...defaults, focusMinutes: 1, autoStartBreaks: true });
+  const completedAt = service.getState().timer.deadline, saved = browser.saved();
+  now = new Date(2026, 9, 25, 9).getTime();
+  const reopened = createGadgetService(environment(saved));
+  assert.equal(reopened.getState().timer.status, 'complete');
+  assert.equal(reopened.getState().timer.phase, 'focus');
+  assert.equal(reopened.getState().focusLog[0].completedAt, completedAt);
+  assert.equal(localDay(completedAt), localDay(new Date(2026, 9, 24, 0, 0, 30).getTime()));
+  assert.deepEqual(dailyFocus(reopened.getState().focusLog), { sessions: 0, milliseconds: 0 });
+  assert.deepEqual(dailyFocus(reopened.getState().focusLog, completedAt), { sessions: 1, milliseconds: 60000 });
+  const legacy = { ...reopened.getState(), focusLog: [], timer: { ...reopened.getState().timer } };
+  delete legacy.timer.completedAt; delete legacy.timer.completionRecorded;
+  assert.equal(createGadgetService(environment(JSON.stringify(legacy))).getState().focusLog.length, 0);
+});
+
+test('automatic break and focus starts are independent choices', t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const service = createGadgetService(environment());
+  service.start('pomodoro', { ...defaults, focusMinutes: 1, breakMinutes: 1, autoStartBreaks: true });
+  now = service.getState().timer.deadline; service.refresh();
+  assert.equal(service.getState().timer.phase, 'break'); assert.equal(service.getState().timer.status, 'running');
+  now = service.getState().timer.deadline; service.refresh();
+  assert.equal(service.getState().timer.phase, 'break'); assert.equal(service.getState().timer.status, 'complete');
+  service.pomodoroTransitions({ autoStartBreaks: false, autoStartFocus: true });
+  service.next(); service.skip();
+  now = service.getState().timer.deadline; service.refresh();
+  assert.equal(service.getState().timer.phase, 'focus'); assert.equal(service.getState().timer.status, 'running');
+  now = service.getState().timer.deadline; service.refresh();
+  assert.equal(service.getState().timer.phase, 'focus'); assert.equal(service.getState().timer.status, 'complete');
+  assert.equal(dailyFocus(service.getState().focusLog).sessions, 2);
+});
+
+test('automatic cycles keep the fourth long break, task, distinct phase IDs and one scheduler', t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser), ids = new Set();
+  service.start('pomodoro', { ...defaults, focusMinutes: 1, breakMinutes: 1, longBreakMinutes: 2, pomodoroTask: 'Practice derivatives', autoStartBreaks: true, autoStartFocus: true });
+  for (let phase = 0; phase < 7; phase++) {
+    ids.add(service.getState().timer.phaseId);
+    now = service.getState().timer.deadline; service.refresh();
+    assert.equal(browser.timers.size, 1); assert.equal(service.getState().timer.config.pomodoroTask, 'Practice derivatives');
+  }
+  assert.equal(ids.size, 7); assert.equal(service.getState().timer.phase, 'break');
+  assert.equal(service.getState().timer.round, 4); assert.equal(service.getState().timer.duration, 120000);
+  assert.deepEqual(dailyFocus(service.getState().focusLog), { sessions: 4, milliseconds: 240000 });
+  now = service.getState().timer.deadline; service.refresh();
+  assert.equal(service.getState().timer.round, 5); assert.equal(service.getState().timer.phase, 'focus');
+});
+
+test('automatic transitions wait for the scheduled chime and can be canceled during that wait', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('pomodoro', { ...defaults, focusMinutes: 1, chime: true, autoStartBreaks: true }); await Promise.resolve();
+  const notes = browser.oscillators.slice();
+  now = service.getState().timer.deadline; browser.contexts[0].currentTime = 60; service.refresh();
+  assert.equal(service.getState().timer.status, 'complete'); assert.equal(service.getState().autoTransition, true);
+  assert.ok(notes.every(note => note.stopTimes.length === 1 && !note.disconnected));
+  assert.deepEqual([...browser.delays.values()], [2500]);
+  for (const note of notes) note.onended();
+  now += 2500; browser.contexts[0].currentTime = 62.5; service.refresh(); await Promise.resolve();
+  assert.equal(service.getState().timer.phase, 'break'); assert.equal(service.getState().timer.status, 'running');
+  assert.ok(notes.every(note => note.stopTimes.length === 1));
+  service.stop(); service.start('pomodoro', { ...defaults, focusMinutes: 1, chime: true, autoStartBreaks: true }); await Promise.resolve();
+  now = service.getState().timer.deadline; browser.contexts[0].currentTime += 60; service.refresh();
+  service.pomodoroTransitions({ autoStartBreaks: false }); now += 2500; service.refresh();
+  assert.equal(service.getState().timer.status, 'complete'); assert.equal(service.getState().autoTransition, false);
+  assert.equal(browser.timers.size, 0);
+});
+
+test('sleep, reopening and another tab cannot turn a missed deadline into automatic focus rounds', t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('pomodoro', { ...defaults, focusMinutes: 1, autoStartBreaks: true, autoStartFocus: true });
+  const second = createGadgetService(environment(browser.saved()));
+  now = service.getState().timer.deadline;
+  second.refresh(); assert.equal(second.getState().timer.status, 'complete');
+  now += 6000; service.refresh();
+  assert.equal(service.getState().timer.phase, 'focus'); assert.equal(service.getState().timer.status, 'complete');
+  service.refresh(); assert.equal(service.getState().focusLog.length, 1);
+});
+
+test('daily records merge by phase ID across storage events and do not reappear after storage is cleared', t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('pomodoro', { ...defaults, focusMinutes: 1 }); now = service.getState().timer.deadline; service.refresh();
+  const incoming = JSON.parse(browser.saved());
+  incoming.focusLog.push({ id: 'another-completion', completedAt: now, duration: 120000 });
+  incoming.focusLog.push(incoming.focusLog[0]);
+  incoming.focusLog.push({ id: 'bad', completedAt: now, duration: -1 });
+  const event = new Event('storage'); Object.assign(event, { key: STORAGE_KEY, newValue: JSON.stringify(incoming) }); browser.dispatchEvent(event);
+  service.refresh(); assert.deepEqual(dailyFocus(service.getState().focusLog), { sessions: 2, milliseconds: 180000 });
+  const cleared = new Event('storage'); Object.assign(cleared, { key: STORAGE_KEY, newValue: null }); browser.dispatchEvent(cleared);
+  assert.equal(service.getState().focusLog.length, 0); assert.equal(service.getState().timer, null);
+});
+
+test('two tabs finishing together preserve the owner\'s next phase and record one completed focus', t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  for (const observerFirst of [false, true]) {
+    let saved = null;
+    const storage = { getItem: () => saved, setItem: (key, value) => { saved = value; } };
+    const ownerBrowser = environment(); ownerBrowser.localStorage = storage;
+    const ownerService = createGadgetService(ownerBrowser);
+    ownerService.start('pomodoro', { ...defaults, focusMinutes: 1, autoStartBreaks: true });
+    const observerBrowser = environment(); observerBrowser.localStorage = storage;
+    const observer = createGadgetService(observerBrowser);
+    now = ownerService.getState().timer.deadline;
+    if (observerFirst) {
+      observer.refresh();
+      const event = new Event('storage'); Object.assign(event, { key: STORAGE_KEY, newValue: saved }); ownerBrowser.dispatchEvent(event);
+    } else ownerService.refresh();
+    observer.refresh();
+    const restored = readState(saved);
+    assert.equal(restored.timer.phase, 'break'); assert.equal(restored.timer.status, 'running');
+    assert.equal(observer.getState().timer.phaseId, restored.timer.phaseId);
+    assert.deepEqual(dailyFocus(restored.focusLog), { sessions: 1, milliseconds: 60000 });
+  }
+});
+
+test('sleeping during the chime wait leaves the finished phase ready for a manual start', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  service.start('pomodoro', { ...defaults, focusMinutes: 1, chime: true, autoStartBreaks: true }); await Promise.resolve();
+  now = service.getState().timer.deadline; browser.contexts[0].currentTime = 60; service.refresh();
+  assert.equal(service.getState().autoTransition, true);
+  now += 60000; service.refresh();
+  assert.equal(service.getState().timer.status, 'complete'); assert.equal(service.getState().autoTransition, false);
+  assert.deepEqual(dailyFocus(service.getState().focusLog), { sessions: 1, milliseconds: 60000 });
+});
+
+test('restarting a long break preserves its round and active lengths without replacing newer preferences or ambient sound', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const timer = createTimer('pomodoro', { ...defaults, longBreakMinutes: 20 }, now, 'break', 4);
+  const browser = environment(JSON.stringify({ version: 1, timer, preferences: defaults })), service = createGadgetService(browser);
+  await service.playSound('brown', 25);
+  service.preferences({ focusMinutes: 50, breakMinutes: 10 });
+  now += 60000; service.pause(); service.restart();
+  const restarted = service.getState();
+  assert.equal(restarted.timer.phase, 'break'); assert.equal(restarted.timer.round, 4);
+  assert.equal(restarted.timer.duration, 20 * 60000); assert.equal(restarted.timer.deadline, now + 20 * 60000);
+  assert.equal(restarted.preferences.focusMinutes, 50); assert.equal(restarted.preferences.breakMinutes, 10);
+  assert.equal(restarted.sound.playing, true); assert.equal(browser.timers.size, 1);
+});
+
+test('round and cycle restarts begin focus with active settings while preserving saved choices, sound and completed work', async t => {
+  let now = 100000; t.mock.method(Date, 'now', () => now);
+  for (const action of ['restartRound', 'restartCycle']) for (const phase of ['focus', 'break']) for (const status of ['running', 'paused', 'complete']) {
+    const config = { ...defaults, focusMinutes: 30, breakMinutes: 7, longBreakMinutes: 20, pomodoroTask: 'Practice derivatives' };
+    const timer = { ...createTimer('pomodoro', config, now, phase, 4), phaseId: `saved-${action}-${phase}-${status}` };
+    const focusLog = [{ id: 'earlier-focus', completedAt: now - 60000, duration: 60000 }];
+    const preferences = { ...defaults, focusMinutes: 50, breakMinutes: 10, pomodoroTask: 'Next task' };
+    const browser = environment(JSON.stringify({ version: 1, timer, preferences, focusLog })), service = createGadgetService(browser);
+    await service.playSound('brown', 25);
+    const sound = service.getState().sound;
+    now += 5000;
+    if (status === 'paused') { service.pause(); now += 60000; }
+    if (status === 'complete') now = timer.deadline;
+    service[action]();
+    const restarted = service.getState();
+    assert.equal(restarted.timer.phase, 'focus');
+    assert.equal(restarted.timer.round, action === 'restartRound' ? 4 : 1);
+    assert.equal(restarted.timer.status, 'running');
+    assert.equal(restarted.timer.duration, config.focusMinutes * 60000);
+    assert.equal(restarted.timer.remaining, restarted.timer.duration);
+    assert.equal(restarted.timer.deadline, now + restarted.timer.duration);
+    assert.notEqual(restarted.timer.phaseId, timer.phaseId);
+    assert.deepEqual(restarted.timer.config, config);
+    assert.deepEqual(restarted.preferences, preferences);
+    assert.deepEqual(restarted.sound, sound);
+    const expectedLog = phase === 'focus' && status === 'complete' ? [...focusLog, { id: timer.phaseId, completedAt: timer.deadline, duration: timer.duration }] : focusLog;
+    assert.deepEqual(restarted.focusLog, expectedLog);
+    assert.deepEqual(readState(browser.saved()).focusLog, expectedLog);
+    assert.equal(browser.timers.size, 1);
+  }
+});
+
+test('round and cycle restarts replace the alarm and cancel a pending automatic transition with one clock', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  for (const action of ['restartRound', 'restartCycle']) {
+    const browser = environment(), service = createGadgetService(browser);
+    service.start('pomodoro', { ...defaults, focusMinutes: 1, chime: true, autoStartBreaks: true }); await Promise.resolve();
+    for (let step = 0; step < 6; step++) { now += 1000; browser.contexts[0].currentTime++; service.skip(); }
+    await Promise.resolve();
+    const original = browser.oscillators.slice(-3);
+    now += 10000; browser.contexts[0].currentTime += 10;
+    service[action](); await Promise.resolve();
+    assert.ok(original.every(note => note.disconnected));
+    const replacement = browser.oscillators.slice(-3);
+    assert.equal(replacement[0].startTime, browser.contexts[0].currentTime + 60);
+    assert.equal(browser.timers.size, 1);
+    now = service.getState().timer.deadline; browser.contexts[0].currentTime = replacement[0].startTime; service.refresh();
+    assert.equal(service.getState().autoTransition, true);
+    const completed = service.getState().timer, focusLog = service.getState().focusLog;
+    service[action](); await Promise.resolve();
+    assert.ok(replacement.every(note => note.disconnected));
+    assert.equal(service.getState().autoTransition, false);
+    assert.notEqual(service.getState().timer.phaseId, completed.phaseId);
+    assert.deepEqual(service.getState().focusLog, focusLog);
+    now += 2500; browser.contexts[0].currentTime += 2.5; service.refresh();
+    assert.equal(service.getState().timer.phase, 'focus');
+    assert.equal(service.getState().timer.status, 'running');
+    assert.equal(browser.timers.size, 1);
+  }
+});
+
+test('Pomodoro round and cycle restart commands leave exams and empty timers untouched', t => {
+  t.mock.method(Date, 'now', () => 1000);
+  const browser = environment(), service = createGadgetService(browser);
+  for (const kind of [null, 'exam']) {
+    if (kind) service.start(kind, defaults);
+    const before = service.getState(), saved = browser.saved(), clock = [...browser.timers.keys()];
+    let notifications = 0; const unsubscribe = service.subscribe(() => notifications++);
+    service.restartRound(); service.restartCycle();
+    assert.equal(service.getState().timer, before.timer);
+    assert.deepEqual(service.getState(), before);
+    assert.equal(browser.saved(), saved);
+    assert.deepEqual([...browser.timers.keys()], clock);
+    assert.equal(notifications, 1);
+    unsubscribe();
+  }
+});
+
+test('skipping advances exactly one phase without changing the independent sound or an exam timer', async t => {
+  let now = 1000; t.mock.method(Date, 'now', () => now);
+  const browser = environment(), service = createGadgetService(browser);
+  await service.playSound('rain', 25);
+  service.start('pomodoro', { ...defaults, longBreakMinutes: 20 });
+  for (let step = 0; step < 7; step++) { now += 1000; service.skip(); }
+  assert.equal(service.getState().timer.round, 4); assert.equal(service.getState().timer.phase, 'break');
+  assert.equal(service.getState().timer.duration, 20 * 60000); assert.equal(service.getState().timer.deadline, now + 20 * 60000);
+  assert.equal(service.getState().sound.playing, true); assert.equal(browser.timers.size, 1);
+  service.pause(); now += 1000; service.skip();
+  assert.equal(service.getState().timer.round, 5); assert.equal(service.getState().timer.phase, 'focus');
+  assert.equal(service.getState().timer.status, 'running');
+  service.start('exam', defaults); const exam = service.getState().timer; service.skip();
+  assert.equal(service.getState().timer, exam);
+  service.stop(); service.skip(); assert.equal(service.getState().timer, null);
+});
 
 test('selected completion sound persists without changing the deadline and rings only once at expiry', async t => {
   let now = 1000; t.mock.method(Date, 'now', () => now);

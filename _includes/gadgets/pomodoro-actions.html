@@ -1,0 +1,15 @@
+<div class="game-controls" role="group" aria-label="Pomodoro controls">
+  <button class="puzzle-icon-button" type="submit" form="gadget-pomodoro-settings" data-start data-puzzle-icon aria-label="Start focus" data-tooltip="Start focus" disabled>{% include icon.html name='play' %}</button>
+  <button class="puzzle-icon-button" type="button" data-workspace-timer-toggle data-puzzle-icon data-timer-running="true" aria-label="Pause" data-tooltip="Pause" disabled hidden><span class="gadget-pause-icon" aria-hidden="true">{% include icon.html name='pause' %}</span><span class="gadget-play-icon" aria-hidden="true">{% include icon.html name='play' %}</span></button>
+  <button class="puzzle-icon-button" type="button" data-workspace-next data-puzzle-icon aria-label="Start break" data-tooltip="Start break" disabled hidden>{% include icon.html name='play' %}</button>
+  <button class="puzzle-icon-button" type="button" data-workspace-restart data-puzzle-icon aria-expanded="false" aria-controls="pomodoro-restart-options" aria-label="Restart options" data-tooltip="Restart" disabled hidden>{% include icon.html name='restart' %}</button>
+  <button class="puzzle-icon-button" type="button" data-workspace-skip data-puzzle-icon aria-label="Skip to next phase" data-tooltip="Skip phase" disabled hidden>{% include icon.html name='skip' %}</button>
+  <button class="puzzle-icon-button" type="button" data-workspace-stop data-puzzle-icon aria-label="Stop session" data-tooltip="Stop" disabled hidden>{% include icon.html name='stop' %}</button>
+  {% include controls/game-action.html icon='settings' title='Settings' label='Pomodoro settings' panel='settings' %}
+  {% include controls/game-action.html icon='help' title='How to use' panel='info' %}
+</div>
+<div class="gadget-restart-panel" id="pomodoro-restart-options" data-pomodoro-restart-panel role="group" aria-label="Restart options" hidden>
+  <button class="gadget-restart-choice" type="button" data-pomodoro-restart-round><span>Restart this round</span><span class="gadget-restart-detail" data-pomodoro-restart-detail>Begin this round's focus timer again.</span></button>
+  <button class="gadget-restart-choice" type="button" data-pomodoro-restart-cycle><span>Restart cycle</span><span class="gadget-restart-detail">Start again at round 1.</span></button>
+  <div class="gadget-restart-foot"><span>Today's completed focus stays saved.</span><button type="button" data-pomodoro-restart-cancel>Cancel</button></div>
+</div>

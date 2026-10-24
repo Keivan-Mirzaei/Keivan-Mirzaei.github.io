@@ -1,11 +1,12 @@
 import { STORAGE_KEY, readState, readPreferences, createTimer, pauseTimer, resumeTimer, reconcile, nextPhase, remaining } from './model.mjs';
 import { createAudioPlayer } from './audio.mjs';
 import { soundChoice } from './sounds.mjs';
+import { mergeFocusLog } from './focus-log.mjs';
 
 export function createGadgetService(environment = globalThis) {
   const { document, navigator } = environment, owner = environment.crypto.randomUUID(), listeners = new Set(), audio = createAudioPlayer(environment);
   let state; try { state = readState(environment.localStorage.getItem(STORAGE_KEY)); } catch { state = readState(null); }
-  let clock = null, lock = null, requesting = false, wakeStatus = 'off', message = '', soundPlaying = false, soundLoading = false, remotePlaying = false, previewing = false, alarmKey = null;
+  let clock = null, lock = null, requesting = false, wakeStatus = 'off', message = '', soundPlaying = false, soundLoading = false, remotePlaying = false, previewing = false, alarmKey = null, automaticNextAt = null, automaticPhase = null, phaseSequence = 0;
   const channel = environment.BroadcastChannel ? new environment.BroadcastChannel('almost-obvious:gadgets') : null;
   channel?.addEventListener('message', event => {
     if (event.data?.type === 'hello' && soundPlaying) channel.postMessage({ type: 'playing', owner });
@@ -14,9 +15,25 @@ export function createGadgetService(environment = globalThis) {
   });
   channel?.postMessage({ type: 'hello' });
   // A new document always needs an explicit Play, even if it last owned sound.
-  function snapshot() { return { ...state, sound: state.sound ? { ...state.sound, playing: soundPlaying, loading: soundLoading, elsewhere: remotePlaying && state.sound.playing && state.sound.owner !== owner } : null, wakeStatus, message }; }
+  function snapshot() { return { ...state, sound: state.sound ? { ...state.sound, playing: soundPlaying, loading: soundLoading, elsewhere: remotePlaying && state.sound.playing && state.sound.owner !== owner } : null, autoTransition: automaticNextAt !== null, wakeStatus, message }; }
   function notify() { listeners.forEach(listener => listener(snapshot())); }
-  function save() { try { environment.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { message = 'Changes work here, but this browser could not save them for a later visit.'; } }
+  function save() {
+    try {
+      state.focusLog = mergeFocusLog(readState(environment.localStorage.getItem(STORAGE_KEY)).focusLog, state.focusLog);
+      environment.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch { message = 'Changes work here, but this browser could not save them for a later visit.'; }
+  }
+  function settle() {
+    const previous = state.timer;
+    state.timer = reconcile(previous);
+    const timer = state.timer;
+    if (timer?.kind === 'pomodoro' && timer.phase === 'focus' && timer.status === 'complete' && !timer.completionRecorded) {
+      if (timer.phaseId && timer.completedAt !== null) state.focusLog = mergeFocusLog(state.focusLog, [{ id: timer.phaseId, completedAt: timer.completedAt, duration: timer.duration }]);
+      state.timer = { ...timer, completionRecorded: true };
+    }
+    return previous !== state.timer;
+  }
+  function automaticEnabled(timer = state.timer) { return timer?.kind === 'pomodoro' && (timer.phase === 'focus' ? timer.config.autoStartBreaks : timer.config.autoStartFocus); }
   audio.onState(value => {
     if (value !== 'running' && alarmKey !== null) { alarmKey = null; audio.cancelCompletion(); }
     if (value === 'running' && canChime()) updateAlarm();
@@ -62,17 +79,29 @@ export function createGadgetService(environment = globalThis) {
   function schedule() {
     if (clock !== null) environment.clearTimeout(clock); clock = null;
     if (state.timer?.status === 'running') clock = environment.setTimeout(tick, Math.max(30, document.hidden ? remaining(state.timer) : remaining(state.timer) % 1000 || 1000));
+    else if (automaticNextAt !== null && state.timer?.status === 'complete' && automaticEnabled()) clock = environment.setTimeout(tick, Math.max(30, automaticNextAt - Date.now()));
   }
   function tick() {
-    const previous = state.timer;
-    state.timer = reconcile(previous);
-    if (previous !== state.timer) {
-      save(); updateWake();
+    // Another tab may already have advanced this phase before its storage event arrives.
+    if (state.timer?.alarmOwner !== owner && (state.timer?.status === 'complete' || state.timer?.status === 'running' && remaining(state.timer) === 0)) {
+      try { const saved = environment.localStorage.getItem(STORAGE_KEY); if (saved) { const restored = readState(saved); state.timer = restored.timer; state.focusLog = mergeFocusLog(state.focusLog, restored.focusLog); } } catch { /* The in-memory timer remains usable. */ }
     }
+    const changed = settle(), timer = state.timer;
+    if (timer?.status === 'complete' && timer.alarmOwner === owner && automaticPhase !== timer.phaseId) {
+      automaticPhase = timer.phaseId;
+      if (automaticEnabled(timer) && timer.completedAt !== null && Date.now() - timer.completedAt <= 5000) {
+        // Let the completion chime finish before arming the next phase's alarm.
+        automaticNextAt = Date.now() + (timer.config.chime ? 2500 : 0);
+      }
+    }
+    if (automaticNextAt !== null && (!automaticEnabled(timer) || timer?.status !== 'complete' || timer.alarmOwner !== owner)) automaticNextAt = null;
+    if (automaticNextAt !== null && Date.now() - automaticNextAt > 5000) automaticNextAt = null;
+    if (automaticNextAt !== null && Date.now() >= automaticNextAt) { commit(nextPhase(timer)); return; }
+    if (changed) { save(); updateWake(); }
     updateAlarm();
     notify(); schedule();
   }
-  function commit(timer) { state.timer = timer ? { ...timer, alarmOwner: owner } : null; message = ''; if (timer?.status !== 'running') audio.rest(); save(); updateWake(); tick(); }
+  function commit(timer) { settle(); automaticNextAt = null; state.timer = timer ? { ...timer, phaseId: timer.phaseId || `${owner}:${++phaseSequence}`, alarmOwner: owner } : null; if (state.timer?.status === 'complete') automaticPhase = state.timer.phaseId; message = ''; if (timer?.status !== 'running') audio.rest(); save(); updateWake(); tick(); }
   const service = {
     subscribe(listener) { listeners.add(listener); listener(snapshot()); return () => listeners.delete(listener); },
     getState: snapshot,
@@ -82,8 +111,23 @@ export function createGadgetService(environment = globalThis) {
     pause() { commit(pauseTimer(state.timer)); },
     resume() { commit(resumeTimer(state.timer)); },
     stop() { commit(null); },
-    restart() { if (state.timer) service.start(state.timer.kind, { ...state.timer.config, soundInBar: state.preferences.soundInBar, source: state.preferences.source, volume: state.preferences.volume }); },
+    restart() { if (state.timer) commit(createTimer(state.timer.kind, state.timer.config, Date.now(), state.timer.phase, state.timer.round)); },
+    restartRound() { if (state.timer?.kind === 'pomodoro') commit(createTimer('pomodoro', state.timer.config, Date.now(), 'focus', state.timer.round)); },
+    restartCycle() { if (state.timer?.kind === 'pomodoro') commit(createTimer('pomodoro', state.timer.config)); },
     next() { commit(nextPhase(state.timer)); },
+    skip() { if (state.timer?.kind === 'pomodoro') commit(nextPhase({ ...state.timer, status: 'complete' })); },
+    pomodoroTask(value) {
+      service.preferences({ pomodoroTask: value });
+      if (state.timer?.kind === 'pomodoro') state.timer.config.pomodoroTask = state.preferences.pomodoroTask;
+      save(); notify();
+    },
+    pomodoroTransitions(patch) {
+      const { autoStartBreaks, autoStartFocus } = readPreferences({ ...state.preferences, ...patch });
+      service.preferences({ autoStartBreaks, autoStartFocus });
+      if (state.timer?.kind === 'pomodoro') Object.assign(state.timer.config, { autoStartBreaks, autoStartFocus });
+      if (!automaticEnabled()) automaticNextAt = null;
+      save(); notify(); schedule();
+    },
     awake(value) { if (state.timer) { state.timer.config.awake = value; save(); updateWake(); notify(); } },
     chime(value) { if (state.timer) { state.timer.config.chime = value; if (value && state.timer.status === 'running') state.timer.alarmOwner = owner; updateAlarm(); save(); notify(); } },
     chimeSound(value) { service.preferences({ chimeSound: value }); if (state.timer) state.timer.config.chimeSound = state.preferences.chimeSound; updateAlarm(); save(); notify(); },
@@ -115,7 +159,9 @@ export function createGadgetService(environment = globalThis) {
   };
   environment.addEventListener('storage', event => {
     if (event.key !== STORAGE_KEY && event.key !== null) return;
+    const focusLog = state.focusLog;
     state = readState(event.key === null ? null : event.newValue);
+    if (event.key !== null && event.newValue !== null) state.focusLog = mergeFocusLog(focusLog, state.focusLog);
     remotePlaying = !channel && state.sound?.playing && state.sound.owner !== owner;
     channel?.postMessage({ type: 'hello' });
     if (!state.sound?.playing || state.sound.owner !== owner) { soundPlaying = soundLoading = false; audio.pause(); }
@@ -123,7 +169,7 @@ export function createGadgetService(environment = globalThis) {
   });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) alarmKey = null; updateWake(); tick(); });
   environment.addEventListener('pageshow', () => { updateWake(); tick(); });
-  environment.addEventListener('pagehide', () => { if (clock !== null) environment.clearTimeout(clock); clock = null; alarmKey = null; audio.cancelCompletion(); audio.silenceChime(); audio.rest(); lock?.release().catch(() => {}); channel?.postMessage({ type: 'leaving', owner }); });
+  environment.addEventListener('pagehide', () => { if (clock !== null) environment.clearTimeout(clock); clock = null; automaticNextAt = null; alarmKey = null; audio.cancelCompletion(); audio.silenceChime(); audio.rest(); lock?.release().catch(() => {}); channel?.postMessage({ type: 'leaving', owner }); });
   updateWake(); tick();
   return service;
 }
