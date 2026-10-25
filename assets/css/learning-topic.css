@@ -22,8 +22,15 @@
 .attention, .caution, .warning { display: flow-root; background: #faf1dd; border-radius: 5px; padding: 18px 20px; margin: 28px 0; }
 .attention > .element-label, .caution > .element-label, .warning > .element-label { color: #80612a; }
 .disclosure { margin-top: 16px; }
-.disclosure summary { padding: 12px 0; font-size: 13px; color: var(--green); }
+.disclosure summary { padding: 12px 0; font-size: 15px; color: var(--green); }
 .disclosure p { margin-top: 10px; }
+/* Soft insets distinguish optional lesson material from its surrounding block. */
+.topic-wrap :is(.definition, .theorem, .worked, .prerequisite, .note, .attention, .warning, .caution) { --disclosure-surface: var(--paper); }
+.disclosure[open]:not(.problem-card .disclosure) { padding: 0 18px 18px; margin-bottom: 24px; background: var(--disclosure-surface, #f1f2ef); border-radius: 5px; }
+.disclosure[open]:not(.problem-card .disclosure) > summary { padding-bottom: 14px; border-bottom: 1px solid #9bafa2; }
+.disclosure[open]:not(.problem-card .disclosure) > :last-child { margin-bottom: 0; }
+@media(max-width:600px) { .disclosure[open]:not(.problem-card .disclosure) { padding: 0 12px 14px; } }
+@media(max-width:360px) { .disclosure[open]:not(.problem-card .disclosure) { padding-inline: 8px; } }
 .display-math { padding: 14px 0; overflow-x: auto; font-size: 22px; }
 .display-math math { margin: 0; }
 .topic-wrap mark { color: inherit; background: linear-gradient(transparent 32%, #f3df8cb3 32%, #f3df8cb3 91%, transparent 91%); padding: .06em .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; border-radius: .15em; }
@@ -311,5 +318,27 @@ section[id], figure[id] { scroll-margin-top: 24px; }
 .applications-legend-key { display: inline-block; width: 20px; border-top: 3px solid; }
 .applications-legend .applications-legend-line { display: block; flex: none; width: 20px; height: 6px; }
 .applications-legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #a67936; }
+.antiderivative-widget, .riemann-widget { margin: 28px 0 36px; }
+.antiderivative-widget .widget-readouts, .riemann-widget .widget-readouts { font-size: 14px; }
+.antiderivative-widget .family-plot { margin: 0; }
+.antiderivative-widget .family-plot > svg { display: block; width: 100%; height: auto; overflow: visible; }
+.antiderivative-widget .family-plot-title { margin: 14px 0 4px; color: var(--muted); text-align: center; font: 14px/1.5 var(--font-ui, sans-serif); }
+.antiderivative-widget .applications-legend { margin: 4px auto 18px; }
+.antiderivative-widget .widget-readouts { gap: 10px 24px; }
+.antiderivative-widget .widget-readouts + .family-plot-title { margin-top: 28px; }
+.antiderivative-widget:not([data-ready]) .graph-handle { cursor: default; }
+.antiderivative-widget .graph-handle[data-dragging] { cursor: grabbing; }
+.riemann-plot { margin: 0; }
+.riemann-plot > svg { display: block; width: 100%; height: auto; }
+.riemann-plot .applications-legend { margin: 12px auto 16px; }
+.riemann-rectangle-key { width: 15px; height: 12px; background: #8fad9933; border: 1px solid #8aa793; }
+.riemann-negative-key { background: #a679362b; border-color: #a67936; }
+.riemann-controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: 16px 28px; margin: 18px 0 0; font: 13px/1.6 var(--font-ui, sans-serif); }
+.riemann-controls label { display: block; }
+.riemann-controls input[type="range"] { display: block; width: 100%; margin: 5px 0 0; }
+@media(max-width:600px) {
+  .riemann-controls { grid-template-columns: 1fr; gap: 14px; }
+  .antiderivative-widget .graph-handle > circle:first-child { r: 44px; }
+}
 .extrema-comparison .applications-legend { flex-direction: column; justify-content: flex-start; gap: 8px; width: 100%; min-height: 70px; margin: 0 0 12px; }
 @media(max-width:600px) { .applications-math { font-size: 25px; } }

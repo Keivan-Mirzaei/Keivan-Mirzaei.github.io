@@ -83,7 +83,11 @@ Fix $$x=a$$ and write $$b=g(a)$$. Differentiability of $$f$$ means we can write
 
 $$f(b+k)-f(b)=\bigl(f^{\prime}(b)+r(k)\bigr)k,$$
 
-where $$r(k)\to0$$ as $$k\to0$$. For $$k\ne0$$, define $$r(k)=[f(b+k)-f(b)]/k-f^{\prime}(b)$$; set $$r(0)=0$$, so the identity holds at zero too.
+where $$r(k)\to0$$ as $$k\to0$$. For $$k\ne0$$, define
+
+$$r(k)=\frac{f(b+k)-f(b)}k-f^{\prime}(b).$$
+
+Set $$r(0)=0$$, so the identity holds at zero too.
 
 Put $$k=g(a+h)-g(a)$$. Since differentiability implies continuity, $$k\to0$$ as $$h\to0$$. For $$h\ne0$$,
 

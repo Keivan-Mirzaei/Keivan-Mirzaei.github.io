@@ -1,4 +1,4 @@
-{% if page.widgets.size > 0 or page.gadget %}
+{% if page.widgets.size > 0 or page.gadget or page.topic_controls %}
 <link data-page-style rel="stylesheet" href="{{ '/assets/css/controls.css' | relative_url }}">
 <link data-page-style rel="stylesheet" href="{{ '/assets/css/dropdown.css' | relative_url }}">
 <template data-page-config data-dropdown-trigger><button type="button" class="site-dropdown-trigger" role="combobox" aria-expanded="false" aria-haspopup="listbox"><span data-dropdown-value></span>{% include icon.html name='chevron-down' %}</button></template>

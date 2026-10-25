@@ -178,8 +178,13 @@
           },
           {
             "slug": "area-and-riemann-sums",
-            "title": "Area and Riemann sums",
+            "title": "Riemann sums and area bounds",
             "url": "/learning/calculus/integral-foundations/area-and-riemann-sums/"
+          },
+          {
+            "slug": "area-as-a-limit",
+            "title": "Area as a limit",
+            "url": "/learning/calculus/integral-foundations/area-as-a-limit/"
           },
           {
             "slug": "definite-integral",

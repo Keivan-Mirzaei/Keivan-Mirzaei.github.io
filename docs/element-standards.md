@@ -12,6 +12,8 @@ An exploration develops significant observations, attempts, obstacles, and argum
 
 Use hints, alternative solutions, extensions, data, and code only when they add a distinct insight. Problems keep their statement visible and supporting material in independent disclosure rows: Hint, Solution, Another solution, Extension. Omit absent rows. They start closed, open inline, stay open during outside interaction, and close with their own trigger or Escape.
 
+Optional lesson proofs and derivations use the soft inset style when expanded: a contrasting paper surface with modest padding, rounded corners, and a fine divider beneath the summary. The whole optional passage must have a clear visual end before the lesson continues.
+
 Give cited figures and equations stable anchors and concise names. Number equations only when referred to later. Use one reference convention within each article; separate article reference labels from labels inside a diagram. Captions explain how to read the visual; the surrounding argument interprets it.
 
 ## Visual consistency
@@ -28,13 +30,13 @@ Quizzes show feedback as soon as an answer is chosen; choosing the same answer a
 
 ## Graph axes
 
-Interactive information displayed below a graph belongs in a soft strip with centered, wrapping values. Keep point-local feedback near its point when that placement is useful.
+Put each graph's live feedback directly below that graph in a soft strip with centered, wrapping values. When a widget contains several graphs, keep each feedback bar with its corresponding graph. Keep point-local feedback near its point when that placement is useful.
 
 Use barely-there axes (style A), giving each numbered axis value a fine tick and omitting unnecessary additional ticks. Axis labels identify coordinates or measured quantities, with units where appropriate. Identify functions through curve legends or direct labels; for a standard function graph, use horizontal `x` and vertical `y`, with the curve named separately.
 
 Use the lesson’s MathJax typography for mathematical expressions everywhere, including graph labels, live readouts, units, captions and static figures. Render roots, powers, fractions and derivative primes structurally; do not substitute plain text or Unicode approximations for typeset mathematics.
 
-Give legends reserved space where they cannot cover a curve, point, axis or numbered tick. Place them below the plot when the graph has no reliably empty area. Tangents use solid lines; use opacity and colour to distinguish overlapping lines, and match the legend samples to the plot.
+Place legends in reserved space above each graph, outside the plotting area where they cannot cover a curve, point, axis or numbered tick. Keep live feedback bars below the graphs. Tangents use solid lines; use opacity and colour to distinguish overlapping lines, and match the legend samples to the plot.
 
 Use the shared soft sage legend strip with muted labels, MathJax expressions, and matching line or point samples. Put derivative facts and classifications in the figure caption.
 
